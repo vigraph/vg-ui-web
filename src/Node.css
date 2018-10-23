@@ -1,0 +1,14 @@
+.node
+{
+    fill: blue;
+}
+
+.label
+{
+    fill: yellow;
+}
+
+.dragging
+{
+    fill: red;
+}

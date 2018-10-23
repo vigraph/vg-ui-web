@@ -1,21 +1,21 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
+import Node from './Node.js';
 
-class App extends Component {
-  render() {
+export default class App extends Component
+{
+  static nodes = [ "a", "b", "c" ];
+
+  render()
+  {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
-      </div>
+      <svg id="diagram">
+        { App.nodes.map( (node, i) => {
+            return <Node key={i} x={10} y={100*i} name={node} />
+          })
+        }
+      </svg>
     );
   }
 }
 
-export default App;
