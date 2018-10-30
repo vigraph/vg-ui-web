@@ -11,7 +11,7 @@ export default class App extends Component
     return (
       <svg id="diagram">
         { App.nodes.map( (node, i) => {
-            return <Node key={i} x={10} y={100*i} name={node} />
+            return <Node key={i} x={10} y={100*i} height={50+50*i} name={node} />
           })
         }
       </svg>

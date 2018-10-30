@@ -1,6 +1,7 @@
 .node
 {
-    fill: blue;
+    fill: black;
+    stroke: white;
 }
 
 .label
@@ -10,5 +11,5 @@
 
 .dragging
 {
-    fill: red;
+    fill: #111;
 }

@@ -3,6 +3,12 @@ import './Node.css';
 
 export default class Node extends Component
 {
+  static defaultProps =
+  {
+    width: 100,
+    height: 50
+  }
+
   constructor(props)
   {
     super(props);
@@ -10,7 +16,7 @@ export default class Node extends Component
       {
         dragging: false,
         x: props.x,
-        y: props.y,
+        y: props.y
       };
 
     this.offsetX = 0;
@@ -50,13 +56,13 @@ export default class Node extends Component
   render()
   {
     return (
-        <svg x={this.state.x} y={this.state.y} width={100} height={50}>
-          <rect width={100} height={50}
-                className={`node ${this.state.dragging?"dragging":""}`}
-                onMouseDown={this.handleMouseDown}
-          />
+      <svg x={this.state.x} y={this.state.y}>
+        <rect width={this.props.width} height={this.props.height}
+              className={`node ${this.state.dragging?"dragging":""}`}
+              onMouseDown={this.handleMouseDown}
+              />
         <text className="label" x={10} y={20}>{this.props.name}</text>
-        </svg>
+      </svg>
     );
   }
 }
