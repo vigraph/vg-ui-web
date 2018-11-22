@@ -23,16 +23,32 @@ export default class App extends React.Component
   public render()
   {
     return (
-      <svg id="diagram">
-        {
-          this.graph.getNodes().map((node: Model.Node, i) =>
+      <div id="container">
+        <button onClick={this.handleUndo}>Undo</button>
+        <button onClick={this.handleRedo}>Redo</button>
+        <svg id="diagram">
           {
-            return <Node key={i} node={node}
-              name={node.id + ": " + node.type} />
-          })
-        }
-      </svg>
+            this.graph.getNodes().map((node: Model.Node, i) =>
+            {
+              return <Node key={i} node={node}
+                name={node.id + ": " + node.type} />
+            })
+          }
+        </svg>
+      </div>
     );
   }
-}
 
+  private handleUndo = () =>
+  {
+    this.graph.undo();
+    this.forceUpdate();
+  }
+
+  private handleRedo = () =>
+  {
+    this.graph.redo();
+    this.forceUpdate();
+  }
+
+}

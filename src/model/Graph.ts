@@ -18,7 +18,14 @@ import { Node } from './Node';
 
 export class Graph
 {
-  private state: Map<string, any> = Map<string, any>();
+  private history: Array<Map<string, any>> = [];
+  private historyIndex: number = 0;  // Index of current state
+
+  public constructor()
+  {
+    // Create initial state
+    this.history.push(Map<string, any>());
+  }
 
   public getNodes(): Node[]
   {
@@ -49,6 +56,40 @@ export class Graph
   public setNodePosition(id: string, pos: { x: number, y: number })
   {
     this.state = this.state.setIn(["nodes", id, "position"], pos);
+  }
+
+  public undo()
+  {
+    if (this.historyIndex > 0)
+    {
+      this.historyIndex--;
+    }
+  }
+
+  public redo()
+  {
+    if (this.historyIndex < this.history.length - 1)
+    {
+      this.historyIndex++;
+    }
+  }
+
+  private get state(): Map<string, any>
+  {
+    return this.history[this.historyIndex];
+  }
+
+  private set state(state: Map<string, any>)
+  {
+    // Move forward
+    this.historyIndex++;
+
+    // Chop off anything after this in forward (redo) history
+    if (this.history.length > this.historyIndex)
+    {
+      this.history = this.history.slice(0, this.historyIndex);
+    }
+    this.history.push(state);
   }
 }
 
