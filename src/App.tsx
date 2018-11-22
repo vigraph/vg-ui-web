@@ -5,6 +5,8 @@ import * as Model from './model';
 import './App.css';
 import Node from './Node';
 
+// tslint:disable:no-console
+
 export default class App extends React.Component
 {
   private graph: Model.Graph = new Model.Graph;
@@ -22,6 +24,7 @@ export default class App extends React.Component
 
   public render()
   {
+    console.log("Render");
     return (
       <div id="container">
         <button onClick={this.handleUndo}>Undo</button>
@@ -30,7 +33,9 @@ export default class App extends React.Component
           {
             this.graph.getNodes().map((node: Model.Node, i) =>
             {
+              console.log("Node " + node.id + " x=" + node.position.x);
               return <Node key={i} node={node}
+                x={node.position.x} y={node.position.y}
                 name={node.id + ": " + node.type} />
             })
           }

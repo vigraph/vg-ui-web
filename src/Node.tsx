@@ -5,6 +5,8 @@ import './Node.css';
 interface IProps
 {
   node: Model.Node;
+  x: number;
+  y: number;
   width: number;
   height: number;
   name: string;
@@ -36,8 +38,8 @@ export default class Node extends React.Component<IProps, IState>
     this.state =
       {
         dragging: false,
-        x: props.node.position.x,
-        y: props.node.position.y
+        x: props.x,
+        y: props.y
       };
 
     this.node = props.node;
