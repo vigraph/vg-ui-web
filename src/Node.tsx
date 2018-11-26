@@ -8,6 +8,7 @@ interface IProps
   width: number;
   height: number;
   name: string;
+  dragUpdate: () => void;
 }
 
 interface IState
@@ -82,6 +83,10 @@ export default class Node extends React.Component<IProps, IState>
     this.setState({ dragging: false });
     window.removeEventListener('mouseup', this.handleMouseUp);
     window.removeEventListener('mousemove', this.handleMouseMove);
+    if (this.props.dragUpdate)
+    {
+      this.props.dragUpdate();
+    }
   }
 
   private handleMouseMove = (e: MouseEvent) =>

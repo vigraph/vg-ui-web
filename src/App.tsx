@@ -3,6 +3,7 @@ import * as React from 'react';
 import * as Model from './model';
 
 import './App.css';
+import Edge from './Edge';
 import Node from './Node';
 
 export default class App extends React.Component
@@ -12,9 +13,16 @@ export default class App extends React.Component
   constructor(props: any)
   {
     super(props);
-    this.graph.addNode("foo", "x").position = { x: 10, y: 50 };
-    this.graph.addNode("bar", "y").position = { x: 20, y: 150 };
-    this.graph.addNode("splat", "z").position = { x: 10, y: 300 };
+    const foo = this.graph.addNode("foo", "x");
+    foo.position = { x: 10, y: 50 };
+    const bar = this.graph.addNode("bar", "y");
+    bar.position = { x: 20, y: 150 };
+    const splat = this.graph.addNode("splat", "z");
+    splat.position = { x: 10, y: 300 };
+
+    foo.addEdge("out1", bar, "in1");
+    splat.addEdge("out1", bar, "in2");
+
     this.graph.resetBaseline();
   }
 
@@ -25,16 +33,36 @@ export default class App extends React.Component
         <button onClick={this.handleUndo}>Undo</button>
         <button onClick={this.handleRedo}>Redo</button>
         <svg id="diagram">
-          {
-            this.graph.getNodes().map((node: Model.Node, i) =>
+          <svg id="nodes">
             {
-              return <Node key={i} node={node}
-                name={node.id + ": " + node.type} />
-            })
+              this.graph.getNodes().map((node: Model.Node, i) =>
+              {
+                return <Node key={i} node={node}
+                  name={node.id + ": " + node.type}
+                  dragUpdate={this.dragUpdate} />
+              })
+            }
+          </svg>
+          <svg id="edges">
+            {
+              this.graph.getNodes().map((node: Model.Node, i) =>
+                Array.from(node.getForwardEdges(),
+                  ([output, to]) =>
+                  {
+                    return <Edge key={i} src={node} dest={to.dest} />
+                  })
+              )
+            }
+          </svg>
           }
         </svg>
       </div>
     );
+  }
+
+  private dragUpdate = () =>
+  {
+    this.forceUpdate();
   }
 
   private handleUndo = () =>
