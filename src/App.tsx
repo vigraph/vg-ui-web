@@ -12,12 +12,9 @@ export default class App extends React.Component
   constructor(props: any)
   {
     super(props);
-    this.graph.addNode("foo", "x");
-    this.graph.setNodePosition("foo", { x: 10, y: 50 });
-    this.graph.addNode("bar", "y");
-    this.graph.setNodePosition("bar", { x: 20, y: 150 });
-    this.graph.addNode("splat", "z");
-    this.graph.setNodePosition("splat", { x: 10, y: 300 });
+    this.graph.addNode("foo", "x").position = { x: 10, y: 50 };
+    this.graph.addNode("bar", "y").position = { x: 20, y: 150 };
+    this.graph.addNode("splat", "z").position = { x: 10, y: 300 };
     this.graph.resetBaseline();
   }
 

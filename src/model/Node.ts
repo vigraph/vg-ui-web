@@ -27,6 +27,6 @@ export class Node
 
   set position(pos: { x: number, y: number })
   {
-    this.graph.setNodePosition(this.id, pos);
+    this.graph.setNodeProp(this.id, "position", pos);
   }
 }

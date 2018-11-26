@@ -9,7 +9,7 @@
 // {
 //   nodes: Map<id, {
 //            type: string
-//            display: map<prop, any>
+//            position: { x, y }
 //                  }>
 // }
 
@@ -48,14 +48,15 @@ export class Graph
     return this.state.getIn(["nodes", id, prop]);
   }
 
+  public setNodeProp(id: string, prop: string, value: any)
+  {
+    this.state = this.state.setIn(["nodes", id, prop], value);
+  }
+
   public addNode(id: string, type: string)
   {
     this.state = this.state.setIn(["nodes", id, "type"], type);
-  }
-
-  public setNodePosition(id: string, pos: { x: number, y: number })
-  {
-    this.state = this.state.setIn(["nodes", id, "position"], pos);
+    return new Node(id, this);
   }
 
   public resetBaseline()
