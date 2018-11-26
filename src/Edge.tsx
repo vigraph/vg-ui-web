@@ -24,7 +24,7 @@ export default class Edge extends React.Component<IProps, {}>
     return (
       <svg>
         <path className="edge"
-          d={`M${sp.x} ${sp.y} L ${dp.x} ${dp.y}`} />
+          d={`M${sp.x} ${sp.y} C ${sp.x + 100} ${sp.y} ${dp.x - 100} ${dp.y} ${dp.x} ${dp.y}`} />
       </svg>
     );
   }
