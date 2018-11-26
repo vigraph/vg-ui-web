@@ -98,14 +98,14 @@ it('adds and retrieves an edge', () =>
   foo.addEdge("out1", bar, "in1");
 
   const edgesOut = foo.getForwardEdges();
-  const edgeOut = edgesOut["out1"];
+  const edgeOut = edgesOut.get("out1");
   expect(edgeOut).toBeDefined();
-  expect(edgeOut.dest.id).toBe("bar");
-  expect(edgeOut.destInput).toBe("in1");
+  expect(edgeOut!.dest.id).toBe("bar");
+  expect(edgeOut!.destInput).toBe("in1");
 
   const edgesIn = bar.getReverseEdges();
-  const edgeIn = edgesIn["in1"];
+  const edgeIn = edgesIn.get("in1");
   expect(edgeIn).toBeDefined();
-  expect(edgeIn.src.id).toBe("foo");
-  expect(edgeIn.srcOutput).toBe("out1");
+  expect(edgeIn!.src.id).toBe("foo");
+  expect(edgeIn!.srcOutput).toBe("out1");
 });
