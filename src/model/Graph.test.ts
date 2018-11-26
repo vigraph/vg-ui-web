@@ -75,3 +75,19 @@ it('overwrites forward history', () =>
   expect(node!.position.x).toBe(1);
   expect(node!.position.y).toBe(2);
 });
+
+it('resets baseline', () =>
+{
+  const graph: Graph = new Graph();
+  graph.addNode("foo", "bar");
+  const node: Node | null = graph.getNode("foo");
+  expect(node).toBeDefined();
+  graph.setNodePosition("foo", { x: 1, y: 2 });
+  graph.setNodePosition("foo", { x: 3, y: 4 });
+  graph.resetBaseline();
+  expect(node!.position.x).toBe(3);
+  expect(node!.position.y).toBe(4);
+  graph.undo();
+  expect(node!.position.x).toBe(3);
+  expect(node!.position.y).toBe(4);
+});

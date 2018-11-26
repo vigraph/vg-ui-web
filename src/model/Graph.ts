@@ -58,6 +58,15 @@ export class Graph
     this.state = this.state.setIn(["nodes", id, "position"], pos);
   }
 
+  public resetBaseline()
+  {
+    if (this.historyIndex > 0)
+    {
+      this.history = this.history.slice(this.historyIndex);
+      this.historyIndex = 0;
+    }
+  }
+
   public undo()
   {
     if (this.historyIndex > 0)

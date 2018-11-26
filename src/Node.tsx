@@ -5,8 +5,6 @@ import './Node.css';
 interface IProps
 {
   node: Model.Node;
-  x: number;
-  y: number;
   width: number;
   height: number;
   name: string;
@@ -27,6 +25,14 @@ export default class Node extends React.Component<IProps, IState>
       width: 100
     }
 
+  // Reset state from node when not dragging - allows movement not by
+  // dragging (e.g. undo/redo) to work
+  public static getDerivedStateFromProps(props: IProps, state: any)
+  {
+    return state.dragging ? null :
+      { x: props.node.position.x, y: props.node.position.y };
+  }
+
   public name: string;
   private node: Model.Node;
   private offsetX: number;
@@ -38,8 +44,8 @@ export default class Node extends React.Component<IProps, IState>
     this.state =
       {
         dragging: false,
-        x: props.x,
-        y: props.y
+        x: props.node.position.x,
+        y: props.node.position.y
       };
 
     this.node = props.node;

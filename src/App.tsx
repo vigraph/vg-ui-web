@@ -5,8 +5,6 @@ import * as Model from './model';
 import './App.css';
 import Node from './Node';
 
-// tslint:disable:no-console
-
 export default class App extends React.Component
 {
   private graph: Model.Graph = new Model.Graph;
@@ -20,11 +18,11 @@ export default class App extends React.Component
     this.graph.setNodePosition("bar", { x: 20, y: 150 });
     this.graph.addNode("splat", "z");
     this.graph.setNodePosition("splat", { x: 10, y: 300 });
+    this.graph.resetBaseline();
   }
 
   public render()
   {
-    console.log("Render");
     return (
       <div id="container">
         <button onClick={this.handleUndo}>Undo</button>
@@ -33,9 +31,7 @@ export default class App extends React.Component
           {
             this.graph.getNodes().map((node: Model.Node, i) =>
             {
-              console.log("Node " + node.id + " x=" + node.position.x);
               return <Node key={i} node={node}
-                x={node.position.x} y={node.position.y}
                 name={node.id + ": " + node.type} />
             })
           }
