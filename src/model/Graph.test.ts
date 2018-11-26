@@ -89,3 +89,23 @@ it('resets baseline', () =>
   expect(node.position.x).toBe(3);
   expect(node.position.y).toBe(4);
 });
+
+it('adds and retrieves an edge', () =>
+{
+  const graph: Graph = new Graph();
+  const foo: Node = graph.addNode("foo", "FOO");
+  const bar: Node = graph.addNode("bar", "BAR");
+  foo.addEdge("out1", bar, "in1");
+
+  const edgesOut = foo.getForwardEdges();
+  const edgeOut = edgesOut["out1"];
+  expect(edgeOut).toBeDefined();
+  expect(edgeOut.dest.id).toBe("bar");
+  expect(edgeOut.destInput).toBe("in1");
+
+  const edgesIn = bar.getReverseEdges();
+  const edgeIn = edgesIn["in1"];
+  expect(edgeIn).toBeDefined();
+  expect(edgeIn.src.id).toBe("foo");
+  expect(edgeIn.srcOutput).toBe("out1");
+});

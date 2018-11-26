@@ -9,6 +9,8 @@
 // {
 //   nodes: Map<id, {
 //            type: string
+//            forwardEdges: Map<output, { dest_id, dest_input }>
+//            reverseEdges: Map<input, { src_id, src_output }>
 //            position: { x, y }
 //                  }>
 // }
@@ -57,6 +59,29 @@ export class Graph
   {
     this.state = this.state.setIn(["nodes", id, "type"], type);
     return new Node(id, this);
+  }
+
+  public addEdge(srcId: string, srcOutput: string,
+    destId: string, destInput: string)
+  {
+    this.state = this.state
+      .setIn(["nodes", srcId, "forwardEdges", srcOutput],
+        { destId, destInput })
+      .setIn(["nodes", destId, "reverseEdges", destInput],
+        { srcId, srcOutput });
+  }
+
+  // Get forward/reverse edges - returns map of output to {dest, input}
+  public getNodeForwardEdges(id: string): Map<string,
+    { destId: string, destInput: string }>
+  {
+    return this.state.getIn(["nodes", id, "forwardEdges"]);
+  }
+
+  public getNodeReverseEdges(id: string): Map<string,
+    { srcId: string, srcOutput: string }>
+  {
+    return this.state.getIn(["nodes", id, "reverseEdges"]);
   }
 
   public resetBaseline()
