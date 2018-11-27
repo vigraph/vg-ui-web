@@ -39,7 +39,9 @@ export default class App extends React.Component
               {
                 return <Node key={i} node={node}
                   name={node.id + ": " + node.type}
-                  dragUpdate={this.dragUpdate} />
+                  startDragUpdate={this.startDragUpdate}
+                  dragUpdate={this.dragUpdate}
+                  endDragUpdate={this.endDragUpdate} />
               })
             }
           </svg>
@@ -60,9 +62,19 @@ export default class App extends React.Component
     );
   }
 
+  private startDragUpdate = () =>
+  {
+    this.graph.beginTransaction();
+  }
+
   private dragUpdate = () =>
   {
     this.forceUpdate();
+  }
+
+  private endDragUpdate = () =>
+  {
+    this.graph.commitTransaction();
   }
 
   private handleUndo = () =>

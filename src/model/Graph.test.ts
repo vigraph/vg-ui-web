@@ -109,3 +109,34 @@ it('adds and retrieves an edge', () =>
   expect(edgeIn!.src.id).toBe("foo");
   expect(edgeIn!.srcOutput).toBe("out1");
 });
+
+it('rolls back transactions', () =>
+{
+  const graph: Graph = new Graph();
+  const node: Node = graph.addNode("foo", "bar");
+  node.position = { x: 1, y: 2 };
+  graph.beginTransaction();
+  node.position = { x: 3, y: 4 };
+  expect(node.position.x).toBe(3);
+  expect(node.position.y).toBe(4);
+  graph.rollbackTransaction();
+  expect(node.position.x).toBe(1);
+  expect(node.position.y).toBe(2);
+});
+
+it('commits transactions', () =>
+{
+  const graph: Graph = new Graph();
+  const node: Node = graph.addNode("foo", "bar");
+  node.position = { x: 1, y: 2 };
+  graph.beginTransaction();
+  node.position = { x: 3, y: 4 };
+  expect(node.position.x).toBe(3);
+  expect(node.position.y).toBe(4);
+  graph.commitTransaction();
+  expect(node.position.x).toBe(3);
+  expect(node.position.y).toBe(4);
+  graph.undo();
+  expect(node.position.x).toBe(1);
+  expect(node.position.y).toBe(2);
+});

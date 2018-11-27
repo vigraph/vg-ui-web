@@ -22,6 +22,7 @@ export class Graph
 {
   private history: Array<Map<string, any>> = [];
   private historyIndex: number = 0;  // Index of current state
+  private inTransaction: boolean = false;
 
   public constructor()
   {
@@ -84,6 +85,38 @@ export class Graph
     return this.state.getIn(["nodes", id, "reverseEdges"]);
   }
 
+  // Transactions - used for temporary changes which might or might not get
+  // committed to the model - e.g. dragging
+  public beginTransaction()
+  {
+    // Rollback any existing, for safety
+    this.rollbackTransaction();
+
+    // Clone top state as transient one
+    this.state = this.state;  // Set get/set below!
+
+    this.inTransaction = true;
+  }
+
+  public rollbackTransaction()
+  {
+    if (this.inTransaction)
+    {
+      this.undo();
+      this.inTransaction = false;
+    }
+  }
+
+  public commitTransaction()
+  {
+    if (this.inTransaction)
+    {
+      // Just leave current state
+      this.inTransaction = false;
+    }
+  }
+
+  // Undo / redo state
   public resetBaseline()
   {
     if (this.historyIndex > 0)
@@ -116,15 +149,24 @@ export class Graph
 
   private set state(state: Map<string, any>)
   {
-    // Move forward
-    this.historyIndex++;
-
-    // Chop off anything after this in forward (redo) history
-    if (this.history.length > this.historyIndex)
+    if (this.inTransaction)
     {
-      this.history = this.history.slice(0, this.historyIndex);
+      // Just replace top one
+      this.history.pop();
+      this.history.push(state);
     }
-    this.history.push(state);
+    else
+    {
+      // Move forward
+      this.historyIndex++;
+
+      // Chop off anything after this in forward (redo) history
+      if (this.history.length > this.historyIndex)
+      {
+        this.history = this.history.slice(0, this.historyIndex);
+      }
+      this.history.push(state);
+    }
   }
 }
 

@@ -8,7 +8,9 @@ interface IProps
   width: number;
   height: number;
   name: string;
+  startDragUpdate: () => void;
   dragUpdate: () => void;
+  endDragUpdate: () => void;
 }
 
 interface IState
@@ -75,17 +77,20 @@ export default class Node extends React.Component<IProps, IState>
     this.setState({ dragging: true });
     this.offsetX = e.pageX - this.state.x;
     this.offsetY = e.pageY - this.state.y;
+    if (this.props.startDragUpdate)
+    {
+      this.props.startDragUpdate();
+    }
   }
 
   private handleMouseUp = (e: MouseEvent) =>
   {
-    this.node.position = { x: this.state.x, y: this.state.y };
     this.setState({ dragging: false });
     window.removeEventListener('mouseup', this.handleMouseUp);
     window.removeEventListener('mousemove', this.handleMouseMove);
-    if (this.props.dragUpdate)
+    if (this.props.endDragUpdate)
     {
-      this.props.dragUpdate();
+      this.props.endDragUpdate();
     }
   }
 
@@ -97,6 +102,11 @@ export default class Node extends React.Component<IProps, IState>
         x: e.pageX - this.offsetX,
         y: e.pageY - this.offsetY
       });
+    }
+    this.node.position = { x: this.state.x, y: this.state.y };
+    if (this.props.dragUpdate)
+    {
+      this.props.dragUpdate();
     }
   }
 }
