@@ -1,6 +1,5 @@
 import * as React from 'react';
 import * as Model from './model';
-import './Node.css';
 
 interface IProps
 {

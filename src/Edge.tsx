@@ -1,8 +1,5 @@
 import * as React from 'react';
-
 import * as Model from './model';
-
-import './Edge.css';
 
 interface IProps
 {
@@ -29,10 +26,15 @@ export default class Edge extends React.Component<IProps, {}>
     const dx = dp.x;
     const dy = dp.y + ds.h / 2;
 
+    // Calculate distance of control point as fraction of the distance,
+    // with minimum - gives a nice smooth curve and long distance
+    let cpx = (dx - sx) / 2;
+    if (cpx < 100) { cpx = 100; }
+
     return (
       <svg>
         <path className="edge"
-          d={`M${sx} ${sy} C ${sx + 100} ${sy} ${dx - 100} ${dy} ${dx} ${dy}`}
+          d={`M${sx} ${sy} C ${sx + cpx} ${sy} ${dx - cpx} ${dy} ${dx} ${dy}`}
         />
       </svg>
     );

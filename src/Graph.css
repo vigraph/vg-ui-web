@@ -10,3 +10,26 @@
     height: 100%;
     background-color: black;
 }
+
+.node
+{
+    fill: black;
+    stroke: white;
+}
+
+.node.dragging
+{
+    fill: #111;
+}
+
+.label
+{
+    fill: yellow;
+}
+
+.edge
+{
+    stroke: #aaf;
+    stroke-width: 2;
+    fill: none;
+}
