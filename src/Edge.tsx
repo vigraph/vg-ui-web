@@ -7,7 +7,7 @@ interface IProps
   dest: Model.Node;
 }
 
-export default class Edge extends React.Component<IProps, {}>
+export default class Edge extends React.Component<IProps>
 {
   constructor(props: IProps)
   {
