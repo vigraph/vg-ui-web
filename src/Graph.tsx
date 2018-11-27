@@ -41,34 +41,32 @@ export default class Graph extends React.Component
   public render()
   {
     return (
-      <div id="graph">
-        <svg id="diagram">
-          <svg id="nodes">
+      <svg id="graph">
+        <svg id="nodes">
+          {
+            this.graph.getNodes().map((node: Model.Node, i) =>
             {
-              this.graph.getNodes().map((node: Model.Node, i) =>
-              {
-                return <Node key={i} node={node}
-                  name={node.id + ": " + node.type}
-                  startDragUpdate={this.startDragUpdate}
-                  dragUpdate={this.dragUpdate}
-                  endDragUpdate={this.endDragUpdate} />
-              })
-            }
-          </svg>
-          <svg id="edges">
-            {
-              this.graph.getNodes().map((node: Model.Node, i) =>
-                Array.from(node.getForwardEdges(),
-                  ([output, to]) =>
-                  {
-                    return <Edge key={i} src={node} dest={to.dest} />
-                  })
-              )
-            }
-          </svg>
+              return <Node key={i} node={node}
+                name={node.id + ": " + node.type}
+                startDragUpdate={this.startDragUpdate}
+                dragUpdate={this.dragUpdate}
+                endDragUpdate={this.endDragUpdate} />
+            })
           }
         </svg>
-      </div>
+        <svg id="edges">
+          {
+            this.graph.getNodes().map((node: Model.Node, i) =>
+              Array.from(node.getForwardEdges(),
+                ([output, to]) =>
+                {
+                  return <Edge key={i} src={node} dest={to.dest} />
+                })
+            )
+          }
+        </svg>
+        }
+      </svg>
     );
   }
 

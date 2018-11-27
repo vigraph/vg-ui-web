@@ -2,12 +2,6 @@
 {
     width: 100%;
     height: 100%;
-}
-
-#diagram
-{
-    width: 100%;
-    height: 100%;
     background-color: black;
 }
 
@@ -15,21 +9,22 @@
 {
     fill: black;
     stroke: white;
+    stroke-width: 1.5;
 }
 
 .node.dragging
 {
-    fill: #111;
+    fill: #331;
 }
 
 .label
 {
-    fill: yellow;
+    fill: #ccc;
 }
 
 .edge
 {
-    stroke: #aaf;
-    stroke-width: 2;
+    stroke: white;
+    stroke-width: 1.5;
     fill: none;
 }
