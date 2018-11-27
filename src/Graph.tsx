@@ -7,34 +7,30 @@ import './Graph.css';
 import Edge from './Edge';
 import Node from './Node';
 
-export default class Graph extends React.Component
+interface IProps
+{
+  from?: any;
+}
+
+export default class Graph extends React.Component<IProps>
 {
   private graph: Model.Graph = new Model.Graph();
 
-  constructor(props: any)
+  constructor(props: IProps)
   {
     super(props);
+    if (props.from)
+    {
+      // Note we load the graph directly, not doing forceUpdate()
+      this.graph.loadFrom(props.from);
+    }
   }
 
-  public createExampleGraph()
+  // Load a new graph after mounting
+  public loadFrom(json: any)
   {
-    this.graph.beginTransaction();
-
-    const foo = this.graph.addNode("foo", "x");
-    foo.position = { x: 10, y: 50 };
-    foo.size = { w: 100, h: 100 };
-    const bar = this.graph.addNode("bar", "y");
-    bar.position = { x: 200, y: 150 };
-    bar.size = { w: 100, h: 50 };
-    const splat = this.graph.addNode("splat", "z");
-    splat.position = { x: 10, y: 300 };
-    splat.size = { w: 100, h: 75 };
-
-    foo.addEdge("out1", bar, "in1");
-    splat.addEdge("out1", bar, "in2");
-
-    this.graph.commitTransaction();
-    this.graph.resetBaseline();
+    this.graph = new Model.Graph();
+    this.graph.loadFrom(json);
     this.forceUpdate();
   }
 

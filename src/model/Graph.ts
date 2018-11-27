@@ -30,6 +30,31 @@ export class Graph
     this.history.push(Map<string, any>());
   }
 
+  // Load a graph from the given JSON:
+  // { nodes: [
+  //     { id, type, x, y, w, h,
+  //       edges: [ { output, dest_id, input } ]
+  //     } ] }
+  public loadFrom(json: any)
+  {
+    this.beginTransaction();
+    for (const n of json.nodes)
+    {
+      const node = this.addNode(n.id, n.type || "?");
+      node.position = { x: n.x || 0, y: n.y || 0 };
+      node.size = { w: n.w || 50, h: n.h || 50 };
+      if (n.edges)
+      {
+        for (const e of n.edges)
+        {
+          this.addEdge(n.id, e.output, e.dest, e.input);
+        }
+      }
+    }
+    this.commitTransaction();
+    this.resetBaseline();
+  }
+
   public getNodes(): Node[]
   {
     const nodes: Map<string, any> = this.state.get("nodes");

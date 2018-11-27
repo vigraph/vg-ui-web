@@ -1,6 +1,48 @@
 import { Graph } from './Graph';
 import { Node } from './Node';
 
+it('loads from JSON', () =>
+{
+  const graph: Graph = new Graph();
+  const json =
+  {
+    nodes: [
+      {
+        id: 'foo', type: 'bar', x: 1, y: 2, w: 3, h: 4,
+        edges: [
+          { output: 'out1', dest: 'splat', input: 'in1' }]
+      },
+      {
+        id: 'splat', type: 'wibble'
+      }
+    ]
+  };
+
+  graph.loadFrom(json);
+
+  const foo: Node | null = graph.getNode("foo");
+  expect(foo).toBeDefined();
+  expect(foo!.type).toBe("bar");
+  expect(foo!.position.x).toBe(1);
+  expect(foo!.position.y).toBe(2);
+  expect(foo!.size.w).toBe(3);
+  expect(foo!.size.h).toBe(4);
+
+  const edgesOut = foo!.getForwardEdges();
+  const edgeOut = edgesOut.get("out1");
+  expect(edgeOut).toBeDefined();
+  expect(edgeOut!.dest.id).toBe("splat");
+  expect(edgeOut!.destInput).toBe("in1");
+
+  const splat: Node | null = graph.getNode("splat");
+  expect(splat).toBeDefined();
+  expect(splat!.type).toBe("wibble");
+  expect(splat!.position.x).toBe(0);
+  expect(splat!.position.y).toBe(0);
+  expect(splat!.size.w).toBe(50);
+  expect(splat!.size.h).toBe(50);
+});
+
 it('adds and retrieves nodes by ID', () =>
 {
   const graph: Graph = new Graph();
@@ -27,13 +69,22 @@ it('adds and retrieves node array', () =>
   expect(nodes.length).toBe(2);
 });
 
-it('sets node position', () =>
+it('sets & retrieves node position', () =>
 {
   const graph: Graph = new Graph();
   const node: Node = graph.addNode("foo", "bar");
   node.position = { x: 1, y: 2 };
   expect(node.position.x).toBe(1);
   expect(node.position.y).toBe(2);
+});
+
+it('sets & retrieves node size', () =>
+{
+  const graph: Graph = new Graph();
+  const node: Node = graph.addNode("foo", "bar");
+  node.size = { w: 3, h: 4 };
+  expect(node.size.w).toBe(3);
+  expect(node.size.h).toBe(4);
 });
 
 it('undoes set position', () =>
