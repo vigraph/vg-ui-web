@@ -30,6 +30,16 @@ export class Node
     this.graph.setNodeProp(this.id, "position", pos);
   }
 
+  get size(): { w: number, h: number }
+  {
+    return this.graph.getNodeProp(this.id, "size");
+  }
+
+  set size(size: { w: number, h: number })
+  {
+    this.graph.setNodeProp(this.id, "size", size);
+  }
+
   public addEdge(output: string, dest: Node, destInput: string)
   {
     this.graph.addEdge(this.id, output, dest.id, destInput);

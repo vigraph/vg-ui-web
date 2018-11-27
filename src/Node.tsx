@@ -5,8 +5,6 @@ import './Node.css';
 interface IProps
 {
   node: Model.Node;
-  width: number;
-  height: number;
   name: string;
   startDragUpdate: () => void;
   dragUpdate: () => void;
@@ -22,12 +20,6 @@ interface IState
 
 export default class Node extends React.Component<IProps, IState>
 {
-  public static defaultProps: Partial<IProps> =
-    {
-      height: 50,
-      width: 100
-    }
-
   // Reset state from node when not dragging - allows movement not by
   // dragging (e.g. undo/redo) to work
   public static getDerivedStateFromProps(props: IProps, state: any)
@@ -59,9 +51,10 @@ export default class Node extends React.Component<IProps, IState>
 
   public render()
   {
+    const size = this.props.node.size;
     return (
       <svg x={this.state.x} y={this.state.y}>
-        <rect width={this.props.width} height={this.props.height}
+        <rect width={size.w} height={size.h}
           className={`node ${this.state.dragging ? "dragging" : ""}`}
           onMouseDown={this.handleMouseDown}
         />

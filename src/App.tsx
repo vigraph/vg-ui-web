@@ -15,10 +15,13 @@ export default class App extends React.Component
     super(props);
     const foo = this.graph.addNode("foo", "x");
     foo.position = { x: 10, y: 50 };
+    foo.size = { w: 100, h: 100 };
     const bar = this.graph.addNode("bar", "y");
-    bar.position = { x: 20, y: 150 };
+    bar.position = { x: 200, y: 150 };
+    bar.size = { w: 100, h: 50 };
     const splat = this.graph.addNode("splat", "z");
     splat.position = { x: 10, y: 300 };
+    splat.size = { w: 100, h: 75 };
 
     foo.addEdge("out1", bar, "in1");
     splat.addEdge("out1", bar, "in2");
