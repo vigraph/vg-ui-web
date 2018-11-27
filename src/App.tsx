@@ -13,6 +13,8 @@ export default class App extends React.Component
   constructor(props: any)
   {
     super(props);
+    this.graph.beginTransaction();
+
     const foo = this.graph.addNode("foo", "x");
     foo.position = { x: 10, y: 50 };
     foo.size = { w: 100, h: 100 };
@@ -26,6 +28,7 @@ export default class App extends React.Component
     foo.addEdge("out1", bar, "in1");
     splat.addEdge("out1", bar, "in2");
 
+    this.graph.commitTransaction();
     this.graph.resetBaseline();
   }
 
