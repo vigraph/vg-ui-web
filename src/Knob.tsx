@@ -6,7 +6,7 @@ import * as Model from './model';
 // rangeMin  - Usable knob range minimum from 0 (r, 2r)
 // rangeMax  - Usable knob range maximum from 0 (r, 2r)
 // offset    - Rotation offset of start from 0 (r, 2r)
-const typeSettings: {default: {}, basic: {}, mini: {}} =
+const knobSettings: {default: {}, basic: {}, mini: {}} =
   {
     default : {radius: 20, rangeMin: 0, rangeMax: 359, offset: 0, turnScale: 1},
     basic : {radius: 20, rangeMin: 0, rangeMax: 270, offset: 225, turnScale: 1.5},
@@ -53,8 +53,8 @@ export default class Knob extends React.Component<IProps, IState>
 
     this.property = props.property;
 
-    this.settings = typeSettings[this.property.subType] ?
-      typeSettings[this.property.subType] : typeSettings.default;
+    this.settings = knobSettings[this.property.subType] ?
+      knobSettings[this.property.subType] : knobSettings.default;
 
     this.state =
     {

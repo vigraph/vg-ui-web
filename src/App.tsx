@@ -27,6 +27,10 @@ const exampleGraph =
       id: 'splat', type: 'z', x: 10, y: 300, w: 100, h: 75,
       edges: [
         { output: 'out1', dest: 'bar', input: 'in2' }
+      ],
+      properties: [
+        { id: 'third', controlType: 'switch', subType: 'circle', x: 10, y: 40,
+          value: 0, maxValue: 1 }
       ]
     },
   ]

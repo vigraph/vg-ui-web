@@ -82,3 +82,30 @@
     stroke: blue;
     stroke-width: 5px;
 }
+
+#switch
+{
+    overflow: visible;
+}
+
+.switch-outer
+{
+    stroke: grey;
+    stroke-width: 2px;
+}
+
+.switch-inner
+{
+    fill: grey;
+}
+
+.switch-inner.switching,
+.switch-inner.switching.on
+{
+    fill: yellow;
+}
+
+.switch-inner.on
+{
+    fill: green;
+}
