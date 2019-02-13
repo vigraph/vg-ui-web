@@ -5,6 +5,7 @@ import * as Model from './model';
 import './Graph.css';
 
 import Edge from './Edge';
+import Knob from './Knob';
 import Node from './Node';
 
 interface IProps
@@ -46,7 +47,15 @@ export default class Graph extends React.Component<IProps>
                 name={node.id + ": " + node.type}
                 startDragUpdate={this.startDragUpdate}
                 dragUpdate={this.dragUpdate}
-                endDragUpdate={this.endDragUpdate} />
+                endDragUpdate={this.endDragUpdate}>
+                {this.graph.getKnobs(node.id).map((knob: Model.Knob, j) =>
+                {
+                  return <Knob key={j} knob={knob} name={knob.id}
+                    startUpdate={this.startDragUpdate}
+                    update={this.dragUpdate}
+                    endUpdate={this.endDragUpdate}/>
+                })}
+               </Node>
             })
           }
         </svg>

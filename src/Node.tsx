@@ -64,6 +64,8 @@ export default class Node extends React.Component<IProps, IState>
         <text className="label" x={10} y={20}>{this.props.name}</text>
         <Connector x={5} y={size.h / 2} r={csize} />
         <Connector x={size.w} y={size.h / 2} r={csize} />
+        {this.props.children}
+        />
       </svg>
     );
   }

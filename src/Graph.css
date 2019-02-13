@@ -10,6 +10,7 @@
     fill: black;
     stroke: white;
     stroke-width: 1.5;
+    overflow: visible;
 }
 
 .node.dragging
@@ -20,6 +21,10 @@
 .label
 {
     fill: #ccc;
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE10+/Edge */
+    user-select: none; /* Standard */
 }
 
 .edge
@@ -33,4 +38,47 @@
 {
     fill: white;
     stroke: none;
+}
+
+#knob
+{
+    overflow: visible;
+}
+
+.knob-wrapper
+{
+    overflow: visible
+}
+
+.knob-background
+{
+    fill: blue;
+}
+
+.knob-arc
+{
+    fill: green;
+}
+
+.knob-dial
+{
+    stroke: black;
+    stroke-width: 3px;
+}
+
+#knob.default .knob-arc
+{
+    fill: yellow;
+}
+
+#knob.basic .knob-overlay,
+#knob.basic .knob-dial
+{
+    display: none;
+}
+
+#knob.basic .knob-background
+{
+    stroke: blue;
+    stroke-width: 5px;
 }
