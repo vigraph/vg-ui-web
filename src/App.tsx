@@ -11,14 +11,16 @@ const exampleGraph =
       edges: [
         { output: 'out1', dest: 'bar', input: 'in1' }
       ],
-      knobs: [
-        { id: 'first', type: 'default', x: 10, y: 45, start: 0, maxValue: 100 }
+      properties: [
+        { id: 'first', controlType: 'knob', subType: 'default', x: 10, y: 45,
+          value: 0, maxValue: 100 }
       ]
     },
     {
       id: 'bar', type: 'y', x: 200, y: 150, w: 100, h: 75,
-      knobs: [
-        { id: 'second', type: 'basic', x: 10, y: 40, start: 180, maxValue: 1000 }
+      properties: [
+        { id: 'second', controlType: 'knob', subType: 'basic', x: 10, y: 40,
+          value: 0.5, maxValue: 1000 }
       ]
     },
     {

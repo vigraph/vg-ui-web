@@ -12,18 +12,20 @@
 //            forwardEdges: Map<output, { dest_id, dest_input }>
 //            reverseEdges: Map<input, { src_id, src_output }>
 //            position: { x, y },
-//            knobs: Map<id, {
-//                             type: string,
-//                             position {x, y},
-//                             start: number,
-//                             maxValue: number
-//                           }
+//            properties: Map<id, {
+//                                  id: string,
+//                                  controlType: string,
+//                                  subType: string,
+//                                  position {x, y},
+//                                  value: number,
+//                                  maxValue: number
+//                                }
 //                  }>
 // }
 
 import { Map } from 'immutable';
-import { Knob } from './Knob';
 import { Node } from './Node';
+import { Property } from './Property';
 
 export class Graph
 {
@@ -41,7 +43,7 @@ export class Graph
   // { nodes: [
   //     { id, type, x, y, w, h,
   //       edges: [ { output, dest_id, input } ]
-  //       knobs: [ { id, type, x, y, start, maxValue } ]
+  //       properties: [ { id, controlType, subType, x, y, value, maxValue } ]
   //     } ] }
   public loadFrom(json: any)
   {
@@ -58,14 +60,15 @@ export class Graph
           this.addEdge(n.id, e.output, e.dest, e.input);
         }
       }
-      if (n.knobs)
+      if (n.properties)
       {
-        for (const k of n.knobs)
+        for (const p of n.properties)
         {
-          const knob = this.addKnob(n.id, k.id, k.type || "?");
-          knob.position = { x: k.x || 0, y: k.y || 0 };
-          knob.start = k.start || 0;
-          knob.maxValue = k.maxValue || 100;
+          const property = this.addProperty(n.id, p.id, p.controlType)
+          property.subType = p.subType || "?";
+          property.position = { x: p.x || 0, y: p.y || 0 };
+          property.value = p.value || 0;
+          property.maxValue = p.maxValue || 100;
         }
       }
     }
@@ -128,44 +131,46 @@ export class Graph
     return this.state.getIn(["nodes", id, "reverseEdges"]);
   }
 
-  public addKnob(parentId: string, id: string, type: string)
+  public addProperty(parentId: string, id: string, controlType: string)
   {
-    this.state = this.state.setIn(["nodes", parentId, "knobs", id, "type"], type);
-    return new Knob(id, parentId, this);
+    this.state = this.state.setIn(["nodes", parentId, "properties", id,
+      "controlType"], controlType);
+    return new Property(id, parentId, this);
   }
 
-  public getKnobProp(id: string, parentId: string, prop: string): any
+  public getPropertyProp(id: string, parentId: string, prop: string): any
   {
-    return this.state.getIn(["nodes", parentId, "knobs", id, prop]);
+    return this.state.getIn(["nodes", parentId, "properties", id, prop]);
   }
 
-  public setKnobProp(id: string, parentId: string, prop: string, value: any)
+  public setPropertyProp(id: string, parentId: string, prop: string, value: any)
   {
-    this.state = this.state.setIn(["nodes", parentId, "knobs", id, prop], value);
+    this.state = this.state.setIn(["nodes", parentId, "properties", id, prop],
+      value);
   }
 
-  public getKnobs(parentId: string): Knob[]
+  public getProperties(parentId: string): Property[]
   {
     const nodes: Map<string, any> = this.state.get("nodes");
     if (!nodes) { return []; };
     const node: Map<string, any> = nodes.get(parentId);
     if (!node) { return []; };
-    const knobs: Map<string, any> = node.get("knobs");
-    if (!knobs) { return []; };
-    return knobs.map((n, id) => new Knob(id!, parentId, this)).toArray();
+    const properties: Map<string, any> = node.get("properties");
+    if (!properties) { return []; };
+    return properties.map((n, id) => new Property(id!, parentId, this)).toArray();
   }
 
-  public getKnob(id: string, parentId: string): Knob | null
+  public getProperty(id: string, parentId: string): Property | null
   {
     const nodes: Map<string, any> = this.state.get("nodes");
     if (!nodes) { return null };
     const node: Map<string, any> = nodes.get(parentId);
     if (!node) { return null };
-    const knobs: Map<string, any> = node.get("knobs");
-    if (!knobs) { return null };
-    const knob: Map<string, any> = nodes.get(id);
-    if (!knob) { return null };
-    return new Knob(id, parentId, this);
+    const properties: Map<string, any> = node.get("properties");
+    if (!properties) { return null };
+    const property: Map<string, any> = nodes.get(id);
+    if (!property) { return null };
+    return new Property(id, parentId, this);
   }
 
   // Transactions - used for temporary changes which might or might not get

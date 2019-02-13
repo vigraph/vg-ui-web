@@ -15,16 +15,15 @@ const typeSettings: {default: {}, basic: {}, mini: {}} =
 
 interface IProps
 {
-  knob: Model.Knob;
-  name: string;
+  property: Model.Property;
   startUpdate: () => void;
-  update: () => void;
+  update: (value: number) => void;
   endUpdate: () => void;
 }
 
 interface IState
 {
-  currentValue: number;
+  currentPercent: number;
   turning: boolean;
 }
 
@@ -35,36 +34,39 @@ export default class Knob extends React.Component<IProps, IState>
   public static getDerivedStateFromProps(props: IProps, state: any)
   {
     return state.turning ? null :
-      { currentValue: props.knob.start };
+      { currentPercent: props.property.value };
   }
 
-  private knob: Model.Knob;
+  private property: Model.Property;
 
   private arcStart: {x: number, y: number};
   private mouseStart: {x: number, y: number};
   private circleCentre: {x: number, y: number};
+  private range: number;
 
   private settings: {radius: number, rangeMin: number, rangeMax: number,
-    offset: number, turnScale: number}
+    offset: number, turnScale: number};
 
   constructor(props: IProps)
   {
     super(props);
 
-    this.knob = props.knob;
+    this.property = props.property;
 
-    this.settings = typeSettings[this.knob.type] ?
-      typeSettings[this.knob.type] : typeSettings.default;
+    this.settings = typeSettings[this.property.subType] ?
+      typeSettings[this.property.subType] : typeSettings.default;
 
     this.state =
     {
-      currentValue: this.knob.start,
+      currentPercent: this.property.value,
       turning: false
     };
 
     this.arcStart = {x: this.settings.radius, y: 2*this.settings.radius};
     this.mouseStart = {x: 0, y: 0};
     this.circleCentre = {x: 0, y: 0};
+
+    this.range = this.settings.rangeMax - this.settings.rangeMin;
   }
 
   public render()
@@ -72,7 +74,8 @@ export default class Knob extends React.Component<IProps, IState>
     const r = this.settings.radius
 
     // Current position in degrees from 0
-    const currentPos = this.valueToPosition(this.state.currentValue);
+    const currentPos = (this.state.currentPercent*this.range)+
+      this.settings.rangeMin;
 
     // Calculate knob arc end point from arc start point and angle (position)
     // of the knob
@@ -118,17 +121,10 @@ export default class Knob extends React.Component<IProps, IState>
 
     const arcSweep = currentPos > 180 ? 1 : 0
 
-    // Calculate value based on current position, range and maximum value
-    const percent = currentPos / this.settings.rangeMax;
-    const newValue = Math.round(percent * this.knob.maxValue);
-
-    const position = this.props.knob.position;
+    const position = this.props.property.position;
 
     return(
-      <svg id={this.props.name.toLowerCase()+"-knob"} className="knob-wrapper">
-        <text className="label knob-label" x={position.x}
-          y={position.y}>{this.props.name+":"+newValue}</text>
-        <svg id="knob" className={this.knob.type} height={r*2} width={r*2}
+        <svg id="knob" className={this.property.subType} height={r*2} width={r*2}
           x={position.x} y={position.y+10}
           onMouseDown={this.handleMouseDown}>
           <circle className={`knob-background`}
@@ -160,7 +156,6 @@ export default class Knob extends React.Component<IProps, IState>
               this.settings.turnScale:"1"}`+")"}
           />
         </svg>
-      </svg>
     );
   }
 
@@ -210,7 +205,8 @@ export default class Knob extends React.Component<IProps, IState>
     const det = (this.mouseStart.x * currentY) - (this.mouseStart.y * currentX);
     const angleRad = Math.atan2(det, dot);
     const angle = angleRad * (180 / Math.PI);
-    let newPos = this.valueToPosition(this.state.currentValue) + angle;
+    let newPos = (this.state.currentPercent*this.range) +
+      this.settings.rangeMin + angle;
 
     // Mouse start can now but current mouse coords
     this.mouseStart.x = currentX;
@@ -218,15 +214,13 @@ export default class Knob extends React.Component<IProps, IState>
 
     newPos = this.limitPosition(newPos);
 
-    const newValue = (newPos/this.settings.rangeMax)*this.knob.maxValue;
+    const newPercent = newPos/this.settings.rangeMax;
 
-    this.setState({currentValue: newValue});
-
-    this.knob.start = newValue;
+    this.setState({currentPercent: newPercent});
 
     if (this.props.update)
     {
-      this.props.update();
+      this.props.update(newPercent);
     }
   }
 
@@ -243,11 +237,5 @@ export default class Knob extends React.Component<IProps, IState>
     }
 
     return position
-  }
-
-  // Convert value of knob to position of dial (degrees)
-  private valueToPosition = (value: number) =>
-  {
-    return this.limitPosition((value/this.knob.maxValue)*this.settings.rangeMax);
   }
 }

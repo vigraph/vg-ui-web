@@ -1,3 +1,3 @@
 export * from './Graph';
-export * from './Knob';
 export * from './Node';
+export * from './Property';

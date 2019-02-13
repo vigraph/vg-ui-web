@@ -5,8 +5,8 @@ import * as Model from './model';
 import './Graph.css';
 
 import Edge from './Edge';
-import Knob from './Knob';
 import Node from './Node';
+import Property from './Property';
 
 interface IProps
 {
@@ -48,14 +48,16 @@ export default class Graph extends React.Component<IProps>
                 startDragUpdate={this.startDragUpdate}
                 dragUpdate={this.dragUpdate}
                 endDragUpdate={this.endDragUpdate}>
-                {this.graph.getKnobs(node.id).map((knob: Model.Knob, j) =>
-                {
-                  return <Knob key={j} knob={knob} name={knob.id}
-                    startUpdate={this.startDragUpdate}
-                    update={this.dragUpdate}
-                    endUpdate={this.endDragUpdate}/>
-                })}
-               </Node>
+                {this.graph.getProperties(node.id).map(
+                  (property: Model.Property, j) =>
+                  {
+                    return <Property key={j} property={property}
+                      name={property.id}
+                      startUpdate={this.startDragUpdate}
+                      update={this.dragUpdate}
+                      endUpdate={this.endDragUpdate}/>
+                  })}
+              </Node>
             })
           }
         </svg>
