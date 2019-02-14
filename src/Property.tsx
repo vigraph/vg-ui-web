@@ -2,9 +2,10 @@ import * as React from 'react';
 import * as Model from './model';
 
 import Knob from './Knob';
+import Slider from './Slider';
 import Switch from './Switch';
 
-const controlTypes = {"knob": Knob, "switch": Switch};
+const controlTypes = {"knob": Knob, "switch": Switch, "slider": Slider};
 
 interface IProps
 {

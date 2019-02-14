@@ -109,3 +109,24 @@
 {
     fill: green;
 }
+
+#slider
+{
+    overflow: visible;
+}
+
+.slider-background
+{
+    fill: blue;
+}
+
+.slider-value
+{
+    fill: yellow;
+}
+
+.slider-dial
+{
+    stroke: grey;
+    stroke-width: 3px;
+}

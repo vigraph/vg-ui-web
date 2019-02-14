@@ -19,7 +19,7 @@ const exampleGraph =
     {
       id: 'bar', type: 'y', x: 200, y: 150, w: 100, h: 75,
       properties: [
-        { id: 'second', controlType: 'knob', subType: 'basic', x: 10, y: 40,
+        { id: 'second', controlType: 'slider', subType: 'horz', x: 10, y: 40,
           value: 0.5, maxValue: 1000 }
       ]
     },
