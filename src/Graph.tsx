@@ -13,7 +13,12 @@ interface IProps
   from?: any;
 }
 
-export default class Graph extends React.Component<IProps>
+interface IState
+{
+  showControls: boolean
+}
+
+export default class Graph extends React.Component<IProps, IState>
 {
   private graph: Model.Graph = new Model.Graph();
 
@@ -25,6 +30,11 @@ export default class Graph extends React.Component<IProps>
       // Note we load the graph directly, not doing forceUpdate()
       this.graph.loadFrom(props.from);
     }
+
+    this.state =
+    {
+      showControls: true
+    };
   }
 
   // Load a new graph after mounting
@@ -53,6 +63,7 @@ export default class Graph extends React.Component<IProps>
                   {
                     return <Property key={j} property={property}
                       name={property.id}
+                      showController={this.state.showControls}
                       startUpdate={this.startDragUpdate}
                       update={this.dragUpdate}
                       endUpdate={this.endDragUpdate}/>
@@ -87,6 +98,11 @@ export default class Graph extends React.Component<IProps>
   {
     this.graph.redo();
     this.forceUpdate();
+  }
+
+  public toggleControls = () =>
+  {
+    this.setState({ showControls: !this.state.showControls});
   }
 
   private startDragUpdate = () =>

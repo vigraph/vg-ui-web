@@ -51,6 +51,7 @@ export default class App extends React.Component
       <div id="container">
         <button onClick={this.handleUndo}>Undo</button>
         <button onClick={this.handleRedo}>Redo</button>
+        <button onClick={this.handleToggleControls}>Toggle Controls</button>
         <Graph ref={this.graph} from={exampleGraph} />
       </div>
     );
@@ -69,6 +70,14 @@ export default class App extends React.Component
     if (this.graph.current)
     {
       this.graph.current.redo();
+    }
+  }
+
+  private handleToggleControls = () =>
+  {
+    if (this.graph.current)
+    {
+      this.graph.current.toggleControls();
     }
   }
 }
