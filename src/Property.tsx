@@ -11,7 +11,7 @@ interface IProps
 {
   property: Model.Property;
   name: string;
-  showController: boolean;
+  display: {labels: boolean, controls: boolean};
   startUpdate: () => void;
   update: () => void;
   endUpdate: () => void;
@@ -57,10 +57,12 @@ export default class Property extends React.Component<IProps, IState>
     return(
       <svg id={this.props.name.toLowerCase()+"-property"}
         className="property-wrapper">
+        {this.props.display.labels ?
         <text className="label property-label" x={position.x}
           y={position.y}>{this.props.name+": "+
-          Math.round(this.state.currentPercent*this.property.maxValue)}</text>
-        {this.props.showController ?
+          Math.round(this.state.currentPercent*this.property.maxValue)}</text> :
+          ""}
+        {this.props.display.controls ?
            <Component property={this.property}
             startUpdate={this.startPropertyUpdate} update={this.propertyUpdate}
             endUpdate={this.endPropertyUpdate}/> : ""}

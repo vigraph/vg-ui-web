@@ -15,7 +15,7 @@ interface IProps
 
 interface IState
 {
-  showControls: boolean
+  propertiesDisplay: {labels: boolean; controls: boolean}
 }
 
 export default class Graph extends React.Component<IProps, IState>
@@ -33,7 +33,7 @@ export default class Graph extends React.Component<IProps, IState>
 
     this.state =
     {
-      showControls: true
+      propertiesDisplay: {labels: true, controls: true}
     };
   }
 
@@ -63,7 +63,7 @@ export default class Graph extends React.Component<IProps, IState>
                   {
                     return <Property key={j} property={property}
                       name={property.id}
-                      showController={this.state.showControls}
+                      display={this.state.propertiesDisplay}
                       startUpdate={this.startDragUpdate}
                       update={this.dragUpdate}
                       endUpdate={this.endDragUpdate}/>
@@ -100,9 +100,11 @@ export default class Graph extends React.Component<IProps, IState>
     this.forceUpdate();
   }
 
-  public toggleControls = () =>
+  public toggleDisplay = (prop: string) =>
   {
-    this.setState({ showControls: !this.state.showControls});
+    const display = this.state.propertiesDisplay;
+    display[prop] = !display[prop];
+    this.setState({propertiesDisplay: display});
   }
 
   private startDragUpdate = () =>
