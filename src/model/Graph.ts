@@ -202,6 +202,13 @@ export class Graph
       // Just leave current state
       this.inTransaction = false;
     }
+
+    // Current and previous states are equal (nothing changed in the last
+    // transaction) so undo state
+    if (this.state.equals(this.history[this.historyIndex-1]))
+    {
+      this.undo();
+    }
   }
 
   // Undo / redo state
