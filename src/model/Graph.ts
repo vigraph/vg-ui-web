@@ -9,11 +9,13 @@
 // {
 //   nodes: Map<id, {
 //            type: string
-//            forwardEdges: Map<output, { dest_id, dest_input }>
-//            reverseEdges: Map<input, { src_id, src_output }>
+//            inputs: Map<id, { type: string, maxConnections: number }>
+//            outputs: Map<id, { type: string, maxConnections: number }>
+//            forwardEdges: Map<output, { destId: string, destInput: string }>
+//            reverseEdges: Map<input, { srcId: string, srcOutput: string }>
 //            position: { x, y },
+//            size: { w, h },
 //            properties: Map<id, {
-//                                  id: string,
 //                                  controlType: string,
 //                                  subType: string,
 //                                  position {x, y},
@@ -24,6 +26,7 @@
 // }
 
 import { Map } from 'immutable';
+import { Connector } from './Connector';
 import { Node } from './Node';
 import { Property } from './Property';
 
@@ -39,27 +42,46 @@ export class Graph
     this.history.push(Map<string, any>());
   }
 
+  //
   // Load a graph from the given JSON:
   // { nodes: [
   //     { id, type, x, y, w, h,
-  //       edges: [ { output, dest_id, input } ]
+  //       inputs: [ { id, connectorType, maxConnections }],
+  //       outputs: [ { id, connectorType, maxConnections }],
+  //       edges: [ { output, destId, input } ]
   //       properties: [ { id, controlType, subType, x, y, value, maxValue } ]
   //     } ] }
   public loadFrom(json: any)
   {
     this.beginTransaction();
+    // First pass to create nodes, connectors and properties
     for (const n of json.nodes)
     {
       const node = this.addNode(n.id, n.type || "?");
       node.position = { x: n.x || 0, y: n.y || 0 };
       node.size = { w: n.w || 50, h: n.h || 50 };
-      if (n.edges)
+      if (n.inputs)
       {
-        for (const e of n.edges)
+        for (const i of n.inputs)
         {
-          this.addEdge(n.id, e.output, e.dest, e.input);
+          const input = this.addNodeInput(n.id, i.id, i.type);
+          input.maxConnections = i.maxConnections || 1
+          input.position = { x: 5,
+            y: ((node.size.h) / (n.inputs.length + 1)) * (n.inputs.indexOf(i) + 1)}
         }
       }
+
+      if (n.outputs)
+      {
+        for (const o of n.outputs)
+        {
+          const input = this.addNodeOutput(n.id, o.id, o.type);
+          input.maxConnections = o.maxConnections || 1
+          input.position = { x: node.size.w,
+            y: ((node.size.h) / (n.outputs.length + 1)) * (n.outputs.indexOf(o) + 1)}
+        }
+      }
+
       if (n.properties)
       {
         for (const p of n.properties)
@@ -72,6 +94,19 @@ export class Graph
         }
       }
     }
+
+    // Second pass to create edges
+    for (const n of json.nodes)
+    {
+      if (n.edges)
+      {
+        for (const e of n.edges)
+        {
+          this.addEdge(n.id, e.output, e.dest, e.input);
+        }
+      }
+    }
+
     this.commitTransaction();
     this.resetBaseline();
   }
@@ -108,14 +143,92 @@ export class Graph
     return new Node(id, this);
   }
 
+  public removeNode(id: string)
+  {
+    this.state = this.state.deleteIn(["nodes", id]);
+  }
+
+  public addNodeInput(parentId: string, id: string, connectorType: string)
+  {
+    this.state = this.state.setIn(["nodes", parentId, "inputs", id,
+      "connectorType"], connectorType);
+    return new Connector(id, parentId, "input", this);
+  }
+
+  public addNodeOutput(parentId: string, id: string, connectorType: string)
+  {
+    this.state = this.state.setIn(["nodes", parentId, "outputs", id,
+      "connectorType"], connectorType);
+    return new Connector(id, parentId, "output", this);
+  }
+
+  public getNodeConnectorProp(id: string, parentId: string, type: string,
+    prop: string): any
+  {
+    const ioType = (type === "input") ? "inputs" : "outputs";
+    return this.state.getIn(["nodes", parentId, ioType, id, prop]);
+  }
+
+  public setNodeConnectorProp(id: string, parentId: string, type: string,
+    prop: string, value: any)
+  {
+    const ioType = (type === "input") ? "inputs" : "outputs";
+    this.state = this.state.setIn(["nodes", parentId, ioType, id, prop], value);
+  }
+
+  public getNodeConnectors(parentId: string, type: string): Connector[]
+  {
+    const ioType = (type === "input") ? "inputs" : "outputs";
+
+    const nodes: Map<string, any> = this.state.get("nodes");
+    if (!nodes) { return []; };
+    const node: Map<string, any> = nodes.get(parentId);
+    if (!node) { return []; };
+    const inputs: Map<string, any> = node.get(ioType);
+    if (!inputs) { return []; };
+    return inputs.map((n, id) =>
+      new Connector(id!, parentId, type, this)).toArray();
+  }
+
+  public getNodeConnector(id: string, parentId: string, type: string):
+    Connector | null
+  {
+    const ioType = (type === "input") ? "inputs" : "outputs";
+
+    const nodes: Map<string, any> = this.state.get("nodes");
+    if (!nodes) { return null };
+    const node: Map<string, any> = nodes.get(parentId);
+    if (!node) { return null };
+    const connectors: Map<string, any> = node.get(ioType);
+    if (!connectors) { return null };
+    const connector: Map<string, any> = connectors.get(id);
+    if (!connector) { return null };
+    return new Connector(id, parentId, type, this);
+  }
+
   public addEdge(srcId: string, srcOutput: string,
     destId: string, destInput: string)
   {
+    const srcConnector = this.getNodeConnector(srcOutput, srcId, "output");
+    const destConnector = this.getNodeConnector(destInput, destId, "input");
+
+    if (srcConnector && destConnector && (srcConnector.connectorType ===
+      destConnector.connectorType))
+    {
+      this.state = this.state
+        .setIn(["nodes", srcId, "forwardEdges", srcOutput],
+          { destId, destInput })
+        .setIn(["nodes", destId, "reverseEdges", destInput],
+          { srcId, srcOutput });
+    }
+  }
+
+  public removeEdge(srcId: string, srcOutput: string,
+    destId: string, destInput: string)
+  {
     this.state = this.state
-      .setIn(["nodes", srcId, "forwardEdges", srcOutput],
-        { destId, destInput })
-      .setIn(["nodes", destId, "reverseEdges", destInput],
-        { srcId, srcOutput });
+      .deleteIn(["nodes", srcId, "forwardEdges", srcOutput])
+      .deleteIn(["nodes", destId, "reverseEdges", destInput]);
   }
 
   // Get forward/reverse edges - returns map of output to {dest, input}
@@ -168,7 +281,7 @@ export class Graph
     if (!node) { return null };
     const properties: Map<string, any> = node.get("properties");
     if (!properties) { return null };
-    const property: Map<string, any> = nodes.get(id);
+    const property: Map<string, any> = properties.get(id);
     if (!property) { return null };
     return new Property(id, parentId, this);
   }

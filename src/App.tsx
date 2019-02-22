@@ -8,6 +8,12 @@ const exampleGraph =
   nodes: [
     {
       id: 'foo', type: 'x', x: 10, y: 50, w: 100, h: 100,
+      inputs: [
+        { id: 'in1', type: 'i', maxConnections: 1 }
+      ],
+      outputs: [
+        { id: 'out1', type: 'i', maxConnections: 1 }
+      ],
       edges: [
         { output: 'out1', dest: 'bar', input: 'in1' }
       ],
@@ -18,6 +24,13 @@ const exampleGraph =
     },
     {
       id: 'bar', type: 'y', x: 200, y: 150, w: 100, h: 75,
+      inputs: [
+        { id: 'in1', type: 'i', maxConnections: 1 },
+        { id: 'in2', type: 'i', maxConnections: 1 }
+      ],
+      outputs: [
+        { id: 'out1', type: 'i', maxConnections: 1 }
+      ],
       properties: [
         { id: 'second', controlType: 'slider', subType: 'horz', x: 10, y: 40,
           value: 0.5, maxValue: 1000 }
@@ -25,6 +38,12 @@ const exampleGraph =
     },
     {
       id: 'splat', type: 'z', x: 10, y: 300, w: 100, h: 75,
+      inputs: [
+        { id: 'in1', type: 'i', maxConnections: 1 }
+      ],
+      outputs: [
+        { id: 'out1', type: 'i', maxConnections: 1 }
+      ],
       edges: [
         { output: 'out1', dest: 'bar', input: 'in2' }
       ],

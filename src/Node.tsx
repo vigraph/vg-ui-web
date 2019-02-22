@@ -1,8 +1,6 @@
 import * as React from 'react';
 import * as Model from './model';
 
-import Connector from './Connector';
-
 const csize: number = 5;  // Connector radius
 
 interface IProps
@@ -55,6 +53,7 @@ export default class Node extends React.Component<IProps, IState>
   public render()
   {
     const size = this.props.node.size;
+
     return (
       <svg x={this.state.x} y={this.state.y}>
         <rect x={csize} width={size.w - csize} height={size.h}
@@ -62,8 +61,6 @@ export default class Node extends React.Component<IProps, IState>
           onMouseDown={this.handleMouseDown}
         />
         <text className="label" x={10} y={20}>{this.props.name}</text>
-        <Connector x={5} y={size.h / 2} r={csize} />
-        <Connector x={size.w} y={size.h / 2} r={csize} />
         {this.props.children}
         />
       </svg>

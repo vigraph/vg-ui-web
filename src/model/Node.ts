@@ -2,6 +2,7 @@
 // Copyright (c) Paul Clark 2018
 
 // Proxy class representing a node in the graph
+import { Connector } from './Connector';
 import { Graph } from './Graph';
 
 export class Node
@@ -81,5 +82,15 @@ export class Node
         });
     }
     return result;
+  }
+
+  public getInputConnector(inputId: string): Connector | null
+  {
+    return this.graph.getNodeConnector(inputId, this.id, "input");
+  }
+
+  public getOutputConnector(outputId: string): Connector | null
+  {
+    return this.graph.getNodeConnector(outputId, this.id, "output");
   }
 }

@@ -4,6 +4,7 @@ import * as Model from './model';
 
 import './Graph.css';
 
+import Connector from './Connector';
 import Edge from './Edge';
 import Node from './Node';
 import Property from './Property';
@@ -58,6 +59,20 @@ export default class Graph extends React.Component<IProps, IState>
                 startDragUpdate={this.startDragUpdate}
                 dragUpdate={this.dragUpdate}
                 endDragUpdate={this.endDragUpdate}>
+                {this.graph.getNodeConnectors(node.id, "input").map(
+                  (connector: Model.Connector, j) =>
+                  {
+                    return <Connector key={j}
+                      parent={node}
+                      connector={connector}/>
+                  })}
+                {this.graph.getNodeConnectors(node.id, "output").map(
+                  (connector: Model.Connector, j) =>
+                  {
+                    return <Connector key={j}
+                      parent={node}
+                      connector={connector}/>
+                  })}
                 {this.graph.getProperties(node.id).map(
                   (property: Model.Property, j) =>
                   {
@@ -78,7 +93,8 @@ export default class Graph extends React.Component<IProps, IState>
               Array.from(node.getForwardEdges(),
                 ([output, to]) =>
                 {
-                  return <Edge key={i} src={node} dest={to.dest} />
+                  return <Edge key={i} src={node} srcOutput={output}
+                    dest={to.dest} destInput={to.destInput} />
                 })
             )
           }

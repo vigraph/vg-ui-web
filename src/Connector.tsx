@@ -1,10 +1,10 @@
 import * as React from 'react';
+import * as Model from './model';
 
 interface IProps
 {
-  x: number;
-  y: number;
-  r: number;
+  parent: Model.Node;
+  connector: Model.Connector;
 }
 
 export default class Connector extends React.Component<IProps>
@@ -19,7 +19,9 @@ export default class Connector extends React.Component<IProps>
     return (
       <svg>
         <circle className="connector"
-          cx={this.props.x} cy={this.props.y} r={this.props.r} />
+          cx={this.props.connector.position.x}
+          cy={this.props.connector.position.y}
+          r={5} />
       </svg>
     );
   }
