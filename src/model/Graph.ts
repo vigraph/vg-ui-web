@@ -9,10 +9,10 @@
 // {
 //   nodes: Map<id, {
 //            type: string
-//            inputs: Map<id, { type: string, maxConnections: number }>
-//            outputs: Map<id, { type: string, maxConnections: number }>
-//            forwardEdges: Map<output, { destId: string, destInput: string }>
-//            reverseEdges: Map<input, { srcId: string, srcOutput: string }>
+//            inputs: Map<id, { connectorType: string, maxConnections: number }>
+//            outputs: Map<id, { connectorType: string, maxConnections: number }>
+//            forwardEdges: Map<output, List<{ destId: string, destInput: string }>>
+//            reverseEdges: Map<input, List<{ srcId: string, srcOutput: string }>>
 //            position: { x, y },
 //            size: { w, h },
 //            properties: Map<id, {
@@ -25,6 +25,7 @@
 //                  }>
 // }
 
+import { List } from 'immutable';
 import { Map } from 'immutable';
 import { Connector } from './Connector';
 import { Node } from './Node';
@@ -66,7 +67,7 @@ export class Graph
         {
           const input = this.addNodeInput(n.id, i.id, i.type);
           input.maxConnections = i.maxConnections || 1
-          input.position = { x: 5,
+          input.position = { x: 10,
             y: ((node.size.h) / (n.inputs.length + 1)) * (n.inputs.indexOf(i) + 1)}
         }
       }
@@ -152,6 +153,14 @@ export class Graph
   {
     this.state = this.state.setIn(["nodes", parentId, "inputs", id,
       "connectorType"], connectorType);
+
+    // Initialise reverse edge list for this input connector
+    if (!this.state.getIn(["nodes", parentId, "reverseEdges", id]))
+    {
+      this.state = this.state.setIn(["nodes", parentId, "reverseEdges",
+        id], List<{destId: string, destInput: string}>());
+    }
+
     return new Connector(id, parentId, "input", this);
   }
 
@@ -159,6 +168,14 @@ export class Graph
   {
     this.state = this.state.setIn(["nodes", parentId, "outputs", id,
       "connectorType"], connectorType);
+
+    // Initialise forward edge list for this output connector
+    if (!this.state.getIn(["nodes", parentId, "forwardEdges", id]))
+    {
+      this.state = this.state.setIn(["nodes", parentId, "forwardEdges",
+        id], List<{destId: string, destInput: string}>());
+    }
+
     return new Connector(id, parentId, "output", this);
   }
 
@@ -217,29 +234,35 @@ export class Graph
     {
       this.state = this.state
         .setIn(["nodes", srcId, "forwardEdges", srcOutput],
-          { destId, destInput })
+          this.state.getIn(["nodes", srcId, "forwardEdges", srcOutput]).push(
+            { destId, destInput }))
         .setIn(["nodes", destId, "reverseEdges", destInput],
-          { srcId, srcOutput });
-    }
+          this.state.getIn(["nodes", destId, "reverseEdges", destInput]).push(
+            { srcId, srcOutput }));
   }
+}
 
   public removeEdge(srcId: string, srcOutput: string,
     destId: string, destInput: string)
   {
     this.state = this.state
-      .deleteIn(["nodes", srcId, "forwardEdges", srcOutput])
-      .deleteIn(["nodes", destId, "reverseEdges", destInput]);
+        .deleteIn(["nodes", srcId, "forwardEdges", srcOutput,
+          this.state.getIn(["nodes", srcId, "forwardEdges", srcOutput]).indexOf(
+            { destId, destInput })])
+        .deleteIn(["nodes", destId, "reverseEdges", destInput,
+          this.state.getIn(["nodes", destId, "reverseEdges", destInput]).indexOf(
+            { srcId, srcOutput })]);
   }
 
   // Get forward/reverse edges - returns map of output to {dest, input}
   public getNodeForwardEdges(id: string): Map<string,
-    { destId: string, destInput: string }>
+    [{ destId: string, destInput: string }]>
   {
     return this.state.getIn(["nodes", id, "forwardEdges"]);
   }
 
   public getNodeReverseEdges(id: string): Map<string,
-    { srcId: string, srcOutput: string }>
+    [{ srcId: string, srcOutput: string }]>
   {
     return this.state.getIn(["nodes", id, "reverseEdges"]);
   }

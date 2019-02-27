@@ -35,6 +35,16 @@ button
     user-select: none; /* Standard */
 }
 
+.dummynode
+{
+    display: none;
+}
+
+.dummyconnector
+{
+    pointer-events: none;
+}
+
 .edge
 {
     stroke: white;
@@ -46,6 +56,12 @@ button
 {
     fill: white;
     stroke: none;
+    pointer-events: none;
+}
+
+.connector-boundary
+{
+    fill: transparent;
 }
 
 #knob

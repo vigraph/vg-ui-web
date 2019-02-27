@@ -7,23 +7,23 @@ const exampleGraph =
 {
   nodes: [
     {
-      id: 'foo', type: 'x', x: 10, y: 50, w: 100, h: 100,
+      id: 'foo', type: 'x', x: 10, y: 50, w: 110, h: 100,
       inputs: [
         { id: 'in1', type: 'i', maxConnections: 1 }
       ],
       outputs: [
-        { id: 'out1', type: 'i', maxConnections: 1 }
+        { id: 'out1', type: 'i', maxConnections: 2 }
       ],
       edges: [
         { output: 'out1', dest: 'bar', input: 'in1' }
       ],
       properties: [
-        { id: 'first', controlType: 'knob', subType: 'default', x: 10, y: 45,
+        { id: 'first', controlType: 'knob', subType: 'default', x: 20, y: 45,
           value: 0, maxValue: 100 }
       ]
     },
     {
-      id: 'bar', type: 'y', x: 200, y: 150, w: 100, h: 75,
+      id: 'bar', type: 'y', x: 200, y: 150, w: 110, h: 75,
       inputs: [
         { id: 'in1', type: 'i', maxConnections: 1 },
         { id: 'in2', type: 'i', maxConnections: 1 }
@@ -32,12 +32,12 @@ const exampleGraph =
         { id: 'out1', type: 'i', maxConnections: 1 }
       ],
       properties: [
-        { id: 'second', controlType: 'slider', subType: 'horz', x: 10, y: 40,
+        { id: 'second', controlType: 'slider', subType: 'horz', x: 20, y: 40,
           value: 0.5, maxValue: 1000 }
       ]
     },
     {
-      id: 'splat', type: 'z', x: 10, y: 300, w: 100, h: 75,
+      id: 'splat', type: 'z', x: 10, y: 300, w: 110, h: 75,
       inputs: [
         { id: 'in1', type: 'i', maxConnections: 1 }
       ],
@@ -48,9 +48,20 @@ const exampleGraph =
         { output: 'out1', dest: 'bar', input: 'in2' }
       ],
       properties: [
-        { id: 'third', controlType: 'switch', subType: 'circle', x: 10, y: 40,
+        { id: 'third', controlType: 'switch', subType: 'circle', x: 20, y: 40,
           value: 0, maxValue: 1 }
       ]
+    },
+    {
+      id: 'bing', type: 'z', x: 400, y: 300, w: 110, h: 75,
+      inputs: [
+        { id: 'in1', type: 'i', maxConnections: 1 }
+      ],
+      outputs: [
+        { id: 'out1', type: 'i', maxConnections: 1 }
+      ],
+      edges: [],
+      properties: []
     },
   ]
 };

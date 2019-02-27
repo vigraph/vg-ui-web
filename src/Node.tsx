@@ -56,11 +56,13 @@ export default class Node extends React.Component<IProps, IState>
 
     return (
       <svg x={this.state.x} y={this.state.y}>
-        <rect x={csize} width={size.w - csize} height={size.h}
+        <rect x={csize*2} width={size.w > csize*2 ? size.w - (csize*2) : 0}
+          height={size.h}
           className={`node ${this.state.dragging ? "dragging" : ""}`}
           onMouseDown={this.handleMouseDown}
         />
-        <text className="label" x={10} y={20}>{this.props.name}</text>
+        <text className={"label " + this.props.node.id}
+          x={20} y={20}>{this.props.name}</text>
         {this.props.children}
         />
       </svg>

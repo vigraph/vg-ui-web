@@ -46,39 +46,43 @@ export class Node
     this.graph.addEdge(this.id, output, dest.id, destInput);
   }
 
-  public getForwardEdges(): Map<string, { dest: Node, destInput: string }>
+  public getForwardEdges(): Array<{outputId: string, dest: Node, destInput: string }>
   {
-    const result = new Map<string, { dest: Node, destInput: string }>();
+    const result = new Array<{outputId: string, dest: Node, destInput: string }>();
     // Insert a Node proxy for 'dest'
     const edges = this.graph.getNodeForwardEdges(this.id);
     if (edges)
     {
       edges.forEach(
-        (to: { destId: string, destInput: string }, output: string) =>
+        (toArray: [{ destId: string, destInput: string }], output: string) =>
         {
-          result.set(output, {
-            "dest": new Node(to.destId, this.graph),
-            "destInput": to.destInput
-          });
+          toArray.forEach(
+            (to: {destId: string, destInput: string}, index: number) =>
+            {
+              result.push({outputId: output, dest: new Node(to.destId,
+                this.graph), destInput: to.destInput})
+            });
         });
     }
     return result;
   }
 
-  public getReverseEdges(): Map<string, { src: Node, srcOutput: string }>
+  public getReverseEdges(): Array<{inputId: string, src: Node, srcOutput: string }>
   {
-    const result = new Map<string, { src: Node, srcOutput: string }>();
+    const result = new Array<{ inputId: string, src: Node, srcOutput: string }>();
     // Insert a Node proxy for 'src'
     const edges = this.graph.getNodeReverseEdges(this.id);
     if (edges)
     {
       edges.forEach(
-        (from: { srcId: string, srcOutput: string }, input: string) =>
+        (fromArray: [{ srcId: string, srcOutput: string }], input: string) =>
         {
-          result.set(input, {
-            "src": new Node(from.srcId, this.graph),
-            "srcOutput": from.srcOutput
-          });
+          fromArray.forEach(
+            (from: {srcId: string, srcOutput: string}, index: number) =>
+            {
+              result.push({inputId: input, src: new Node(from.srcId,
+                this.graph), srcOutput: from.srcOutput});
+            });
         });
     }
     return result;
@@ -92,5 +96,39 @@ export class Node
   public getOutputConnector(outputId: string): Connector | null
   {
     return this.graph.getNodeConnector(outputId, this.id, "output");
+  }
+
+  public edgesFromConnector(connector: Connector): number
+  {
+    let count = 0;
+
+    if (connector.direction === "input")
+    {
+      const reverse = this.getReverseEdges();
+
+      reverse.forEach(
+        (edge: {inputId: string, src: Node, srcOutput: string }, index) =>
+        {
+          if (edge.inputId === connector.id)
+          {
+            count++;
+          }
+        });
+    }
+    else
+    {
+      const forward = this.getForwardEdges();
+
+      forward.forEach(
+        (edge: {outputId: string, dest: Node, destInput: string}, index) =>
+        {
+          if (edge.outputId === connector.id)
+          {
+            count++;
+          }
+        });
+    }
+
+    return count;
   }
 }
