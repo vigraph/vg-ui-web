@@ -43,13 +43,12 @@ export default class Connector extends React.Component<IProps>
     const connector = this.props.connector;
 
     // Input connectors cannot have more than one edge
-    if (connector.direction === "input" &&
-      parent.edgesFromConnector(connector) < 1)
-    {
-      this.props.connectorSelected(this.props.parent, this.props.connector, e);
-    }
-    // Connectors cannot have more edges (connections) than their maxConnections
-    else if (parent.edgesFromConnector(connector) < connector.maxConnections)
+    // Output connectors cannot have more edges (connections) than their
+    // maxConnections
+    if ((connector.direction === "input" &&
+      parent.edgesFromConnector(connector) < 1) ||
+      (connector.direction === "output" &&
+      parent.edgesFromConnector(connector) < connector.maxConnections))
     {
       this.props.connectorSelected(this.props.parent, this.props.connector, e);
     }
