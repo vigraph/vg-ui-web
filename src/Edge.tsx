@@ -19,8 +19,10 @@ export default class Edge extends React.Component<IProps>
 
   public render()
   {
-    const outputConnector = this.props.src.getOutputConnector(this.props.srcOutput);
-    const inputConnector = this.props.dest.getInputConnector(this.props.destInput);
+    const outputConnector =
+      this.props.src.getOutputConnector(this.props.srcOutput);
+    const inputConnector =
+      this.props.dest.getInputConnector(this.props.destInput);
 
     const offset = this.props.offset;
 

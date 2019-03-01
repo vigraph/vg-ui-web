@@ -110,9 +110,9 @@ export default class Graph extends React.Component<IProps, IState>
                 (edge: {outputId: string, dest: Model.Node, destInput: string},
                   index) =>
                 {
-                  return <Edge key={i+","+index} src={node} srcOutput={edge.outputId}
-                          dest={edge.dest} destInput={edge.destInput}
-                          offset={csize} />
+                  return <Edge key={i+","+index} src={node}
+                    srcOutput={edge.outputId} dest={edge.dest}
+                    destInput={edge.destInput} offset={csize}/>
                 });
             })
           }
@@ -231,9 +231,9 @@ export default class Graph extends React.Component<IProps, IState>
       this.graph.removeNode(dnode.id);
 
       // If the target connector has the same connector type as the previously
-      // selected connector, the same direction as the dummy connector
-      // (input/output) and has not reached its maximum number of connectors,
-      // then add a permanent edge between selected connector and target connector.
+      // selected connector, the same direction as the dummy connector and has
+      // not reached its maximum number of connectors, then add a permanent
+      // edge between selected connector and target connector.
       if (tconnector && tconnector.connector && tconnector.parent &&
         tconnector.connector.connectorType === rconnector.connectorType &&
         tconnector.connector.direction === dconnector.direction &&
@@ -262,6 +262,7 @@ export default class Graph extends React.Component<IProps, IState>
 
   private handleConnectorMouseMove = (e: MouseEvent) =>
   {
+    // Move temp dummy node positioned so the connector is under the mouse
     if (this.state.tempNodes)
     {
       const dnode = this.state.tempNodes.dummy;
@@ -278,6 +279,7 @@ export default class Graph extends React.Component<IProps, IState>
     }
   }
 
+  // Target (mouse over) connector
   private updateTargetConnector = (target: {connector: Model.Connector,
     parent: Model.Node} | null) =>
   {

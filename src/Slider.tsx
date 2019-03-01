@@ -126,12 +126,12 @@ export default class Slider extends React.Component<IProps, IState>
     const diff = this.settings.horizontal ? e.pageX - this.mouseStart.x :
       this.mouseStart.y - e.pageY;
 
-    let newPos = (this.state.currentPercent*this.settings.length) +
-      (diff/this.settings.slideScale);
+    let newPos = (this.state.currentPercent * this.settings.length) +
+      (diff / this.settings.slideScale);
 
     newPos = this.limitPosition(newPos);
 
-    const newPercent = newPos/this.settings.length;
+    const newPercent = newPos / this.settings.length;
 
     this.setState({currentPercent: newPercent});
 

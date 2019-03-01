@@ -56,8 +56,7 @@ export default class Node extends React.Component<IProps, IState>
 
     return (
       <svg x={this.state.x} y={this.state.y}>
-        <rect x={padding} width={size.w}
-          height={size.h}
+        <rect x={padding} width={size.w} height={size.h}
           className={`node ${this.state.dragging ? "dragging" : ""}`}
           onMouseDown={this.handleMouseDown}
         />

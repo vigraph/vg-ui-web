@@ -67,7 +67,7 @@ export default class Switch extends React.Component<IProps, IState>
 
           <rect className="switch-outer"
             width={settings.width} height={settings.height}
-            rx={settings.rx} ry={settings.ry}/>
+            rx={settings.rx} ry={settings.ry} />
 
           <rect className={`switch-inner ` +
             `${this.state.currentPercent ? "on" : "off"} ` +
@@ -75,7 +75,7 @@ export default class Switch extends React.Component<IProps, IState>
             x={settings.offset/2} y={settings.offset/2}
             width={settings.width - settings.offset}
             height={settings.height - settings.offset}
-            rx={settings.rx} ry={settings.ry}/>
+            rx={settings.rx} ry={settings.ry} />
         </svg>
     );
   }
@@ -98,7 +98,7 @@ export default class Switch extends React.Component<IProps, IState>
 
     this.setState({switching: false});
 
-    const newPercent = this.state.currentPercent ? 0 : 1
+    const newPercent = this.state.currentPercent ? 0 : 1;
     this.setState({currentPercent: newPercent});
 
     if (this.props.update)

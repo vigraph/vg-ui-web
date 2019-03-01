@@ -74,7 +74,7 @@ export default class Knob extends React.Component<IProps, IState>
     const r = this.settings.radius
 
     // Current position in degrees from 0
-    const currentPos = (this.state.currentPercent*this.range)+
+    const currentPos = (this.state.currentPercent*this.range) +
       this.settings.rangeMin;
 
     // Calculate knob arc end point from arc start point and angle (position)
@@ -83,9 +83,7 @@ export default class Knob extends React.Component<IProps, IState>
     const remain90 = currentPos % 90;
     const remain90rad = (remain90 * Math.PI) / 180;
 
-    const z = Math.sqrt((r*r) +
-      (r*r) -
-      (2*r*r*Math.cos(remain90rad)));
+    const z = Math.sqrt((r*r) + (r*r) - (2*r*r*Math.cos(remain90rad)));
 
     const x = Math.sin(remain90rad)*r;
     const y = Math.sqrt((z*z) - (x*x));
@@ -101,18 +99,18 @@ export default class Knob extends React.Component<IProps, IState>
         break;
 
       case 1:
-        newX = 0 + y,
-        newY = r - x
+        newX = 0 + y;
+        newY = r - x;
         break;
 
       case 2:
-        newX = r + x,
-        newY = 0 + y
+        newX = r + x;
+        newY = 0 + y;
         break;
 
       case 3:
-        newX = (r*2) - y,
-        newY = (r) + x
+        newX = (r*2) - y;
+        newY = (r) + x;
         break;
 
       default:
@@ -124,13 +122,13 @@ export default class Knob extends React.Component<IProps, IState>
     const position = this.props.property.position;
 
     return(
-        <svg id="knob" className={this.property.subType} height={r*2} width={r*2}
-          x={position.x} y={position.y+10}
+        <svg id="knob" className={this.property.subType}
+          height={r*2} width={r*2} x={position.x} y={position.y+10}
           onMouseDown={this.handleMouseDown}>
           <circle className={`knob-background`}
             cx={r} cy={r} r={r}
-            transform={"scale("+`${this.state.turning?
-              this.settings.turnScale:"1"}`+")"}
+            transform={"scale("+`${this.state.turning ?
+              this.settings.turnScale : "1"}` + ")"}
           />
           <path
             className={`knob-arc`}
@@ -150,8 +148,7 @@ export default class Knob extends React.Component<IProps, IState>
               `rotate(${this.settings.offset}, ${r}, ${r})`}
           />
           <circle className="knob-overlay"
-            cx={r} cy={r}
-            r={r/2}
+            cx={r} cy={r} r={r/2}
             transform={"scale("+`${this.state.turning?
               this.settings.turnScale:"1"}`+")"}
           />

@@ -68,7 +68,7 @@ export class Graph
           const input = this.addNodeInput(n.id, i.id, i.type);
           input.maxConnections = i.maxConnections || 1;
           input.position = { x: 0,
-            y: ((node.size.h) / (n.inputs.length + 1)) * (n.inputs.indexOf(i) + 1)}
+            y: ((node.size.h)/(n.inputs.length+1))*(n.inputs.indexOf(i)+1)};
         }
       }
 
@@ -79,7 +79,7 @@ export class Graph
           const input = this.addNodeOutput(n.id, o.id, o.type);
           input.maxConnections = o.maxConnections || 1;
           input.position = { x: node.size.w,
-            y: ((node.size.h) / (n.outputs.length + 1)) * (n.outputs.indexOf(o) + 1)}
+            y: ((node.size.h)/(n.outputs.length+1))*(n.outputs.indexOf(o)+1)};
         }
       }
 
@@ -247,11 +247,11 @@ export class Graph
   {
     this.state = this.state
         .deleteIn(["nodes", srcId, "forwardEdges", srcOutput,
-          this.state.getIn(["nodes", srcId, "forwardEdges", srcOutput]).indexOf(
-            { destId, destInput })])
+          this.state.getIn(["nodes", srcId, "forwardEdges",
+            srcOutput]).indexOf({ destId, destInput })])
         .deleteIn(["nodes", destId, "reverseEdges", destInput,
-          this.state.getIn(["nodes", destId, "reverseEdges", destInput]).indexOf(
-            { srcId, srcOutput })]);
+          this.state.getIn(["nodes", destId, "reverseEdges",
+            destInput]).indexOf({ srcId, srcOutput })]);
   }
 
   // Get forward/reverse edges - returns map of output to {dest, input}
@@ -293,7 +293,8 @@ export class Graph
     if (!node) { return []; };
     const properties: Map<string, any> = node.get("properties");
     if (!properties) { return []; };
-    return properties.map((n, id) => new Property(id!, parentId, this)).toArray();
+    return properties.map((n, id) =>
+      new Property(id!, parentId, this)).toArray();
   }
 
   public getProperty(id: string, parentId: string): Property | null
@@ -400,4 +401,3 @@ export class Graph
     }
   }
 }
-

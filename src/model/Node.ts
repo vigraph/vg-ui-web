@@ -46,9 +46,12 @@ export class Node
     this.graph.addEdge(this.id, output, dest.id, destInput);
   }
 
-  public getForwardEdges(): Array<{outputId: string, dest: Node, destInput: string }>
+  public getForwardEdges(): Array<{outputId: string, dest: Node,
+    destInput: string }>
   {
-    const result = new Array<{outputId: string, dest: Node, destInput: string }>();
+    const result = new Array<{outputId: string, dest: Node,
+      destInput: string }>();
+
     // Insert a Node proxy for 'dest'
     const edges = this.graph.getNodeForwardEdges(this.id);
     if (edges)
@@ -67,9 +70,12 @@ export class Node
     return result;
   }
 
-  public getReverseEdges(): Array<{inputId: string, src: Node, srcOutput: string }>
+  public getReverseEdges(): Array<{inputId: string, src: Node,
+    srcOutput: string }>
   {
-    const result = new Array<{ inputId: string, src: Node, srcOutput: string }>();
+    const result = new Array<{ inputId: string, src: Node,
+      srcOutput: string }>();
+
     // Insert a Node proxy for 'src'
     const edges = this.graph.getNodeReverseEdges(this.id);
     if (edges)
@@ -98,6 +104,7 @@ export class Node
     return this.graph.getNodeConnector(outputId, this.id, "output");
   }
 
+  // Number of edges connected to the given connector
   public edgesFromConnector(connector: Connector): number
   {
     let count = 0;

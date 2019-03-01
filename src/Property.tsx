@@ -58,7 +58,7 @@ export default class Property extends React.Component<IProps, IState>
       <svg id={this.props.name.toLowerCase()+"-property"}
         className="property-wrapper">
         {this.props.display.labels ?
-        <text className="label property-label" x={position.x}
+          <text className="label property-label" x={position.x}
           y={position.y}>{this.props.name+": "+
           Math.round(this.state.currentPercent*this.property.maxValue)}</text> :
           ""}
