@@ -9,6 +9,8 @@ import Edge from './Edge';
 import Node from './Node';
 import Property from './Property';
 
+const csize: number = 5;
+
 interface IProps
 {
   from?: any;
@@ -62,9 +64,10 @@ export default class Graph extends React.Component<IProps, IState>
             {
               return <Node key={i} node={node}
                 name={node.id + ": " + node.type}
-                startDragUpdate={this.startDragUpdate}
-                dragUpdate={this.dragUpdate}
-                endDragUpdate={this.endDragUpdate}>
+                startDragUpdate={this.startUpdate}
+                dragUpdate={this.movementUpdate}
+                endDragUpdate={this.endUpdate}
+                padding={csize*2}>
                 {this.graph.getNodeConnectors(node.id, "input").map(
                   (connector: Model.Connector, j) =>
                   {
@@ -72,7 +75,8 @@ export default class Graph extends React.Component<IProps, IState>
                       parent={node}
                       connector={connector}
                       connectorSelected={this.connectorSelected}
-                      updateTargetConnector={this.updateTargetConnector}/>
+                      updateTargetConnector={this.updateTargetConnector}
+                      radius={csize}/>
                   })}
                 {this.graph.getNodeConnectors(node.id, "output").map(
                   (connector: Model.Connector, j) =>
@@ -81,7 +85,8 @@ export default class Graph extends React.Component<IProps, IState>
                       parent={node}
                       connector={connector}
                       connectorSelected={this.connectorSelected}
-                      updateTargetConnector={this.updateTargetConnector}/>
+                      updateTargetConnector={this.updateTargetConnector}
+                      radius={csize}/>
                   })}
                 {this.graph.getProperties(node.id).map(
                   (property: Model.Property, j) =>
@@ -89,9 +94,9 @@ export default class Graph extends React.Component<IProps, IState>
                     return <Property key={j} property={property}
                       name={property.id}
                       display={this.state.propertiesDisplay}
-                      startUpdate={this.startDragUpdate}
-                      update={this.dragUpdate}
-                      endUpdate={this.endDragUpdate}/>
+                      startUpdate={this.startUpdate}
+                      update={this.movementUpdate}
+                      endUpdate={this.endUpdate}/>
                   })}
               </Node>
             })
@@ -106,7 +111,8 @@ export default class Graph extends React.Component<IProps, IState>
                   index) =>
                 {
                   return <Edge key={i+","+index} src={node} srcOutput={edge.outputId}
-                          dest={edge.dest} destInput={edge.destInput} />
+                          dest={edge.dest} destInput={edge.destInput}
+                          offset={csize} />
                 });
             })
           }
@@ -135,17 +141,17 @@ export default class Graph extends React.Component<IProps, IState>
     this.setState({propertiesDisplay: display});
   }
 
-  private startDragUpdate = () =>
+  private startUpdate = () =>
   {
     this.graph.beginTransaction();
   }
 
-  private dragUpdate = () =>
+  private movementUpdate = () =>
   {
     this.forceUpdate();
   }
 
-  private endDragUpdate = () =>
+  private endUpdate = () =>
   {
     this.graph.commitTransaction();
   }
@@ -161,8 +167,14 @@ export default class Graph extends React.Component<IProps, IState>
     // Create dummy node and connect to selected connector to simulate
     // moving unconnected edge
     const dummyNode = this.graph.addNode("dummynode","dummy");
-    dummyNode.size = {w: 5, h: 5};
-    dummyNode.position = {x: e.pageX-5, y: e.pageY-25}
+    dummyNode.size = {w: 0, h: 0};
+
+    const graphEle = document.getElementById("graph");
+    const graphOffsetX = graphEle ? graphEle.getBoundingClientRect().left : 0;
+    const graphOffsetY = graphEle ? graphEle.getBoundingClientRect().top : 0;
+
+    dummyNode.position = {x: e.pageX-(3*csize)-graphOffsetX,
+      y: e.pageY-csize-graphOffsetY}
 
     let dummyConnector;
 
@@ -182,7 +194,7 @@ export default class Graph extends React.Component<IProps, IState>
     }
 
     dummyConnector.maxConnections = 1;
-    dummyConnector.position = {x: 5, y: 5};
+    dummyConnector.position = {x: csize, y: csize};
 
     this.setState({ tempNodes: {dummy: dummyNode, real: node }});
     this.setState({ tempConnectors: {dummy: dummyConnector, real: connector}});
@@ -253,7 +265,14 @@ export default class Graph extends React.Component<IProps, IState>
     if (this.state.tempNodes)
     {
       const dnode = this.state.tempNodes.dummy;
-      dnode.position = {x: e.pageX-5, y: e.pageY-25};
+
+      const graphEle = document.getElementById("graph");
+      const graphOffsetX = graphEle ? graphEle.getBoundingClientRect().left : 0;
+      const graphOffsetY = graphEle ? graphEle.getBoundingClientRect().top : 0;
+
+      dnode.position = {x: e.pageX-(3*csize)-graphOffsetX,
+        y: e.pageY-csize-graphOffsetY}
+
       this.setState({tempNodes: {dummy: dnode,
         real: this.state.tempNodes.real}});
     }

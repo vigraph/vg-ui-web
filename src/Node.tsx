@@ -1,8 +1,6 @@
 import * as React from 'react';
 import * as Model from './model';
 
-const csize: number = 5;  // Connector radius
-
 interface IProps
 {
   node: Model.Node;
@@ -10,6 +8,7 @@ interface IProps
   startDragUpdate: () => void;
   dragUpdate: () => void;
   endDragUpdate: () => void;
+  padding: number;
 }
 
 interface IState
@@ -53,10 +52,11 @@ export default class Node extends React.Component<IProps, IState>
   public render()
   {
     const size = this.props.node.size;
+    const padding = this.props.padding;
 
     return (
       <svg x={this.state.x} y={this.state.y}>
-        <rect x={csize*2} width={size.w > csize*2 ? size.w - (csize*2) : 0}
+        <rect x={padding} width={size.w}
           height={size.h}
           className={`node ${this.state.dragging ? "dragging" : ""}`}
           onMouseDown={this.handleMouseDown}

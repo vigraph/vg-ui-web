@@ -66,8 +66,8 @@ export class Graph
         for (const i of n.inputs)
         {
           const input = this.addNodeInput(n.id, i.id, i.type);
-          input.maxConnections = i.maxConnections || 1
-          input.position = { x: 10,
+          input.maxConnections = i.maxConnections || 1;
+          input.position = { x: 0,
             y: ((node.size.h) / (n.inputs.length + 1)) * (n.inputs.indexOf(i) + 1)}
         }
       }
@@ -77,7 +77,7 @@ export class Graph
         for (const o of n.outputs)
         {
           const input = this.addNodeOutput(n.id, o.id, o.type);
-          input.maxConnections = o.maxConnections || 1
+          input.maxConnections = o.maxConnections || 1;
           input.position = { x: node.size.w,
             y: ((node.size.h) / (n.outputs.length + 1)) * (n.outputs.indexOf(o) + 1)}
         }
@@ -87,7 +87,7 @@ export class Graph
       {
         for (const p of n.properties)
         {
-          const property = this.addProperty(n.id, p.id, p.controlType)
+          const property = this.addProperty(n.id, p.id, p.controlType);
           property.subType = p.subType || "?";
           property.position = { x: p.x || 0, y: p.y || 0 };
           property.value = p.value || 0;

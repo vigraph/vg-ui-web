@@ -9,6 +9,7 @@ interface IProps
     e: React.MouseEvent) => void;
   updateTargetConnector: (target: {connector: Model.Connector,
     parent: Model.Node } | null) => void;
+  radius: number;
 }
 
 export default class Connector extends React.Component<IProps>
@@ -21,18 +22,19 @@ export default class Connector extends React.Component<IProps>
   public render()
   {
     const position = this.props.connector.position;
+    const radius = this.props.radius;
 
     return (
       <svg>
         <rect className={"connector-boundary " + this.props.connector.id}
-          x={position.x-10} y={position.y-10}
-          width={20} height={20} onMouseEnter={this.mouseEnter}
+          x={position.x} y={position.y-(2*radius)}
+          width={radius*4} height={radius*4} onMouseEnter={this.mouseEnter}
           onMouseLeave={this.mouseLeave}
           onMouseDown={this.mouseDown} />
         <circle className={"connector " + this.props.connector.id}
-          cx={this.props.connector.position.x}
-          cy={this.props.connector.position.y}
-          r={5} />
+          cx={position.x+(2*radius)}
+          cy={position.y}
+          r={radius} />
       </svg>
     );
   }

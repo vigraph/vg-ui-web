@@ -7,6 +7,7 @@ interface IProps
   srcOutput: string;
   dest: Model.Node;
   destInput: string;
+  offset: number;
 }
 
 export default class Edge extends React.Component<IProps>
@@ -21,9 +22,13 @@ export default class Edge extends React.Component<IProps>
     const outputConnector = this.props.src.getOutputConnector(this.props.srcOutput);
     const inputConnector = this.props.dest.getInputConnector(this.props.destInput);
 
-    let sx = this.props.src.position.x;
+    const offset = this.props.offset;
+
+    // Add offset (size of connector) so that the edge starts at the right
+    // boundary of connector and ends at the left boundary
+    let sx = this.props.src.position.x + (3*offset);
     let sy = this.props.src.position.y;
-    let dx = this.props.dest.position.x;
+    let dx = this.props.dest.position.x + offset;
     let dy = this.props.dest.position.y;
 
     if (outputConnector && inputConnector)
