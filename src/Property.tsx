@@ -51,6 +51,8 @@ export default class Property extends React.Component<IProps, IState>
   public render()
   {
     const position = this.property.position;
+    const range = this.property.range;
+    const valueRange = range.max - range.min;
 
     const Component = controlTypes[this.property.controlType];
 
@@ -60,7 +62,7 @@ export default class Property extends React.Component<IProps, IState>
         {this.props.display.labels ?
           <text className="label property-label" x={position.x}
           y={position.y}>{this.props.name+": "+
-          Math.round(this.state.currentPercent*this.property.maxValue)}</text> :
+          Math.round((this.state.currentPercent*valueRange)+ range.min)}</text>:
           ""}
         {this.props.display.controls ?
            <Component property={this.property}

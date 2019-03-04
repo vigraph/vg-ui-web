@@ -49,7 +49,7 @@ export default class Switch extends React.Component<IProps, IState>
     this.state =
     {
       // Either 0 (off) or 1 (on)
-      currentPercent: this.property.value,
+      currentPercent: this.property.value ? 1 : 0,
       switching: false
     };
   }

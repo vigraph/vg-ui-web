@@ -52,14 +52,14 @@ export class Property
     this.graph.setPropertyProp(this.id, this.parent, "value", value);
   }
 
-  get maxValue(): number
+  get range(): { min: number, max: number }
   {
-    return this.graph.getPropertyProp(this.id, this.parent, "maxValue");
+    return this.graph.getPropertyProp(this.id, this.parent, "range");
   }
 
-  set maxValue(value: number)
+  set range(pos: { min: number, max: number })
   {
-    this.graph.setPropertyProp(this.id, this.parent, "maxValue", value);
+    this.graph.setPropertyProp(this.id, this.parent, "range", pos);
   }
 
 }
