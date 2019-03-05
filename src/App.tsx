@@ -62,8 +62,8 @@ const exampleGraph =
       ],
       edges: [],
       properties: [
-        { id: 'fourth', controlType: 'slider', subType: 'default', x: 20, y: 40,
-          value: 0.3, rangeMin: 0, rangeMax: 300, increment: 100 }
+        { id: 'fourth', controlType: 'slider', subType: 'selector', x: 20,
+          y: 40, value: 0.3, rangeMin: 100, rangeMax: 300, increment: 100 }
       ]
     },
   ]
