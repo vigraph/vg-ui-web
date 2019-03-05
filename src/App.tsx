@@ -19,7 +19,7 @@ const exampleGraph =
       ],
       properties: [
         { id: 'first', controlType: 'knob', subType: 'default', x: 20, y: 45,
-          value: 0, rangeMin: 0, rangeMax: 100 }
+          value: 0, rangeMin: 0, rangeMax: 100, increment: 50 }
       ]
     },
     {
@@ -33,7 +33,7 @@ const exampleGraph =
       ],
       properties: [
         { id: 'second', controlType: 'slider', subType: 'horz', x: 20, y: 40,
-          value: 0.5, rangeMin: -1000, rangeMax: 1000 }
+          value: 0.5, rangeMin: -1000, rangeMax: 1000, increment: 1 }
       ]
     },
     {
@@ -49,7 +49,7 @@ const exampleGraph =
       ],
       properties: [
         { id: 'third', controlType: 'switch', subType: 'circle', x: 20, y: 40,
-          value: 0, rangeMin: 0, rangeMax: 1 }
+          value: 0, rangeMin: 0, rangeMax: 1, increment: 1 }
       ]
     },
     {
@@ -61,7 +61,10 @@ const exampleGraph =
         { id: 'out1', type: 'i', maxConnections: 1 }
       ],
       edges: [],
-      properties: []
+      properties: [
+        { id: 'fourth', controlType: 'slider', subType: 'default', x: 20, y: 40,
+          value: 0.3, rangeMin: 0, rangeMax: 300, increment: 100 }
+      ]
     },
   ]
 };

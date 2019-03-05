@@ -41,9 +41,13 @@ export default class Property extends React.Component<IProps, IState>
 
     this.property = props.property;
 
+    // Ensure value conforms to increment bounds
+    const value = this.snapValueToIncrement(this.property.value);
+    this.property.value = value;
+
     this.state =
     {
-      currentPercent: this.property.value,
+      currentPercent: value,
       updating: false
     };
   }
@@ -51,9 +55,6 @@ export default class Property extends React.Component<IProps, IState>
   public render()
   {
     const position = this.property.position;
-    const range = this.property.range;
-    const valueRange = range.max - range.min;
-
     const Component = controlTypes[this.property.controlType];
 
     return(
@@ -61,9 +62,8 @@ export default class Property extends React.Component<IProps, IState>
         className="property-wrapper">
         {this.props.display.labels ?
           <text className="label property-label" x={position.x}
-          y={position.y}>{this.props.name+": "+
-          Math.round((this.state.currentPercent*valueRange)+ range.min)}</text>:
-          ""}
+          y={position.y}>{this.props.name + ": " +
+          this.calculateRoundedDisplayValue(this.property.value)}</text> : ""}
         {this.props.display.controls ?
            <Component property={this.property}
             startUpdate={this.startPropertyUpdate} update={this.propertyUpdate}
@@ -94,14 +94,52 @@ export default class Property extends React.Component<IProps, IState>
 
   private propertyUpdate = (value: number) =>
   {
-    this.setState({currentPercent: value});
+    const newValue = this.snapValueToIncrement(value);
 
-    this.property.value = value;
+    this.setState({currentPercent: newValue});
+
+    this.property.value = newValue;
 
     if (this.props.update)
     {
       this.props.update();
     }
+  }
+
+  // Calculate the value to display with the same accuracy as the given
+  // increment.
+  private calculateRoundedDisplayValue = (value: number) =>
+  {
+    const increment = this.property.increment;
+    const split = increment.toString().split(".");
+    const decimalPlaces = split[1] ? split[1].length : 0;
+
+    const range = this.property.range;
+    const valueRange = range.max - range.min;
+    const displayValue = (value * valueRange) + range.min;
+    const roundedDisplayValue = displayValue.toFixed(decimalPlaces);
+
+    return parseInt(roundedDisplayValue, 10)
+  }
+
+  // Snap value to closest increment
+  private snapValueToIncrement = (value: number) =>
+  {
+    const roundedDisplayValue = this.calculateRoundedDisplayValue(value);
+
+    const increment = this.property.increment;
+    const range = this.property.range;
+    const valueRange = range.max - range.min;
+
+    const mod = roundedDisplayValue % increment;
+    const diff = roundedDisplayValue - mod;
+
+    // Snap to the closest increment
+    const snap = (mod > increment/2) ? increment : 0;
+
+    const newValue = (diff + snap - range.min) / valueRange;
+
+    return newValue;
   }
 
 }

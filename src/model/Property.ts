@@ -57,9 +57,19 @@ export class Property
     return this.graph.getPropertyProp(this.id, this.parent, "range");
   }
 
-  set range(pos: { min: number, max: number })
+  set range(range: { min: number, max: number })
   {
-    this.graph.setPropertyProp(this.id, this.parent, "range", pos);
+    this.graph.setPropertyProp(this.id, this.parent, "range", range);
+  }
+
+  get increment(): number
+  {
+    return this.graph.getPropertyProp(this.id, this.parent, "increment");
+  }
+
+  set increment(increment: number)
+  {
+    this.graph.setPropertyProp(this.id, this.parent, "increment", increment);
   }
 
 }

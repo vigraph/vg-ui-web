@@ -20,7 +20,8 @@
 //                                  subType: string,
 //                                  position {x, y},
 //                                  value: number,
-//                                  range: {min, max}
+//                                  range: {min, max},
+//                                  increment: number
 //                                }
 //                  }>
 // }
@@ -51,7 +52,7 @@ export class Graph
   //       outputs: [ { id, connectorType, maxConnections }],
   //       edges: [ { output, destId, input } ]
   //       properties: [ { id, controlType, subType, x, y, value, rangeMin,
-  //                       rangeMax } ]
+  //                       rangeMax, increment } ]
   //     } ] }
   public loadFrom(json: any)
   {
@@ -92,7 +93,8 @@ export class Graph
           property.subType = p.subType || "?";
           property.position = { x: p.x || 0, y: p.y || 0 };
           property.value = p.value || 0;
-          property.range = { min: p.rangeMin || 0, max: p.rangeMax || 1}
+          property.range = { min: p.rangeMin || 0, max: p.rangeMax || 1};
+          property.increment = p.increment || 1;
         }
       }
     }
