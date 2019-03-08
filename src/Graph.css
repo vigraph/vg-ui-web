@@ -166,3 +166,32 @@ button
 {
     fill: none;
 }
+
+.picker
+{
+    stroke: white;
+    stroke-width: 1px;
+    overflow: visible;
+}
+
+.picker-indicator
+{
+    stroke: none;
+}
+
+.indicator-top
+{
+    fill: black;
+}
+
+.indicator-bottom
+{
+    fill: white;
+}
+
+.picker-wrapper-background
+{
+    stroke: white;
+    stroke-width: 1px;
+    fill: #383838;
+}

@@ -1,11 +1,13 @@
 import * as React from 'react';
 import * as Model from './model';
 
+import ColourPicker from './ColourPicker';
 import Knob from './Knob';
 import Slider from './Slider';
 import Switch from './Switch';
 
-const controlTypes = {"knob": Knob, "switch": Switch, "slider": Slider};
+const controlTypes = {"knob": Knob, "switch": Switch, "slider": Slider,
+  "colourPicker": ColourPicker};
 
 interface IProps
 {
@@ -19,7 +21,7 @@ interface IProps
 
 interface IState
 {
-  currentPercent: number;
+  value: number | string;
   updating: boolean;
 }
 
@@ -30,10 +32,11 @@ export default class Property extends React.Component<IProps, IState>
   public static getDerivedStateFromProps(props: IProps, state: any)
   {
     return state.updating ? null :
-      { currentPercent: props.property.value };
+      { value: props.property.value };
   }
 
   private property: Model.Property;
+  private numerical: boolean;
 
   constructor(props: IProps)
   {
@@ -41,13 +44,24 @@ export default class Property extends React.Component<IProps, IState>
 
     this.property = props.property;
 
-    // Ensure value conforms to increment bounds
-    const value = this.snapValueToIncrement(this.property.value);
-    this.property.value = value;
+    // Knobs and sliders are numerical and snap to increments. All other types
+    // e.g. switch and colourPicker are not numerical.
+    if (this.property.controlType === "knob" || this.property.controlType ===
+      "slider")
+    {
+      this.numerical = true;
+
+      // Ensure value conforms to increment bounds
+      this.property.value = this.snapValueToIncrement(this.property.value);
+    }
+    else
+    {
+      this.numerical = false;
+    }
 
     this.state =
     {
-      currentPercent: value,
+      value: this.property.value,
       updating: false
     };
   }
@@ -63,7 +77,9 @@ export default class Property extends React.Component<IProps, IState>
         {this.props.display.labels ?
           <text className="label property-label" x={position.x}
           y={position.y}>{this.props.name + ": " +
-          this.calculateRoundedDisplayValue(this.property.value)}</text> : ""}
+            ((this.numerical && typeof this.property.value === "number") ?
+              this.formatValueForDisplay(this.property.value) :
+              this.property.value)}</text> : ""}
         {this.props.display.controls ?
            <Component property={this.property}
             startUpdate={this.startPropertyUpdate} update={this.propertyUpdate}
@@ -92,11 +108,14 @@ export default class Property extends React.Component<IProps, IState>
     }
   }
 
-  private propertyUpdate = (value: number) =>
+  // Numerical control types return percentage (0-1)
+  // Non-numerical returns a string
+  private propertyUpdate = (value: number | string) =>
   {
-    const newValue = this.snapValueToIncrement(value);
+    const newValue = this.numerical && typeof value === "number" ?
+      this.snapValueToIncrement(value) : value;
 
-    this.setState({currentPercent: newValue});
+    this.setState({value: newValue});
 
     this.property.value = newValue;
 
@@ -108,7 +127,7 @@ export default class Property extends React.Component<IProps, IState>
 
   // Calculate the value to display with the same accuracy as the given
   // increment.
-  private calculateRoundedDisplayValue = (value: number) =>
+  private formatValueForDisplay = (value: number) =>
   {
     const increment = this.property.increment;
     const split = increment.toString().split(".");
@@ -125,7 +144,7 @@ export default class Property extends React.Component<IProps, IState>
   // Snap value to closest increment
   private snapValueToIncrement = (value: number) =>
   {
-    const roundedDisplayValue = this.calculateRoundedDisplayValue(value);
+    const roundedDisplayValue = this.formatValueForDisplay(value);
 
     const increment = this.property.increment;
     const range = this.property.range;
@@ -140,6 +159,7 @@ export default class Property extends React.Component<IProps, IState>
     const newValue = (diff + snap - range.min) / valueRange;
 
     return newValue;
+
   }
 
 }

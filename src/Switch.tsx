@@ -18,7 +18,7 @@ interface IProps
 
 interface IState
 {
-  currentPercent: number;
+  currentValue: number;
   switching: boolean;
 }
 
@@ -29,7 +29,7 @@ export default class Switch extends React.Component<IProps, IState>
   public static getDerivedStateFromProps(props: IProps, state: any)
   {
     return state.switching ? null :
-      { currentPercent: props.property.value };
+      { currentValue: props.property.value };
   }
 
   private property: Model.Property;
@@ -49,7 +49,7 @@ export default class Switch extends React.Component<IProps, IState>
     this.state =
     {
       // Either 0 (off) or 1 (on)
-      currentPercent: this.property.value ? 1 : 0,
+      currentValue: this.property.value ? 1 : 0,
       switching: false
     };
   }
@@ -70,7 +70,7 @@ export default class Switch extends React.Component<IProps, IState>
             rx={settings.rx} ry={settings.ry} />
 
           <rect className={`switch-inner ` +
-            `${this.state.currentPercent ? "on" : "off"} ` +
+            `${this.state.currentValue ? "on" : "off"} ` +
             `${this.state.switching ? "switching" : ""}`}
             x={settings.offset/2} y={settings.offset/2}
             width={settings.width - settings.offset}
@@ -98,12 +98,12 @@ export default class Switch extends React.Component<IProps, IState>
 
     this.setState({switching: false});
 
-    const newPercent = this.state.currentPercent ? 0 : 1;
-    this.setState({currentPercent: newPercent});
+    const newValue = this.state.currentValue ? 0 : 1;
+    this.setState({currentValue: newValue});
 
     if (this.props.update)
     {
-      this.props.update(newPercent);
+      this.props.update(newValue);
     }
 
     if (this.props.endUpdate)

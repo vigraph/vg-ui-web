@@ -53,7 +53,7 @@ const exampleGraph =
       ]
     },
     {
-      id: 'bing', type: 'z', x: 400, y: 300, w: 110, h: 75,
+      id: 'bing', type: 'z', x: 400, y: 100, w: 110, h: 75,
       inputs: [
         { id: 'in1', type: 'i', maxConnections: 1 }
       ],
@@ -64,6 +64,20 @@ const exampleGraph =
       properties: [
         { id: 'fourth', controlType: 'slider', subType: 'selector', x: 20,
           y: 40, value: 0.3, rangeMin: 100, rangeMax: 300, increment: 100 }
+      ]
+    },
+    {
+      id: 'bang', type: 'y', x: 400, y: 300, w: 110, h: 75,
+      inputs: [
+        { id: 'in1', type: 'i', maxConnections: 1 }
+      ],
+      outputs: [
+        { id: 'out1', type: 'i', maxConnections: 1 }
+      ],
+      edges: [],
+      properties: [
+        { id: 'fourth', controlType: 'colourPicker', subType: 'default', x: 20,
+          y: 40, value: "000100050", rangeMin: 0, rangeMax: 1, increment: 1 }
       ]
     },
   ]

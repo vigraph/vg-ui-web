@@ -42,12 +42,12 @@ export class Property
     this.graph.setPropertyProp(this.id, this.parent, "position", pos);
   }
 
-  get value(): number
+  get value(): any
   {
     return this.graph.getPropertyProp(this.id, this.parent, "value");
   }
 
-  set value(value: number)
+  set value(value: any)
   {
     this.graph.setPropertyProp(this.id, this.parent, "value", value);
   }
