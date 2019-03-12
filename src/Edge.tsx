@@ -8,13 +8,25 @@ interface IProps
   dest: Model.Node;
   destInput: string;
   offset: number;
+  removeEdge: (src: Model.Node, srcOutput: string, dest: Model.Node,
+    destInput: string) => void;
 }
 
-export default class Edge extends React.Component<IProps>
+interface IState
+{
+  edgeSelected: boolean;
+}
+
+export default class Edge extends React.Component<IProps, IState>
 {
   constructor(props: IProps)
   {
     super(props);
+
+    this.state =
+    {
+      edgeSelected: false
+    }
   }
 
   public render()
@@ -46,13 +58,43 @@ export default class Edge extends React.Component<IProps>
     let cpx = (dx - sx) / 2;
     if (cpx < 100) { cpx = 100; }
 
+    // Centre point of the delete icon
+    const deleteX = sx+((dx-sx)/2);
+    const deleteY = sy+((dy-sy)/2);
+
     return (
       <svg>
-        <path className="edge"
+        <path className={`edge ${this.state.edgeSelected ? "selected" : ""}`}
           d={`M${sx} ${sy} C ${sx + cpx} ${sy} ${dx - cpx} ${dy} ${dx} ${dy}`}
         />
+        <path className="edge-boundary"
+          d={`M${sx} ${sy} C ${sx + cpx} ${sy} ${dx - cpx} ${dy} ${dx} ${dy}`}
+          onMouseDown={this.edgeSelected}
+        />
+        {
+          this.state.edgeSelected && <svg className="delete-wrapper">
+            <circle className="edge-delete"
+              cx={deleteX} cy={deleteY} r={8}
+              onMouseDown={this.removeEdge}/>
+            <path className="delete-line" d={`M ${deleteX - 5} ${deleteY-5} L` +
+              `${deleteX+5} ${deleteY+5}`}/>
+            <path className="delete-line" d={`M ${deleteX - 5} ${deleteY+5} L` +
+              `${deleteX+5} ${deleteY-5}`}/>
+            </svg>
+        }
       </svg>
     );
+  }
+
+  private edgeSelected = () =>
+  {
+    this.setState({edgeSelected: !this.state.edgeSelected});
+  }
+
+  private removeEdge = () =>
+  {
+    this.props.removeEdge(this.props.src, this.props.srcOutput, this.props.dest,
+      this.props.destInput);
   }
 }
 

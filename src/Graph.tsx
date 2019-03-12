@@ -112,7 +112,8 @@ export default class Graph extends React.Component<IProps, IState>
                 {
                   return <Edge key={i+","+index} src={node}
                     srcOutput={edge.outputId} dest={edge.dest}
-                    destInput={edge.destInput} offset={csize}/>
+                    destInput={edge.destInput} offset={csize}
+                    removeEdge={this.removeEdge}/>
                 });
             })
           }
@@ -154,6 +155,13 @@ export default class Graph extends React.Component<IProps, IState>
   private endUpdate = () =>
   {
     this.graph.commitTransaction();
+  }
+
+  private removeEdge = (src: Model.Node, srcOutput: string, dest: Model.Node,
+    destInput: string) =>
+  {
+    this.graph.removeEdge(src.id, srcOutput, dest.id, destInput);
+    this.forceUpdate();
   }
 
   private connectorSelected = (node: Model.Node, connector: Model.Connector,

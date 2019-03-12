@@ -52,6 +52,31 @@ button
     fill: none;
 }
 
+.edge.selected
+{
+    stroke: #331;
+}
+
+.edge-boundary
+{
+    stroke: transparent;
+    stroke-width: 10;
+    fill: none;
+}
+
+.edge-delete
+{
+    fill: red;
+}
+
+.delete-line
+{
+    stroke: white;
+    stroke-width: 1;
+    fill: none;
+    pointer-events: none;
+}
+
 .connector
 {
     fill: white;
