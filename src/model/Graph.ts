@@ -251,10 +251,12 @@ export class Graph
     this.state = this.state
         .deleteIn(["nodes", srcId, "forwardEdges", srcOutput,
           this.state.getIn(["nodes", srcId, "forwardEdges",
-            srcOutput]).indexOf({ destId, destInput })])
+          srcOutput]).findIndex((value: {destId: string, destInput: string}) =>
+            value.destId === destId && value.destInput === destInput)])
         .deleteIn(["nodes", destId, "reverseEdges", destInput,
           this.state.getIn(["nodes", destId, "reverseEdges",
-            destInput]).indexOf({ srcId, srcOutput })]);
+          destInput]).findIndex((value: {srcId: string, srcOutput: string}) =>
+            value.srcId === srcId && value.srcOutput === srcOutput)]);
   }
 
   // Get forward/reverse edges - returns map of output to {dest, input}
@@ -345,7 +347,8 @@ export class Graph
 
     // Current and previous states are equal (nothing changed in the last
     // transaction) so undo state
-    if (this.state.equals(this.history[this.historyIndex-1]))
+    if (JSON.stringify(this.state) ===
+      JSON.stringify(this.history[this.historyIndex-1]))
     {
       this.undo();
     }

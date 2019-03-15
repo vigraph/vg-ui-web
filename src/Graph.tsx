@@ -113,7 +113,8 @@ export default class Graph extends React.Component<IProps, IState>
                   return <Edge key={i+","+index} src={node}
                     srcOutput={edge.outputId} dest={edge.dest}
                     destInput={edge.destInput} offset={csize}
-                    removeEdge={this.removeEdge}/>
+                    removeEdge={this.removeEdge}
+                    moveEdge={this.moveEdge}/>
                 });
             })
           }
@@ -164,13 +165,31 @@ export default class Graph extends React.Component<IProps, IState>
     this.forceUpdate();
   }
 
+  private moveEdge = (node: Model.Node, connectorId: string,
+    e: MouseEvent, direction: string, remove: () => void) =>
+  {
+    const connector = (direction === "output") ?
+      node.getOutputConnector(connectorId) :
+      node.getInputConnector(connectorId);
+
+    if (connector)
+    {
+      this.connectorSelected(node, connector, e, remove);
+    }
+  }
+
   private connectorSelected = (node: Model.Node, connector: Model.Connector,
-    e: React.MouseEvent) =>
+    e: React.MouseEvent | MouseEvent, preSelection?: () => void) =>
   {
     window.addEventListener('mouseup', this.handleConnectorMouseUp);
     window.addEventListener('mousemove', this.handleConnectorMouseMove);
 
     this.graph.beginTransaction();
+
+    if (preSelection)
+    {
+      preSelection();
+    }
 
     // Create dummy node and connect to selected connector to simulate
     // moving unconnected edge
