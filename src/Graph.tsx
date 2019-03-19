@@ -58,6 +58,23 @@ export default class Graph extends React.Component<IProps, IState>
   {
     return (
       <svg id="graph">
+        <svg id="edges">
+          {
+            this.graph.getNodes().map((node: Model.Node, i) =>
+            {
+              return node.getForwardEdges().map(
+                (edge: {outputId: string, dest: Model.Node, destInput: string},
+                  index) =>
+                {
+                  return <Edge key={i+","+index} src={node}
+                    srcOutput={edge.outputId} dest={edge.dest}
+                    destInput={edge.destInput} offset={csize}
+                    removeEdge={this.removeEdge}
+                    moveEdge={this.moveEdge}/>
+                });
+            })
+          }
+        </svg>
         <svg id="nodes">
           {
             this.graph.getNodes().map((node: Model.Node, i) =>
@@ -99,23 +116,6 @@ export default class Graph extends React.Component<IProps, IState>
                       endUpdate={this.endUpdate}/>
                   })}
               </Node>
-            })
-          }
-        </svg>
-        <svg id="edges">
-          {
-            this.graph.getNodes().map((node: Model.Node, i) =>
-            {
-              return node.getForwardEdges().map(
-                (edge: {outputId: string, dest: Model.Node, destInput: string},
-                  index) =>
-                {
-                  return <Edge key={i+","+index} src={node}
-                    srcOutput={edge.outputId} dest={edge.dest}
-                    destInput={edge.destInput} offset={csize}
-                    removeEdge={this.removeEdge}
-                    moveEdge={this.moveEdge}/>
-                });
             })
           }
         </svg>

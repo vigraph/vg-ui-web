@@ -17,6 +17,7 @@ interface IProps
 interface IState
 {
   edgeSelected: boolean;
+  hover: boolean;
 }
 
 export default class Edge extends React.Component<IProps, IState>
@@ -31,7 +32,8 @@ export default class Edge extends React.Component<IProps, IState>
 
     this.state =
     {
-      edgeSelected: false
+      edgeSelected: false,
+      hover: false
     }
 
     this.mouseStart = {x: 0, y: 0};
@@ -77,12 +79,15 @@ export default class Edge extends React.Component<IProps, IState>
 
     return (
       <svg>
-        <path className={`edge ${this.state.edgeSelected ? "selected" : ""} `}
+        <path className={`edge ${this.state.edgeSelected ? "selected" : ""} ` +
+          `${this.state.hover ? "hover" : ""}`}
           d={`M${sx} ${sy} C ${sx + cpx} ${sy} ${dx - cpx} ${dy} ${dx} ${dy}`}
         />
         <path className="edge-boundary"
           d={`M${sx} ${sy} C ${sx + cpx} ${sy} ${dx - cpx} ${dy} ${dx} ${dy}`}
           onMouseDown={this.edgeMouseDown}
+          onMouseEnter={this.edgeMouseEnter}
+          onMouseLeave={this.edgeMouseLeave}
         />
         {
           this.state.edgeSelected && <svg className="delete-wrapper">
@@ -97,6 +102,16 @@ export default class Edge extends React.Component<IProps, IState>
         }
       </svg>
     );
+  }
+
+  private edgeMouseEnter = (e: React.MouseEvent<SVGElement>) =>
+  {
+    this.setState({hover: true});
+  }
+
+  private edgeMouseLeave = (e: React.MouseEvent<SVGElement>) =>
+  {
+    this.setState({hover: false});
   }
 
   private edgeMouseDown = (e: React.MouseEvent<SVGElement>) =>

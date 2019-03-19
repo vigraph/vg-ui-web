@@ -16,6 +16,7 @@ button
 .node
 {
     fill: black;
+    fill-opacity: 0.7;
     stroke: white;
     stroke-width: 1.5;
     overflow: visible;
@@ -48,13 +49,20 @@ button
 .edge
 {
     stroke: white;
-    stroke-width: 1.5;
+    stroke-width: 2;
+    stroke-opacity: 0.2;
     fill: none;
 }
 
 .edge.selected
 {
-    stroke: #331;
+    stroke: grey;
+    stroke-opacity: 1;
+}
+
+.edge.hover
+{
+    stroke-opacity: 1;
 }
 
 .edge-boundary
