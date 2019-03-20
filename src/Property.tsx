@@ -6,8 +6,8 @@ import Knob from './Knob';
 import Slider from './Slider';
 import Switch from './Switch';
 
-const controlTypes = {"knob": Knob, "switch": Switch, "slider": Slider,
-  "colourPicker": ColourPicker};
+const controlTypes = {"none": null, "knob": Knob, "switch": Switch,
+  "slider": Slider, "colourPicker": ColourPicker};
 
 interface IProps
 {
@@ -80,7 +80,7 @@ export default class Property extends React.Component<IProps, IState>
             ((this.numerical && typeof this.property.value === "number") ?
               this.formatValueForDisplay(this.property.value) :
               this.property.value)}</text> : ""}
-        {this.props.display.controls ?
+        {this.props.display.controls && Component ?
            <Component property={this.property}
             startUpdate={this.startPropertyUpdate} update={this.propertyUpdate}
             endUpdate={this.endPropertyUpdate}/> : ""}
