@@ -80,7 +80,9 @@ export default class Edge extends React.Component<IProps, IState>
     return (
       <svg>
         <path className={`edge ${this.state.edgeSelected ? "selected" : ""} ` +
-          `${this.state.hover ? "hover" : ""}`}
+          `${this.state.hover ? "hover" : "" }` +
+          `${(this.props.src.type === "dummy" ||
+            this.props.dest.type === "dummy") ? "dummy":""}`}
           d={`M${sx} ${sy} C ${sx + cpx} ${sy} ${dx - cpx} ${dy} ${dx} ${dy}`}
         />
         <path className="edge-boundary"

@@ -91,7 +91,8 @@ export default class Graph extends React.Component<IProps, IState>
                     return <Connector key={j}
                       parent={node}
                       connector={connector}
-                      connectorSelected={this.connectorSelected}
+                      inputConnectorSelected={this.moveEdgeFromInput}
+                      outputConnectorSelected={this.newMovingConnectorEdge}
                       updateTargetConnector={this.updateTargetConnector}
                       radius={csize}/>
                   })}
@@ -101,7 +102,8 @@ export default class Graph extends React.Component<IProps, IState>
                     return <Connector key={j}
                       parent={node}
                       connector={connector}
-                      connectorSelected={this.connectorSelected}
+                      inputConnectorSelected={this.moveEdgeFromInput}
+                      outputConnectorSelected={this.newMovingConnectorEdge}
                       updateTargetConnector={this.updateTargetConnector}
                       radius={csize}/>
                   })}
@@ -166,7 +168,7 @@ export default class Graph extends React.Component<IProps, IState>
   }
 
   private moveEdge = (node: Model.Node, connectorId: string,
-    e: MouseEvent, direction: string, remove: () => void) =>
+    e: MouseEvent, direction: string, selfRemove: () => void) =>
   {
     const connector = (direction === "output") ?
       node.getOutputConnector(connectorId) :
@@ -174,21 +176,46 @@ export default class Graph extends React.Component<IProps, IState>
 
     if (connector)
     {
-      this.connectorSelected(node, connector, e, remove);
+      this.graph.beginTransaction();
+      selfRemove();
+      this.newMovingConnectorEdge(node, connector, e, true);
     }
   }
 
-  private connectorSelected = (node: Model.Node, connector: Model.Connector,
-    e: React.MouseEvent | MouseEvent, preSelection?: () => void) =>
+  private moveEdgeFromInput = (inNode: Model.Node, inConnector: Model.Connector,
+    e: React.MouseEvent) =>
   {
-    window.addEventListener('mouseup', this.handleConnectorMouseUp);
-    window.addEventListener('mousemove', this.handleConnectorMouseMove);
+    const reverse = inNode.getReverseEdges();
+    let srcNode;
+    let srcConnector;
 
-    this.graph.beginTransaction();
-
-    if (preSelection)
+    for (const edge of reverse)
     {
-      preSelection();
+      if (edge.inputId === inConnector.id)
+      {
+        srcNode = edge.src;
+        srcConnector = srcNode.getOutputConnector(edge.srcOutput);
+        break;
+      }
+    }
+
+    if (srcNode && srcConnector)
+    {
+      this.graph.beginTransaction();
+      this.removeEdge(srcNode, srcConnector.id, inNode, inConnector.id);
+      this.newMovingConnectorEdge(srcNode, srcConnector, e, true);
+    }
+  }
+
+  private newMovingConnectorEdge = (node: Model.Node, connector: Model.Connector,
+    e: React.MouseEvent | MouseEvent, transactionStarted: boolean) =>
+  {
+    window.addEventListener('mouseup', this.dropConnectorEdge);
+    window.addEventListener('mousemove', this.moveConnectorEdge);
+
+    if (!transactionStarted)
+    {
+      this.graph.beginTransaction();
     }
 
     // Create dummy node and connect to selected connector to simulate
@@ -229,10 +256,10 @@ export default class Graph extends React.Component<IProps, IState>
     this.forceUpdate();
   }
 
-  private handleConnectorMouseUp = (e: MouseEvent) =>
+  private dropConnectorEdge = (e: MouseEvent) =>
   {
-    window.removeEventListener('mouseup', this.handleConnectorMouseUp);
-    window.removeEventListener('mousemove', this.handleConnectorMouseMove);
+    window.removeEventListener('mouseup', this.dropConnectorEdge);
+    window.removeEventListener('mousemove', this.moveConnectorEdge);
 
     if (this.state.tempNodes && this.state.tempConnectors)
     {
@@ -287,7 +314,7 @@ export default class Graph extends React.Component<IProps, IState>
     this.forceUpdate();
   }
 
-  private handleConnectorMouseMove = (e: MouseEvent) =>
+  private moveConnectorEdge = (e: MouseEvent) =>
   {
     // Move temp dummy node positioned so the connector is under the mouse
     if (this.state.tempNodes)

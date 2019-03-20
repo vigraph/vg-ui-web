@@ -65,6 +65,11 @@ button
     stroke-opacity: 1;
 }
 
+.edge.hover.dummy
+{
+    stroke-opacity: 0.2;
+}
+
 .edge-boundary
 {
     stroke: transparent;
@@ -95,6 +100,16 @@ button
 .connector-boundary
 {
     fill: transparent;
+}
+
+.connector.input
+{
+    fill: red;
+}
+
+.connector.output
+{
+    fill: blue;
 }
 
 #knob
