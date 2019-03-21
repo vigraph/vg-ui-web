@@ -48,7 +48,7 @@ const exampleGraph =
         { output: 'out1', dest: 'bar', input: 'in2' }
       ],
       properties: [
-        { id: 'third', controlType: 'switch', subType: 'circle', x: 20, y: 40,
+        { id: 'third', controlType: 'button', subType: 'circle', x: 20, y: 40,
           value: 0, rangeMin: 0, rangeMax: 1, increment: 1 }
       ]
     },

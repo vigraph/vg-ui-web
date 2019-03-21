@@ -155,29 +155,29 @@ button
     stroke-width: 5px;
 }
 
-#switch
+#button
 {
     overflow: visible;
 }
 
-.switch-outer
+.button-outer
 {
     stroke: grey;
     stroke-width: 2px;
 }
 
-.switch-inner
+.button-inner
 {
     fill: grey;
 }
 
-.switch-inner.switching,
-.switch-inner.switching.on
+.button-inner.pressing,
+.button-inner.pressing.on
 {
     fill: yellow;
 }
 
-.switch-inner.on
+.button-inner.on
 {
     fill: green;
 }

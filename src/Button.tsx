@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as Model from './model';
 
-const switchSettings: {default: {}, square: {}, circle: {}} =
+const buttonSettings: {default: {}, square: {}, circle: {}} =
 {
   default: {height: 40, width: 40, rx: 10, ry: 10, offset: 10},
   square: {height: 40, width: 40, rx: 0, ry: 0, offset: 10},
@@ -19,16 +19,16 @@ interface IProps
 interface IState
 {
   currentValue: number;
-  switching: boolean;
+  pressing: boolean;
 }
 
-export default class Switch extends React.Component<IProps, IState>
+export default class Button extends React.Component<IProps, IState>
 {
-  // Reset state from switch when not switching - allows movement not by
-  // switching (e.g. undo/redo) to work
+  // Reset state from button when not pressing - allows movement not by
+  // pressing (e.g. undo/redo) to work
   public static getDerivedStateFromProps(props: IProps, state: any)
   {
-    return state.switching ? null :
+    return state.pressing ? null :
       { currentValue: props.property.value };
   }
 
@@ -43,14 +43,14 @@ export default class Switch extends React.Component<IProps, IState>
 
     this.property = props.property;
 
-    this.settings = switchSettings[this.property.subType] ?
-      switchSettings[this.property.subType] : switchSettings.default;
+    this.settings = buttonSettings[this.property.subType] ?
+      buttonSettings[this.property.subType] : buttonSettings.default;
 
     this.state =
     {
       // Either 0 (off) or 1 (on)
       currentValue: this.property.value ? 1 : 0,
-      switching: false
+      pressing: false
     };
   }
 
@@ -60,18 +60,18 @@ export default class Switch extends React.Component<IProps, IState>
      const settings = this.settings;
 
     return(
-        <svg id="switch" className={this.property.subType}
+        <svg id="button" className={this.property.subType}
           height={this.settings.height} width={this.settings.width}
           x={position.x} y={position.y+10}
           onMouseDown={this.handleMouseDown}>
 
-          <rect className="switch-outer"
+          <rect className="button-outer"
             width={settings.width} height={settings.height}
             rx={settings.rx} ry={settings.ry} />
 
-          <rect className={`switch-inner ` +
+          <rect className={`button-inner ` +
             `${this.state.currentValue ? "on" : "off"} ` +
-            `${this.state.switching ? "switching" : ""}`}
+            `${this.state.pressing ? "pressing" : ""}`}
             x={settings.offset/2} y={settings.offset/2}
             width={settings.width - settings.offset}
             height={settings.height - settings.offset}
@@ -84,7 +84,7 @@ export default class Switch extends React.Component<IProps, IState>
   {
     window.addEventListener('mouseup', this.handleMouseUp);
 
-    this.setState({switching: true});
+    this.setState({pressing: true});
 
     if (this.props.startUpdate)
     {
@@ -96,7 +96,7 @@ export default class Switch extends React.Component<IProps, IState>
   {
     window.removeEventListener('mouseup', this.handleMouseUp);
 
-    this.setState({switching: false});
+    this.setState({pressing: false});
 
     const newValue = this.state.currentValue ? 0 : 1;
     this.setState({currentValue: newValue});

@@ -1,12 +1,12 @@
 import * as React from 'react';
 import * as Model from './model';
 
+import Button from './Button';
 import ColourPicker from './ColourPicker';
 import Knob from './Knob';
 import Slider from './Slider';
-import Switch from './Switch';
 
-const controlTypes = {"none": null, "knob": Knob, "switch": Switch,
+const controlTypes = {"none": null, "knob": Knob, "button": Button,
   "slider": Slider, "colourPicker": ColourPicker};
 
 interface IProps
@@ -45,7 +45,7 @@ export default class Property extends React.Component<IProps, IState>
     this.property = props.property;
 
     // Knobs and sliders are numerical and snap to increments. All other types
-    // e.g. switch and colourPicker are not numerical.
+    // e.g. button and colourPicker are not numerical.
     if (this.property.controlType === "knob" || this.property.controlType ===
       "slider")
     {
