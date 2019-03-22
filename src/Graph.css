@@ -203,18 +203,6 @@ button
     stroke-width: 3px;
 }
 
-#slider.selector .slider-dial
-{
-    stroke: none;
-    stroke-width: 0px;
-    fill: grey;
-}
-
-#slider.selector .slider-value
-{
-    fill: none;
-}
-
 .picker
 {
     stroke: white;

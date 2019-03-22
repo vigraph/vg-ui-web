@@ -32,7 +32,7 @@ const exampleGraph =
         { id: 'out1', type: 'i', maxConnections: 1 }
       ],
       properties: [
-        { id: 'second', controlType: 'slider', subType: 'horz', x: 20, y: 40,
+        { id: 'second', controlType: 'slider', subType: 'default', x: 20, y: 40,
           value: 0.5, rangeMin: -1000, rangeMax: 1000, increment: 1 }
       ]
     },
@@ -62,8 +62,8 @@ const exampleGraph =
       ],
       edges: [],
       properties: [
-        { id: 'fourth', controlType: 'slider', subType: 'selector', x: 20,
-          y: 40, value: 0.3, rangeMin: 100, rangeMax: 300, increment: 100 }
+        { id: 'fourth', controlType: 'slider', subType: 'horz', x: 20,
+          y: 40, value: 0.5, rangeMin: 100, rangeMax: 300, increment: 100 }
       ]
     },
     {
