@@ -231,3 +231,27 @@ button
     stroke-width: 1px;
     fill: #383838;
 }
+
+.selector-position
+{
+    stroke: white;
+    stroke-width: 1px;
+    fill: blue;
+}
+
+.selector-position.selected
+{
+    fill: yellow;
+}
+
+.selector-dial
+{
+    stroke: grey;
+    stroke-width: 3px;
+}
+
+#selector.default .selector-label,
+#selector.horz .selector-label
+{
+    display: none;
+}

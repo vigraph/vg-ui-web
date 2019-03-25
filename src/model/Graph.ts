@@ -95,6 +95,7 @@ export class Graph
           property.value = p.value || 0;
           property.range = { min: p.rangeMin || 0, max: p.rangeMax || 1};
           property.increment = p.increment || 1;
+          property.available = p.available || [];
         }
       }
     }

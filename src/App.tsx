@@ -62,8 +62,9 @@ const exampleGraph =
       ],
       edges: [],
       properties: [
-        { id: 'fourth', controlType: 'slider', subType: 'horz', x: 20,
-          y: 40, value: 0.5, rangeMin: 100, rangeMax: 300, increment: 100 }
+        { id: 'fourth', controlType: 'selector', subType: 'default', x: 20,
+          y: 40, value: "option1", available: ["option1","option2","option3"],
+          rangeMin: 100, rangeMax: 300, increment: 100 }
       ]
     },
     {

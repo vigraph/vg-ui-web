@@ -4,10 +4,11 @@ import * as Model from './model';
 import Button from './Button';
 import ColourPicker from './ColourPicker';
 import Knob from './Knob';
+import Selector from './Selector';
 import Slider from './Slider';
 
 const controlTypes = {"none": null, "knob": Knob, "button": Button,
-  "slider": Slider, "colourPicker": ColourPicker};
+  "slider": Slider, "colourPicker": ColourPicker, "selector": Selector};
 
 interface IProps
 {
