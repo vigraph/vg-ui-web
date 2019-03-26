@@ -3,9 +3,9 @@ import * as Model from './model';
 
 const buttonSettings: {default: {}, square: {}, circle: {}} =
 {
-  default: {height: 40, width: 40, rx: 10, ry: 10, offset: 10},
-  square: {height: 40, width: 40, rx: 0, ry: 0, offset: 10},
-  circle: {height: 40, width: 40, rx: 100, ry: 100, offset: 10}
+  default: {height: 40, width: 40, rx: 10, ry: 10, offset: 10, latch: true},
+  square: {height: 40, width: 40, rx: 0, ry: 0, offset: 10, latch: true},
+  circle: {height: 40, width: 40, rx: 100, ry: 100, offset: 10, latch: false}
 }
 
 interface IProps
@@ -35,7 +35,7 @@ export default class Button extends React.Component<IProps, IState>
   private property: Model.Property;
 
   private settings: {height: number, width: number, rx: number, ry: number,
-    offset: number, circle: boolean};
+    offset: number, circle: boolean, latch: boolean};
 
   constructor(props: IProps)
   {
@@ -90,12 +90,27 @@ export default class Button extends React.Component<IProps, IState>
     {
       this.props.startUpdate();
     }
+
+    if (!this.settings.latch)
+    {
+      this.toggleValue();
+    }
   }
 
   private handleMouseUp = (e: MouseEvent) =>
   {
     window.removeEventListener('mouseup', this.handleMouseUp);
 
+    this.toggleValue();
+
+    if (this.props.endUpdate)
+    {
+      this.props.endUpdate();
+    }
+  }
+
+  private toggleValue = () =>
+  {
     this.setState({pressing: false});
 
     const newValue = this.state.currentValue ? 0 : 1;
@@ -104,11 +119,6 @@ export default class Button extends React.Component<IProps, IState>
     if (this.props.update)
     {
       this.props.update(newValue);
-    }
-
-    if (this.props.endUpdate)
-    {
-      this.props.endUpdate();
     }
   }
 }
