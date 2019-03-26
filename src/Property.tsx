@@ -14,6 +14,7 @@ interface IProps
 {
   property: Model.Property;
   name: string;
+  position: {x: number, y: number};
   display: {labels: boolean, controls: boolean};
   startUpdate: () => void;
   update: () => void;
@@ -69,7 +70,7 @@ export default class Property extends React.Component<IProps, IState>
 
   public render()
   {
-    const position = this.property.position;
+    const position = this.props.position;
     const Component = controlTypes[this.property.controlType];
 
     return(
@@ -83,6 +84,7 @@ export default class Property extends React.Component<IProps, IState>
               this.property.value)}</text> : ""}
         {this.props.display.controls && Component ?
            <Component property={this.property}
+            position={{x: position.x, y: position.y + 10}}
             startUpdate={this.startPropertyUpdate} update={this.propertyUpdate}
             endUpdate={this.endPropertyUpdate}/> : ""}
       </svg>

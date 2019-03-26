@@ -14,6 +14,7 @@ interface IProps
   startUpdate: () => void;
   update: (value: number) => void;
   endUpdate: () => void;
+  position: {x: number, y:number};
 }
 
 interface IState
@@ -56,13 +57,13 @@ export default class Button extends React.Component<IProps, IState>
 
   public render()
   {
-     const position = this.property.position;
+     const position = this.props.position;
      const settings = this.settings;
 
     return(
         <svg id="button" className={this.property.subType}
           height={this.settings.height} width={this.settings.width}
-          x={position.x} y={position.y+10}
+          x={position.x} y={position.y}
           onMouseDown={this.handleMouseDown}>
 
           <rect className="button-outer"

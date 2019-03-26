@@ -232,6 +232,12 @@ button
     fill: #383838;
 }
 
+#selector,
+#selector-value
+{
+    overflow: visible;
+}
+
 .selector-position
 {
     stroke: white;

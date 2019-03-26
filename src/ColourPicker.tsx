@@ -12,6 +12,7 @@ interface IProps
   startUpdate: () => void;
   update: (value: string) => void;
   endUpdate: () => void;
+  position: {x: number, y:number};
 }
 
 interface IState
@@ -55,7 +56,7 @@ export default class ColourPicker extends React.Component<IProps, IState>
 
   public render()
   {
-    const position = this.property.position;
+    const position = this.props.position;
     const settings = this.settings;
 
     const currentAttributes = this.valueToHSL(this.property.value.toString());
@@ -72,7 +73,7 @@ export default class ColourPicker extends React.Component<IProps, IState>
 
     return(
         <svg id="colour-picker" className={this.property.subType}
-          x={position.x} y={position.y+10}>
+          x={position.x} y={position.y}>
 
           <linearGradient id="hue-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
             {

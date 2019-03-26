@@ -15,6 +15,7 @@ interface IProps
   startUpdate: () => void;
   update: (value: number) => void;
   endUpdate: () => void;
+  position: {x: number, y:number};
 }
 
 interface IState
@@ -60,7 +61,7 @@ export default class Selector extends React.Component<IProps, IState>
 
   public render()
   {
-    const position = this.props.property.position;
+    const position = this.props.position;
     const settings = this.settings;
     const availablePos = this.props.property.available
     const currentPos = availablePos.indexOf(this.state.currentValue);
@@ -70,11 +71,11 @@ export default class Selector extends React.Component<IProps, IState>
     return(
         <svg id="selector" className={`${this.property.subType}
           ${this.state.selecting ? "selecting" : ""}`}
-          x={position.x} y={position.y+10}
+          x={position.x} y={position.y}
           onMouseDown={this.handleMouseDown}
           onMouseMove={this.handleMouseMove}>
 
-          <rect className="selector-background" width={settings.length + 5}
+          <rect className="selector-background" width={settings.length}
             height={settings.thickness}
             transform={`rotate(${settings.horizontal ? "0" : "270"}, ${0},
               ${0}) translate(${settings.horizontal ? "0" :
@@ -86,7 +87,7 @@ export default class Selector extends React.Component<IProps, IState>
                 <rect className={`selector-position ${value.toString()}
                   ${value === this.state.currentValue ? "selected" : ""}`}
                   width={positionSize} height={settings.thickness}
-                  x={(positionSize * index) + 5}
+                  x={(positionSize * index)}
                   transform={`rotate(${settings.horizontal ? "0" : "270"}, ${0},
                   ${0}) translate(${settings.horizontal ? "0" :
                   -settings.length - 5}, 0)`}/>
@@ -103,11 +104,11 @@ export default class Selector extends React.Component<IProps, IState>
           }
 
           <rect className="selector-dial"
-            x={(positionSize * currentPos) + 5 + (positionSize / 2)}
+            x={(positionSize * currentPos) + (positionSize / 2)}
             width={1} height={settings.thickness}
             transform={`rotate(${settings.horizontal ? "0" : "270"}, ${0},
               ${0}) translate(${settings.horizontal ? "0" :
-              -settings.length - 5},0)`}/>
+              -settings.length},0)`}/>
 
         </svg>
     );
@@ -138,7 +139,7 @@ export default class Selector extends React.Component<IProps, IState>
   private calculateNewPosition = (e: React.MouseEvent<SVGElement>) =>
   {
     const position = this.settings.horizontal ?
-    e.pageX - e.currentTarget.getBoundingClientRect().left - 5 :
+    e.pageX - e.currentTarget.getBoundingClientRect().left :
     this.settings.length - (e.pageY -
     e.currentTarget.getBoundingClientRect().top);
 

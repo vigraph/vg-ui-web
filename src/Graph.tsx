@@ -7,7 +7,6 @@ import './Graph.css';
 import Connector from './Connector';
 import Edge from './Edge';
 import Node from './Node';
-import Property from './Property';
 
 const csize: number = 5;
 
@@ -81,11 +80,13 @@ export default class Graph extends React.Component<IProps, IState>
             {
               return <Node key={i} node={node}
                 name={node.id + ": " + node.type}
-                startDragUpdate={this.startUpdate}
-                dragUpdate={this.movementUpdate}
-                endDragUpdate={this.endUpdate}
-                padding={csize*2}>
-                {this.graph.getNodeConnectors(node.id, "input").map(
+                startUpdate={this.startUpdate}
+                update={this.movementUpdate}
+                endUpdate={this.endUpdate}
+                padding={csize*2}
+                propertiesDisplay={this.state.propertiesDisplay}>
+                {
+                  this.graph.getNodeConnectors(node.id, "input").map(
                   (connector: Model.Connector, j) =>
                   {
                     return <Connector key={j}
@@ -106,16 +107,6 @@ export default class Graph extends React.Component<IProps, IState>
                       outputConnectorSelected={this.newMovingConnectorEdge}
                       updateTargetConnector={this.updateTargetConnector}
                       radius={csize}/>
-                  })}
-                {this.graph.getProperties(node.id).map(
-                  (property: Model.Property, j) =>
-                  {
-                    return <Property key={j} property={property}
-                      name={property.id}
-                      display={this.state.propertiesDisplay}
-                      startUpdate={this.startUpdate}
-                      update={this.movementUpdate}
-                      endUpdate={this.endUpdate}/>
                   })}
               </Node>
             })

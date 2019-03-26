@@ -32,16 +32,6 @@ export class Property
     this.graph.setPropertyProp(this.id, this.parent, "subType", subType);
   }
 
-  get position(): { x: number, y: number }
-  {
-    return this.graph.getPropertyProp(this.id, this.parent, "position");
-  }
-
-  set position(pos: { x: number, y: number })
-  {
-    this.graph.setPropertyProp(this.id, this.parent, "position", pos);
-  }
-
   get value(): any
   {
     return this.graph.getPropertyProp(this.id, this.parent, "value");

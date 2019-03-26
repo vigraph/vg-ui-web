@@ -1,14 +1,17 @@
 import * as React from 'react';
 import * as Model from './model';
 
+import Property from './Property';
+
 interface IProps
 {
   node: Model.Node;
   name: string;
-  startDragUpdate: () => void;
-  dragUpdate: () => void;
-  endDragUpdate: () => void;
+  startUpdate: () => void;
+  update: () => void;
+  endUpdate: () => void;
   padding: number;
+  propertiesDisplay: {labels: boolean; controls: boolean};
 }
 
 interface IState
@@ -54,6 +57,8 @@ export default class Node extends React.Component<IProps, IState>
     const size = this.props.node.size;
     const padding = this.props.padding;
 
+    const properties = this.node.getProperties();
+
     return (
       <svg x={this.state.x} y={this.state.y}>
         <rect x={padding} width={size.w} height={size.h}
@@ -63,6 +68,16 @@ export default class Node extends React.Component<IProps, IState>
         <text className={"label " + this.props.node.id}
           x={20} y={20}>{this.props.name}</text>
         {this.props.children}
+        {properties.map((property: Model.Property, j) =>
+          {
+            return <Property key={j} property={property}
+              name={property.id}
+              display={this.props.propertiesDisplay}
+              position={{x: 20, y: 40 + (j * 70)}}
+              startUpdate={this.props.startUpdate}
+              update={this.props.update}
+              endUpdate={this.props.endUpdate}/>
+          })}
         />
       </svg>
     );
@@ -75,9 +90,9 @@ export default class Node extends React.Component<IProps, IState>
     this.setState({ dragging: true });
     this.offsetX = e.pageX - this.state.x;
     this.offsetY = e.pageY - this.state.y;
-    if (this.props.startDragUpdate)
+    if (this.props.startUpdate)
     {
-      this.props.startDragUpdate();
+      this.props.startUpdate();
     }
   }
 
@@ -86,9 +101,9 @@ export default class Node extends React.Component<IProps, IState>
     this.setState({ dragging: false });
     window.removeEventListener('mouseup', this.handleMouseUp);
     window.removeEventListener('mousemove', this.handleMouseMove);
-    if (this.props.endDragUpdate)
+    if (this.props.endUpdate)
     {
-      this.props.endDragUpdate();
+      this.props.endUpdate();
     }
   }
 
@@ -102,9 +117,9 @@ export default class Node extends React.Component<IProps, IState>
       });
     }
     this.node.position = { x: this.state.x, y: this.state.y };
-    if (this.props.dragUpdate)
+    if (this.props.update)
     {
-      this.props.dragUpdate();
+      this.props.update();
     }
   }
 }

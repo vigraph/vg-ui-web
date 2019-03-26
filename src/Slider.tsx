@@ -18,6 +18,7 @@ interface IProps
   startUpdate: () => void;
   update: (value: number) => void;
   endUpdate: () => void;
+  position: {x: number, y:number};
 }
 
 interface IState
@@ -65,12 +66,12 @@ export default class Slider extends React.Component<IProps, IState>
   {
     // Current position from 0
     const currentPos = (this.state.currentPercent*this.settings.length)
-    const position = this.props.property.position;
+    const position = this.props.position;
     const settings = this.settings;
 
     return(
         <svg id="slider" className={this.property.subType}
-          x={position.x} y={position.y+10}
+          x={position.x} y={position.y}
           onMouseDown={this.handleMouseDown}>
 
           <rect className="slider-background"

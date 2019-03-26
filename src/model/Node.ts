@@ -4,6 +4,7 @@
 // Proxy class representing a node in the graph
 import { Connector } from './Connector';
 import { Graph } from './Graph';
+import { Property } from './Property'
 
 export class Node
 {
@@ -137,5 +138,11 @@ export class Node
     }
 
     return count;
+  }
+
+  // Return array of properties for this node
+  public getProperties(): Property[]
+  {
+    return this.graph.getProperties(this.id);
   }
 }

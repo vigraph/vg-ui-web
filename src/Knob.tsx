@@ -19,6 +19,7 @@ interface IProps
   startUpdate: () => void;
   update: (value: number) => void;
   endUpdate: () => void;
+  position: {x: number, y:number};
 }
 
 interface IState
@@ -119,11 +120,11 @@ export default class Knob extends React.Component<IProps, IState>
 
     const arcSweep = currentPos > 180 ? 1 : 0
 
-    const position = this.props.property.position;
+    const position = this.props.position;
 
     return(
         <svg id="knob" className={this.property.subType}
-          height={r*2} width={r*2} x={position.x} y={position.y+10}
+          height={r*2} width={r*2} x={position.x} y={position.y}
           onMouseDown={this.handleMouseDown}>
           <circle className={`knob-background`}
             cx={r} cy={r} r={r}
