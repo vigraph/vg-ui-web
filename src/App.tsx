@@ -78,7 +78,8 @@ const exampleGraph =
       edges: [],
       properties: [
         { id: 'fourth', controlType: 'colourPicker', subType: 'default',
-          value: "000100050", rangeMin: 0, rangeMax: 1, increment: 1 }
+          value: {r: 1, g: 0, b: 0, h: 0, s: 1, l: 0.5},
+          rangeMin: 0, rangeMax: 1, increment: 1 }
       ]
     },
   ]

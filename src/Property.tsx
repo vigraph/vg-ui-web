@@ -23,7 +23,7 @@ interface IProps
 
 interface IState
 {
-  value: number | string;
+  value: any;
   updating: boolean;
 }
 
@@ -73,15 +73,23 @@ export default class Property extends React.Component<IProps, IState>
     const position = this.props.position;
     const Component = controlTypes[this.property.controlType];
 
+    let displayValue = "";
+
+    if (this.numerical && typeof this.property.value === "number")
+    {
+      displayValue = this.formatValueForDisplay(this.property.value).toString();
+    }
+    else if (typeof this.property.value === "string")
+    {
+      displayValue = this.property.value;
+    }
+
     return(
       <svg id={this.props.name.toLowerCase()+"-property"}
         className="property-wrapper">
         {this.props.display.labels ?
           <text className="label property-label" x={position.x}
-          y={position.y}>{this.props.name + ": " +
-            ((this.numerical && typeof this.property.value === "number") ?
-              this.formatValueForDisplay(this.property.value) :
-              this.property.value)}</text> : ""}
+          y={position.y}>{this.props.name + ": " + displayValue}</text> : ""}
         {this.props.display.controls && Component ?
            <Component property={this.property}
             position={{x: position.x, y: position.y + 10}}
@@ -112,8 +120,7 @@ export default class Property extends React.Component<IProps, IState>
   }
 
   // Numerical control types return percentage (0-1)
-  // Non-numerical returns a string
-  private propertyUpdate = (value: number | string) =>
+  private propertyUpdate = (value: any) =>
   {
     const newValue = this.numerical && typeof value === "number" ?
       this.snapValueToIncrement(value) : value;

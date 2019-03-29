@@ -261,3 +261,10 @@ button
 {
     display: none;
 }
+
+#colour-picker .picker-label
+{
+    font-size: small;
+    text-anchor: middle;
+    fill: grey;
+}
