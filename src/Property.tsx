@@ -46,10 +46,10 @@ export default class Property extends React.Component<IProps, IState>
 
     this.property = props.property;
 
-    // Knobs and sliders are numerical and snap to increments. All other types
-    // e.g. button and colourPicker are not numerical.
+    // Buttons, knobs and sliders are numerical and snap to increments. All
+    // other types e.g. selectors and colourPicker are not numerical.
     if (this.property.controlType === "knob" || this.property.controlType ===
-      "slider")
+      "slider" || this.property.controlType === "button")
     {
       this.numerical = true;
 
