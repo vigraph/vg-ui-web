@@ -66,7 +66,7 @@ export class Graph
       {
         for (const i of n.inputs)
         {
-          const input = this.addNodeInput(n.id, i.id, i.type);
+          const input = this.addNodeInput(n.id, i.id, i.connectorType);
           input.maxConnections = i.maxConnections || 1;
           input.position = { x: 0,
             y: ((node.size.h)/(n.inputs.length+1))*(n.inputs.indexOf(i)+1)};
@@ -77,7 +77,7 @@ export class Graph
       {
         for (const o of n.outputs)
         {
-          const input = this.addNodeOutput(n.id, o.id, o.type);
+          const input = this.addNodeOutput(n.id, o.id, o.connectorType);
           input.maxConnections = o.maxConnections || 1;
           input.position = { x: node.size.w,
             y: ((node.size.h)/(n.outputs.length+1))*(n.outputs.indexOf(o)+1)};
@@ -105,7 +105,7 @@ export class Graph
       {
         for (const e of n.edges)
         {
-          this.addEdge(n.id, e.output, e.dest, e.input);
+          this.addEdge(n.id, e.output, e.destId, e.input);
         }
       }
     }
@@ -241,7 +241,7 @@ export class Graph
         .setIn(["nodes", destId, "reverseEdges", destInput],
           this.state.getIn(["nodes", destId, "reverseEdges", destInput]).push(
             { srcId, srcOutput }));
-  }
+    }
 }
 
   public removeEdge(srcId: string, srcOutput: string,

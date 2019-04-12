@@ -2,6 +2,8 @@ import * as React from 'react';
 
 import * as Model from './model';
 
+import { graphData } from './data/GraphData';
+
 import './Graph.css';
 
 import Connector from './Connector';
@@ -33,7 +35,13 @@ export default class Graph extends React.Component<IProps, IState>
     if (props.from)
     {
       // Note we load the graph directly, not doing forceUpdate()
-      this.graph.loadFrom(props.from);
+      // this.graph.loadFrom(props.from);
+
+      graphData.generateGraph((json:any) =>
+        {
+          this.graph.loadFrom(json);
+          this.forceUpdate();
+        });
     }
 
     this.state =

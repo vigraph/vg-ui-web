@@ -9,13 +9,13 @@ const exampleGraph =
     {
       id: 'foo', type: 'x', x: 10, y: 50, w: 80, h: 100,
       inputs: [
-        { id: 'in1', type: 'i', maxConnections: 1 }
+        { id: 'in1', connectorType: 'i', maxConnections: 1 }
       ],
       outputs: [
-        { id: 'out1', type: 'i', maxConnections: 2 }
+        { id: 'out1', connectorType: 'i', maxConnections: 2 }
       ],
       edges: [
-        { output: 'out1', dest: 'bar', input: 'in1' }
+        { output: 'out1', destId: 'bar', input: 'in1' }
       ],
       properties: [
         { id: 'first', controlType: 'knob', subType: 'default',
@@ -25,11 +25,11 @@ const exampleGraph =
     {
       id: 'bar', type: 'y', x: 200, y: 150, w: 115, h: 80,
       inputs: [
-        { id: 'in1', type: 'i', maxConnections: 1 },
-        { id: 'in2', type: 'i', maxConnections: 1 }
+        { id: 'in1', connectorType: 'i', maxConnections: 1 },
+        { id: 'in2', connectorType: 'i', maxConnections: 1 }
       ],
       outputs: [
-        { id: 'out1', type: 'i', maxConnections: 1 }
+        { id: 'out1', connectorType: 'i', maxConnections: 1 }
       ],
       properties: [
         { id: 'second', controlType: 'slider', subType: 'default',
@@ -39,13 +39,13 @@ const exampleGraph =
     {
       id: 'splat', type: 'z', x: 10, y: 300, w: 80, h: 100,
       inputs: [
-        { id: 'in1', type: 'i', maxConnections: 1 }
+        { id: 'in1', connectorType: 'i', maxConnections: 1 }
       ],
       outputs: [
-        { id: 'out1', type: 'i', maxConnections: 1 }
+        { id: 'out1', connectorType: 'i', maxConnections: 1 }
       ],
       edges: [
-        { output: 'out1', dest: 'bar', input: 'in2' }
+        { output: 'out1', destId: 'bar', input: 'in2' }
       ],
       properties: [
         { id: 'third', controlType: 'button', subType: 'circle',
@@ -55,10 +55,10 @@ const exampleGraph =
     {
       id: 'bing', type: 'z', x: 400, y: 100, w: 125, h: 80,
       inputs: [
-        { id: 'in1', type: 'i', maxConnections: 1 }
+        { id: 'in1', connectorType: 'i', maxConnections: 1 }
       ],
       outputs: [
-        { id: 'out1', type: 'i', maxConnections: 1 }
+        { id: 'out1', connectorType: 'i', maxConnections: 1 }
       ],
       edges: [],
       properties: [
@@ -70,10 +70,10 @@ const exampleGraph =
     {
       id: 'bang', type: 'y', x: 400, y: 300, w: 110, h: 75,
       inputs: [
-        { id: 'in1', type: 'i', maxConnections: 1 }
+        { id: 'in1', connectorType: 'i', maxConnections: 1 }
       ],
       outputs: [
-        { id: 'out1', type: 'i', maxConnections: 1 }
+        { id: 'out1', connectorType: 'i', maxConnections: 1 }
       ],
       edges: [],
       properties: [
