@@ -18,7 +18,7 @@ const exampleGraph =
         { output: 'out1', destId: 'bar', input: 'in1' }
       ],
       properties: [
-        { id: 'first', controlType: 'knob', subType: 'default',
+        { id: 'first', controlType: 'knob', subType: 'default', x: 20, y: 40,
           value: 0, rangeMin: 0, rangeMax: 100, increment: 50 },
       ]
     },
@@ -32,7 +32,7 @@ const exampleGraph =
         { id: 'out1', connectorType: 'i', maxConnections: 1 }
       ],
       properties: [
-        { id: 'second', controlType: 'slider', subType: 'default',
+        { id: 'second', controlType: 'slider', subType: 'default', x: 20, y: 40,
           value: 0.5, rangeMin: -1000, rangeMax: 1000, increment: 1 }
       ]
     },
@@ -48,7 +48,7 @@ const exampleGraph =
         { output: 'out1', destId: 'bar', input: 'in2' }
       ],
       properties: [
-        { id: 'third', controlType: 'button', subType: 'circle',
+        { id: 'third', controlType: 'button', subType: 'circle', x: 20, y: 40,
           value: 0, rangeMin: 0, rangeMax: 1, increment: 1 }
       ]
     },
@@ -62,8 +62,8 @@ const exampleGraph =
       ],
       edges: [],
       properties: [
-        { id: 'fourth', controlType: 'selector', subType: 'default',
-          value: "option1", available: ["option1","option2","option3"],
+        { id: 'fourth', controlType: 'selector', subType: 'default', x: 20,
+          y: 40, value: "option1", available: ["option1","option2","option3"],
           rangeMin: 100, rangeMax: 300, increment: 100 }
       ]
     },
@@ -78,7 +78,7 @@ const exampleGraph =
       edges: [],
       properties: [
         { id: 'fourth', controlType: 'colourPicker', subType: 'default',
-          value: {r: 1, g: 0, b: 0, h: 0, s: 1, l: 0.5},
+          x: 20, y: 40, value: {r: 1, g: 0, b: 0, h: 0, s: 1, l: 0.5},
           rangeMin: 0, rangeMax: 1, increment: 1 }
       ]
     },

@@ -73,7 +73,6 @@ export default class Node extends React.Component<IProps, IState>
             return <Property key={j} property={property}
               name={property.id}
               display={this.props.propertiesDisplay}
-              position={{x: 20, y: 40 + (j * 70)}}
               startUpdate={this.props.startUpdate}
               update={this.props.update}
               endUpdate={this.props.endUpdate}/>

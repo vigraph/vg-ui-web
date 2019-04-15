@@ -14,7 +14,6 @@ interface IProps
 {
   property: Model.Property;
   name: string;
-  position: {x: number, y: number};
   display: {labels: boolean, controls: boolean};
   startUpdate: () => void;
   update: () => void;
@@ -70,7 +69,7 @@ export default class Property extends React.Component<IProps, IState>
 
   public render()
   {
-    const position = this.props.position;
+    const position = this.property.position;
     const Component = controlTypes[this.property.controlType];
 
     let displayValue = "";
