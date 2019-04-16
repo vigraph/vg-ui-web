@@ -13,7 +13,6 @@
 // (in a line with type:number = Knob etc)
 // TODO: hide/show property value option
 // TODO: 'trigger' should have a momentary button
-// TODO: move any currently hard-coded layout values to layout config
 // TODO: if a property has an input attached the control should be disabled
 // TODO: handle 'multiple' value of inputs/outputs and behaviour with 'default'
 // TODO: should connectors either be labeled or not be positioned at the edges?
@@ -90,6 +89,8 @@ interface IProcessedMetadata
 }
 
 const restURL = 'http://192.168.0.68:33380';
+const mardingPadding = {x: 10, y: 10};
+const layoutPadding = {x: 40, y: 20};
 
 class GraphData
 {
@@ -301,18 +302,29 @@ class GraphData
         subType: string, value: any, rangeMin?: number, rangeMax?: number,
         increment?: number, available?: string[], x: number, y:number}> = [];
 
+
       if (this.propertiesConfig[value.type])
       {
-        for (const key of Object.keys(value.props))
+        // Special cases
+        if (value.type === "colour")
         {
-          const fProp =  metadata[value.type].properties.find(x =>
-              x.id === key);
-          const propType = fProp ? fProp.propType : "prop";
+          gProps.push({id: value.id, propType: "prop",
+            value: value.props,
+            ...this.propertiesConfig[value.type].properties[value.type]});
+        }
+        else
+        {
+          for (const key of Object.keys(value.props))
+          {
+            const fProp =  metadata[value.type].properties.find(x =>
+                x.id === key);
+            const propType = fProp ? fProp.propType : "prop";
 
-          gProps.push({id: key, value: value.props[key],
-            propType,
-            ...this.propertiesConfig[value.type].properties[key]});
-        };
+            gProps.push({id: key, value: value.props[key],
+              propType,
+              ...this.propertiesConfig[value.type].properties[key]});
+          };
+        }
       }
 
       const node: IProcessedGraphItem =
@@ -404,8 +416,9 @@ class GraphData
         rankNextPos[nRank] = {x: 0, y: 0};
       }
 
-      layout.x = (rankNextPos[nRank].x) + (nRank === 0 ? 10 : 40);
-      layout.y = (rankNextPos[nRank].y) + 20;
+      layout.x = (rankNextPos[nRank].x) + (nRank === 0 ? mardingPadding.x :
+        layoutPadding.x);
+      layout.y = (rankNextPos[nRank].y) + layoutPadding.y;
 
       rankNextPos[nRank] = {x: rankNextPos[nRank].x,
         y: layout.y + layout.h};

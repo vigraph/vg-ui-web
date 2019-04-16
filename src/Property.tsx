@@ -127,7 +127,18 @@ export default class Property extends React.Component<IProps, IState>
 
     this.setState({value: newValue});
 
-    graphData.updateProperty(this.property.parent, this.property.id, value);
+    // Update each value individually if value is an object (of values)
+    if (typeof value === "object")
+    {
+      for (const key of Object.keys(value))
+      {
+        graphData.updateProperty(this.property.parent, key, value[key]);
+      }
+    }
+    else
+    {
+      graphData.updateProperty(this.property.parent, this.property.id, value);
+    }
 
     this.property.value = newValue;
 

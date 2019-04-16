@@ -17,7 +17,7 @@ interface IProps
 
 interface IState
 {
-  currentValue: {r: number, g: number, b: number, h: number,
+  currentValue: {hex: string, r: number, g: number, b: number, h: number,
     s: number, l: number};
   picking: boolean;
   showPicker: boolean;
@@ -322,6 +322,8 @@ export default class ColourPicker extends React.Component<IProps, IState>
     newValue.g = rgb.g;
     newValue.b = rgb.b;
 
+    newValue.hex = this.rgbToHex(rgb);
+
     this.setState({currentValue: newValue});
 
     if (this.props.update)
@@ -372,6 +374,8 @@ export default class ColourPicker extends React.Component<IProps, IState>
     }
 
     const hsl = this.rgbToHSL(newValue.r, newValue.g, newValue.b);
+
+    newValue.hex = this.rgbToHex(newValue);
 
     newValue.h = hsl.h / 360;
     newValue.s = hsl.s;
@@ -519,5 +523,21 @@ export default class ColourPicker extends React.Component<IProps, IState>
     }
 
     return {h, s, l};
+    }
+
+    // input - r,g,b: [0..1]
+    private rgbToHex = (rgb: {r: number, g: number, b: number}) =>
+    {
+      const toHex = (colour: number) =>
+      {
+        let hex = Math.round(colour * 255).toString(16);
+        if (hex.length < 2)
+        {
+          hex = "0" + hex;
+        }
+        return hex;
+      }
+
+      return "#" + toHex(rgb.r) + toHex(rgb.g) + toHex(rgb.b);
     }
 }

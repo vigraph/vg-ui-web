@@ -4,7 +4,8 @@
     "height": 140,
     "properties":
     {
-      "offset": {
+      "offset":
+      {
         "controlType": "knob",
         "subType": "default",
         "rangeMin": 0,
@@ -13,13 +14,15 @@
         "x": 20,
         "y": 40
       },
-      "once": {
+      "once":
+      {
         "controlType": "button",
         "subType": "default",
         "x": 80,
         "y": 40
       },
-      "period": {
+      "period":
+      {
         "controlType": "knob",
         "subType": "default",
         "rangeMin": 0,
@@ -28,7 +31,8 @@
         "x": 140,
         "y": 40
       },
-      "phase": {
+      "phase":
+      {
         "controlType": "knob",
         "subType": "default",
         "rangeMin": 0,
@@ -37,7 +41,8 @@
         "x": 20,
         "y": 80
       },
-      "pulse-width": {
+      "pulse-width":
+      {
         "controlType": "knob",
         "subType": "default",
         "rangeMin": 0,
@@ -46,7 +51,8 @@
         "x": 80,
         "y": 80
       },
-      "scale": {
+      "scale":
+      {
         "controlType": "knob",
         "subType": "default",
         "rangeMin": 0,
@@ -55,13 +61,15 @@
         "x": 140,
         "y": 80
       },
-      "wait": {
+      "wait":
+      {
         "controlType": "button",
         "subType": "default",
         "x": 20,
         "y": 120
       },
-      "wave": {
+      "wave":
+      {
         "controlType": "selector",
         "subType": "default",
         "available": ["sin","square","triangle","saw"],
@@ -70,6 +78,26 @@
         "increment": 100,
         "x": 80,
         "y": 120
+      }
+    }
+  },
+  "sum":
+  {
+    "width": 85,
+    "height": 35
+  },
+  "colour":
+  {
+    "width": 100,
+    "height": 100,
+    "properties":
+    {
+      "colour":
+      {
+        "controlType": "colourPicker",
+        "subType": "default",
+        "x": 20,
+        "y": 40
       }
     }
   }
