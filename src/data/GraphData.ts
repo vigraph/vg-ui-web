@@ -89,6 +89,8 @@ interface IProcessedMetadata
   }
 }
 
+const restURL = 'http://192.168.0.68:33380';
+
 class GraphData
 {
   private rest: rm.RestClient;
@@ -99,7 +101,7 @@ class GraphData
 
   public constructor()
   {
-    this.rest = new rm.RestClient('vigraph-rest', 'http://192.168.0.68:33380');
+    this.rest = new rm.RestClient('vigraph-rest', restURL);
     this.inputEdgeMap = {};
     this.outputEdgeMap = {};
 
@@ -110,6 +112,34 @@ class GraphData
   {
     this.generateSuccess = success;
     this.getGraphData();
+  }
+
+  public updateProperty(nodeID: string, propID: string,
+    value: number | string | boolean)
+  {
+    const url = restURL + "/graph/" + nodeID + "/";
+    const data = {[propID]: value};
+
+    fetch(url,
+    {
+      method: "POST",
+      body: JSON.stringify(data)
+    })
+    .then(response =>
+      {
+        if (response.status === 200)
+        {
+          // Success
+        }
+        else
+        {
+          // Error
+        }
+      })
+    .catch(error =>
+      {
+        // Error
+      });
   }
 
   private async getGraphData()

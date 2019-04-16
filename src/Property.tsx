@@ -1,6 +1,8 @@
 import * as React from 'react';
 import * as Model from './model';
 
+import { graphData } from './data/GraphData';
+
 import Button from './Button';
 import ColourPicker from './ColourPicker';
 import Knob from './Knob';
@@ -83,8 +85,6 @@ export default class Property extends React.Component<IProps, IState>
       displayValue = this.property.value;
     }
 
-    window.console.log("display - " + this.property.value + " " + displayValue);
-
     return(
       <svg id={this.props.name.toLowerCase()+"-property"}
         className="property-wrapper">
@@ -127,6 +127,8 @@ export default class Property extends React.Component<IProps, IState>
 
     this.setState({value: newValue});
 
+    graphData.updateProperty(this.property.parent, this.property.id, value);
+
     this.property.value = newValue;
 
     if (this.props.update)
@@ -145,8 +147,6 @@ export default class Property extends React.Component<IProps, IState>
 
     const roundedDisplayValue = value.toFixed(decimalPlaces);
 
-    window.console.log("format value for display - " + value + " " + roundedDisplayValue);
-
     return parseFloat(roundedDisplayValue);
   }
 
@@ -162,8 +162,6 @@ export default class Property extends React.Component<IProps, IState>
     // Snap to the closest increment
     const snap = (mod > increment/2) ? increment : 0;
     const newValue = diff + snap - range.min;
-
-    window.console.log("snapped - " + value + " " + newValue);
 
     return this.formatValueForDisplay(newValue);
 
