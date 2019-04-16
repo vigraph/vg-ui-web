@@ -8,7 +8,7 @@ import * as Model from './model';
 // offset    - Rotation offset of start from 0 (r, 2r)
 const knobSettings: {default: {}, basic: {}, mini: {}} =
   {
-    default : {radius: 20, rangeMin: 0, rangeMax: 359, offset: 0, turnScale: 1},
+    default : {radius: 15, rangeMin: 0, rangeMax: 359, offset: 0, turnScale: 1},
     basic : {radius: 20, rangeMin: 0, rangeMax: 270, offset: 225, turnScale: 1.5},
     mini : {radius: 10, rangeMin: 0, rangeMax: 270, offset: 225, turnScale: 1.5}
   }
@@ -24,7 +24,7 @@ interface IProps
 
 interface IState
 {
-  currentPercent: number;
+  currentValue: number;
   turning: boolean;
 }
 
@@ -35,7 +35,7 @@ export default class Knob extends React.Component<IProps, IState>
   public static getDerivedStateFromProps(props: IProps, state: any)
   {
     return state.turning ? null :
-      { currentPercent: props.property.value };
+      { currentValue: props.property.value };
   }
 
   private property: Model.Property;
@@ -59,7 +59,7 @@ export default class Knob extends React.Component<IProps, IState>
 
     this.state =
     {
-      currentPercent: this.property.value,
+      currentValue: this.property.value,
       turning: false
     };
 
@@ -75,7 +75,8 @@ export default class Knob extends React.Component<IProps, IState>
     const r = this.settings.radius
 
     // Current position in degrees from 0
-    const currentPos = (this.state.currentPercent*this.range) +
+    const currentPos = (this.state.currentValue /
+      (this.property.range.max - this.property.range.min) * this.range) +
       this.settings.rangeMin;
 
     // Calculate knob arc end point from arc start point and angle (position)
@@ -203,8 +204,8 @@ export default class Knob extends React.Component<IProps, IState>
     const det = (this.mouseStart.x * currentY) - (this.mouseStart.y * currentX);
     const angleRad = Math.atan2(det, dot);
     const angle = angleRad * (180 / Math.PI);
-    let newPos = (this.state.currentPercent*this.range) +
-      this.settings.rangeMin + angle;
+    let newPos = (this.state.currentValue / (this.property.range.max -
+      this.property.range.min) * this.range) + this.settings.rangeMin + angle;
 
     // Mouse start can now but current mouse coords
     this.mouseStart.x = currentX;
@@ -212,13 +213,14 @@ export default class Knob extends React.Component<IProps, IState>
 
     newPos = this.limitPosition(newPos);
 
-    const newPercent = newPos/this.settings.rangeMax;
+    const newValue = (newPos / this.settings.rangeMax) *
+      (this.property.range.max - this.property.range.min);
 
-    this.setState({currentPercent: newPercent});
+    this.setState({currentValue: newValue});
 
     if (this.props.update)
     {
-      this.props.update(newPercent);
+      this.props.update(newValue);
     }
   }
 

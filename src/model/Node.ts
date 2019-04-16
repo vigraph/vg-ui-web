@@ -22,6 +22,16 @@ export class Node
     return this.graph.getNodeProp(this.id, "type");
   }
 
+  get name(): string
+  {
+    return this.graph.getNodeProp(this.id, "name");
+  }
+
+  set name(name: string)
+  {
+    this.graph.setNodeProp(this.id, "name", name);
+  }
+
   get position(): { x: number, y: number }
   {
     return this.graph.getNodeProp(this.id, "position");

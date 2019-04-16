@@ -1,0 +1,76 @@
+{
+  "lfo": {
+    "width": 200,
+    "height": 140,
+    "properties":
+    {
+      "offset": {
+        "controlType": "knob",
+        "subType": "default",
+        "rangeMin": 0,
+        "rangeMax": 10,
+        "increment": 0,
+        "x": 20,
+        "y": 40
+      },
+      "once": {
+        "controlType": "button",
+        "subType": "default",
+        "x": 80,
+        "y": 40
+      },
+      "period": {
+        "controlType": "knob",
+        "subType": "default",
+        "rangeMin": 0,
+        "rangeMax": 500,
+        "increment": 1,
+        "x": 140,
+        "y": 40
+      },
+      "phase": {
+        "controlType": "knob",
+        "subType": "default",
+        "rangeMin": 0,
+        "rangeMax": 1,
+        "increment": 0.01,
+        "x": 20,
+        "y": 80
+      },
+      "pulse-width": {
+        "controlType": "knob",
+        "subType": "default",
+        "rangeMin": 0,
+        "rangeMax": 10,
+        "increment": 0,
+        "x": 80,
+        "y": 80
+      },
+      "scale": {
+        "controlType": "knob",
+        "subType": "default",
+        "rangeMin": 0,
+        "rangeMax": 10,
+        "increment": 0.1,
+        "x": 140,
+        "y": 80
+      },
+      "wait": {
+        "controlType": "button",
+        "subType": "default",
+        "x": 20,
+        "y": 120
+      },
+      "wave": {
+        "controlType": "selector",
+        "subType": "default",
+        "available": ["sin","square","triangle","saw"],
+        "rangeMin": 100,
+        "rangeMax": 400,
+        "increment": 100,
+        "x": 80,
+        "y": 120
+      }
+    }
+  }
+}

@@ -29,6 +29,7 @@ button
 
 .label
 {
+    font-size: small;
     fill: #ccc;
     -webkit-user-select: none; /* Safari */
     -moz-user-select: none; /* Firefox */
@@ -172,12 +173,12 @@ button
 }
 
 .button-inner.pressing,
-.button-inner.pressing.on
+.button-inner.pressing.true
 {
     fill: yellow;
 }
 
-.button-inner.on
+.button-inner.true
 {
     fill: green;
 }

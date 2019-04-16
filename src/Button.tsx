@@ -12,14 +12,14 @@ interface IProps
 {
   property: Model.Property;
   startUpdate: () => void;
-  update: (value: number) => void;
+  update: (value: boolean) => void;
   endUpdate: () => void;
   position: {x: number, y:number};
 }
 
 interface IState
 {
-  currentValue: number;
+  currentValue: boolean;
   pressing: boolean;
 }
 
@@ -49,8 +49,7 @@ export default class Button extends React.Component<IProps, IState>
 
     this.state =
     {
-      // Either 0 (off) or 1 (on)
-      currentValue: this.property.value ? 1 : 0,
+      currentValue: this.property.value,
       pressing: false
     };
   }
@@ -71,7 +70,7 @@ export default class Button extends React.Component<IProps, IState>
             rx={settings.rx} ry={settings.ry} />
 
           <rect className={`button-inner ` +
-            `${this.state.currentValue ? "on" : "off"} ` +
+            `${this.state.currentValue ? "true" : "false"} ` +
             `${this.state.pressing ? "pressing" : ""}`}
             x={settings.offset/2} y={settings.offset/2}
             width={settings.width - settings.offset}
@@ -114,7 +113,7 @@ export default class Button extends React.Component<IProps, IState>
   {
     this.setState({pressing: false});
 
-    const newValue = this.state.currentValue ? 0 : 1;
+    const newValue = !this.state.currentValue;
     this.setState({currentValue: newValue});
 
     if (this.props.update)

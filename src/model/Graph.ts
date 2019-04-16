@@ -8,6 +8,7 @@
 // State structure:
 // {
 //   nodes: Map<id, {
+//            name: string
 //            type: string
 //            inputs: Map<id, { connectorType: string, maxConnections: number }>
 //            outputs: Map<id, { connectorType: string, maxConnections: number }>
@@ -16,6 +17,7 @@
 //            position: { x, y },
 //            size: { w, h },
 //            properties: Map<id, {
+//                                  propType: string,
 //                                  controlType: string,
 //                                  subType: string,
 //                                  position: {x, y},
@@ -47,12 +49,12 @@ export class Graph
   //
   // Load a graph from the given JSON:
   // { nodes: [
-  //     { id, type, x, y, w, h,
+  //     { id, name, type, x, y, w, h,
   //       inputs: [ { id, connectorType, maxConnections }],
   //       outputs: [ { id, connectorType, maxConnections }],
   //       edges: [ { output, destId, input } ]
-  //       properties: [ { id, controlType, subType, x, y, value, rangeMin,
-  //                       rangeMax, increment } ]
+  //       properties: [ { id, propType, controlType, subType, x, y, value,
+  //                       rangeMin, rangeMax, increment } ]
   //     } ] }
   public loadFrom(json: any)
   {
@@ -61,6 +63,7 @@ export class Graph
     for (const n of json.nodes)
     {
       const node = this.addNode(n.id, n.type || "?");
+      node.name = n.name || n.id;
       node.position = { x: n.x || 0, y: n.y || 0 };
       node.size = { w: n.w || 50, h: n.h || 50 };
       if (n.inputs)
@@ -89,7 +92,8 @@ export class Graph
       {
         for (const p of n.properties)
         {
-          const property = this.addProperty(n.id, p.id, p.controlType);
+          const property = this.addProperty(n.id, p.id, p.propType);
+          property.controlType = p.controlType || "default"
           property.subType = p.subType || "?";
           property.position = { x: p.x || 0, y: p.y || 0 };
           property.value = p.value || 0;
@@ -273,10 +277,10 @@ export class Graph
     return this.state.getIn(["nodes", id, "reverseEdges"]);
   }
 
-  public addProperty(parentId: string, id: string, controlType: string)
+  public addProperty(parentId: string, id: string, propType: string)
   {
     this.state = this.state.setIn(["nodes", parentId, "properties", id,
-      "controlType"], controlType);
+      "propType"], propType);
     return new Property(id, parentId, this);
   }
 

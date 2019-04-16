@@ -3,20 +3,45 @@
 
 // TODO: write description for this file
 // TODO: move types to type description file
-// TODO: get full layout data from a layout config json for each node type
-// TODO: create and layout node properties
-// TODO: move any currently hard-coded layout values to layout config
-// TODO: if a property has an input attached the control should be disabled
-// TODO: handle 'multiple' value of inputs/outputs and behaviour with 'default'
-// TODO: get and add node names to model and node
-// TODO: handle current lack of rangemin, rangemax and increment in graph data
 // TODO: comments throughout
 // TODO: refactor (and/or rename) this file in needed
 // TODO: move rest client address to config or global variable
 // TODO: log or display errors
 // TODO: better node layout algorithm
+// TODO: description for config file
+// TODO: default layout - layout without the need for properties config
+// (in a line with type:number = Knob etc)
+// TODO: hide/show property value option
+// TODO: 'trigger' should have a momentary button
+// TODO: move any currently hard-coded layout values to layout config
+// TODO: if a property has an input attached the control should be disabled
+// TODO: handle 'multiple' value of inputs/outputs and behaviour with 'default'
+// TODO: should connectors either be labeled or not be positioned at the edges?
+// TODO: show values and node labels on (time delay) mouse over
+// TODO: layout node properties nicely
+// TODO: update value using rest put
 
 import * as rm from 'typed-rest-client/RestClient';
+
+interface IPropertiesConfig
+{
+  [key: string]: {
+    width: number,
+    height: number,
+    properties: {
+      [key: string]: {
+        controlType: string,
+        subType: string,
+        rangeMin?: number,
+        rangeMax?: number,
+        increment?: number,
+        available?: string[],
+        x: number,
+        y: number
+      }
+    }
+  }
+}
 
 interface IRawGraphItem
 {
@@ -29,13 +54,15 @@ interface IRawGraphItem
 interface IProcessedGraphItem
 {
   id: string,
+  name: string,
   type: string,
   inputs: Array<{ id: string, connectorType: string}>,
   outputs: Array<{ id: string, connectorType: string, maxConnections?: number}>,
   edges: Array<{ output: string, destId: string, input: string}>,
   // propType = "iprop" | "prop" | "oprop"
   properties?: Array<{ id: string, propType: string, controlType: string,
-    value: any}>
+    subType: string, value: any, rangeMin?: number, rangeMax?: number,
+    increment?: number, available?: string[], x: number, y:number}>
 }
 
 interface IRawMetadataItem
@@ -54,6 +81,7 @@ interface IRawMetadataItem
 interface IProcessedMetadata
 {
   [key: string]: {
+    name: string,
     inputs: Array<{ id: string, connectorType: string}>,
     outputs: Array<{ id: string, connectorType: string}>,
     properties: Array<{ id: string, type: string, propType: string,
@@ -67,12 +95,15 @@ class GraphData
   private generateSuccess: (json: any) => void;
   private inputEdgeMap: { [key: string]: string[]};
   private outputEdgeMap: { [key: string]: string[]};
+  private propertiesConfig: IPropertiesConfig;
 
   public constructor()
   {
-    this.rest = new rm.RestClient('vigraph-rest', 'http://localhost:33380');
+    this.rest = new rm.RestClient('vigraph-rest', 'http://192.168.0.68:33380');
     this.inputEdgeMap = {};
     this.outputEdgeMap = {};
+
+    this.propertiesConfig = require('./PropertiesConfig.json');
   }
 
   public generateGraph(success: (json: any) => void)
@@ -195,6 +226,7 @@ class GraphData
 
       processedMetadata[value.id] =
       {
+        name: value.name,
         inputs: pInputs,
         outputs: pOutputs,
         properties: pProps
@@ -216,7 +248,6 @@ class GraphData
 
       if (value.outputs)
       {
-
         for (const key of Object.keys(value.outputs))
         {
           value.outputs[key].forEach(
@@ -224,6 +255,7 @@ class GraphData
             {
               gEdges.push({ output: key, destId: vOutput.element,
                 input: vOutput.prop})
+
               this.inputEdgeMap[vOutput.element] ?
                 this.inputEdgeMap[vOutput.element].push(value.id) :
                 this.inputEdgeMap[vOutput.element] = [value.id];
@@ -235,13 +267,33 @@ class GraphData
         }
       }
 
+      const gProps: Array<{ id: string, propType: string, controlType: string,
+        subType: string, value: any, rangeMin?: number, rangeMax?: number,
+        increment?: number, available?: string[], x: number, y:number}> = [];
+
+      if (this.propertiesConfig[value.type])
+      {
+        for (const key of Object.keys(value.props))
+        {
+          const fProp =  metadata[value.type].properties.find(x =>
+              x.id === key);
+          const propType = fProp ? fProp.propType : "prop";
+
+          gProps.push({id: key, value: value.props[key],
+            propType,
+            ...this.propertiesConfig[value.type].properties[key]});
+        };
+      }
+
       const node: IProcessedGraphItem =
       {
         id: value.id,
+        name: metadata[value.type].name,
         type: value.type,
         inputs: metadata[value.type].inputs,
         outputs: metadata[value.type].outputs,
-        edges: gEdges
+        edges: gEdges,
+        properties: gProps
       };
 
       nodes.push(node);
@@ -291,10 +343,17 @@ class GraphData
     }
 
     const ranksCount: number[] = [];
+    const rankNextPos: [{x: number, y: number}] = [{x: 0, y: 0}];
 
     nodes.forEach((value: IProcessedGraphItem) =>
     {
       const layout = {x: 0, y: 0, h: 50, w: 50};
+
+      if (this.propertiesConfig[value.type])
+      {
+        layout.h = this.propertiesConfig[value.type].height;
+        layout.w = this.propertiesConfig[value.type].width;
+      }
 
       const nRank = ranks[value.id];
 
@@ -307,8 +366,28 @@ class GraphData
         ranksCount[nRank] = ranksCount[nRank] + 1;
       }
 
-      layout.x = (nRank * 150) + 10;
-      layout.y = (ranksCount[nRank] * 70) + 10;
+      // Position nodes in this rank based on the previous nodes height and
+      // the nodes in the next rank based on the largest (width) node so far
+
+      if (!rankNextPos[nRank])
+      {
+        rankNextPos[nRank] = {x: 0, y: 0};
+      }
+
+      layout.x = (rankNextPos[nRank].x) + (nRank === 0 ? 10 : 40);
+      layout.y = (rankNextPos[nRank].y) + 20;
+
+      rankNextPos[nRank] = {x: rankNextPos[nRank].x,
+        y: layout.y + layout.h};
+
+      if (!rankNextPos[nRank+1])
+      {
+        rankNextPos[nRank+1] = {x: 0, y: 0};
+      }
+
+      rankNextPos[nRank+1] = {x: Math.max(layout.x + layout.w,
+        rankNextPos[nRank+1].x),
+        y: rankNextPos[nRank+1].y};
 
       layoutNodes.push({...value, ...layout});
     })

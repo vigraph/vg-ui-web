@@ -87,7 +87,6 @@ export default class Graph extends React.Component<IProps, IState>
             this.graph.getNodes().map((node: Model.Node, i) =>
             {
               return <Node key={i} node={node}
-                name={node.id + ": " + node.type}
                 startUpdate={this.startUpdate}
                 update={this.movementUpdate}
                 endUpdate={this.endUpdate}

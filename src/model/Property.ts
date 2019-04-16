@@ -17,9 +17,19 @@ export class Property
     this.graph = graph;
   }
 
+  get propType(): string
+  {
+    return this.graph.getPropertyProp(this.id, this.parent, "propType");
+  }
+
   get controlType(): string
   {
     return this.graph.getPropertyProp(this.id, this.parent, "controlType");
+  }
+
+  set controlType(controlType: string)
+  {
+    this.graph.setPropertyProp(this.id, this.parent, "controlType", controlType);
   }
 
   get subType(): string

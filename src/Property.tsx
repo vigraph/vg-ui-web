@@ -48,7 +48,7 @@ export default class Property extends React.Component<IProps, IState>
     // Buttons, knobs and sliders are numerical and snap to increments. All
     // other types e.g. selectors and colourPicker are not numerical.
     if (this.property.controlType === "knob" || this.property.controlType ===
-      "slider" || this.property.controlType === "button")
+      "slider")
     {
       this.numerical = true;
 
@@ -76,12 +76,14 @@ export default class Property extends React.Component<IProps, IState>
 
     if (this.numerical && typeof this.property.value === "number")
     {
-      displayValue = this.formatValueForDisplay(this.property.value).toString();
+      displayValue = this.property.value.toString();
     }
     else if (typeof this.property.value === "string")
     {
       displayValue = this.property.value;
     }
+
+    window.console.log("display - " + this.property.value + " " + displayValue);
 
     return(
       <svg id={this.props.name.toLowerCase()+"-property"}
@@ -91,7 +93,7 @@ export default class Property extends React.Component<IProps, IState>
           y={position.y}>{this.props.name + ": " + displayValue}</text> : ""}
         {this.props.display.controls && Component ?
            <Component property={this.property}
-            position={{x: position.x, y: position.y + 10}}
+            position={{x: position.x, y: position.y + 5}}
             startUpdate={this.startPropertyUpdate} update={this.propertyUpdate}
             endUpdate={this.endPropertyUpdate}/> : ""}
       </svg>
@@ -118,7 +120,6 @@ export default class Property extends React.Component<IProps, IState>
     }
   }
 
-  // Numerical control types return percentage (0-1)
   private propertyUpdate = (value: any) =>
   {
     const newValue = this.numerical && typeof value === "number" ?
@@ -142,32 +143,29 @@ export default class Property extends React.Component<IProps, IState>
     const split = increment.toString().split(".");
     const decimalPlaces = split[1] ? split[1].length : 0;
 
-    const range = this.property.range;
-    const valueRange = range.max - range.min;
-    const displayValue = (value * valueRange) + range.min;
-    const roundedDisplayValue = displayValue.toFixed(decimalPlaces);
+    const roundedDisplayValue = value.toFixed(decimalPlaces);
 
-    return parseInt(roundedDisplayValue, 10)
+    window.console.log("format value for display - " + value + " " + roundedDisplayValue);
+
+    return parseFloat(roundedDisplayValue);
   }
 
   // Snap value to closest increment
   private snapValueToIncrement = (value: number) =>
   {
-    const roundedDisplayValue = this.formatValueForDisplay(value);
-
     const increment = this.property.increment;
     const range = this.property.range;
-    const valueRange = range.max - range.min;
 
-    const mod = roundedDisplayValue % increment;
-    const diff = roundedDisplayValue - mod;
+    const mod = value % increment;
+    const diff = value - mod;
 
     // Snap to the closest increment
     const snap = (mod > increment/2) ? increment : 0;
+    const newValue = diff + snap - range.min;
 
-    const newValue = (diff + snap - range.min) / valueRange;
+    window.console.log("snapped - " + value + " " + newValue);
 
-    return newValue;
+    return this.formatValueForDisplay(newValue);
 
   }
 

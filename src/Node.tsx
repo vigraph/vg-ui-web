@@ -6,7 +6,6 @@ import Property from './Property';
 interface IProps
 {
   node: Model.Node;
-  name: string;
   startUpdate: () => void;
   update: () => void;
   endUpdate: () => void;
@@ -31,7 +30,6 @@ export default class Node extends React.Component<IProps, IState>
       { x: props.node.position.x, y: props.node.position.y };
   }
 
-  public name: string;
   private node: Model.Node;
   private offsetX: number;
   private offsetY: number;
@@ -49,7 +47,6 @@ export default class Node extends React.Component<IProps, IState>
     this.node = props.node;
     this.offsetX = 0;
     this.offsetY = 0;
-    this.name = props.name;
   }
 
   public render()
@@ -66,7 +63,7 @@ export default class Node extends React.Component<IProps, IState>
           onMouseDown={this.handleMouseDown}
         />
         <text className={"label " + this.props.node.id}
-          x={20} y={20}>{this.props.name}</text>
+          x={20} y={20}>{this.node.name}</text>
         {this.props.children}
         {properties.map((property: Model.Property, j) =>
           {

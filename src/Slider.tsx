@@ -23,7 +23,7 @@ interface IProps
 
 interface IState
 {
-  currentPercent: number;
+  currentValue: number;
   sliding: boolean;
 }
 
@@ -34,7 +34,7 @@ export default class Slider extends React.Component<IProps, IState>
   public static getDerivedStateFromProps(props: IProps, state: any)
   {
     return state.sliding ? null :
-      { currentPercent: props.property.value };
+      { currentValue: props.property.value };
   }
 
   private property: Model.Property;
@@ -55,7 +55,7 @@ export default class Slider extends React.Component<IProps, IState>
 
     this.state =
     {
-      currentPercent: this.property.value,
+      currentValue: this.property.value,
       sliding: false
     };
 
@@ -65,7 +65,8 @@ export default class Slider extends React.Component<IProps, IState>
   public render()
   {
     // Current position from 0
-    const currentPos = (this.state.currentPercent*this.settings.length)
+    const currentPos =  (this.state.currentValue / (this.property.range.max -
+      this.property.range.min)) * this.settings.length;
     const position = this.props.position;
     const settings = this.settings;
 
@@ -121,11 +122,13 @@ export default class Slider extends React.Component<IProps, IState>
         e.currentTarget.getBoundingClientRect().top);
       const newPos = this.limitPosition(newDistance);
       const newPercent = newPos / this.settings.length;
+      const newValue = newPercent * (this.property.range.max -
+        this.property.range.min)
 
-      this.setState({currentPercent: newPercent});
+      this.setState({currentValue: newValue});
       if (this.props.update)
       {
-        this.props.update(newPercent);
+        this.props.update(newValue);
       }
     }
   }
@@ -148,21 +151,24 @@ export default class Slider extends React.Component<IProps, IState>
     const diff = this.settings.horizontal ? e.pageX - this.mouseStart.x :
       this.mouseStart.y - e.pageY;
 
-    let newPos = (this.state.currentPercent * this.settings.length) +
+    let newPos = ((this.state.currentValue / (this.property.range.max -
+      this.property.range.min)) * this.settings.length) +
       (diff / this.settings.slideScale);
 
     newPos = this.limitPosition(newPos);
 
     const newPercent = newPos / this.settings.length;
+    const newValue = newPercent * (this.property.range.max -
+        this.property.range.min)
 
-    this.setState({currentPercent: newPercent});
+    this.setState({currentValue: newValue});
 
     this.mouseStart.x = e.pageX;
     this.mouseStart.y = e.pageY;
 
     if (this.props.update)
     {
-      this.props.update(newPercent);
+      this.props.update(newValue);
     }
   }
 
