@@ -462,7 +462,8 @@ export default class ColourPicker extends React.Component<IProps, IState>
 }
 
 
-  // input - r,g,b: [0..1]
+  // input - r, g, b: [0..1]
+  // output - h: [0..360], s: [0..1], l: [0..1]
   private rgbToHSL = (r: number, g: number, b: number) =>
   {
     const rgb = [r, g, b];
@@ -534,7 +535,7 @@ export default class ColourPicker extends React.Component<IProps, IState>
     return {h, s, l};
     }
 
-    // input - r,g,b: [0..1]
+    // input - r, g, b: [0..1]
     private rgbToHex = (rgb: {r: number, g: number, b: number}) =>
     {
       const toHex = (colour: number) =>
@@ -564,6 +565,7 @@ export default class ColourPicker extends React.Component<IProps, IState>
     {
       const rgb = this.hexToRGB(this.state.currentValue);
       const hsl = this.rgbToHSL(rgb.r, rgb.g, rgb.b);
+      hsl.h = hsl.h / 360;
 
       this.allCurrentValues = {hex: this.state.currentValue, ...rgb, ...hsl};
     }
