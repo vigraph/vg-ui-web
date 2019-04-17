@@ -3,7 +3,7 @@ import * as Model from './model';
 
 const buttonSettings: {default: {}, square: {}, circle: {}} =
 {
-  default: {height: 40, width: 40, rx: 10, ry: 10, offset: 10, latch: true},
+  default: {height: 15, width: 15, rx: 0, ry: 0, offset: 2, latch: true},
   square: {height: 40, width: 40, rx: 0, ry: 0, offset: 10, latch: true},
   circle: {height: 40, width: 40, rx: 100, ry: 100, offset: 10, latch: false}
 }

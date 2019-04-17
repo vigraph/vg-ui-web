@@ -62,8 +62,8 @@ export default class Node extends React.Component<IProps, IState>
           className={`node ${this.state.dragging ? "dragging" : ""}`}
           onMouseDown={this.handleMouseDown}
         />
-        <text className={"label " + this.props.node.id}
-          x={20} y={20}>{this.node.name}</text>
+        <text className={"node-label label " + this.props.node.id}
+          x={(size.w/2)+padding} y={15}>{this.node.name}</text>
         {this.props.children}
         {properties.map((property: Model.Property, j) =>
           {

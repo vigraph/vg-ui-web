@@ -26,6 +26,7 @@ interface IState
 {
   value: any;
   updating: boolean;
+  hover: boolean;
 }
 
 export default class Property extends React.Component<IProps, IState>
@@ -65,7 +66,8 @@ export default class Property extends React.Component<IProps, IState>
     this.state =
     {
       value: this.property.value,
-      updating: false
+      updating: false,
+      hover: false
     };
   }
 
@@ -87,13 +89,16 @@ export default class Property extends React.Component<IProps, IState>
 
     return(
       <svg id={this.props.name.toLowerCase()+"-property"}
-        className="property-wrapper">
-        {this.props.display.labels ?
+        className="property-wrapper"
+        onMouseEnter={this.mouseEnter}
+        onMouseLeave={this.mouseLeave}>
+        {this.props.display.labels && (this.state.hover || this.state.updating) ?
           <text className="label property-label" x={position.x}
           y={position.y}>{this.props.name + ": " + displayValue}</text> : ""}
+
         {this.props.display.controls && Component ?
            <Component property={this.property}
-            position={{x: position.x, y: position.y + 5}}
+            position={{x: position.x, y: position.y}}
             startUpdate={this.startPropertyUpdate} update={this.propertyUpdate}
             endUpdate={this.endPropertyUpdate}/> : ""}
       </svg>
@@ -175,7 +180,16 @@ export default class Property extends React.Component<IProps, IState>
     const newValue = diff + snap - range.min;
 
     return this.formatValueForDisplay(newValue);
+  }
 
+  private mouseEnter = (event: React.MouseEvent<SVGSVGElement>) =>
+  {
+    this.setState({hover: true});
+  }
+
+  private mouseLeave = (event: React.MouseEvent<SVGSVGElement>) =>
+  {
+    this.setState({hover: false});
   }
 
 }

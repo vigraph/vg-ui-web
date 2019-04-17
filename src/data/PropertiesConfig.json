@@ -1,6 +1,6 @@
 {
   "lfo": {
-    "width": 200,
+    "width": 190,
     "height": 140,
     "properties":
     {
@@ -11,15 +11,8 @@
         "rangeMin": 0,
         "rangeMax": 10,
         "increment": 0,
-        "x": 20,
-        "y": 40
-      },
-      "once":
-      {
-        "controlType": "button",
-        "subType": "default",
-        "x": 80,
-        "y": 40
+        "x": 30,
+        "y": 20
       },
       "period":
       {
@@ -28,8 +21,8 @@
         "rangeMin": 0,
         "rangeMax": 500,
         "increment": 1,
-        "x": 140,
-        "y": 40
+        "x": 30,
+        "y": 60
       },
       "phase":
       {
@@ -38,8 +31,8 @@
         "rangeMin": 0,
         "rangeMax": 1,
         "increment": 0.01,
-        "x": 20,
-        "y": 80
+        "x": 30,
+        "y": 100
       },
       "pulse-width":
       {
@@ -48,8 +41,8 @@
         "rangeMin": 0,
         "rangeMax": 10,
         "increment": 0,
-        "x": 80,
-        "y": 80
+        "x": 70,
+        "y": 20
       },
       "scale":
       {
@@ -58,26 +51,33 @@
         "rangeMin": 0,
         "rangeMax": 10,
         "increment": 0.1,
-        "x": 140,
-        "y": 80
+        "x": 70,
+        "y": 60
+      },
+      "once":
+      {
+        "controlType": "button",
+        "subType": "default",
+        "x": 120,
+        "y": 105
       },
       "wait":
       {
         "controlType": "button",
         "subType": "default",
-        "x": 20,
-        "y": 120
+        "x": 145,
+        "y": 105
       },
       "wave":
       {
         "controlType": "selector",
-        "subType": "default",
+        "subType": "vert",
         "available": ["sin","square","triangle","saw"],
         "rangeMin": 100,
         "rangeMax": 400,
         "increment": 100,
-        "x": 80,
-        "y": 120
+        "x": 120,
+        "y": 20
       }
     }
   },
@@ -88,16 +88,16 @@
   },
   "colour":
   {
-    "width": 100,
-    "height": 100,
+    "width": 80,
+    "height": 50,
     "properties":
     {
       "colour":
       {
         "controlType": "colourPicker",
         "subType": "default",
-        "x": 20,
-        "y": 40
+        "x": 40,
+        "y": 17
       }
     }
   }

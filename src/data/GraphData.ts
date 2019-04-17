@@ -4,6 +4,7 @@
 // TODO: write description for this file
 // TODO: move types to type description file
 // TODO: comments throughout
+// TODO: calculate knob background based on range min and max
 // TODO: refactor (and/or rename) this file in needed
 // TODO: move rest client address to config or global variable
 // TODO: log or display errors
@@ -19,6 +20,7 @@
 // TODO: show values and node labels on (time delay) mouse over
 // TODO: layout node properties nicely
 // TODO: update value using rest put
+// TODO: split property name and value
 
 import * as rm from 'typed-rest-client/RestClient';
 
@@ -70,11 +72,11 @@ interface IRawMetadataItem
   description: string,
   name: string,
   section: string,
-  inputs?: [{ type: string, multiple?: boolean}],
-  iprops?: [{ id: string, description: string, type: string }],
-  props?: [{ id: string, description: string, type: string }],
-  oprops?: [{ id: string, description: string, type: string }],
-  outputs?: [{ type: string, multiple?: boolean}]
+  inputs?: Array<{ type: string, multiple?: boolean}>,
+  iprops?: Array<{ id: string, description: string, type: string, alias?: boolean }>,
+  props?: Array<{ id: string, description: string, type: string, alias?: boolean }>,
+  oprops?: Array<{ id: string, description: string, type: string, alias?: boolean }>,
+  outputs?: Array<{ type: string, multiple?: boolean}>
 }
 
 interface IProcessedMetadata
@@ -90,7 +92,7 @@ interface IProcessedMetadata
 
 const restURL = 'http://192.168.0.68:33380';
 const mardingPadding = {x: 10, y: 10};
-const layoutPadding = {x: 40, y: 20};
+const layoutPadding = {x: 50, y: 20};
 
 class GraphData
 {

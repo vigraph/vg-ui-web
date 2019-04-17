@@ -5,7 +5,7 @@ const selectorSettings: {default: {}, horz: {}, vert: {}} =
   {
     default : {length: 80, thickness: 20, horizontal: true},
     horz : {length: 80, thickness: 20, horizontal: true},
-    vert : {length: 80, thickness: 20, horizontal: false},
+    vert : {length: 60, thickness: 15, horizontal: false},
   }
 
 interface IProps
@@ -107,7 +107,7 @@ export default class Selector extends React.Component<IProps, IState>
             width={1} height={settings.thickness}
             transform={`rotate(${settings.horizontal ? "0" : "270"}, ${0},
               ${0}) translate(${settings.horizontal ? "0" :
-              -settings.length},0)`}/>
+              - settings.length - 5},0)`}/>
 
         </svg>
     );

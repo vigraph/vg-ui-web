@@ -8,9 +8,12 @@ import * as Model from './model';
 // offset    - Rotation offset of start from 0 (r, 2r)
 const knobSettings: {default: {}, basic: {}, mini: {}} =
   {
-    default : {radius: 15, rangeMin: 0, rangeMax: 359, offset: 0, turnScale: 1},
-    basic : {radius: 20, rangeMin: 0, rangeMax: 270, offset: 225, turnScale: 1.5},
-    mini : {radius: 10, rangeMin: 0, rangeMax: 270, offset: 225, turnScale: 1.5}
+    default : {radius: 15, overlayRadius: 10, rangeMin: 0, rangeMax: 359,
+      offset: 0, turnScale: 1},
+    basic : {radius: 20, overlayRadius: 7.5, rangeMin: 0, rangeMax: 270,
+      offset: 225, turnScale: 1.5},
+    mini : {radius: 10, overlayRadius: 5, rangeMin: 0, rangeMax: 270,
+      offset: 225, turnScale: 1.5},
   }
 
 interface IProps
@@ -45,8 +48,8 @@ export default class Knob extends React.Component<IProps, IState>
   private circleCentre: {x: number, y: number};
   private range: number;
 
-  private settings: {radius: number, rangeMin: number, rangeMax: number,
-    offset: number, turnScale: number};
+  private settings: {radius: number, overlayRadius: number, rangeMin: number,
+    rangeMax: number, offset: number, turnScale: number};
 
   constructor(props: IProps)
   {
@@ -73,6 +76,7 @@ export default class Knob extends React.Component<IProps, IState>
   public render()
   {
     const r = this.settings.radius
+    const oR = this.settings.overlayRadius;
 
     // Current position in degrees from 0
     const currentPos = (this.state.currentValue /
@@ -150,7 +154,7 @@ export default class Knob extends React.Component<IProps, IState>
               `rotate(${this.settings.offset}, ${r}, ${r})`}
           />
           <circle className="knob-overlay"
-            cx={r} cy={r} r={r/2}
+            cx={r} cy={r} r={oR}
             transform={"scale("+`${this.state.turning?
               this.settings.turnScale:"1"}`+")"}
           />
