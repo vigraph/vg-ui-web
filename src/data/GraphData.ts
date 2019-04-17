@@ -217,22 +217,30 @@ class GraphData
       if (value.iprops)
       {
         value.iprops.forEach(
-          (input: {id: string, description: string, type: string}) =>
+          (input: {id: string, description: string, type: string,
+            alias?: boolean}) =>
           {
             pInputs.push({id: input.id, connectorType: input.type});
 
-            pProps.push({id: input.id, type: input.type, propType: "iprop",
-              description: input.description });
+            if (!input.alias)
+            {
+              pProps.push({id: input.id, type: input.type, propType: "iprop",
+                description: input.description });
+            }
           });
       }
 
       if (value.props)
       {
           value.props.forEach(
-            (input: {id: string, description: string, type: string}) =>
+            (prop: {id: string, description: string, type: string,
+              alias?: boolean}) =>
             {
-              pProps.push({id: input.id, type: input.type, propType: "prop",
-                description: input.description });
+              if (!prop.alias)
+              {
+                pProps.push({id: prop.id, type: prop.type, propType: "prop",
+                  description: prop.description });
+              }
             });
       }
 
@@ -248,12 +256,16 @@ class GraphData
       if (value.oprops)
       {
         value.oprops.forEach(
-          (output: {id: string, description: string, type: string}) =>
+          (output: {id: string, description: string, type: string,
+            alias?: boolean}) =>
           {
             pOutputs.push({id: output.id, connectorType: output.type});
 
-            pProps.push({id: output.id, type: output.type, propType: "oprop",
-              description: output.description });
+            if (!output.alias)
+            {
+              pProps.push({id: output.id, type: output.type, propType: "oprop",
+                description: output.description });
+            }
           });
       }
 
@@ -307,26 +319,16 @@ class GraphData
 
       if (this.propertiesConfig[value.type])
       {
-        // Special cases
-        if (value.type === "colour")
+        for (const key of Object.keys(value.props))
         {
-          gProps.push({id: value.id, propType: "prop",
-            value: value.props,
-            ...this.propertiesConfig[value.type].properties[value.type]});
-        }
-        else
-        {
-          for (const key of Object.keys(value.props))
-          {
-            const fProp =  metadata[value.type].properties.find(x =>
-                x.id === key);
-            const propType = fProp ? fProp.propType : "prop";
+          const fProp =  metadata[value.type].properties.find(x =>
+              x.id === key);
+          const propType = fProp ? fProp.propType : "prop";
 
-            gProps.push({id: key, value: value.props[key],
-              propType,
-              ...this.propertiesConfig[value.type].properties[key]});
-          };
-        }
+          gProps.push({id: key, value: value.props[key],
+            propType,
+            ...this.propertiesConfig[value.type].properties[key]});
+        };
       }
 
       const node: IProcessedGraphItem =

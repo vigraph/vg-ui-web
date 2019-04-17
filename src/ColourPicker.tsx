@@ -17,8 +17,8 @@ interface IProps
 
 interface IState
 {
-  currentValue: {hex: string, r: number, g: number, b: number, h: number,
-    s: number, l: number};
+  // Current Value is Colour Hex (#rrggbb)
+  currentValue: string
   picking: boolean;
   showPicker: boolean;
 }
@@ -38,6 +38,9 @@ export default class ColourPicker extends React.Component<IProps, IState>
   private settings: {barLength: number, barThickness: number, padding: number,
     indicatorThickness: number};
 
+  private allCurrentValues: {hex: string, r: number, g: number, b: number, h: number,
+    s: number, l: number};
+
   constructor(props: IProps)
   {
     super(props);
@@ -49,7 +52,7 @@ export default class ColourPicker extends React.Component<IProps, IState>
 
     this.state =
     {
-      currentValue: this.property.value.toString(),
+      currentValue: this.property.value,
       picking: false,
       showPicker: false
     };
@@ -59,6 +62,7 @@ export default class ColourPicker extends React.Component<IProps, IState>
   {
     const position = this.props.position;
     const currentValue = this.state.currentValue;
+    this.updateAllFromHex(currentValue);
 
     return(
         <svg id="colour-picker" className={this.property.subType}
@@ -68,8 +72,7 @@ export default class ColourPicker extends React.Component<IProps, IState>
             x={0} y={0}>
             <rect className="colour-display"
               width={20} height={20}
-              fill={"hsl("+(currentValue.h*360)+","+(currentValue.s*100)+
-                "%,"+(currentValue.l*100)+"%)"}
+              fill={currentValue}
               onMouseDown={this.togglePickerShow} />
           </svg>
 
@@ -94,12 +97,12 @@ export default class ColourPicker extends React.Component<IProps, IState>
     // Dummy array to create gradients more easily
     const gradientArray = ["","","","","","","","","",""];
 
-    const currentH = this.state.currentValue.h
-    const currentS = this.state.currentValue.s;
-    const currentL = this.state.currentValue.l;
-    const currentR = this.state.currentValue.r;
-    const currentG = this.state.currentValue.g;
-    const currentB = this.state.currentValue.b;
+    const currentH = this.allCurrentValues.h
+    const currentS = this.allCurrentValues.s;
+    const currentL = this.allCurrentValues.l;
+    const currentR = this.allCurrentValues.r;
+    const currentG = this.allCurrentValues.g;
+    const currentB = this.allCurrentValues.b;
 
     const positionH = currentH * settings.barLength;
     const positionS = currentS * settings.barLength;
@@ -301,7 +304,7 @@ export default class ColourPicker extends React.Component<IProps, IState>
   {
     const position = e.pageX - e.currentTarget.getBoundingClientRect().left;
     const newAttr = position / this.settings.barLength;
-    const newValue = JSON.parse(JSON.stringify(this.state.currentValue));
+    const newValue = JSON.parse(JSON.stringify(this.allCurrentValues));
 
     switch (attr)
     {
@@ -324,11 +327,13 @@ export default class ColourPicker extends React.Component<IProps, IState>
 
     newValue.hex = this.rgbToHex(rgb);
 
-    this.setState({currentValue: newValue});
+    this.allCurrentValues = newValue;
+
+    this.setState({currentValue: newValue.hex});
 
     if (this.props.update)
     {
-      this.props.update(newValue);
+      this.props.update(newValue.hex);
     }
   }
 
@@ -358,7 +363,7 @@ export default class ColourPicker extends React.Component<IProps, IState>
   {
     const position = e.pageX - e.currentTarget.getBoundingClientRect().left;
     const newAttr = position / this.settings.barLength;
-    const newValue = JSON.parse(JSON.stringify(this.state.currentValue));
+    const newValue = JSON.parse(JSON.stringify(this.allCurrentValues));
 
     switch (attr)
     {
@@ -381,11 +386,13 @@ export default class ColourPicker extends React.Component<IProps, IState>
     newValue.s = hsl.s;
     newValue.l = hsl.l;
 
-    this.setState({currentValue: newValue});
+    this.allCurrentValues = newValue;
+
+    this.setState({currentValue: newValue.hex});
 
     if (this.props.update)
     {
-      this.props.update(newValue);
+      this.props.update(newValue.hex);
     }
   }
 
@@ -539,5 +546,23 @@ export default class ColourPicker extends React.Component<IProps, IState>
       }
 
       return "#" + toHex(rgb.r) + toHex(rgb.g) + toHex(rgb.b);
+    }
+
+    private hexToRGB = (hex: string) =>
+    {
+      hex = hex.replace('#','');
+      const r = parseInt(hex.substring(0,2), 16) / 255;
+      const g = parseInt(hex.substring(2,4), 16) / 255;
+      const b = parseInt(hex.substring(4,6), 16) / 255;
+
+      return {r, g, b};
+    }
+
+    private updateAllFromHex = (hex: string) =>
+    {
+      const rgb = this.hexToRGB(this.state.currentValue);
+      const hsl = this.rgbToHSL(rgb.r, rgb.g, rgb.b);
+
+      this.allCurrentValues = {hex: this.state.currentValue, ...rgb, ...hsl};
     }
 }

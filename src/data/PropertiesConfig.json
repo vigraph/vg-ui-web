@@ -89,15 +89,15 @@
   "colour":
   {
     "width": 80,
-    "height": 50,
+    "height": 60,
     "properties":
     {
-      "colour":
+      "hex":
       {
         "controlType": "colourPicker",
         "subType": "default",
         "x": 40,
-        "y": 17
+        "y": 25
       }
     }
   }
