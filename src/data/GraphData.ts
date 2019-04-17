@@ -90,9 +90,9 @@ interface IProcessedMetadata
   }
 }
 
-const restURL = 'http://192.168.0.68:33380';
-const marginPadding = {x: 10, y: 10};
-const layoutPadding = {x: 50, y: 20};
+const restURL = 'http://localhost:33380';
+const marginPadding = { x: 40, y: 40 };
+const layoutPadding = { x: 100, y: 40 };
 
 class GraphData
 {

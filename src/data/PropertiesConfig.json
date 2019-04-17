@@ -100,5 +100,143 @@
         "y": 25
       }
     }
+  },
+  "figure":
+  {
+    "width": 170,
+    "height": 290,
+    "properties":
+    {
+      "points":
+      {
+        "controlType": "knob",
+        "subType": "default",
+        "rangeMin": 0,
+        "rangeMax": 500,
+        "increment": 1,
+        "x": 40,
+        "y": 40
+      },
+
+      "closed":
+      {
+        "controlType": "button",
+        "subType": "default",
+        "x": 120,
+        "y": 50
+      },
+
+      "x.wave":
+      {
+        "controlType": "selector",
+        "subType": "default",
+        "available": ["sin","square","triangle","saw","random"],
+        "rangeMin": 100,
+        "rangeMax": 500,
+        "increment": 100,
+        "x": 60,
+        "y": 100
+      },
+
+      "x.freq":
+      {
+        "controlType": "knob",
+        "subType": "default",
+        "rangeMin": 0,
+        "rangeMax": 1,
+        "increment": 0.01,
+        "x": 20,
+        "y": 140
+      },
+
+      "x.phase":
+      {
+        "controlType": "knob",
+        "subType": "default",
+        "rangeMin": 0,
+        "rangeMax": 1,
+        "increment": 0.01,
+        "x": 60,
+        "y": 140
+      },
+
+      "x.pos":
+      {
+        "controlType": "knob",
+        "subType": "default",
+        "rangeMin": 0,
+        "rangeMax": 1,
+        "increment": 0.01,
+        "x": 100,
+        "y": 140
+      },
+
+      "x.scale":
+      {
+        "controlType": "knob",
+        "subType": "default",
+        "rangeMin": 0,
+        "rangeMax": 1,
+        "increment": 0.01,
+        "x": 140,
+        "y": 140
+      },
+
+      "y.wave":
+      {
+        "controlType": "selector",
+        "subType": "default",
+        "available": ["sin","square","triangle","saw","random"],
+        "rangeMin": 100,
+        "rangeMax": 500,
+        "increment": 100,
+        "x": 60,
+        "y": 200
+      },
+
+      "y.freq":
+      {
+        "controlType": "knob",
+        "subType": "default",
+        "rangeMin": 0,
+        "rangeMax": 1,
+        "increment": 0.01,
+        "x": 20,
+        "y": 240
+      },
+
+      "y.phase":
+      {
+        "controlType": "knob",
+        "subType": "default",
+        "rangeMin": 0,
+        "rangeMax": 1,
+        "increment": 0.01,
+        "x": 60,
+        "y": 240
+      },
+
+      "y.pos":
+      {
+        "controlType": "knob",
+        "subType": "default",
+        "rangeMin": 0,
+        "rangeMax": 1,
+        "increment": 0.01,
+        "x": 100,
+        "y": 240
+      },
+
+      "y.scale":
+      {
+        "controlType": "knob",
+        "subType": "default",
+        "rangeMin": 0,
+        "rangeMax": 1,
+        "increment": 0.01,
+        "x": 140,
+        "y": 240
+      }
+    }
   }
 }
