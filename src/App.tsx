@@ -3,7 +3,7 @@ import * as React from 'react';
 import './App.css';
 import Graph from './Graph';
 
-const exampleGraph =
+/* const exampleGraph =
 {
   nodes: [
     {
@@ -78,12 +78,12 @@ const exampleGraph =
       edges: [],
       properties: [
         { id: 'fourth', controlType: 'colourPicker', subType: 'default',
-          x: 20, y: 40, value: {r: 1, g: 0, b: 0, h: 0, s: 1, l: 0.5},
+          x: 20, y: 40, value: "#CCCCCC",
           rangeMin: 0, rangeMax: 1, increment: 1 }
       ]
     },
   ]
-};
+}; */
 
 export default class App extends React.Component
 {
@@ -102,7 +102,7 @@ export default class App extends React.Component
         <button onClick={this.handleRedo}>Redo</button>
         <button onClick={this.handleToggleControls}>Toggle Controls</button>
         <button onClick={this.handleToggleLabels}>Toggle Labels</button>
-        <Graph ref={this.graph} from={exampleGraph} />
+        <Graph ref={this.graph} /* from={exampleGraph} */ />
       </div>
     );
   }
