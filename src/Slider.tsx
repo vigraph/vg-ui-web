@@ -117,9 +117,9 @@ export default class Slider extends React.Component<IProps, IState>
     if (this.settings.slideScale === 1 && this.settings.clickMove)
     {
       const newDistance = this.settings.horizontal ?
-        e.pageX - e.currentTarget.getBoundingClientRect().left :
+        e.pageX - e.currentTarget.getBoundingClientRect().left - window.scrollX:
         this.settings.length - (e.pageY -
-        e.currentTarget.getBoundingClientRect().top);
+        e.currentTarget.getBoundingClientRect().top - window.scrollY);
       const newPos = this.limitPosition(newDistance);
       const newPercent = newPos / this.settings.length;
       const newValue = newPercent * (this.property.range.max -

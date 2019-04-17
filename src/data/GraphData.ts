@@ -21,6 +21,8 @@
 // TODO: layout node properties nicely
 // TODO: update value using rest put
 // TODO: split property name and value
+// TODO: mouse wheel zoom
+// TODO: grab/move background to scroll around
 
 import * as rm from 'typed-rest-client/RestClient';
 

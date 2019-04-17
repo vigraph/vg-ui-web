@@ -35,8 +35,10 @@ export default class Graph extends React.Component<IProps, IState>
     if (props.from)
     {
       // Note we load the graph directly, not doing forceUpdate()
-      // this.graph.loadFrom(props.from);
-
+      this.graph.loadFrom(props.from);
+    }
+    else
+    {
       graphData.generateGraph((json:any) =>
         {
           this.graph.loadFrom(json);
@@ -86,7 +88,7 @@ export default class Graph extends React.Component<IProps, IState>
           {
             this.graph.getNodes().map((node: Model.Node, i) =>
             {
-              return <Node key={i} node={node}
+              return <Node key={node.id} node={node}
                 startUpdate={this.startUpdate}
                 update={this.movementUpdate}
                 endUpdate={this.endUpdate}
@@ -219,11 +221,14 @@ export default class Graph extends React.Component<IProps, IState>
     // Create dummy node and connect to selected connector to simulate
     // moving unconnected edge
     const dummyNode = this.graph.addNode("dummynode","dummy");
+
     dummyNode.size = {w: 0, h: 0};
 
     const graphEle = document.getElementById("graph");
-    const graphOffsetX = graphEle ? graphEle.getBoundingClientRect().left : 0;
-    const graphOffsetY = graphEle ? graphEle.getBoundingClientRect().top : 0;
+    const graphOffsetX = graphEle ? graphEle.getBoundingClientRect().left +
+      window.scrollX : 0;
+    const graphOffsetY = graphEle ? graphEle.getBoundingClientRect().top +
+      window.scrollY : 0;
 
     dummyNode.position = {x: e.pageX-(3*csize)-graphOffsetX,
       y: e.pageY-csize-graphOffsetY}
@@ -320,8 +325,10 @@ export default class Graph extends React.Component<IProps, IState>
       const dnode = this.state.tempNodes.dummy;
 
       const graphEle = document.getElementById("graph");
-      const graphOffsetX = graphEle ? graphEle.getBoundingClientRect().left : 0;
-      const graphOffsetY = graphEle ? graphEle.getBoundingClientRect().top : 0;
+      const graphOffsetX = graphEle ? graphEle.getBoundingClientRect().left +
+        window.scrollX : 0;
+      const graphOffsetY = graphEle ? graphEle.getBoundingClientRect().top +
+        window.scrollY : 0;
 
       dnode.position = {x: e.pageX-(3*csize)-graphOffsetX,
         y: e.pageY-csize-graphOffsetY}
