@@ -159,14 +159,12 @@ export default class Property extends React.Component<IProps, IState>
   private snapValueToIncrement = (value: number) =>
   {
     const increment = this.property.increment;
-    const range = this.property.range;
-
     const mod = value % increment;
     const diff = value - mod;
 
     // Snap to the closest increment
     const snap = (mod > increment/2) ? increment : 0;
-    const newValue = diff + snap - range.min;
+    const newValue = diff + snap;
 
     return this.formatValueForDisplay(newValue);
   }

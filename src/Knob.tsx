@@ -79,7 +79,7 @@ export default class Knob extends React.Component<IProps, IState>
     const oR = this.settings.overlayRadius;
 
     // Current position in degrees from 0
-    const currentPos = (this.state.currentValue /
+    const currentPos = ((this.state.currentValue - this.property.range.min) /
       (this.property.range.max - this.property.range.min) * this.range) +
       this.settings.rangeMin;
 
@@ -208,8 +208,9 @@ export default class Knob extends React.Component<IProps, IState>
     const det = (this.mouseStart.x * currentY) - (this.mouseStart.y * currentX);
     const angleRad = Math.atan2(det, dot);
     const angle = angleRad * (180 / Math.PI);
-    let newPos = (this.state.currentValue / (this.property.range.max -
-      this.property.range.min) * this.range) + this.settings.rangeMin + angle;
+    let newPos = ((this.state.currentValue - this.property.range.min) /
+      (this.property.range.max - this.property.range.min) * this.range) +
+      this.settings.rangeMin + angle;
 
     // Mouse start can now but current mouse coords
     this.mouseStart.x = currentX;
@@ -217,8 +218,9 @@ export default class Knob extends React.Component<IProps, IState>
 
     newPos = this.limitPosition(newPos);
 
-    const newValue = (newPos / this.settings.rangeMax) *
-      (this.property.range.max - this.property.range.min);
+    const newValue = ((newPos / this.settings.rangeMax) *
+      (this.property.range.max - this.property.range.min)) +
+      this.property.range.min;
 
     this.setState({currentValue: newValue});
 

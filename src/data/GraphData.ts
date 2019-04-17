@@ -16,7 +16,6 @@
 // TODO: 'trigger' should have a momentary button
 // TODO: if a property has an input attached the control should be disabled
 // TODO: handle 'multiple' value of inputs/outputs and behaviour with 'default'
-// TODO: should connectors either be labeled or not be positioned at the edges?
 // TODO: show values and node labels on (time delay) mouse over
 // TODO: layout node properties nicely
 // TODO: update value using rest put

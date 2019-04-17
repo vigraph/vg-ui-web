@@ -65,8 +65,8 @@ export default class Slider extends React.Component<IProps, IState>
   public render()
   {
     // Current position from 0
-    const currentPos =  (this.state.currentValue / (this.property.range.max -
-      this.property.range.min)) * this.settings.length;
+    const currentPos =  ((this.state.currentValue - this.property.range.min) /
+      (this.property.range.max - this.property.range.min)) * this.settings.length;
     const position = this.props.position;
     const settings = this.settings;
 
@@ -122,8 +122,8 @@ export default class Slider extends React.Component<IProps, IState>
         e.currentTarget.getBoundingClientRect().top - window.scrollY);
       const newPos = this.limitPosition(newDistance);
       const newPercent = newPos / this.settings.length;
-      const newValue = newPercent * (this.property.range.max -
-        this.property.range.min)
+      const newValue = (newPercent * (this.property.range.max -
+        this.property.range.min)) + this.property.range.min;
 
       this.setState({currentValue: newValue});
       if (this.props.update)
@@ -151,15 +151,15 @@ export default class Slider extends React.Component<IProps, IState>
     const diff = this.settings.horizontal ? e.pageX - this.mouseStart.x :
       this.mouseStart.y - e.pageY;
 
-    let newPos = ((this.state.currentValue / (this.property.range.max -
-      this.property.range.min)) * this.settings.length) +
+    let newPos = (((this.state.currentValue - this.property.range.min ) /
+      (this.property.range.max - this.property.range.min)) * this.settings.length) +
       (diff / this.settings.slideScale);
 
     newPos = this.limitPosition(newPos);
 
     const newPercent = newPos / this.settings.length;
-    const newValue = newPercent * (this.property.range.max -
-        this.property.range.min)
+    const newValue = (newPercent * (this.property.range.max -
+      this.property.range.min)) + this.property.range.min;
 
     this.setState({currentValue: newValue});
 
