@@ -238,5 +238,188 @@
         "y": 240
       }
     }
+  },
+  "vco":
+  {
+    "width": 120,
+    "height": 200,
+    "properties":
+    {
+      "trigger":
+      {
+        "controlType": "button",
+        "subType": "circle",
+        "x": 40,
+        "y": 50
+      },
+
+      "clear":
+      {
+        "controlType": "button",
+        "subType": "circle",
+        "x": 80,
+        "y": 50
+      },
+
+      "wave":
+      {
+        "controlType": "selector",
+        "subType": "default",
+        "available": ["sin","square","triangle","saw","random"],
+        "rangeMin": 100,
+        "rangeMax": 500,
+        "increment": 100,
+        "x": 30,
+        "y": 100
+      },
+
+      "freq":
+      {
+        "controlType": "knob",
+        "subType": "default",
+        "rangeMin": 0,
+        "rangeMax": 4000,
+        "increment": 10,
+        "x": 40,
+        "y": 140
+      },
+
+      "pulse-width":
+      {
+        "controlType": "knob",
+        "subType": "default",
+        "rangeMin": 0,
+        "rangeMax": 1,
+        "increment": 0.01,
+        "x": 80,
+        "y": 140
+      }
+    }
+  },
+  "filter":
+  {
+    "width": 160,
+    "height": 200,
+    "properties":
+    {
+      "enable":
+      {
+        "controlType": "button",
+        "subType": "circle",
+        "x": 40,
+        "y": 50
+      },
+
+      "disable":
+      {
+        "controlType": "button",
+        "subType": "circle",
+        "x": 80,
+        "y": 50
+      },
+
+      "mode":
+      {
+        "controlType": "selector",
+        "subType": "default",
+        "available": ["low-pass","high-pass","band-pass"],
+        "rangeMin": 100,
+        "rangeMax": 300,
+        "increment": 100,
+        "x": 30,
+        "y": 100
+      },
+
+      "cutoff":
+      {
+        "controlType": "knob",
+        "subType": "default",
+        "rangeMin": 0,
+        "rangeMax": 1,
+        "increment": 0.01,
+        "x": 40,
+        "y": 140
+      },
+
+      "resonance":
+      {
+        "controlType": "knob",
+        "subType": "default",
+        "rangeMin": 0,
+        "rangeMax": 1,
+        "increment": 0.01,
+        "x": 80,
+        "y": 140
+      },
+
+      "steepness":
+      {
+        "controlType": "knob",
+        "subType": "default",
+        "rangeMin": 0,
+        "rangeMax": 5,
+        "increment": 1,
+        "x": 120,
+        "y": 140
+      }
+    }
+  },
+  "position":
+  {
+    "width": 50,
+    "height": 160,
+    "properties":
+    {
+      "x":
+      {
+        "controlType": "knob",
+        "subType": "default",
+        "rangeMin": -0.5,
+        "rangeMax": 0.5,
+        "increment": 0.01,
+        "x": 20,
+        "y": 30
+      },
+
+      "y":
+      {
+        "controlType": "knob",
+        "subType": "default",
+        "rangeMin": -0.5,
+        "rangeMax": 0.5,
+        "increment": 0.01,
+        "x": 20,
+        "y": 70
+      },
+
+      "z":
+      {
+        "controlType": "knob",
+        "subType": "default",
+        "rangeMin": -0.5,
+        "rangeMax": 0.5,
+        "increment": 0.01,
+        "x": 20,
+        "y": 110
+      }
+    }
+  },
+  "attenuator":
+  {
+    "width": 50,
+    "height": 80,
+    "properties":
+    {
+      "gain":
+      {
+        "controlType": "knob",
+        "subType": "default",
+        "rangeMin": 0,
+        "rangeMax": 1,
+        "increment": 0.01,
+        "x": 20,
+        "y": 30
+      }
+    }
   }
 }
