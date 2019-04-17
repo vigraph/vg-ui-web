@@ -118,6 +118,11 @@ button
     fill: blue;
 }
 
+.connector-label
+{
+    font-size: x-small;
+}
+
 #knob
 {
     overflow: visible;

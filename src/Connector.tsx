@@ -14,11 +14,21 @@ interface IProps
   radius: number;
 }
 
-export default class Connector extends React.Component<IProps>
+interface IState
+{
+  hover: boolean;
+}
+
+export default class Connector extends React.Component<IProps,IState>
 {
   constructor(props: IProps)
   {
     super(props);
+
+    this.state =
+    {
+      hover: false
+    }
   }
 
   public render()
@@ -38,6 +48,10 @@ export default class Connector extends React.Component<IProps>
           cx={position.x+(2*radius)}
           cy={position.y}
           r={radius} />
+        {this.props.connector.direction === "input" && this.state.hover ?
+          <text className="label connector-label input"
+            x={position.x + (radius*3)}
+            y={position.y}>{this.props.connector.id}</text> : ""}
       </svg>
     );
   }
@@ -69,11 +83,15 @@ export default class Connector extends React.Component<IProps>
   {
     this.props.updateTargetConnector({connector: this.props.connector,
       parent: this.props.parent});
+
+    this.setState({hover: true});
   }
 
   private mouseLeave = (e: React.MouseEvent<SVGRectElement>) =>
   {
     this.props.updateTargetConnector(null);
+
+    this.setState({hover: false});
   }
 
 }
