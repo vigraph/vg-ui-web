@@ -91,7 +91,7 @@ interface IProcessedMetadata
 }
 
 const restURL = 'http://192.168.0.68:33380';
-const mardingPadding = {x: 10, y: 10};
+const marginPadding = {x: 10, y: 10};
 const layoutPadding = {x: 50, y: 20};
 
 class GraphData
@@ -420,7 +420,7 @@ class GraphData
         rankNextPos[nRank] = {x: 0, y: 0};
       }
 
-      layout.x = (rankNextPos[nRank].x) + (nRank === 0 ? mardingPadding.x :
+      layout.x = (rankNextPos[nRank].x) + (nRank === 0 ? marginPadding.x :
         layoutPadding.x);
       layout.y = (rankNextPos[nRank].y) + layoutPadding.y;
 
