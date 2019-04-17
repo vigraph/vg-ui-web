@@ -302,7 +302,8 @@ export default class ColourPicker extends React.Component<IProps, IState>
 
   private updateHSL = (e: React.MouseEvent<SVGElement>, attr: string) =>
   {
-    const position = e.pageX - e.currentTarget.getBoundingClientRect().left;
+    const position = e.pageX - e.currentTarget.getBoundingClientRect().left -
+      window.scrollX;
     const newAttr = position / this.settings.barLength;
     const newValue = JSON.parse(JSON.stringify(this.allCurrentValues));
 
@@ -361,7 +362,8 @@ export default class ColourPicker extends React.Component<IProps, IState>
 
   private updateRGB = (e: React.MouseEvent<SVGElement>, attr: string) =>
   {
-    const position = e.pageX - e.currentTarget.getBoundingClientRect().left;
+    const position = e.pageX - e.currentTarget.getBoundingClientRect().left -
+      window.scrollX;
     const newAttr = position / this.settings.barLength;
     const newValue = JSON.parse(JSON.stringify(this.allCurrentValues));
 

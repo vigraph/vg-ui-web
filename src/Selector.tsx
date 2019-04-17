@@ -138,9 +138,9 @@ export default class Selector extends React.Component<IProps, IState>
   private calculateNewPosition = (e: React.MouseEvent<SVGElement>) =>
   {
     const position = this.settings.horizontal ?
-    e.pageX - e.currentTarget.getBoundingClientRect().left :
+    e.pageX - e.currentTarget.getBoundingClientRect().left - window.scrollX :
     this.settings.length - (e.pageY -
-    e.currentTarget.getBoundingClientRect().top);
+    e.currentTarget.getBoundingClientRect().top - window.scrollY);
 
     if (position < 0)
     {

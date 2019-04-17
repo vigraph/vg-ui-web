@@ -225,8 +225,10 @@ export default class Graph extends React.Component<IProps, IState>
     dummyNode.size = {w: 0, h: 0};
 
     const graphEle = document.getElementById("graph");
-    const graphOffsetX = graphEle ? graphEle.getBoundingClientRect().left : 0;
-    const graphOffsetY = graphEle ? graphEle.getBoundingClientRect().top : 0;
+    const graphOffsetX = graphEle ? graphEle.getBoundingClientRect().left +
+      window.scrollX : 0;
+    const graphOffsetY = graphEle ? graphEle.getBoundingClientRect().top +
+      window.scrollY : 0;
 
     dummyNode.position = {x: e.pageX-(3*csize)-graphOffsetX,
       y: e.pageY-csize-graphOffsetY}
@@ -323,8 +325,10 @@ export default class Graph extends React.Component<IProps, IState>
       const dnode = this.state.tempNodes.dummy;
 
       const graphEle = document.getElementById("graph");
-      const graphOffsetX = graphEle ? graphEle.getBoundingClientRect().left : 0;
-      const graphOffsetY = graphEle ? graphEle.getBoundingClientRect().top : 0;
+      const graphOffsetX = graphEle ? graphEle.getBoundingClientRect().left +
+        window.scrollX : 0;
+      const graphOffsetY = graphEle ? graphEle.getBoundingClientRect().top +
+        window.scrollY : 0;
 
       dnode.position = {x: e.pageX-(3*csize)-graphOffsetX,
         y: e.pageY-csize-graphOffsetY}
