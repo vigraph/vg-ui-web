@@ -186,12 +186,12 @@ button
 .button-inner.pressing,
 .button-inner.pressing.true
 {
-    fill: yellow;
+    fill: #80ff80;
 }
 
 .button-inner.true
 {
-    fill: green;
+    fill: #00ff00;
 }
 
 #slider
