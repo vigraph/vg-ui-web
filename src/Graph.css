@@ -15,16 +15,16 @@ button
 
 .node
 {
-    fill: black;
+    fill: #111;
     fill-opacity: 0.7;
-    stroke: white;
-    stroke-width: 1.5;
+    stroke: #ccc;
+    stroke-width: 0.75;
     overflow: visible;
 }
 
 .node.dragging
 {
-    fill: #331;
+    fill: #444;
 }
 
 .label
@@ -39,6 +39,7 @@ button
 
 .node-label
 {
+    font-weight: bold;
     text-anchor: middle;
 }
 
@@ -110,12 +111,12 @@ button
 
 .connector.input
 {
-    fill: red;
+    fill: #a44;
 }
 
 .connector.output
 {
-    fill: blue;
+    fill: #44c;
 }
 
 .connector-label
@@ -135,7 +136,7 @@ button
 
 .knob-background
 {
-    fill: blue;
+    fill: #444;
 }
 
 .knob-arc
@@ -151,7 +152,7 @@ button
 
 #knob.default .knob-arc
 {
-    fill: yellow;
+    fill: #00ff00;
 }
 
 #knob.basic .knob-overlay,
@@ -200,12 +201,12 @@ button
 
 .slider-background
 {
-    fill: blue;
+    fill: #444;
 }
 
 .slider-value
 {
-    fill: yellow;
+    fill: #00ff00;
 }
 
 .slider-dial
@@ -251,19 +252,19 @@ button
 
 .selector-position
 {
-    stroke: white;
+    stroke: #888;
     stroke-width: 1px;
-    fill: blue;
+    fill: #444;
 }
 
 .selector-position.selected
 {
-    fill: yellow;
+    fill: #00ff00;
 }
 
 .selector-dial
 {
-    stroke: grey;
+    stroke: black;
     stroke-width: 3px;
 }
 
