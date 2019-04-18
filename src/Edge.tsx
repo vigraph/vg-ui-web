@@ -8,8 +8,8 @@ interface IProps
   dest: Model.Node;
   destInput: string;
   offset: number;
-  removeEdge: (src: Model.Node, srcOutput: string, dest: Model.Node,
-    destInput: string) => void;
+  removeEdge: (srcID: string, srcOutput: string, destID: string,
+    destInput: string, success?: () => void) => void;
   moveEdge: (node: Model.Node, connectorId: string,
     e: MouseEvent, direction: string, remove: () => void) => void;
 }
@@ -95,7 +95,7 @@ export default class Edge extends React.Component<IProps, IState>
           this.state.edgeSelected && <svg className="delete-wrapper">
             <circle className="edge-delete"
               cx={deleteX} cy={deleteY} r={8}
-              onMouseDown={this.removeEdge}/>
+              onMouseDown={this.removeEdgeMouse}/>
             <path className="delete-line" d={`M ${deleteX-5} ${deleteY-5} L` +
               `${deleteX+5} ${deleteY+5}`}/>
             <path className="delete-line" d={`M ${deleteX-5} ${deleteY+5} L` +
@@ -164,11 +164,16 @@ export default class Edge extends React.Component<IProps, IState>
     this.setState({edgeSelected: !this.state.edgeSelected});
   }
 
-  private removeEdge = () =>
+  private removeEdgeMouse = () =>
+  {
+    this.removeEdge();
+  }
+
+  private removeEdge = (success?: () => void) =>
   {
     this.setState({edgeSelected: false});
-    this.props.removeEdge(this.props.src, this.props.srcOutput, this.props.dest,
-      this.props.destInput);
+    this.props.removeEdge(this.props.src.id, this.props.srcOutput,
+      this.props.dest.id, this.props.destInput, success);
   }
 }
 

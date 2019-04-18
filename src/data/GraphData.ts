@@ -146,6 +146,44 @@ class GraphData
       });
   }
 
+  public removeEdge(outputNodeID: string, outputID: string, success?: ()=>void)
+  {
+    this.addEdge(outputNodeID, outputID, undefined, undefined, success);
+  }
+
+  public addEdge(outputNodeID: string, outputID: string, inputNodeID?: string,
+    inputID?: string, success?: ()=>void)
+  {
+    const url = restURL + "/graph/" + outputNodeID + "/" + outputID;
+    const data = inputNodeID && inputID ? {"element": inputNodeID,
+      "prop": inputID} : {};
+
+    fetch(url,
+    {
+      method: "POST",
+      body: JSON.stringify(data)
+    })
+    .then(response =>
+      {
+        if (response.status === 200)
+        {
+          // Success
+          if (success)
+          {
+            success();
+          }
+        }
+        else
+        {
+          // Error
+        }
+      })
+    .catch(error =>
+      {
+        // Error
+      });
+  }
+
   private async getGraphData()
   {
     try
@@ -402,7 +440,7 @@ class GraphData
         layout.w = this.propertiesConfig[value.type].width;
       }
 
-      const nRank = ranks[value.id];
+      const nRank = ranks[value.id] ? ranks[value.id] : 0;
 
       if (typeof ranksCount[nRank] === "undefined")
       {

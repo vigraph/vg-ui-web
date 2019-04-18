@@ -160,15 +160,32 @@ export default class Graph extends React.Component<IProps, IState>
     this.graph.commitTransaction();
   }
 
-  private removeEdge = (src: Model.Node, srcOutput: string, dest: Model.Node,
+  private addEdge = (srcID: string, srcOutput: string, destID: string,
     destInput: string) =>
   {
-    this.graph.removeEdge(src.id, srcOutput, dest.id, destInput);
-    this.forceUpdate();
+    graphData.addEdge(srcID, srcOutput, destID, destInput, () =>
+      {
+        this.graph.addEdge(srcID, srcOutput, destID, destInput);
+        this.forceUpdate();
+      });
+  }
+
+  private removeEdge = (srcID: string, srcOutput: string, destID: string,
+    destInput: string, success?: ()=>void) =>
+  {
+    graphData.removeEdge(srcID, srcOutput, () =>
+      {
+        this.graph.removeEdge(srcID, srcOutput, destID, destInput);
+        if (success)
+        {
+          success();
+        }
+        this.forceUpdate();
+      });
   }
 
   private moveEdge = (node: Model.Node, connectorId: string,
-    e: MouseEvent, direction: string, selfRemove: () => void) =>
+    e: MouseEvent, direction: string, selfRemove: (success: ()=>void) => void) =>
   {
     const connector = (direction === "output") ?
       node.getOutputConnector(connectorId) :
@@ -176,9 +193,11 @@ export default class Graph extends React.Component<IProps, IState>
 
     if (connector)
     {
-      this.graph.beginTransaction();
-      selfRemove();
-      this.newMovingConnectorEdge(node, connector, e, true);
+      selfRemove(() =>
+        {
+          this.graph.beginTransaction();
+          this.newMovingConnectorEdge(node, connector, e, true);
+        });
     }
   }
 
@@ -201,9 +220,14 @@ export default class Graph extends React.Component<IProps, IState>
 
     if (srcNode && srcConnector)
     {
-      this.graph.beginTransaction();
-      this.removeEdge(srcNode, srcConnector.id, inNode, inConnector.id);
-      this.newMovingConnectorEdge(srcNode, srcConnector, e, true);
+      const sNode: Model.Node = srcNode;
+      const sConnector: Model.Connector = srcConnector;
+      this.removeEdge(sNode.id, sConnector.id, inNode.id, inConnector.id,
+        () =>
+        {
+          this.graph.beginTransaction();
+          this.newMovingConnectorEdge(sNode, sConnector, e, true);
+        });
     }
   }
 
@@ -299,12 +323,12 @@ export default class Graph extends React.Component<IProps, IState>
       {
         if (tconnector.connector.direction === "input")
         {
-          this.graph.addEdge(rnode.id, rconnector.id, tconnector.parent.id,
+          this.addEdge(rnode.id, rconnector.id, tconnector.parent.id,
             tconnector.connector.id);
         }
         else
         {
-          this.graph.addEdge(tconnector.parent.id, tconnector.connector.id,
+          this.addEdge(tconnector.parent.id, tconnector.connector.id,
             rnode.id, rconnector.id);
         }
       }
