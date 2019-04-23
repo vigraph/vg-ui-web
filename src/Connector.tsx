@@ -58,21 +58,14 @@ export default class Connector extends React.Component<IProps,IState>
 
   private mouseDown = (e: React.MouseEvent<SVGRectElement>) =>
   {
-    const parent = this.props.parent;
     const connector = this.props.connector;
 
-    // Input connectors cannot have more than one edge and can only move an
-    // edge connected to them, not start a new edge from themselves.
-    // Output connectors cannot have more edges (connections) than their
-    // maxConnections and cannot move edges connected to themselves already.
-    if (connector.direction === "output" &&
-      parent.edgesFromConnector(connector) < connector.maxConnections)
+    if (connector.direction === "output")
     {
       this.props.outputConnectorSelected(this.props.parent,
         this.props.connector, e, false);
     }
-    else if (connector.direction === "input" &&
-      parent.edgesFromConnector(connector) > 0)
+    else if (connector.direction === "input" && connector.multiple)
     {
       this.props.inputConnectorSelected(this.props.parent, this.props.connector,
         e);

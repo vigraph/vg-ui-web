@@ -9,10 +9,10 @@ import Graph from './Graph';
     {
       id: 'foo', type: 'x', x: 10, y: 50, w: 80, h: 100,
       inputs: [
-        { id: 'in1', connectorType: 'i', maxConnections: 1 }
+        { id: 'in1', connectorType: 'i', multiple: false }
       ],
       outputs: [
-        { id: 'out1', connectorType: 'i', maxConnections: 2 }
+        { id: 'out1', connectorType: 'i', multiple: false }
       ],
       edges: [
         { output: 'out1', destId: 'bar', input: 'in1' }
@@ -25,11 +25,11 @@ import Graph from './Graph';
     {
       id: 'bar', type: 'y', x: 200, y: 150, w: 115, h: 80,
       inputs: [
-        { id: 'in1', connectorType: 'i', maxConnections: 1 },
-        { id: 'in2', connectorType: 'i', maxConnections: 1 }
+        { id: 'in1', connectorType: 'i', multiple: false },
+        { id: 'in2', connectorType: 'i', multiple: false }
       ],
       outputs: [
-        { id: 'out1', connectorType: 'i', maxConnections: 1 }
+        { id: 'out1', connectorType: 'i', multiple: false }
       ],
       properties: [
         { id: 'second', controlType: 'slider', subType: 'default', x: 20, y: 40,
@@ -39,10 +39,10 @@ import Graph from './Graph';
     {
       id: 'splat', type: 'z', x: 10, y: 300, w: 80, h: 100,
       inputs: [
-        { id: 'in1', connectorType: 'i', maxConnections: 1 }
+        { id: 'in1', connectorType: 'i', multiple: false }
       ],
       outputs: [
-        { id: 'out1', connectorType: 'i', maxConnections: 1 }
+        { id: 'out1', connectorType: 'i', multiple: false }
       ],
       edges: [
         { output: 'out1', destId: 'bar', input: 'in2' }
@@ -55,10 +55,10 @@ import Graph from './Graph';
     {
       id: 'bing', type: 'z', x: 400, y: 100, w: 125, h: 80,
       inputs: [
-        { id: 'in1', connectorType: 'i', maxConnections: 1 }
+        { id: 'in1', connectorType: 'i', multiple: false }
       ],
       outputs: [
-        { id: 'out1', connectorType: 'i', maxConnections: 1 }
+        { id: 'out1', connectorType: 'i', multiple: false }
       ],
       edges: [],
       properties: [
@@ -70,10 +70,10 @@ import Graph from './Graph';
     {
       id: 'bang', type: 'y', x: 400, y: 300, w: 110, h: 75,
       inputs: [
-        { id: 'in1', connectorType: 'i', maxConnections: 1 }
+        { id: 'in1', connectorType: 'i', multiple: false }
       ],
       outputs: [
-        { id: 'out1', connectorType: 'i', maxConnections: 1 }
+        { id: 'out1', connectorType: 'i', multiple: false }
       ],
       edges: [],
       properties: [

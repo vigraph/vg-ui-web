@@ -37,15 +37,15 @@ export class Connector
       "position", pos);
   }
 
-  get maxConnections(): number
+  get multiple(): boolean
   {
     return this.graph.getNodeConnectorProp(this.id, this.parent, this.direction,
-      "maxConnections");
+      "multiple");
   }
 
-  set maxConnections(maxConnections: number)
+  set multiple(multiple: boolean)
   {
     this.graph.setNodeConnectorProp(this.id, this.parent, this.direction,
-      "maxConnections", maxConnections);
+      "multiple", multiple);
   }
 }

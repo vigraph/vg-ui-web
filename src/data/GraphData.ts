@@ -58,8 +58,8 @@ interface IProcessedGraphItem
   id: string,
   name: string,
   type: string,
-  inputs: Array<{ id: string, connectorType: string}>,
-  outputs: Array<{ id: string, connectorType: string, maxConnections?: number}>,
+  inputs: Array<{ id: string, connectorType: string, multiple?: boolean}>,
+  outputs: Array<{ id: string, connectorType: string, multiple?: boolean}>,
   edges: Array<{ output: string, destId: string, input: string}>,
   // propType = "iprop" | "prop" | "oprop"
   properties?: Array<{ id: string, propType: string, controlType: string,
@@ -84,8 +84,8 @@ interface IProcessedMetadata
 {
   [key: string]: {
     name: string,
-    inputs: Array<{ id: string, connectorType: string}>,
-    outputs: Array<{ id: string, connectorType: string}>,
+    inputs: Array<{ id: string, connectorType: string, multiple?: boolean}>,
+    outputs: Array<{ id: string, connectorType: string, multiple?: boolean}>,
     properties: Array<{ id: string, type: string, propType: string,
       description: string}>,
   }
@@ -155,8 +155,8 @@ class GraphData
     inputID?: string, success?: ()=>void)
   {
     const url = restURL + "/graph/" + outputNodeID + "/" + outputID;
-    const data = inputNodeID && inputID ? {"element": inputNodeID,
-      "prop": inputID} : {};
+    const data = inputNodeID && inputID ? [{"element": inputNodeID,
+      "prop": inputID}] : [];
 
     fetch(url,
     {
@@ -236,10 +236,10 @@ class GraphData
     rawMetadata.forEach((value: IRawMetadataItem, index: number) =>
     {
       const pInputs:
-        Array<{ id: string, connectorType: string}> = [];
+        Array<{ id: string, connectorType: string, multiple?: boolean}> = [];
 
       const pOutputs:
-        Array<{ id: string, connectorType: string}> = [];
+        Array<{ id: string, connectorType: string, multiple?: boolean}> = [];
 
       const pProps: Array<{ id: string, type: string, propType: string,
            description: string}> = [];
@@ -249,7 +249,8 @@ class GraphData
         value.inputs.forEach((input: {type: string, multiple?: boolean},
           iIndex: number) =>
           {
-            pInputs.push({id: "default", connectorType: input.type});
+            pInputs.push({id: "default", connectorType: input.type,
+              multiple: !!input.multiple});
           });
       }
 

@@ -10,8 +10,8 @@
 //   nodes: Map<id, {
 //            name: string
 //            type: string
-//            inputs: Map<id, { connectorType: string, maxConnections: number }>
-//            outputs: Map<id, { connectorType: string, maxConnections: number }>
+//            inputs: Map<id, { connectorType: string, multiple: boolean }>
+//            outputs: Map<id, { connectorType: string, multiple: boolean }>
 //            forwardEdges: Map<output, List<{ destId: string, destInput: string }>>
 //            reverseEdges: Map<input, List<{ srcId: string, srcOutput: string }>>
 //            position: { x, y },
@@ -50,8 +50,8 @@ export class Graph
   // Load a graph from the given JSON:
   // { nodes: [
   //     { id, name, type, x, y, w, h,
-  //       inputs: [ { id, connectorType, maxConnections }],
-  //       outputs: [ { id, connectorType, maxConnections }],
+  //       inputs: [ { id, connectorType, multiple }],
+  //       outputs: [ { id, connectorType, multiple }],
   //       edges: [ { output, destId, input } ]
   //       properties: [ { id, propType, controlType, subType, x, y, value,
   //                       rangeMin, rangeMax, increment } ]
@@ -71,7 +71,7 @@ export class Graph
         for (const i of n.inputs)
         {
           const input = this.addNodeInput(n.id, i.id, i.connectorType);
-          input.maxConnections = i.maxConnections || 1;
+          input.multiple = i.multiple || false;
           input.position = { x: 0,
             y: ((node.size.h)/(n.inputs.length+1))*(n.inputs.indexOf(i)+1)};
         }
@@ -82,7 +82,7 @@ export class Graph
         for (const o of n.outputs)
         {
           const input = this.addNodeOutput(n.id, o.id, o.connectorType);
-          input.maxConnections = o.maxConnections || 1;
+          input.multiple = o.multiple || false;
           input.position = { x: node.size.w,
             y: ((node.size.h)/(n.outputs.length+1))*(n.outputs.indexOf(o)+1)};
         }

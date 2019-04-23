@@ -163,11 +163,33 @@ export default class Graph extends React.Component<IProps, IState>
   private addEdge = (srcID: string, srcOutput: string, destID: string,
     destInput: string) =>
   {
-    graphData.addEdge(srcID, srcOutput, destID, destInput, () =>
+    const src = this.graph.getNode(srcID);
+
+    if (src)
+    {
+      // Only add edge if there are no other connections between the same
+      // connectors on the same nodes
+      if (!src.getForwardEdges().some((value:{outputId: string, dest: Model.Node,
+        destInput: string}) =>
+        {
+          if (value.outputId === srcOutput && value.dest.id === destID &&
+            value.destInput === destInput)
+          {
+            return true;
+          }
+          else
+          {
+            return false;
+          }
+        }))
       {
-        this.graph.addEdge(srcID, srcOutput, destID, destInput);
-        this.forceUpdate();
-      });
+        graphData.addEdge(srcID, srcOutput, destID, destInput, () =>
+          {
+            this.graph.addEdge(srcID, srcOutput, destID, destInput);
+            this.forceUpdate();
+          });
+      }
+    }
   }
 
   private removeEdge = (srcID: string, srcOutput: string, destID: string,
@@ -274,7 +296,7 @@ export default class Graph extends React.Component<IProps, IState>
         dummyConnector.id);
     }
 
-    dummyConnector.maxConnections = 1;
+    dummyConnector.multiple = false;
     dummyConnector.position = {x: csize, y: csize};
 
     this.setState({ tempNodes: {dummy: dummyNode, real: node }});
@@ -312,16 +334,15 @@ export default class Graph extends React.Component<IProps, IState>
       this.graph.removeNode(dnode.id);
 
       // If the target connector has the same connector type as the previously
-      // selected connector, the same direction as the dummy connector and has
-      // not reached its maximum number of connectors, then add a permanent
+      // selected connector, the same direction as the dummy connector and can
+      // accept multiple connections (input only), then add a permanent
       // edge between selected connector and target connector.
       if (tconnector && tconnector.connector && tconnector.parent &&
         tconnector.connector.connectorType === rconnector.connectorType &&
-        tconnector.connector.direction === dconnector.direction &&
-        tconnector.parent.edgesFromConnector(tconnector.connector) <
-        tconnector.connector.maxConnections)
+        tconnector.connector.direction === dconnector.direction)
       {
-        if (tconnector.connector.direction === "input")
+        if (tconnector.connector.direction === "input"
+          && tconnector.connector.multiple)
         {
           this.addEdge(rnode.id, rconnector.id, tconnector.parent.id,
             tconnector.connector.id);
