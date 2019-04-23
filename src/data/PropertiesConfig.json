@@ -421,5 +421,34 @@
         "y": 30
       }
     }
+  },
+  "audio-to-vector":
+  {
+    "width": 120,
+    "height": 120,
+    "properties":
+    {
+      "slope":
+      {
+        "controlType": "selector",
+        "subType": "default",
+        "available": ["free","rising","falling"],
+        "rangeMin": 100,
+        "rangeMax": 300,
+        "increment": 100,
+        "x": 30,
+        "y": 30
+      },
+      "level":
+      {
+        "controlType": "knob",
+        "subType": "default",
+        "rangeMin": -1,
+        "rangeMax": 1,
+        "increment": 0.01,
+        "x": 55,
+        "y": 60
+      }
+    }
   }
 }
