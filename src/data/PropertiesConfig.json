@@ -72,10 +72,10 @@
       {
         "controlType": "selector",
         "subType": "vert",
-        "available": ["sin","square","triangle","saw"],
+        "available": ["sin","square","triangle","saw","random"],
         "rangeMin": 100,
-        "rangeMax": 400,
-        "increment": 100,
+        "rangeMax": 500,
+        "increment": 80,
         "x": 120,
         "y": 20
       }
