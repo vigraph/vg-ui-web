@@ -341,11 +341,14 @@ export default class Graph extends React.Component<IProps, IState>
         tconnector.connector.connectorType === rconnector.connectorType &&
         tconnector.connector.direction === dconnector.direction)
       {
-        if (tconnector.connector.direction === "input"
-          && tconnector.connector.multiple)
+        if (tconnector.connector.direction === "input")
         {
-          this.addEdge(rnode.id, rconnector.id, tconnector.parent.id,
-            tconnector.connector.id);
+          if (tconnector.connector.multiple ||
+            tconnector.parent.edgesFromConnector(tconnector.connector) < 1)
+          {
+            this.addEdge(rnode.id, rconnector.id, tconnector.parent.id,
+              tconnector.connector.id);
+          }
         }
         else
         {
