@@ -164,8 +164,9 @@ export default class Graph extends React.Component<IProps, IState>
     destInput: string) =>
   {
     const src = this.graph.getNode(srcID);
+    const output = src ? src.getOutputConnector(srcOutput) : null;
 
-    if (src)
+    if (src && output)
     {
       // Only add edge if there are no other connections between the same
       // connectors on the same nodes
@@ -183,7 +184,10 @@ export default class Graph extends React.Component<IProps, IState>
           }
         }))
       {
-        graphData.addEdge(srcID, srcOutput, destID, destInput, () =>
+        const edges = src.edgesFromConnector(output);
+        edges.push({dest: destID, destInput});
+
+        graphData.updateEdges(srcID, srcOutput, edges, () =>
           {
             this.graph.addEdge(srcID, srcOutput, destID, destInput);
             this.forceUpdate();
@@ -195,15 +199,27 @@ export default class Graph extends React.Component<IProps, IState>
   private removeEdge = (srcID: string, srcOutput: string, destID: string,
     destInput: string, success?: ()=>void) =>
   {
-    graphData.removeEdge(srcID, srcOutput, () =>
-      {
-        this.graph.removeEdge(srcID, srcOutput, destID, destInput);
-        if (success)
+    const src = this.graph.getNode(srcID);
+    const output = src ? src.getOutputConnector(srcOutput) : null;
+
+    if (src && output)
+    {
+      const edges = src.edgesFromConnector(output);
+      const newEdges = edges.filter((value: {dest: string, destInput: string}) =>
         {
-          success();
-        }
-        this.forceUpdate();
-      });
+          return !(destID === value.dest && destInput === value.destInput);
+        });
+
+      graphData.updateEdges(srcID, srcOutput, newEdges, () =>
+        {
+          this.graph.removeEdge(srcID, srcOutput, destID, destInput);
+          if (success)
+          {
+            success();
+          }
+          this.forceUpdate();
+        });
+    }
   }
 
   private moveEdge = (node: Model.Node, connectorId: string,
@@ -344,7 +360,8 @@ export default class Graph extends React.Component<IProps, IState>
         if (tconnector.connector.direction === "input")
         {
           if (tconnector.connector.multiple ||
-            tconnector.parent.edgesFromConnector(tconnector.connector) < 1)
+            tconnector.parent.edgesFromConnector(tconnector.connector).length <
+            1)
           {
             this.addEdge(rnode.id, rconnector.id, tconnector.parent.id,
               tconnector.connector.id);

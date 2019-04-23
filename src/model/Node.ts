@@ -116,9 +116,10 @@ export class Node
   }
 
   // Number of edges connected to the given connector
-  public edgesFromConnector(connector: Connector): number
+  public edgesFromConnector(connector: Connector): Array<{dest: string,
+    destInput: string}>
   {
-    let count = 0;
+    const result: Array<{dest: string, destInput: string}> = [];
 
     if (connector.direction === "input")
     {
@@ -129,7 +130,7 @@ export class Node
         {
           if (edge.inputId === connector.id)
           {
-            count++;
+            result.push({dest: edge.src.id, destInput: edge.srcOutput});
           }
         });
     }
@@ -142,12 +143,12 @@ export class Node
         {
           if (edge.outputId === connector.id)
           {
-            count++;
+            result.push({dest: edge.dest.id, destInput: edge.destInput});
           }
         });
     }
 
-    return count;
+    return result;
   }
 
   // Return array of properties for this node

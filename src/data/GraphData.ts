@@ -146,17 +146,17 @@ class GraphData
       });
   }
 
-  public removeEdge(outputNodeID: string, outputID: string, success?: ()=>void)
-  {
-    this.addEdge(outputNodeID, outputID, undefined, undefined, success);
-  }
-
-  public addEdge(outputNodeID: string, outputID: string, inputNodeID?: string,
-    inputID?: string, success?: ()=>void)
+  public updateEdges(outputNodeID: string, outputID: string,
+    edges: Array<{dest: string, destInput: string}>, success?: ()=>void)
   {
     const url = restURL + "/graph/" + outputNodeID + "/" + outputID;
-    const data = inputNodeID && inputID ? [{"element": inputNodeID,
-      "prop": inputID}] : [];
+
+    const data: Array<{"element": string, "prop": string}> = [];
+
+    edges.forEach((value: {dest: string, destInput: string}) =>
+    {
+      data.push({"element": value.dest, "prop": value.destInput});
+    })
 
     fetch(url,
     {
