@@ -26,12 +26,12 @@ button
 
 body::-webkit-scrollbar
 {
-    width: 16px;
+    width: 12px;
     background-color: black;
 }
 body::-webkit-scrollbar-thumb
 {
-  background-color: #333;
+  background-color: #222;
 }
 
 body::-webkit-scrollbar-corner
