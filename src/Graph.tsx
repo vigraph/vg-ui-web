@@ -21,13 +21,17 @@ interface IState
 {
   propertiesDisplay: {labels: boolean; controls: boolean},
   tempNodes: {dummy: Model.Node, real: Model.Node} | null,
-  tempConnectors:{ dummy: Model.Connector,  real: Model.Connector} | null
-  targetConnector: { connector: Model.Connector, parent: Model.Node } | null
+  tempConnectors:{ dummy: Model.Connector,  real: Model.Connector} | null,
+  targetConnector: { connector: Model.Connector, parent: Model.Node } | null,
+  showMenu: boolean
 }
 
 export default class Graph extends React.Component<IProps, IState>
 {
   private graph: Model.Graph = new Model.Graph();
+  private mouseClick: {x: number, y: number};
+  private subMenu: string | null;
+  private idCount: number;
 
   constructor(props: IProps)
   {
@@ -51,8 +55,13 @@ export default class Graph extends React.Component<IProps, IState>
       propertiesDisplay: {labels: true, controls: true},
       tempNodes: null,
       tempConnectors: null,
-      targetConnector: null
+      targetConnector: null,
+      showMenu: false
     };
+
+    this.mouseClick = {x: 0, y: 0};
+    this.subMenu = null;
+    this.idCount = 0;
   }
 
   // Load a new graph after mounting
@@ -66,63 +75,68 @@ export default class Graph extends React.Component<IProps, IState>
   public render()
   {
     return (
-      <svg id="graph">
-        <svg id="edges">
-          {
-            this.graph.getNodes().map((node: Model.Node, i) =>
+      <div className="wrapper">
+        {this.state.showMenu && this.createMenu()}
+        <svg id="graph" onMouseDown={this.handleMouseDown}
+          onContextMenu={this.handleContextMenu}>
+          <svg id="edges">
             {
-              return node.getForwardEdges().map(
-                (edge: {outputId: string, dest: Model.Node, destInput: string},
-                  index) =>
-                {
-                  return <Edge key={i+","+index} src={node}
-                    srcOutput={edge.outputId} dest={edge.dest}
-                    destInput={edge.destInput} offset={csize}
-                    removeEdge={this.removeEdge}
-                    moveEdge={this.moveEdge}/>
-                });
-            })
+              this.graph.getNodes().map((node: Model.Node, i) =>
+              {
+                return node.getForwardEdges().map(
+                  (edge: {outputId: string, dest: Model.Node, destInput: string},
+                    index) =>
+                  {
+                    return <Edge key={i+","+index} src={node}
+                      srcOutput={edge.outputId} dest={edge.dest}
+                      destInput={edge.destInput} offset={csize}
+                      removeEdge={this.removeEdge}
+                      moveEdge={this.moveEdge}/>
+                  });
+              })
+            }
+          </svg>
+          <svg id="nodes">
+            {
+              this.graph.getNodes().map((node: Model.Node, i) =>
+              {
+                return <Node key={node.id} node={node}
+                  startUpdate={this.startUpdate}
+                  update={this.movementUpdate}
+                  endUpdate={this.endUpdate}
+                  padding={csize*2}
+                  propertiesDisplay={this.state.propertiesDisplay}
+                  removeNode={this.removeNode}>
+                  {
+                    this.graph.getNodeConnectors(node.id, "input").map(
+                    (connector: Model.Connector, j) =>
+                    {
+                      return <Connector key={j}
+                        parent={node}
+                        connector={connector}
+                        inputConnectorSelected={this.moveEdgeFromInput}
+                        outputConnectorSelected={this.newMovingConnectorEdge}
+                        updateTargetConnector={this.updateTargetConnector}
+                        radius={csize}/>
+                    })}
+                  {this.graph.getNodeConnectors(node.id, "output").map(
+                    (connector: Model.Connector, j) =>
+                    {
+                      return <Connector key={j}
+                        parent={node}
+                        connector={connector}
+                        inputConnectorSelected={this.moveEdgeFromInput}
+                        outputConnectorSelected={this.newMovingConnectorEdge}
+                        updateTargetConnector={this.updateTargetConnector}
+                        radius={csize}/>
+                    })}
+                </Node>
+              })
+            }
+          </svg>
           }
         </svg>
-        <svg id="nodes">
-          {
-            this.graph.getNodes().map((node: Model.Node, i) =>
-            {
-              return <Node key={node.id} node={node}
-                startUpdate={this.startUpdate}
-                update={this.movementUpdate}
-                endUpdate={this.endUpdate}
-                padding={csize*2}
-                propertiesDisplay={this.state.propertiesDisplay}>
-                {
-                  this.graph.getNodeConnectors(node.id, "input").map(
-                  (connector: Model.Connector, j) =>
-                  {
-                    return <Connector key={j}
-                      parent={node}
-                      connector={connector}
-                      inputConnectorSelected={this.moveEdgeFromInput}
-                      outputConnectorSelected={this.newMovingConnectorEdge}
-                      updateTargetConnector={this.updateTargetConnector}
-                      radius={csize}/>
-                  })}
-                {this.graph.getNodeConnectors(node.id, "output").map(
-                  (connector: Model.Connector, j) =>
-                  {
-                    return <Connector key={j}
-                      parent={node}
-                      connector={connector}
-                      inputConnectorSelected={this.moveEdgeFromInput}
-                      outputConnectorSelected={this.newMovingConnectorEdge}
-                      updateTargetConnector={this.updateTargetConnector}
-                      radius={csize}/>
-                  })}
-              </Node>
-            })
-          }
-        </svg>
-        }
-      </svg>
+      </div>
     );
   }
 
@@ -158,6 +172,114 @@ export default class Graph extends React.Component<IProps, IState>
   private endUpdate = () =>
   {
     this.graph.commitTransaction();
+  }
+
+  private createMenu = () =>
+  {
+    const sMetadata = graphData.returnSectionedMetadata();
+
+    let aMetadata = []
+
+    if (this.subMenu)
+    {
+      aMetadata = sMetadata[this.subMenu];
+    }
+    else
+    {
+      for (const key of Object.keys(sMetadata))
+      {
+        aMetadata.push(key);
+      }
+    }
+
+    return <div className="menu" style={{left: this.mouseClick.x,
+        top: this.mouseClick.y}} onContextMenu={this.handleMenuContextMenu}>
+      {
+        aMetadata.map((value: string, index: number) =>
+        {
+          return <div key={index} id={"menu-"+value} className="menu-item"
+            onMouseDown={this.handleMenuMouseDown}> {value} </div>
+        })
+      }
+    </div>
+  }
+
+  private handleMenuMouseDown = (e: React.MouseEvent<HTMLDivElement>) =>
+  {
+    const target = e.currentTarget.id;
+    const id = target.substring(5, target.length);
+
+    if (!this.subMenu)
+    {
+      this.subMenu = id;
+      this.forceUpdate();
+    }
+    else
+    {
+      this.subMenu = null;
+      this.setState({showMenu: false});
+      this.createNewNode(id);
+    }
+  }
+
+  // Do nothing - prevents browser context menu from showing
+  private handleMenuContextMenu = (e: React.MouseEvent<HTMLDivElement>) =>
+  {
+    e.preventDefault();
+  }
+
+  // Do nothing - prevents browser context menu from showing
+  private handleContextMenu = (e: React.MouseEvent<SVGSVGElement>) =>
+  {
+    e.preventDefault();
+  }
+
+  private handleMouseDown = (e: React.MouseEvent<SVGSVGElement>) =>
+  {
+    e.preventDefault();
+
+    if (e.button === 2)
+    {
+      this.subMenu = null;
+      this.mouseClick = {x: e.pageX, y: e.pageY};
+      this.setState({showMenu: true});
+    }
+    else
+    {
+      this.subMenu = null;
+      this.setState({showMenu: false});
+    }
+  }
+
+  private createNewNode = (type: string) =>
+  {
+    let flag = false;
+
+    while (!flag)
+    {
+      const node = this.graph.getNode(type+"-"+this.idCount);
+      if (node)
+      {
+        this.idCount++;
+      }
+      else
+      {
+        flag = true;
+      }
+    }
+
+    const id = type+"-"+this.idCount;
+
+    graphData.createNode(id, type);
+
+    // TODO: add new node to model without needing a full refresh
+  }
+
+  private removeNode = (id: string) =>
+  {
+    graphData.deleteNode(id);
+
+    // TODO: delete node and its edges from model without needing a full refresh
   }
 
   private addEdge = (srcID: string, srcOutput: string, destID: string,

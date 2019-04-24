@@ -84,6 +84,7 @@ interface IProcessedMetadata
 {
   [key: string]: {
     name: string,
+    section: string,
     inputs: Array<{ id: string, connectorType: string, multiple?: boolean}>,
     outputs: Array<{ id: string, connectorType: string, multiple?: boolean}>,
     properties: Array<{ id: string, type: string, propType: string,
@@ -102,14 +103,28 @@ class GraphData
   private inputEdgeMap: { [key: string]: string[]};
   private outputEdgeMap: { [key: string]: string[]};
   private propertiesConfig: IPropertiesConfig;
+  private processedMetadata: IProcessedMetadata;
+  private sectionedMetadata: { [key: string]: string[]};
 
   public constructor()
   {
     this.rest = new rm.RestClient('vigraph-rest', restURL);
     this.inputEdgeMap = {};
     this.outputEdgeMap = {};
+    this.processedMetadata = {};
+    this.sectionedMetadata = {};
 
     this.propertiesConfig = require('./PropertiesConfig.json');
+  }
+
+  public returnMetadata()
+  {
+    return this.processedMetadata;
+  }
+
+  public returnSectionedMetadata()
+  {
+    return this.sectionedMetadata;
   }
 
   public generateGraph(success: (json: any) => void)
@@ -182,6 +197,94 @@ class GraphData
       {
         // Error
       });
+  }
+
+  public createNode(nodeID: string, nodeType: string, success?: ()=>void)
+  {
+    const url = restURL + "/graph/" + nodeID;
+    const data = {type: nodeType}
+
+    fetch(url,
+    {
+      method: "PUT",
+      body: JSON.stringify(data)
+    })
+    .then(response =>
+      {
+        if (response.status === 200)
+        {
+          // Success
+          if (success)
+          {
+            success();
+          }
+        }
+        else
+        {
+          // Error
+        }
+      })
+    .catch(error =>
+      {
+        // Error
+      });
+  }
+
+  public deleteNode(nodeID: string, success?: ()=>void)
+  {
+    const url = restURL + "/graph/" + nodeID;
+
+    fetch(url,
+    {
+      method: "DELETE"
+    })
+    .then(response =>
+      {
+        if (response.status === 200)
+        {
+          // Success
+          if (success)
+          {
+            success();
+          }
+        }
+        else
+        {
+          // Error
+        }
+      })
+    .catch(error =>
+      {
+        // Error
+      });
+  }
+
+  public getNode(nodeID: string, success?: (result: IRawGraphItem)=>void)
+  {
+    this.getNodeByID(nodeID, success);
+  }
+
+  private async getNodeByID(nodeID: string,
+    success?: (result: IRawGraphItem)=>void)
+  {
+    try
+    {
+      const res: rm.IRestResponse<IRawGraphItem> =
+        await this.rest.get<IRawGraphItem>('/graph/'+nodeID);
+
+      if (res.statusCode === 200 && res.result && success)
+      {
+        success(res.result);
+      }
+      else
+      {
+        // Error with status code - res.StatusCode;
+      }
+    }
+    catch (error)
+    {
+      // Error with status code - res.StatusCode;
+    }
   }
 
   private async getGraphData()
@@ -312,11 +415,22 @@ class GraphData
       processedMetadata[value.id] =
       {
         name: value.name,
+        section: value.section,
         inputs: pInputs,
         outputs: pOutputs,
         properties: pProps
       };
+
+      if (!this.sectionedMetadata[value.section])
+      {
+        this.sectionedMetadata[value.section] = [];
+      }
+
+      this.sectionedMetadata[value.section].push(value.id);
+
     });
+
+    this.processedMetadata = processedMetadata;
 
     return processedMetadata;
   }

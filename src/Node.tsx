@@ -11,6 +11,7 @@ interface IProps
   endUpdate: () => void;
   padding: number;
   propertiesDisplay: {labels: boolean; controls: boolean};
+  removeNode: (id: string) => void;
 }
 
 interface IState
@@ -18,6 +19,7 @@ interface IState
   dragging: boolean;
   x: number;
   y: number;
+  hover: boolean;
 }
 
 export default class Node extends React.Component<IProps, IState>
@@ -41,7 +43,8 @@ export default class Node extends React.Component<IProps, IState>
       {
         dragging: false,
         x: props.node.position.x,
-        y: props.node.position.y
+        y: props.node.position.y,
+        hover: false
       };
 
     this.node = props.node;
@@ -56,11 +59,17 @@ export default class Node extends React.Component<IProps, IState>
 
     const properties = this.node.getProperties();
 
+    const deleteX = padding + size.w;
+    const deleteY = size.h;
+
     return (
-      <svg x={this.state.x} y={this.state.y}>
+      <svg x={this.state.x} y={this.state.y}
+        onMouseEnter={this.handleMouseEnter}
+        onMouseLeave={this.handleMouseLeave}>
         <rect x={padding} width={size.w} height={size.h}
           className={`node ${this.state.dragging ? "dragging" : ""}`}
           onMouseDown={this.handleMouseDown}
+          onContextMenu={this.handleContextMenu}
         />
         <text className={"node-label label " + this.props.node.id}
           x={(size.w/2)+padding} y={15}>{this.node.name}</text>
@@ -75,12 +84,29 @@ export default class Node extends React.Component<IProps, IState>
               endUpdate={this.props.endUpdate}/>
           })}
         />
+        {this.state.hover && <svg className="delete-wrapper">
+            <circle className="node-delete"
+              cx={deleteX} cy={deleteY} r={8}
+              onMouseDown={this.removeNode}/>
+            <path className="delete-line" d={`M ${deleteX-5} ${deleteY-5} L` +
+              `${deleteX+5} ${deleteY+5}`}/>
+            <path className="delete-line" d={`M ${deleteX-5} ${deleteY+5} L` +
+              `${deleteX+5} ${deleteY-5}`}/>
+        </svg>}
       </svg>
     );
   }
 
+  // Do nothing - prevents browser context menu from showing
+  private handleContextMenu = (e: React.MouseEvent<SVGRectElement>) =>
+  {
+    e.preventDefault();
+    e.stopPropagation();
+  }
+
   private handleMouseDown = (e: React.MouseEvent<SVGRectElement>) =>
   {
+    e.stopPropagation();
     window.addEventListener('mouseup', this.handleMouseUp);
     window.addEventListener('mousemove', this.handleMouseMove);
     this.setState({ dragging: true });
@@ -117,6 +143,21 @@ export default class Node extends React.Component<IProps, IState>
     {
       this.props.update();
     }
+  }
+
+  private handleMouseEnter = () =>
+  {
+    this.setState({hover: true});
+  }
+
+  private handleMouseLeave = () =>
+  {
+    this.setState({hover: false});
+  }
+
+  private removeNode = () =>
+  {
+    this.props.removeNode(this.node.id);
   }
 }
 
