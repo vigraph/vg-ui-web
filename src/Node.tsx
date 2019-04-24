@@ -71,6 +71,15 @@ export default class Node extends React.Component<IProps, IState>
           onMouseDown={this.handleMouseDown}
           onContextMenu={this.handleContextMenu}
         />
+        {this.state.hover && <svg className="delete-wrapper">
+            <circle className="node-delete"
+              cx={deleteX} cy={deleteY} r={8}
+              onMouseDown={this.removeNode}/>
+            <path className="delete-line" d={`M ${deleteX-5} ${deleteY-5} L` +
+              `${deleteX+5} ${deleteY+5}`}/>
+            <path className="delete-line" d={`M ${deleteX-5} ${deleteY+5} L` +
+              `${deleteX+5} ${deleteY-5}`}/>
+        </svg>}
         <text className={"node-label label " + this.props.node.id}
           x={(size.w/2)+padding} y={15}>{this.node.name}</text>
         {this.props.children}
@@ -84,15 +93,6 @@ export default class Node extends React.Component<IProps, IState>
               endUpdate={this.props.endUpdate}/>
           })}
         />
-        {this.state.hover && <svg className="delete-wrapper">
-            <circle className="node-delete"
-              cx={deleteX} cy={deleteY} r={8}
-              onMouseDown={this.removeNode}/>
-            <path className="delete-line" d={`M ${deleteX-5} ${deleteY-5} L` +
-              `${deleteX+5} ${deleteY+5}`}/>
-            <path className="delete-line" d={`M ${deleteX-5} ${deleteY+5} L` +
-              `${deleteX+5} ${deleteY-5}`}/>
-        </svg>}
       </svg>
     );
   }
