@@ -2,6 +2,7 @@ import * as React from 'react';
 
 import './App.css';
 import Graph from './Graph';
+import WebsocketCanvas from './WebsocketCanvas';
 
 /* const exampleGraph =
 {
@@ -98,11 +99,14 @@ export default class App extends React.Component
   {
     return (
       <div id="container">
-        <button onClick={this.handleUndo}>Undo</button>
-        <button onClick={this.handleRedo}>Redo</button>
-        <button onClick={this.handleToggleControls}>Toggle Controls</button>
-        <button onClick={this.handleToggleLabels}>Toggle Labels</button>
+        <div id="buttons">
+          <button onClick={this.handleUndo}>Undo</button>
+          <button onClick={this.handleRedo}>Redo</button>
+          <button onClick={this.handleToggleControls}>Toggle Controls</button>
+          <button onClick={this.handleToggleLabels}>Toggle Labels</button>
+        </div>
         <Graph ref={this.graph} /* from={exampleGraph} */ />
+        <WebsocketCanvas />
       </div>
     );
   }
