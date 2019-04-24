@@ -7,8 +7,8 @@
 #canvas
 {
     position: fixed;
-    right: 4px;
-    bottom: 4px;
+    right: 10px;
+    bottom: 10px;
     border: solid 1px #444;
 }
 
