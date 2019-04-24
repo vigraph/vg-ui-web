@@ -450,5 +450,103 @@
         "y": 60
       }
     }
+  },
+  "scale":
+  {
+    "width": 50,
+    "height": 160,
+    "properties":
+    {
+      "x":
+      {
+        "controlType": "knob",
+        "subType": "default",
+        "rangeMin": 0,
+        "rangeMax": 5,
+        "increment": 0.01,
+        "x": 20,
+        "y": 30
+      },
+
+      "y":
+      {
+        "controlType": "knob",
+        "subType": "default",
+        "rangeMin": 0,
+        "rangeMax": 5,
+        "increment": 0.01,
+        "x": 20,
+        "y": 70
+      },
+
+      "z":
+      {
+        "controlType": "knob",
+        "subType": "default",
+        "rangeMin": 0,
+        "rangeMax": 5,
+        "increment": 0.01,
+        "x": 20,
+        "y": 110
+      }
+    }
+  },
+  "add":
+  {
+    "width": 50,
+    "height": 110,
+    "properties":
+    {
+      "value":
+      {
+        "controlType": "knob",
+        "subType": "default",
+        "rangeMin": 0,
+        "rangeMax": 5,
+        "increment": 0.01,
+        "x": 20,
+        "y": 30
+      },
+
+      "offset":
+      {
+        "controlType": "knob",
+        "subType": "default",
+        "rangeMin": 0,
+        "rangeMax": 5,
+        "increment": 0.01,
+        "x": 20,
+        "y": 70
+      }
+    }
+  },
+  "multiply":
+  {
+    "width": 50,
+    "height": 110,
+    "properties":
+    {
+      "value":
+      {
+        "controlType": "knob",
+        "subType": "default",
+        "rangeMin": 0,
+        "rangeMax": 5,
+        "increment": 0.01,
+        "x": 20,
+        "y": 30
+      },
+
+      "factor":
+      {
+        "controlType": "knob",
+        "subType": "default",
+        "rangeMin": 0,
+        "rangeMax": 5,
+        "increment": 0.01,
+        "x": 20,
+        "y": 70
+      }
+    }
   }
 }
