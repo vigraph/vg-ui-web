@@ -62,46 +62,7 @@ export class Graph
     // First pass to create nodes, connectors and properties
     for (const n of json.nodes)
     {
-      const node = this.addNode(n.id, n.type || "?");
-      node.name = n.name || n.id;
-      node.position = { x: n.x || 0, y: n.y || 0 };
-      node.size = { w: n.w || 50, h: n.h || 50 };
-      if (n.inputs)
-      {
-        for (const i of n.inputs)
-        {
-          const input = this.addNodeInput(n.id, i.id, i.connectorType);
-          input.multiple = i.multiple || false;
-          input.position = { x: 0,
-            y: ((node.size.h)/(n.inputs.length+1))*(n.inputs.indexOf(i)+1)};
-        }
-      }
-
-      if (n.outputs)
-      {
-        for (const o of n.outputs)
-        {
-          const input = this.addNodeOutput(n.id, o.id, o.connectorType);
-          input.multiple = o.multiple || false;
-          input.position = { x: node.size.w,
-            y: ((node.size.h)/(n.outputs.length+1))*(n.outputs.indexOf(o)+1)};
-        }
-      }
-
-      if (n.properties)
-      {
-        for (const p of n.properties)
-        {
-          const property = this.addProperty(n.id, p.id, p.propType);
-          property.controlType = p.controlType || "default"
-          property.subType = p.subType || "?";
-          property.position = { x: p.x || 0, y: p.y || 0 };
-          property.value = p.value || 0;
-          property.range = { min: p.rangeMin || 0, max: p.rangeMax || 1};
-          property.increment = p.increment || 1;
-          property.available = p.available || [];
-        }
-      }
+      this.addNodeFromJSON(n);
     }
 
     // Second pass to create edges
@@ -118,6 +79,50 @@ export class Graph
 
     this.commitTransaction();
     this.resetBaseline();
+  }
+
+  public addNodeFromJSON(n: any)
+  {
+    const node = this.addNode(n.id, n.type || "?");
+    node.name = n.name || n.id;
+    node.position = { x: n.x || 0, y: n.y || 0 };
+    node.size = { w: n.w || 50, h: n.h || 50 };
+    if (n.inputs)
+    {
+      for (const i of n.inputs)
+      {
+        const input = this.addNodeInput(n.id, i.id, i.connectorType);
+        input.multiple = i.multiple || false;
+        input.position = { x: 0,
+          y: ((node.size.h)/(n.inputs.length+1))*(n.inputs.indexOf(i)+1)};
+      }
+    }
+
+    if (n.outputs)
+    {
+      for (const o of n.outputs)
+      {
+        const input = this.addNodeOutput(n.id, o.id, o.connectorType);
+        input.multiple = o.multiple || false;
+        input.position = { x: node.size.w,
+          y: ((node.size.h)/(n.outputs.length+1))*(n.outputs.indexOf(o)+1)};
+      }
+    }
+
+    if (n.properties)
+    {
+      for (const p of n.properties)
+      {
+        const property = this.addProperty(n.id, p.id, p.propType);
+        property.controlType = p.controlType || "default"
+        property.subType = p.subType || "?";
+        property.position = { x: p.x || 0, y: p.y || 0 };
+        property.value = p.value || 0;
+        property.range = { min: p.rangeMin || 0, max: p.rangeMax || 1};
+        property.increment = p.increment || 1;
+        property.available = p.available || [];
+      }
+    }
   }
 
   public getNodes(): Node[]

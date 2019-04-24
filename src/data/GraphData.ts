@@ -103,7 +103,7 @@ class GraphData
   private inputEdgeMap: { [key: string]: string[]};
   private outputEdgeMap: { [key: string]: string[]};
   private propertiesConfig: IPropertiesConfig;
-  private processedMetadata: IProcessedMetadata;
+  private processedMetadata?: IProcessedMetadata;
   private sectionedMetadata: { [key: string]: string[]};
 
   public constructor()
@@ -111,7 +111,6 @@ class GraphData
     this.rest = new rm.RestClient('vigraph-rest', restURL);
     this.inputEdgeMap = {};
     this.outputEdgeMap = {};
-    this.processedMetadata = {};
     this.sectionedMetadata = {};
 
     this.propertiesConfig = require('./PropertiesConfig.json');
@@ -259,13 +258,13 @@ class GraphData
       });
   }
 
-  public getNode(nodeID: string, success?: (result: IRawGraphItem)=>void)
+  public getNode(nodeID: string, success?: (result: any)=>void)
   {
     this.getNodeByID(nodeID, success);
   }
 
   private async getNodeByID(nodeID: string,
-    success?: (result: IRawGraphItem)=>void)
+    success?: (result: IProcessedGraphItem)=>void)
   {
     try
     {
@@ -274,7 +273,26 @@ class GraphData
 
       if (res.statusCode === 200 && res.result && success)
       {
-        success(res.result);
+        if (this.processedMetadata)
+        {
+          const item = this.processSingleGraphItem(res.result,
+            this.processedMetadata)
+
+          const layout = {h: 0, w: 0};
+
+          if (this.propertiesConfig[item.type])
+          {
+            layout.h = this.propertiesConfig[item.type].height;
+            layout.w = this.propertiesConfig[item.type].width;
+          }
+
+          success({...item, ...layout});
+        }
+        else
+        {
+          // Error - trying to create node before Graph set up
+        }
+
       }
       else
       {
@@ -296,7 +314,14 @@ class GraphData
 
       if (res.statusCode === 200 && res.result)
       {
-        this.getMetadata(res.result);
+        if (this.processedMetadata)
+        {
+          this.createGraphModel(res.result, this.processedMetadata);
+        }
+        else
+        {
+          this.getMetadata(res.result);
+        }
       }
       else
       {
@@ -442,64 +467,70 @@ class GraphData
 
     rawGraphData.forEach((value: IRawGraphItem, index: number) =>
     {
-      const gEdges:
-        Array<{ output: string, destId: string, input: string}> = [];
-
-      if (value.outputs)
-      {
-        for (const key of Object.keys(value.outputs))
-        {
-          value.outputs[key].forEach(
-            (vOutput: {element: string, prop: string}) =>
-            {
-              gEdges.push({ output: key, destId: vOutput.element,
-                input: vOutput.prop})
-
-              this.inputEdgeMap[vOutput.element] ?
-                this.inputEdgeMap[vOutput.element].push(value.id) :
-                this.inputEdgeMap[vOutput.element] = [value.id];
-
-               this.outputEdgeMap[value.id] ?
-                this.outputEdgeMap[value.id].push(vOutput.element) :
-                this.outputEdgeMap[value.id] = [vOutput.element];
-            });
-        }
-      }
-
-      const gProps: Array<{ id: string, propType: string, controlType: string,
-        subType: string, value: any, rangeMin?: number, rangeMax?: number,
-        increment?: number, available?: string[], x: number, y:number}> = [];
-
-
-      if (this.propertiesConfig[value.type])
-      {
-        for (const key of Object.keys(value.props))
-        {
-          const fProp =  metadata[value.type].properties.find(x =>
-              x.id === key);
-          const propType = fProp ? fProp.propType : "prop";
-
-          gProps.push({id: key, value: value.props[key],
-            propType,
-            ...this.propertiesConfig[value.type].properties[key]});
-        };
-      }
-
-      const node: IProcessedGraphItem =
-      {
-        id: value.id,
-        name: metadata[value.type].name,
-        type: value.type,
-        inputs: metadata[value.type].inputs,
-        outputs: metadata[value.type].outputs,
-        edges: gEdges,
-        properties: gProps
-      };
-
-      nodes.push(node);
+      nodes.push(this.processSingleGraphItem(value, metadata));
     })
 
     this.layoutGraph(nodes);
+  }
+
+  private processSingleGraphItem(item: IRawGraphItem,
+    metadata: IProcessedMetadata)
+  {
+    const gEdges:
+      Array<{ output: string, destId: string, input: string}> = [];
+
+    if (item.outputs)
+    {
+      for (const key of Object.keys(item.outputs))
+      {
+        item.outputs[key].forEach(
+          (vOutput: {element: string, prop: string}) =>
+          {
+            gEdges.push({ output: key, destId: vOutput.element,
+              input: vOutput.prop})
+
+            this.inputEdgeMap[vOutput.element] ?
+              this.inputEdgeMap[vOutput.element].push(item.id) :
+              this.inputEdgeMap[vOutput.element] = [item.id];
+
+            this.outputEdgeMap[item.id] ?
+              this.outputEdgeMap[item.id].push(vOutput.element) :
+              this.outputEdgeMap[item.id] = [vOutput.element];
+          });
+      }
+    }
+
+    const gProps: Array<{ id: string, propType: string, controlType: string,
+      subType: string, value: any, rangeMin?: number, rangeMax?: number,
+      increment?: number, available?: string[], x: number, y:number}> = [];
+
+
+    if (this.propertiesConfig[item.type])
+    {
+      for (const key of Object.keys(item.props))
+      {
+        const fProp =  metadata[item.type].properties.find(x =>
+            x.id === key);
+        const propType = fProp ? fProp.propType : "prop";
+
+        gProps.push({id: key, value: item.props[key],
+          propType,
+          ...this.propertiesConfig[item.type].properties[key]});
+      };
+    }
+
+    const node: IProcessedGraphItem =
+    {
+      id: item.id,
+      name: metadata[item.type].name,
+      type: item.type,
+      inputs: metadata[item.type].inputs,
+      outputs: metadata[item.type].outputs,
+      edges: gEdges,
+      properties: gProps
+    };
+
+    return node;
   }
 
   private layoutGraph(nodes: IProcessedGraphItem[])

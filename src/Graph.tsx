@@ -270,9 +270,18 @@ export default class Graph extends React.Component<IProps, IState>
 
     const id = type+"-"+this.idCount;
 
-    graphData.createNode(id, type);
-
-    // TODO: add new node to model without needing a full refresh
+    // Create new node, get with properties etc, add layout data and add to
+    // graph model
+    graphData.createNode(id, type, () =>
+      {
+        graphData.getNode(id, (node: any) =>
+        {
+          node.x = this.mouseClick.x;
+          node.y = this.mouseClick.y;
+          this.graph.addNodeFromJSON(node);
+          this.forceUpdate();
+        })
+      });
   }
 
   private removeNode = (id: string) =>
