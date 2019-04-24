@@ -279,7 +279,29 @@ export default class Graph extends React.Component<IProps, IState>
   {
     graphData.deleteNode(id);
 
-    // TODO: delete node and its edges from model without needing a full refresh
+    const node = this.graph.getNode(id);
+
+    // Delete node and all of its edges from the model
+    if (node)
+    {
+      const reverseEdges = node.getReverseEdges();
+      const forwardEdges = node.getForwardEdges();
+
+      reverseEdges.forEach((value: { inputId: string, src: Model.Node,
+        srcOutput: string}) =>
+      {
+        this.graph.removeEdge(value.src.id, value.srcOutput, id, value.inputId);
+      });
+
+      forwardEdges.forEach((value: { outputId: string, dest: Model.Node,
+        destInput: string}) =>
+      {
+        this.graph.removeEdge(id, value.outputId, value.dest.id,
+          value.destInput);
+      });
+
+      this.graph.removeNode(id);
+    }
   }
 
   private addEdge = (srcID: string, srcOutput: string, destID: string,
