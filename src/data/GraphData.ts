@@ -1,29 +1,31 @@
 // ViGraph UI model - Graph Data class
 // Copyright (c) Paul Clark 2019
 
+// TODO: refactor (and/or rename) this file if needed
 // TODO: write description for this file
 // TODO: move types to type description file
 // TODO: comments throughout
-// TODO: calculate knob background based on range min and max
-// TODO: refactor (and/or rename) this file in needed
 // TODO: move rest client address to config or global variable
-// TODO: log or display errors
-// TODO: better node layout algorithm
 // TODO: description for config file
+
+// TODO: show values and node labels on (time delay) mouse over
 // TODO: default layout - layout without the need for properties config
 // (in a line with type:number = Knob etc)
+// TODO: calculate knob background based on range min and max
+// TODO: better node layout algorithm
 // TODO: hide/show property value option
 // TODO: 'trigger' should have a momentary button
 // TODO: if a property has an input attached the control should be disabled
 // TODO: handle 'multiple' value of inputs/outputs and behaviour with 'default'
-// TODO: show values and node labels on (time delay) mouse over
 // TODO: layout node properties nicely
-// TODO: update value using rest put
 // TODO: split property name and value
 // TODO: mouse wheel zoom
 // TODO: grab/move background to scroll around
+// TODO: nicer create/delete nodes
 
 import * as rm from 'typed-rest-client/RestClient';
+
+import { vgLogger } from '../Logger'
 
 interface IPropertiesConfig
 {
@@ -148,15 +150,19 @@ class GraphData
         if (response.status === 200)
         {
           // Success
+          vgLogger.log("Update Property Success");
         }
         else
         {
           // Error
+          vgLogger.log("Update Property Failure with response status: " +
+            response.status)
         }
       })
     .catch(error =>
       {
         // Error
+        vgLogger.log("Update Property Failure with error: " + error);
       });
   }
 
@@ -184,17 +190,21 @@ class GraphData
           // Success
           if (success)
           {
+            vgLogger.log("Update Edges Success");
             success();
           }
         }
         else
         {
           // Error
+          vgLogger.log("Update Edges Success with response status: " +
+            response.status);
         }
       })
     .catch(error =>
       {
         // Error
+        vgLogger.log("Update Edges Success with error: " + error);
       });
   }
 
@@ -216,16 +226,20 @@ class GraphData
           if (success)
           {
             success();
+            vgLogger.log("Create Node Success");
           }
         }
         else
         {
           // Error
+          vgLogger.log("Create Node Failure with response status: " +
+            response.status);
         }
       })
     .catch(error =>
       {
         // Error
+        vgLogger.log("Create Node Failure with error: " + error);
       });
   }
 
@@ -245,16 +259,20 @@ class GraphData
           if (success)
           {
             success();
+            vgLogger.log("Delete Node Success");
           }
         }
         else
         {
           // Error
+          vgLogger.log("Delete Node Failure with response status: " +
+            response.status);
         }
       })
     .catch(error =>
       {
         // Error
+        vgLogger.log("Delete Node Failure with error: " + error);
       });
   }
 
@@ -273,6 +291,7 @@ class GraphData
 
       if (res.statusCode === 200 && res.result && success)
       {
+        vgLogger.log("Get Node By ID Success");
         if (this.processedMetadata)
         {
           const item = this.processSingleGraphItem(res.result,
@@ -291,17 +310,22 @@ class GraphData
         else
         {
           // Error - trying to create node before Graph set up
+          vgLogger.log("Process Get Node Failure: Trying to process node " +
+            "before full Graph set up");
         }
 
       }
       else
       {
-        // Error with status code - res.StatusCode;
+        // Error with status code
+        vgLogger.log("Get Node By ID Failure with status code: " +
+          res.statusCode);
       }
     }
     catch (error)
     {
-      // Error with status code - res.StatusCode;
+      // Error
+      vgLogger.log("Get Node By Id Failure with error: " + error);
     }
   }
 
@@ -314,6 +338,7 @@ class GraphData
 
       if (res.statusCode === 200 && res.result)
       {
+        vgLogger.log("Get Graph Data Success");
         if (this.processedMetadata)
         {
           this.createGraphModel(res.result, this.processedMetadata);
@@ -325,12 +350,15 @@ class GraphData
       }
       else
       {
-        // Error with status code - res.StatusCode;
+        // Error with status code
+        vgLogger.log("Get Graph Data Failure with status code: " +
+          res.statusCode);
       }
     }
     catch (error)
     {
-      // Error with status code - res.StatusCode;
+      // Error
+      vgLogger.log("Get Graph Data Failure with error: " + error);
     }
   }
 
@@ -343,16 +371,20 @@ class GraphData
 
       if (res.statusCode === 200 && res.result)
       {
+        vgLogger.log("Get Metadata Success");
         this.createGraphModel(rawGraphData, this.processMetadata(res.result));
       }
       else
       {
-        // Error with status code - res.StatusCode;
+        // Error with status code
+        vgLogger.log("Get Metadata Failure with status code: " +
+          res.statusCode);
       }
     }
     catch (error)
     {
-      // Error with status code - res.StatusCode;
+      // Error
+      vgLogger.log("Get Metadata Failure with error: " + error);
     }
   }
 
