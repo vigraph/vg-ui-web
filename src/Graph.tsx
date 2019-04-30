@@ -340,6 +340,8 @@ export default class Graph extends React.Component<IProps, IState>
 
       this.graph.removeNode(id);
     }
+
+    this.forceUpdate();
   }
 
   private addEdge = (srcID: string, srcOutput: string, destID: string,

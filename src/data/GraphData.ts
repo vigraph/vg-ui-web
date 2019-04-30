@@ -129,10 +129,11 @@ class GraphData
       {
         if (response.status === 200)
         {
+          vgLogger.log("Update Edges Success");
+
           // Success
           if (success)
           {
-            vgLogger.log("Update Edges Success");
             success();
           }
         }
@@ -166,11 +167,12 @@ class GraphData
       {
         if (response.status === 200)
         {
+          vgLogger.log("Create Node Success");
+
           // Success
           if (success)
           {
             success();
-            vgLogger.log("Create Node Success");
           }
         }
         else
@@ -201,11 +203,12 @@ class GraphData
       {
         if (response.status === 200)
         {
+          vgLogger.log("Delete Node Success");
+
           // Success
           if (success)
           {
             success();
-            vgLogger.log("Delete Node Success");
           }
         }
         else
