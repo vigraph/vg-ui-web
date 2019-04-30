@@ -1,24 +1,27 @@
 // ViGraph UI model - Graph Data class
 // Copyright (c) Paul Clark 2019
 
-// TODO: refactor (and/or rename) this file if needed
-// TODO: write description for this file
-// TODO: move types to type description file
-// TODO: comments throughout
-// TODO: move rest client address to config or global variable
-// TODO: description for config file
+// Class to interrogate and modify a dataflow graph within the ViGraph engine,
+// as well as getting property Metadata, using REST protocol API.
+// State is read/sent in JSON.  The URL format identifies a hierarchy of
+// elements (nodes) by ID.
+// Processes and combines graph and metadata to create graph model.
 
+
+// TODO: calculate knob background based on range min and max
+
+// TODO: split property name and value
 // TODO: show values and node labels on (time delay) mouse over
+// TODO: hide/show property value option
+// TODO: layout node properties nicely
+
+// TODO: if a property has an input attached the control should be disabled
 // TODO: default layout - layout without the need for properties config
 // (in a line with type:number = Knob etc)
-// TODO: calculate knob background based on range min and max
 // TODO: better node layout algorithm
-// TODO: hide/show property value option
+// TODO: save/load node layout/position data
 // TODO: 'trigger' should have a momentary button
-// TODO: if a property has an input attached the control should be disabled
 // TODO: handle 'multiple' value of inputs/outputs and behaviour with 'default'
-// TODO: layout node properties nicely
-// TODO: split property name and value
 // TODO: mouse wheel zoom
 // TODO: grab/move background to scroll around
 // TODO: nicer create/delete nodes
@@ -27,72 +30,7 @@ import * as rm from 'typed-rest-client/RestClient';
 
 import { vgLogger } from '../Logger'
 
-interface IPropertiesConfig
-{
-  [key: string]: {
-    width: number,
-    height: number,
-    properties: {
-      [key: string]: {
-        controlType: string,
-        subType: string,
-        rangeMin?: number,
-        rangeMax?: number,
-        increment?: number,
-        available?: string[],
-        x: number,
-        y: number
-      }
-    }
-  }
-}
-
-interface IRawGraphItem
-{
-  id: string,
-  outputs?: { [key: string]: Array<{element: string, prop: string}>},
-  props: { [key: string]: number | string | boolean },
-  type: string
-}
-
-interface IProcessedGraphItem
-{
-  id: string,
-  name: string,
-  type: string,
-  inputs: Array<{ id: string, connectorType: string, multiple?: boolean}>,
-  outputs: Array<{ id: string, connectorType: string, multiple?: boolean}>,
-  edges: Array<{ output: string, destId: string, input: string}>,
-  // propType = "iprop" | "prop" | "oprop"
-  properties?: Array<{ id: string, propType: string, controlType: string,
-    subType: string, value: any, rangeMin?: number, rangeMax?: number,
-    increment?: number, available?: string[], x: number, y:number}>
-}
-
-interface IRawMetadataItem
-{
-  id: string,
-  description: string,
-  name: string,
-  section: string,
-  inputs?: Array<{ type: string, multiple?: boolean}>,
-  iprops?: Array<{ id: string, description: string, type: string, alias?: boolean }>,
-  props?: Array<{ id: string, description: string, type: string, alias?: boolean }>,
-  oprops?: Array<{ id: string, description: string, type: string, alias?: boolean }>,
-  outputs?: Array<{ type: string, multiple?: boolean}>
-}
-
-interface IProcessedMetadata
-{
-  [key: string]: {
-    name: string,
-    section: string,
-    inputs: Array<{ id: string, connectorType: string, multiple?: boolean}>,
-    outputs: Array<{ id: string, connectorType: string, multiple?: boolean}>,
-    properties: Array<{ id: string, type: string, propType: string,
-      description: string}>,
-  }
-}
+import * as vgType from '../Types'
 
 const restURL = 'http://localhost:33380';
 const marginPadding = { x: 40, y: 40 };
@@ -104,8 +42,8 @@ class GraphData
   private generateSuccess: (json: any) => void;
   private inputEdgeMap: { [key: string]: string[]};
   private outputEdgeMap: { [key: string]: string[]};
-  private propertiesConfig: IPropertiesConfig;
-  private processedMetadata?: IProcessedMetadata;
+  private propertiesConfig: vgType.IPropertiesConfig;
+  private processedMetadata?: vgType.IProcessedMetadata;
   private sectionedMetadata: { [key: string]: string[]};
 
   public constructor()
@@ -134,6 +72,7 @@ class GraphData
     this.getGraphData();
   }
 
+  // Update property (propID) on node (nodeID) with given value (value)
   public updateProperty(nodeID: string, propID: string,
     value: number | string | boolean)
   {
@@ -166,6 +105,9 @@ class GraphData
       });
   }
 
+  // Update edges from output Node with an Array of all valid edges.
+  // Edge removed by copying current edges, removing the edge and updating with
+  // new array.
   public updateEdges(outputNodeID: string, outputID: string,
     edges: Array<{dest: string, destInput: string}>, success?: ()=>void)
   {
@@ -208,6 +150,8 @@ class GraphData
       });
   }
 
+  // Create/add node with ID nodeID and type nodeType to Graph
+  // Calls success function on PUT success
   public createNode(nodeID: string, nodeType: string, success?: ()=>void)
   {
     const url = restURL + "/graph/" + nodeID;
@@ -243,6 +187,8 @@ class GraphData
       });
   }
 
+  // Delete node with ID nodeID from Graph
+  // Calls success on DELETE success
   public deleteNode(nodeID: string, success?: ()=>void)
   {
     const url = restURL + "/graph/" + nodeID;
@@ -276,18 +222,20 @@ class GraphData
       });
   }
 
+  // Get node (nodeID) and calls success with resulting (processed) node
+  // allowing it to be added to the Graph model
   public getNode(nodeID: string, success?: (result: any)=>void)
   {
     this.getNodeByID(nodeID, success);
   }
 
   private async getNodeByID(nodeID: string,
-    success?: (result: IProcessedGraphItem)=>void)
+    success?: (result: vgType.IProcessedGraphItem)=>void)
   {
     try
     {
-      const res: rm.IRestResponse<IRawGraphItem> =
-        await this.rest.get<IRawGraphItem>('/graph/'+nodeID);
+      const res: rm.IRestResponse<vgType.IRawGraphItem> =
+        await this.rest.get<vgType.IRawGraphItem>('/graph/'+nodeID);
 
       if (res.statusCode === 200 && res.result && success)
       {
@@ -299,6 +247,7 @@ class GraphData
 
           const layout = {h: 0, w: 0};
 
+          // Node properties layout from config
           if (this.propertiesConfig[item.type])
           {
             layout.h = this.propertiesConfig[item.type].height;
@@ -329,12 +278,13 @@ class GraphData
     }
   }
 
+  // Get data for entire graph and start processing
   private async getGraphData()
   {
     try
     {
-      const res: rm.IRestResponse<IRawGraphItem[]> =
-        await this.rest.get<IRawGraphItem[]>('/graph');
+      const res: rm.IRestResponse<vgType.IRawGraphItem[]> =
+        await this.rest.get<vgType.IRawGraphItem[]>('/graph');
 
       if (res.statusCode === 200 && res.result)
       {
@@ -362,12 +312,13 @@ class GraphData
     }
   }
 
-  private async getMetadata(rawGraphData: IRawGraphItem[])
+  // Get properties metadata, process and pass on to creating Graph model
+  private async getMetadata(rawGraphData: vgType.IRawGraphItem[])
   {
     try
     {
-      const res: rm.IRestResponse<IRawMetadataItem[]> =
-        await this.rest.get<IRawMetadataItem[]>('/meta');
+      const res: rm.IRestResponse<vgType.IRawMetadataItem[]> =
+        await this.rest.get<vgType.IRawMetadataItem[]>('/meta');
 
       if (res.statusCode === 200 && res.result)
       {
@@ -388,12 +339,14 @@ class GraphData
     }
   }
 
-  private processMetadata(rawMetadata: IRawMetadataItem[]):
-    IProcessedMetadata
+  // Process metadata from raw metadata into a usable format to create Graph
+  // model (see type definition file)
+  private processMetadata(rawMetadata: vgType.IRawMetadataItem[]):
+    vgType.IProcessedMetadata
   {
-    const processedMetadata: IProcessedMetadata = {};
+    const processedMetadata: vgType.IProcessedMetadata = {};
 
-    rawMetadata.forEach((value: IRawMetadataItem, index: number) =>
+    rawMetadata.forEach((value: vgType.IRawMetadataItem, index: number) =>
     {
       const pInputs:
         Array<{ id: string, connectorType: string, multiple?: boolean}> = [];
@@ -492,12 +445,13 @@ class GraphData
     return processedMetadata;
   }
 
-  private createGraphModel(rawGraphData: IRawGraphItem[],
-    metadata: IProcessedMetadata)
+  // Create Graph model from processed raw graph data and metadata
+  private createGraphModel(rawGraphData: vgType.IRawGraphItem[],
+    metadata: vgType.IProcessedMetadata)
   {
-    const nodes: IProcessedGraphItem[] = [];
+    const nodes: vgType.IProcessedGraphItem[] = [];
 
-    rawGraphData.forEach((value: IRawGraphItem, index: number) =>
+    rawGraphData.forEach((value: vgType.IRawGraphItem, index: number) =>
     {
       nodes.push(this.processSingleGraphItem(value, metadata));
     })
@@ -505,8 +459,10 @@ class GraphData
     this.layoutGraph(nodes);
   }
 
-  private processSingleGraphItem(item: IRawGraphItem,
-    metadata: IProcessedMetadata)
+  // Process a single graph item into format to create Graph model
+  // (see type definitions)
+  private processSingleGraphItem(item: vgType.IRawGraphItem,
+    metadata: vgType.IProcessedMetadata)
   {
     const gEdges:
       Array<{ output: string, destId: string, input: string}> = [];
@@ -521,6 +477,8 @@ class GraphData
             gEdges.push({ output: key, destId: vOutput.element,
               input: vOutput.prop})
 
+            // Store input and output IDs used to layout Graph without
+            // node position data
             this.inputEdgeMap[vOutput.element] ?
               this.inputEdgeMap[vOutput.element].push(item.id) :
               this.inputEdgeMap[vOutput.element] = [item.id];
@@ -536,7 +494,7 @@ class GraphData
       subType: string, value: any, rangeMin?: number, rangeMax?: number,
       increment?: number, available?: string[], x: number, y:number}> = [];
 
-
+    // Node properties from metadata
     if (this.propertiesConfig[item.type])
     {
       for (const key of Object.keys(item.props))
@@ -551,7 +509,7 @@ class GraphData
       };
     }
 
-    const node: IProcessedGraphItem =
+    const node: vgType.IProcessedGraphItem =
     {
       id: item.id,
       name: metadata[item.type].name,
@@ -565,14 +523,17 @@ class GraphData
     return node;
   }
 
-  private layoutGraph(nodes: IProcessedGraphItem[])
+  // Layout Graph and pass full graph on to final success callback
+  private layoutGraph(nodes: vgType.IProcessedGraphItem[])
   {
     const graph = { "nodes" : this.generateLayout(nodes)};
 
     this.generateSuccess(graph);
   }
 
-  private generateLayout(nodes: IProcessedGraphItem[])
+  // Generate Graph layout without node position data. Nodes ranked by number of
+  // parents and layed out without overlapping
+  private generateLayout(nodes: vgType.IProcessedGraphItem[])
   {
     const layoutNodes: any[] = [];
 
@@ -608,7 +569,7 @@ class GraphData
     const ranksCount: number[] = [];
     const rankNextPos: [{x: number, y: number}] = [{x: 0, y: 0}];
 
-    nodes.forEach((value: IProcessedGraphItem) =>
+    nodes.forEach((value: vgType.IProcessedGraphItem) =>
     {
       const layout = {x: 0, y: 0, h: 50, w: 50};
 
