@@ -115,6 +115,7 @@ export default class Selector extends React.Component<IProps, IState>
 
   private handleMouseDown = (e: React.MouseEvent<SVGElement>) =>
   {
+    e.stopPropagation();
     window.addEventListener('mouseup', this.handleMouseUp);
 
     this.setState({selecting: true});

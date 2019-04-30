@@ -58,6 +58,7 @@ export default class Connector extends React.Component<IProps,IState>
 
   private mouseDown = (e: React.MouseEvent<SVGRectElement>) =>
   {
+    e.stopPropagation();
     const connector = this.props.connector;
 
     if (connector.direction === "output")

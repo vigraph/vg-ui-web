@@ -85,6 +85,7 @@ export default class ColourPicker extends React.Component<IProps, IState>
 
   private togglePickerShow = (e: React.MouseEvent<SVGElement>) =>
   {
+    e.stopPropagation();
     const show = !this.state.showPicker;
     this.setState({showPicker: show});
   }
@@ -280,6 +281,7 @@ export default class ColourPicker extends React.Component<IProps, IState>
 
   private handleMouseDownHSL = (e: React.MouseEvent<SVGElement>) =>
   {
+    e.stopPropagation();
     window.addEventListener('mouseup', this.handleMouseUp);
 
     this.setState({picking: true});
@@ -340,6 +342,7 @@ export default class ColourPicker extends React.Component<IProps, IState>
 
   private handleMouseDownRGB = (e: React.MouseEvent<SVGElement>) =>
   {
+    e.stopPropagation();
     window.addEventListener('mouseup', this.handleMouseUp);
 
     this.setState({picking: true});

@@ -155,8 +155,9 @@ export default class Node extends React.Component<IProps, IState>
     this.setState({hover: false});
   }
 
-  private removeNode = () =>
+  private removeNode = (e: React.MouseEvent<SVGCircleElement>) =>
   {
+    e.stopPropagation();
     this.props.removeNode(this.node.id);
   }
 }

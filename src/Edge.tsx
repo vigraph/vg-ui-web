@@ -118,6 +118,7 @@ export default class Edge extends React.Component<IProps, IState>
 
   private edgeMouseDown = (e: React.MouseEvent<SVGElement>) =>
   {
+    e.stopPropagation();
     this.mouseStart = {x: e.pageX, y: e.pageY};
     window.addEventListener('mouseup', this.edgeMouseUp);
     window.addEventListener('mousemove', this.edgeMouseMove);
@@ -164,8 +165,9 @@ export default class Edge extends React.Component<IProps, IState>
     this.setState({edgeSelected: !this.state.edgeSelected});
   }
 
-  private removeEdgeMouse = () =>
+  private removeEdgeMouse = (e: React.MouseEvent<SVGCircleElement>) =>
   {
+    e.stopPropagation();
     this.removeEdge();
   }
 

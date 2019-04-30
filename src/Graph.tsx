@@ -23,7 +23,8 @@ interface IState
   tempNodes: {dummy: Model.Node, real: Model.Node} | null,
   tempConnectors:{ dummy: Model.Connector,  real: Model.Connector} | null,
   targetConnector: { connector: Model.Connector, parent: Model.Node } | null,
-  showMenu: boolean
+  showMenu: boolean,
+  view: {x: number, y: number, w: number, h: number}
 }
 
 export default class Graph extends React.Component<IProps, IState>
@@ -56,7 +57,8 @@ export default class Graph extends React.Component<IProps, IState>
       tempNodes: null,
       tempConnectors: null,
       targetConnector: null,
-      showMenu: false
+      showMenu: false,
+      view: {x: 0, y: 0, w: 5000, h: 5000}
     };
 
     this.mouseClick = {x: 0, y: 0};
@@ -74,10 +76,13 @@ export default class Graph extends React.Component<IProps, IState>
 
   public render()
   {
+    const view = this.state.view;
+
     return (
       <div className="wrapper">
         {this.state.showMenu && this.createMenu()}
-        <svg id="graph" onMouseDown={this.handleMouseDown}
+        <svg id="graph" viewBox={`${view.x} ${view.y} ${view.w} ${view.h}`}
+          onMouseDown={this.handleMouseDown}
           onContextMenu={this.handleContextMenu}>
           <svg id="edges">
             {
@@ -237,18 +242,42 @@ export default class Graph extends React.Component<IProps, IState>
   private handleMouseDown = (e: React.MouseEvent<SVGSVGElement>) =>
   {
     e.preventDefault();
+    this.mouseClick = {x: e.pageX, y: e.pageY};
 
     if (e.button === 2)
     {
       this.subMenu = null;
-      this.mouseClick = {x: e.pageX, y: e.pageY};
       this.setState({showMenu: true});
     }
     else
     {
       this.subMenu = null;
       this.setState({showMenu: false});
+
+      window.addEventListener('mousemove', this.handleGraphDrag);
+      window.addEventListener('mouseup', this.handleGraphDragRelease);
     }
+  }
+
+  // Move/scroll graph by dragging background
+  private handleGraphDrag = (e: MouseEvent) =>
+  {
+    const diffX = e.pageX - this.mouseClick.x;
+    const diffY = e.pageY - this.mouseClick.y;
+
+    const newView = this.state.view;
+    newView.x = newView.x - diffX > 0 ? newView.x - diffX : 0;
+    newView.y = newView.y - diffY > 0 ? newView.y - diffY : 0;
+
+    this.mouseClick = {x: e.pageX, y: e.pageY};
+
+    this.setState({view: newView});
+  }
+
+  private handleGraphDragRelease = (e: MouseEvent) =>
+  {
+    window.removeEventListener('mousemove', this.handleGraphDrag);
+    window.removeEventListener('mouseup', this.handleGraphDragRelease);
   }
 
   private createNewNode = (type: string) =>

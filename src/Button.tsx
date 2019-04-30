@@ -82,6 +82,7 @@ export default class Button extends React.Component<IProps, IState>
 
   private handleMouseDown = (e: React.MouseEvent<SVGElement>) =>
   {
+    e.stopPropagation();
     window.addEventListener('mouseup', this.handleMouseUp);
 
     this.setState({pressing: true});

@@ -164,6 +164,7 @@ export default class Knob extends React.Component<IProps, IState>
 
   private handleMouseDown = (e: React.MouseEvent<SVGElement>) =>
   {
+    e.stopPropagation();
     window.addEventListener('mouseup', this.handleMouseUp);
     window.addEventListener('mousemove', this.handleMouseMove);
     this.circleCentre.x = e.currentTarget.getBoundingClientRect().left +
