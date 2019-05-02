@@ -245,8 +245,7 @@ button
     fill: #383838;
 }
 
-#selector,
-#selector-value
+#selector
 {
     overflow: visible;
 }
@@ -267,6 +266,12 @@ button
 {
     stroke: black;
     stroke-width: 3px;
+    pointer-events: none;
+}
+
+.selector-background
+{
+    fill: green;
 }
 
 #selector.default .selector-label,

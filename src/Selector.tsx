@@ -36,8 +36,6 @@ export default class Selector extends React.Component<IProps, IState>
   private property: Model.Property;
 
   private settings: {length: number, thickness: number, horizontal: boolean};
-  private availableLength: number;
-  private intervalSize: number;
 
   constructor(props: IProps)
   {
@@ -53,9 +51,6 @@ export default class Selector extends React.Component<IProps, IState>
       currentValue: this.property.value,
       selecting: false
     };
-
-    this.availableLength = this.props.property.available.length;
-    this.intervalSize = this.settings.length / this.availableLength;
   }
 
   public render()
@@ -70,32 +65,31 @@ export default class Selector extends React.Component<IProps, IState>
     return(
         <svg id="selector" className={`${this.property.subType}
           ${this.state.selecting ? "selecting" : ""}`}
-          x={position.x} y={position.y}
-          onMouseDown={this.handleMouseDown}
-          onMouseMove={this.handleMouseMove}>
+          x={position.x} y={position.y}>
 
           <rect className="selector-background" width={settings.length}
             height={settings.thickness}
-            transform={`rotate(${settings.horizontal ? "0" : "270"}, ${0},
-              ${0}) translate(${settings.horizontal ? "0" :
-              -settings.length - 5}, 0)`}/>
+            transform={`rotate(${settings.horizontal ? "0" : "90"}, ${0},
+              ${0}) translate(5, ${settings.horizontal ? "0" :
+               -settings.thickness})`}/>
 
           {this.props.property.available.map((value: any, index: number) =>
             {
-              return <svg id="selector-value" key={index}>
+              return <svg id={value} key={index}
+                  onMouseDown={this.handleMouseDown}
+                  onMouseEnter={this.handleMouseEnter}>
                 <rect className={`selector-position ${value.toString()}
                   ${value === this.state.currentValue ? "selected" : ""}`}
                   width={positionSize} height={settings.thickness}
                   x={(positionSize * index)}
-                  transform={`rotate(${settings.horizontal ? "0" : "270"}, ${0},
-                  ${0}) translate(${settings.horizontal ? "0" :
-                  -settings.length - 5}, 0)`}/>
+                  transform={`rotate(${settings.horizontal ? "0" : "90"}, ${0},
+                  ${0}) translate(5, ${settings.horizontal ? "0" :
+                  -settings.thickness})`}/>
                 <text className="label selector-label"
                   x={`${settings.horizontal ? (positionSize * index) + 5 :
                     settings.thickness + 10}`}
                   y={`${settings.horizontal ? settings.thickness + 10 :
-                    settings.length - (positionSize * index) + 15 -
-                    positionSize}`}>
+                    (positionSize * index) + 15}`}>
                   {value}
                 </text>
               </svg>
@@ -105,9 +99,9 @@ export default class Selector extends React.Component<IProps, IState>
           <rect className="selector-dial"
             x={(positionSize * currentPos) + (positionSize / 2)}
             width={1} height={settings.thickness}
-            transform={`rotate(${settings.horizontal ? "0" : "270"}, ${0},
-              ${0}) translate(${settings.horizontal ? "0" :
-              - settings.length - 5},0)`}/>
+            transform={`rotate(${settings.horizontal ? "0" : "90"}, ${0},
+              ${0}) translate(5, ${settings.horizontal ? "0" :
+               -settings.thickness})`}/>
 
         </svg>
     );
@@ -125,40 +119,26 @@ export default class Selector extends React.Component<IProps, IState>
       this.props.startUpdate();
     }
 
-    this.calculateNewPosition(e);
+    this.selectValue(e.currentTarget.id);
   }
 
-  private handleMouseMove = (e: React.MouseEvent<SVGElement>) =>
+  private handleMouseEnter = (e: React.MouseEvent<SVGElement>) =>
   {
     if (this.state.selecting)
     {
-      this.calculateNewPosition(e);
+      this.selectValue(e.currentTarget.id);
     }
   }
 
-  private calculateNewPosition = (e: React.MouseEvent<SVGElement>) =>
+  private selectValue = (value: any) =>
   {
-    const position = this.settings.horizontal ?
-    e.pageX - e.currentTarget.getBoundingClientRect().left - window.scrollX :
-    this.settings.length - (e.pageY -
-    e.currentTarget.getBoundingClientRect().top - window.scrollY);
-
-    if (position < 0)
+    if (this.state.currentValue !== value &&
+      this.props.property.available.indexOf(value) > -1)
     {
-      return;
-    }
-
-    const selectValuePos = Math.floor(position / this.intervalSize);
-    const newValuePos = selectValuePos > this.availableLength - 1 ?
-      this.availableLength - 1: selectValuePos;
-    const newValue = this.props.property.available[newValuePos];
-
-    if (this.state.currentValue !== newValue)
-    {
-      this.setState({currentValue: newValue});
+      this.setState({currentValue: value});
       if (this.props.update)
       {
-        this.props.update(newValue);
+        this.props.update(value);
       }
     }
   }
