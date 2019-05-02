@@ -476,8 +476,8 @@ export default class Graph extends React.Component<IProps, IState>
     const graphOffsetY = graphEle ? graphEle.getBoundingClientRect().top +
       window.scrollY : 0;
 
-    dummyNode.position = {x: e.pageX-(3*csize)-graphOffsetX,
-      y: e.pageY-csize-graphOffsetY}
+    dummyNode.position = {x: e.pageX-(3*csize)-graphOffsetX+this.state.view.x,
+      y: e.pageY-csize-graphOffsetY+this.state.view.y}
 
     let dummyConnector;
 
@@ -579,8 +579,8 @@ export default class Graph extends React.Component<IProps, IState>
       const graphOffsetY = graphEle ? graphEle.getBoundingClientRect().top +
         window.scrollY : 0;
 
-      dnode.position = {x: e.pageX-(3*csize)-graphOffsetX,
-        y: e.pageY-csize-graphOffsetY}
+      dnode.position = {x: e.pageX-(3*csize)-graphOffsetX+this.state.view.x,
+        y: e.pageY-csize-graphOffsetY+this.state.view.y};
 
       this.setState({tempNodes: {dummy: dnode,
         real: this.state.tempNodes.real}});
