@@ -3,6 +3,8 @@ import * as Model from './model';
 
 import Property from './Property';
 
+import { vgUtils } from './Utils'
+
 interface IProps
 {
   node: Model.Node;
@@ -11,6 +13,7 @@ interface IProps
   endUpdate: () => void;
   padding: number;
   propertiesDisplay: {labels: boolean; controls: boolean};
+  graphRef: SVGSVGElement | null;
   removeNode: (id: string) => void;
 }
 
@@ -110,8 +113,12 @@ export default class Node extends React.Component<IProps, IState>
     window.addEventListener('mouseup', this.handleMouseUp);
     window.addEventListener('mousemove', this.handleMouseMove);
     this.setState({ dragging: true });
-    this.offsetX = e.pageX - this.state.x;
-    this.offsetY = e.pageY - this.state.y;
+
+    const currentPosition = vgUtils.windowToSVGPosition(
+      {x: e.pageX, y: e.pageY}, this.props.graphRef);
+
+    this.offsetX = currentPosition.x - this.state.x;
+    this.offsetY = currentPosition.y - this.state.y;
     if (this.props.startUpdate)
     {
       this.props.startUpdate();
@@ -131,11 +138,14 @@ export default class Node extends React.Component<IProps, IState>
 
   private handleMouseMove = (e: MouseEvent) =>
   {
+    const currentPosition = vgUtils.windowToSVGPosition(
+      {x: e.pageX, y: e.pageY}, this.props.graphRef);
+
     if (this.state.dragging)
     {
       this.setState({
-        x: e.pageX - this.offsetX,
-        y: e.pageY - this.offsetY
+        x: currentPosition.x - this.offsetX,
+        y: currentPosition.y - this.offsetY
       });
     }
     this.node.position = { x: this.state.x, y: this.state.y };

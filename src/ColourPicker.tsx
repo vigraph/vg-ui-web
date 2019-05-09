@@ -1,6 +1,8 @@
 import * as React from 'react';
 import * as Model from './model';
 
+import { vgUtils } from './Utils'
+
 const pickerSettings: {default: {}} =
 {
   default: {barLength: 100, barThickness: 15, padding: 5, indicatorThickness: 6}
@@ -41,6 +43,8 @@ export default class ColourPicker extends React.Component<IProps, IState>
   private allCurrentValues: {hex: string, r: number, g: number, b: number, h: number,
     s: number, l: number};
 
+  private pickerRef: SVGSVGElement | null;
+
   constructor(props: IProps)
   {
     super(props);
@@ -66,6 +70,7 @@ export default class ColourPicker extends React.Component<IProps, IState>
 
     return(
         <svg id="colour-picker" className={this.property.subType}
+          ref={(ref) => { this.pickerRef = ref; }}
           x={position.x} y={position.y}>
 
           <svg id="colour-display" className="display"
@@ -304,8 +309,10 @@ export default class ColourPicker extends React.Component<IProps, IState>
 
   private updateHSL = (e: React.MouseEvent<SVGElement>, attr: string) =>
   {
-    const position = e.pageX - e.currentTarget.getBoundingClientRect().left -
-      window.scrollX;
+    const svgPosition = vgUtils.windowToSVGPosition({x: e.pageX, y: e.pageY},
+        this.pickerRef);
+
+    const position = svgPosition.x - this.props.position.x + this.settings.padding;
     const newAttr = position / this.settings.barLength;
     const newValue = JSON.parse(JSON.stringify(this.allCurrentValues));
 
@@ -365,8 +372,10 @@ export default class ColourPicker extends React.Component<IProps, IState>
 
   private updateRGB = (e: React.MouseEvent<SVGElement>, attr: string) =>
   {
-    const position = e.pageX - e.currentTarget.getBoundingClientRect().left -
-      window.scrollX;
+    const svgPosition = vgUtils.windowToSVGPosition({x: e.pageX, y: e.pageY},
+      this.pickerRef);
+
+    const position = svgPosition.x - this.props.position.x + this.settings.padding;
     const newAttr = position / this.settings.barLength;
     const newValue = JSON.parse(JSON.stringify(this.allCurrentValues));
 

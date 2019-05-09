@@ -1,6 +1,8 @@
 import * as React from 'react';
 import * as Model from './model';
 
+import { vgUtils } from './Utils'
+
 // slideScale - Scale increase whilst sliding slider
 const sliderSettings: {default: {}, horz: {}, vert: {}} =
   {
@@ -44,6 +46,8 @@ export default class Slider extends React.Component<IProps, IState>
   private settings: {length: number, thickness: number, horizontal: boolean,
     slideScale: number, dialThickness: number, clickMove: boolean};
 
+  private sliderRef: SVGSVGElement | null;
+
   constructor(props: IProps)
   {
     super(props);
@@ -73,6 +77,7 @@ export default class Slider extends React.Component<IProps, IState>
     return(
         <svg id="slider" className={this.property.subType}
           x={position.x} y={position.y}
+          ref={(ref) => {this.sliderRef = ref}}
           onMouseDown={this.handleMouseDown}>
 
           <rect className="slider-background"
@@ -104,8 +109,10 @@ export default class Slider extends React.Component<IProps, IState>
     window.addEventListener('mouseup', this.handleMouseUp);
     window.addEventListener('mousemove', this.handleMouseMove);
 
-    this.mouseStart.x = e.pageX;
-    this.mouseStart.y = e.pageY;
+    const currentPosition = vgUtils.windowToSVGPosition(
+      {x: e.pageX, y: e.pageY}, this.sliderRef);
+
+    this.mouseStart = currentPosition;
 
     this.setState({sliding: true});
 
@@ -117,10 +124,8 @@ export default class Slider extends React.Component<IProps, IState>
     // Move current value to click position
     if (this.settings.slideScale === 1 && this.settings.clickMove)
     {
-      const newDistance = this.settings.horizontal ?
-        e.pageX - e.currentTarget.getBoundingClientRect().left - window.scrollX:
-        this.settings.length - (e.pageY -
-        e.currentTarget.getBoundingClientRect().top - window.scrollY);
+      const newDistance = this.settings.horizontal ? currentPosition.x:
+        this.settings.length - currentPosition.y;
       const newPos = this.limitPosition(newDistance);
       const newPercent = newPos / this.settings.length;
       const newValue = (newPercent * (this.property.range.max -
@@ -149,8 +154,11 @@ export default class Slider extends React.Component<IProps, IState>
 
   private handleMouseMove = (e: MouseEvent) =>
   {
-    const diff = this.settings.horizontal ? e.pageX - this.mouseStart.x :
-      this.mouseStart.y - e.pageY;
+    const currentPosition = vgUtils.windowToSVGPosition(
+      {x: e.pageX, y: e.pageY}, this.sliderRef);
+
+    const diff = this.settings.horizontal ? currentPosition.x -
+      this.mouseStart.x : this.mouseStart.y - currentPosition.y;
 
     let newPos = (((this.state.currentValue - this.property.range.min ) /
       (this.property.range.max - this.property.range.min)) * this.settings.length) +
@@ -164,8 +172,7 @@ export default class Slider extends React.Component<IProps, IState>
 
     this.setState({currentValue: newValue});
 
-    this.mouseStart.x = e.pageX;
-    this.mouseStart.y = e.pageY;
+    this.mouseStart = currentPosition;
 
     if (this.props.update)
     {

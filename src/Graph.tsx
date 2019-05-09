@@ -3,6 +3,7 @@ import * as React from 'react';
 import * as Model from './model';
 
 import { graphData } from './data/GraphData';
+import { vgUtils } from './Utils'
 
 import './Graph.css';
 
@@ -33,6 +34,7 @@ export default class Graph extends React.Component<IProps, IState>
   private mouseClick: {x: number, y: number};
   private subMenu: string | null;
   private idCount: number;
+  private graphRef: SVGSVGElement | null;
 
   constructor(props: IProps)
   {
@@ -81,9 +83,12 @@ export default class Graph extends React.Component<IProps, IState>
     return (
       <div className="wrapper">
         {this.state.showMenu && this.createMenu()}
-        <svg id="graph" viewBox={`${view.x} ${view.y} ${view.w} ${view.h}`}
+        <svg id="graph"
+          viewBox={`${view.x} ${view.y} ${view.w} ${view.h}`}
+          ref={(ref) => { this.graphRef = ref; }}
           onMouseDown={this.handleMouseDown}
-          onContextMenu={this.handleContextMenu}>
+          onContextMenu={this.handleContextMenu}
+          onWheel={this.handleMouseWheel}>
           <svg id="edges">
             {
               this.graph.getNodes().map((node: Model.Node, i) =>
@@ -111,6 +116,7 @@ export default class Graph extends React.Component<IProps, IState>
                   endUpdate={this.endUpdate}
                   padding={csize*2}
                   propertiesDisplay={this.state.propertiesDisplay}
+                  graphRef={this.graphRef}
                   removeNode={this.removeNode}>
                   {
                     this.graph.getNodeConnectors(node.id, "input").map(
@@ -239,6 +245,21 @@ export default class Graph extends React.Component<IProps, IState>
     e.preventDefault();
   }
 
+  // Mouse wheel to zoom in/out
+  private handleMouseWheel = (e: React.WheelEvent<SVGSVGElement>) =>
+  {
+    e.preventDefault();
+
+    const newView = {x: 0, y: 0, w: 0, h: 0};
+
+    newView.w = this.state.view.w + (300 * Math.sign(e.deltaY));
+    newView.h = this.state.view.h + (300 * Math.sign(e.deltaY));
+    newView.x = this.state.view.x;
+    newView.y = this.state.view.y;
+
+    this.setState({view: newView});
+  }
+
   private handleMouseDown = (e: React.MouseEvent<SVGSVGElement>) =>
   {
     e.preventDefault();
@@ -262,8 +283,14 @@ export default class Graph extends React.Component<IProps, IState>
   // Move/scroll graph by dragging background
   private handleGraphDrag = (e: MouseEvent) =>
   {
-    const diffX = e.pageX - this.mouseClick.x;
-    const diffY = e.pageY - this.mouseClick.y;
+    const currentPosition = vgUtils.windowToSVGPosition(
+      {x: e.pageX, y: e.pageY}, this.graphRef);
+
+    const svgMouseClick = vgUtils.windowToSVGPosition(
+      {x: this.mouseClick.x, y: this.mouseClick.y}, this.graphRef);
+
+    const diffX = Math.round(currentPosition.x - svgMouseClick.x);
+    const diffY = Math.round(currentPosition.y - svgMouseClick.y);
 
     const newView = this.state.view;
     newView.x = newView.x - diffX > 0 ? newView.x - diffX : 0;
@@ -470,14 +497,11 @@ export default class Graph extends React.Component<IProps, IState>
 
     dummyNode.size = {w: 0, h: 0};
 
-    const graphEle = document.getElementById("graph");
-    const graphOffsetX = graphEle ? graphEle.getBoundingClientRect().left +
-      window.scrollX : 0;
-    const graphOffsetY = graphEle ? graphEle.getBoundingClientRect().top +
-      window.scrollY : 0;
+    const currentPosition = vgUtils.windowToSVGPosition(
+      {x: e.pageX, y: e.pageY}, this.graphRef);
 
-    dummyNode.position = {x: e.pageX-(3*csize)-graphOffsetX+this.state.view.x,
-      y: e.pageY-csize-graphOffsetY+this.state.view.y}
+    dummyNode.position = {x: currentPosition.x - (3*csize),
+      y: currentPosition.y - csize}
 
     let dummyConnector;
 
@@ -573,14 +597,11 @@ export default class Graph extends React.Component<IProps, IState>
     {
       const dnode = this.state.tempNodes.dummy;
 
-      const graphEle = document.getElementById("graph");
-      const graphOffsetX = graphEle ? graphEle.getBoundingClientRect().left +
-        window.scrollX : 0;
-      const graphOffsetY = graphEle ? graphEle.getBoundingClientRect().top +
-        window.scrollY : 0;
+      const currentPosition = vgUtils.windowToSVGPosition(
+        {x: e.pageX, y: e.pageY}, this.graphRef);
 
-      dnode.position = {x: e.pageX-(3*csize)-graphOffsetX+this.state.view.x,
-        y: e.pageY-csize-graphOffsetY+this.state.view.y};
+      dnode.position = {x: currentPosition.x - (3*csize),
+        y: currentPosition.y - csize};
 
       this.setState({tempNodes: {dummy: dnode,
         real: this.state.tempNodes.real}});
