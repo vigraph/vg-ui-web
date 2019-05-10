@@ -187,19 +187,24 @@ export default class Graph extends React.Component<IProps, IState>
 
   private createMenu = () =>
   {
-    const sMetadata = graphData.returnSectionedMetadata();
+    const sMetadata = graphData.returnMetadata();
+    const aMetadata = [];
 
-    let aMetadata = []
-
-    if (this.subMenu)
+    if (sMetadata)
     {
-      aMetadata = sMetadata[this.subMenu];
-    }
-    else
-    {
-      for (const key of Object.keys(sMetadata))
+      if (this.subMenu)
       {
-        aMetadata.push(key);
+        for (const key of Object.keys(sMetadata[this.subMenu]))
+        {
+          aMetadata.push(key);
+        }
+      }
+      else
+      {
+        for (const key of Object.keys(sMetadata))
+        {
+          aMetadata.push(key);
+        }
       }
     }
 
@@ -208,7 +213,8 @@ export default class Graph extends React.Component<IProps, IState>
       {
         aMetadata.map((value: string, index: number) =>
         {
-          return <div key={index} id={"menu-"+value} className="menu-item"
+          const id = this.subMenu ? this.subMenu+":"+value : value;
+          return <div key={index} id={"menu-"+id} className="menu-item"
             onMouseDown={this.handleMenuMouseDown}> {value} </div>
         })
       }
@@ -332,8 +338,10 @@ export default class Graph extends React.Component<IProps, IState>
       {
         graphData.getNode(id, (node: any) =>
         {
-          node.x = this.mouseClick.x;
-          node.y = this.mouseClick.y;
+          const svgMouseClick = vgUtils.windowToSVGPosition(
+            {x: this.mouseClick.x, y: this.mouseClick.y}, this.graphRef);
+          node.x = svgMouseClick.x;
+          node.y = svgMouseClick.y;
           this.graph.addNodeFromJSON(node);
           this.forceUpdate();
         })

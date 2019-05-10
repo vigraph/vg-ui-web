@@ -59,11 +59,13 @@ export interface IRawMetadataItem
 export interface IProcessedMetadata
 {
   [key: string]: {
-    name: string,
-    section: string,
-    inputs: Array<{ id: string, connectorType: string, multiple?: boolean}>,
-    outputs: Array<{ id: string, connectorType: string, multiple?: boolean}>,
-    properties: Array<{ id: string, type: string, propType: string,
-      description: string}>,
+    [key: string]: {
+      name: string,
+      section: string,
+      inputs: Array<{ id: string, connectorType: string, multiple?: boolean}>,
+      outputs: Array<{ id: string, connectorType: string, multiple?: boolean}>,
+      properties: Array<{ id: string, type: string, propType: string,
+        description: string}>,
+    }
   }
 }

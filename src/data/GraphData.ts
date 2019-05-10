@@ -44,14 +44,12 @@ class GraphData
   private outputEdgeMap: { [key: string]: string[]};
   private propertiesConfig: vgType.IPropertiesConfig;
   private processedMetadata?: vgType.IProcessedMetadata;
-  private sectionedMetadata: { [key: string]: string[]};
 
   public constructor()
   {
     this.rest = new rm.RestClient('vigraph-rest', restURL);
     this.inputEdgeMap = {};
     this.outputEdgeMap = {};
-    this.sectionedMetadata = {};
 
     this.propertiesConfig = require('./PropertiesConfig.json');
   }
@@ -59,11 +57,6 @@ class GraphData
   public returnMetadata()
   {
     return this.processedMetadata;
-  }
-
-  public returnSectionedMetadata()
-  {
-    return this.sectionedMetadata;
   }
 
   public generateGraph(success: (json: any) => void)
@@ -424,22 +417,19 @@ class GraphData
           });
       }
 
-      processedMetadata[value.id] =
+      if (!processedMetadata[value.section])
       {
-        name: value.name,
-        section: value.section,
-        inputs: pInputs,
-        outputs: pOutputs,
-        properties: pProps
-      };
-
-      if (!this.sectionedMetadata[value.section])
-      {
-        this.sectionedMetadata[value.section] = [];
+        processedMetadata[value.section] = {};
       }
 
-      this.sectionedMetadata[value.section].push(value.id);
-
+      processedMetadata[value.section][value.id] =
+        {
+          name: value.name,
+          section: value.section,
+          inputs: pInputs,
+          outputs: pOutputs,
+          properties: pProps
+        }
     });
 
     this.processedMetadata = processedMetadata;
@@ -496,28 +486,32 @@ class GraphData
       subType: string, value: any, rangeMin?: number, rangeMax?: number,
       increment?: number, available?: string[], x: number, y:number}> = [];
 
+    const splitType = item.type.split(":");
+    const itemSection = splitType[0];
+    const itemType = splitType[1];
+
     // Node properties from metadata
-    if (this.propertiesConfig[item.type])
+    if (this.propertiesConfig[itemType])
     {
       for (const key of Object.keys(item.props))
       {
-        const fProp =  metadata[item.type].properties.find(x =>
+        const fProp =  metadata[itemSection][itemType].properties.find(x =>
             x.id === key);
         const propType = fProp ? fProp.propType : "prop";
 
         gProps.push({id: key, value: item.props[key],
           propType,
-          ...this.propertiesConfig[item.type].properties[key]});
+          ...this.propertiesConfig[itemType].properties[key]});
       };
     }
 
     const node: vgType.IProcessedGraphItem =
     {
       id: item.id,
-      name: metadata[item.type].name,
-      type: item.type,
-      inputs: metadata[item.type].inputs,
-      outputs: metadata[item.type].outputs,
+      name: metadata[itemSection][itemType].name,
+      type: itemType,
+      inputs: metadata[itemSection][itemType].inputs,
+      outputs: metadata[itemSection][itemType].outputs,
       edges: gEdges,
       properties: gProps
     };
