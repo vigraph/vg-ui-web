@@ -106,7 +106,7 @@ export default class App extends React.Component
           <button onClick={this.handleToggleLabels}>Toggle Labels</button>
         </div>
         <Graph ref={this.graph} /* from={exampleGraph} */ />
-        <WebsocketCanvas size={{ x: 1000, y: 500 }} />
+        <WebsocketCanvas size={{ x: 400, y: 400 }} />
       </div>
     );
   }
