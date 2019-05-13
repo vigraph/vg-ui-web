@@ -18,12 +18,9 @@
 // TODO: if a property has an input attached the control should be disabled
 // TODO: default layout - layout without the need for properties config
 // (in a line with type:number = Knob etc)
-// TODO: better node layout algorithm
-// TODO: save/load node layout/position data
 // TODO: 'trigger' should have a momentary button
 // TODO: handle 'multiple' value of inputs/outputs and behaviour with 'default'
 // TODO: mouse wheel zoom
-// TODO: grab/move background to scroll around
 // TODO: nicer create/delete nodes
 
 import * as rm from 'typed-rest-client/RestClient';
@@ -44,12 +41,14 @@ class GraphData
   private outputEdgeMap: { [key: string]: string[]};
   private propertiesConfig: vgType.IPropertiesConfig;
   private processedMetadata?: vgType.IProcessedMetadata;
+  private layoutData: vgType.ILayoutData;
 
   public constructor()
   {
     this.rest = new rm.RestClient('vigraph-rest', restURL);
     this.inputEdgeMap = {};
     this.outputEdgeMap = {};
+    this.layoutData = {};
 
     this.propertiesConfig = require('./PropertiesConfig.json');
   }
@@ -94,6 +93,47 @@ class GraphData
       {
         // Error
         vgUtils.log("Update Property Failure with error: " + error);
+      });
+  }
+
+  // Update layout data. If no value given then layout data for given node id
+  // is removed
+  public updateLayout(nodeID: string, value?: {x: number, y: number})
+  {
+    const url = restURL + "/layout";
+
+    if (value)
+    {
+      this.layoutData[nodeID] = value;
+    }
+    else
+    {
+      delete this.layoutData[nodeID];
+    }
+
+    fetch(url,
+    {
+      method: "POST",
+      body: JSON.stringify(this.layoutData)
+    })
+    .then(response =>
+      {
+        if (response.status === 200)
+        {
+          // Success
+          vgUtils.log("Update Layout Success");
+        }
+        else
+        {
+          // Error
+          vgUtils.log("Update Layout Failure with response status: " +
+            response.status);
+        }
+      })
+    .catch(error =>
+      {
+        // Error
+        vgUtils.log("Update Layout Failure with error: " + error);
       });
   }
 
@@ -197,6 +237,8 @@ class GraphData
         {
           vgUtils.log("Delete Node Success");
 
+          this.updateLayout(nodeID);
+
           // Success
           if (success)
           {
@@ -270,6 +312,39 @@ class GraphData
     {
       // Error
       vgUtils.log("Get Node By Id Failure with error: " + error);
+    }
+  }
+
+  // Get data for graph layout
+  private async getLayoutData(nodes: vgType.IProcessedGraphItem[],
+    success: (nodes: vgType.IProcessedGraphItem[],
+      layout: vgType.ILayoutData)=>void,
+    failure: (nodes: vgType.IProcessedGraphItem[])=>void)
+  {
+    try
+    {
+      const res: rm.IRestResponse<vgType.ILayoutData> =
+        await this.rest.get<vgType.ILayoutData>('/layout');
+
+      if (res.statusCode === 200 && res.result)
+      {
+        vgUtils.log("Get Layout Data Success");
+        this.layoutData = res.result;
+        success(nodes, this.layoutData);
+      }
+      else
+      {
+        // Error with status code
+        vgUtils.log("Get Layout Data Failure with status code: " +
+          res.statusCode);
+        failure(nodes);
+      }
+    }
+    catch (error)
+    {
+      // Error
+      vgUtils.log("Get Layout Data Failure with error: " + error);
+      failure(nodes);
     }
   }
 
@@ -522,8 +597,39 @@ class GraphData
   // Layout Graph and pass full graph on to final success callback
   private layoutGraph(nodes: vgType.IProcessedGraphItem[])
   {
-    const graph = { "nodes" : this.generateLayout(nodes)};
+    this.getLayoutData(nodes,
+      (lNodes: vgType.IProcessedGraphItem[],layout: vgType.ILayoutData) =>
+        {
+          this.processLayout(lNodes, layout);
+        },
+      (lNodes: vgType.IProcessedGraphItem[]) =>
+        {
+          this.generateLayout(lNodes);
+        }
+    );
+  }
 
+  // Process layout data and combine with node data
+  private processLayout(nodes: vgType.IProcessedGraphItem[], layout:
+    vgType.ILayoutData)
+  {
+    const layoutNodes: any[] = [];
+
+    nodes.forEach((value: vgType.IProcessedGraphItem) =>
+    {
+      const propConfig = this.propertiesConfig[value.type];
+      const nodeLayout =
+      {
+        x: layout[value.id] ? layout[value.id].x : 0,
+        y: layout[value.id] ? layout[value.id].y : 0,
+        h: propConfig ? propConfig.height : 50,
+        w: propConfig ? propConfig.width : 50
+      }
+
+      layoutNodes.push({...value, ...nodeLayout});
+    });
+
+    const graph = { "nodes" : layoutNodes };
     this.generateSuccess(graph);
   }
 
@@ -611,9 +717,11 @@ class GraphData
         y: rankNextPos[nRank+1].y};
 
       layoutNodes.push({...value, ...layout});
+      this.layoutData[value.id] = {x: layout.x, y: layout.y};
     })
 
-    return layoutNodes;
+    const graph = { "nodes" : layoutNodes };
+    this.generateSuccess(graph);
   }
 }
 

@@ -342,6 +342,9 @@ export default class Graph extends React.Component<IProps, IState>
             {x: this.mouseClick.x, y: this.mouseClick.y}, this.graphRef);
           node.x = svgMouseClick.x;
           node.y = svgMouseClick.y;
+
+          graphData.updateLayout(id, {x: svgMouseClick.x, y: svgMouseClick.y});
+
           this.graph.addNodeFromJSON(node);
           this.forceUpdate();
         })

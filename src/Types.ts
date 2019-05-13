@@ -69,3 +69,11 @@ export interface IProcessedMetadata
     }
   }
 }
+
+export interface ILayoutData
+{
+  [key: string]: {
+    x: number,
+    y: number
+  }
+}

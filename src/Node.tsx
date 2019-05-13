@@ -3,6 +3,7 @@ import * as Model from './model';
 
 import Property from './Property';
 
+import { graphData } from './data/GraphData';
 import { vgUtils } from './Utils'
 
 interface IProps
@@ -130,6 +131,10 @@ export default class Node extends React.Component<IProps, IState>
     this.setState({ dragging: false });
     window.removeEventListener('mouseup', this.handleMouseUp);
     window.removeEventListener('mousemove', this.handleMouseMove);
+
+    // Update graph layout data
+    graphData.updateLayout(this.node.id, {x: this.state.x, y: this.state.y});
+
     if (this.props.endUpdate)
     {
       this.props.endUpdate();
