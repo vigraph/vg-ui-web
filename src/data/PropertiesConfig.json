@@ -242,25 +242,9 @@
   "vco":
   {
     "width": 120,
-    "height": 200,
+    "height": 120,
     "properties":
     {
-      "trigger":
-      {
-        "controlType": "button",
-        "subType": "circle",
-        "x": 40,
-        "y": 50
-      },
-
-      "clear":
-      {
-        "controlType": "button",
-        "subType": "circle",
-        "x": 80,
-        "y": 50
-      },
-
       "wave":
       {
         "controlType": "selector",
@@ -270,7 +254,7 @@
         "rangeMax": 500,
         "increment": 100,
         "x": 30,
-        "y": 100
+        "y": 30
       },
 
       "freq":
@@ -281,7 +265,7 @@
         "rangeMax": 1000,
         "increment": 1,
         "x": 40,
-        "y": 140
+        "y": 70
       },
 
       "pulse-width":
@@ -292,32 +276,16 @@
         "rangeMax": 1,
         "increment": 0.01,
         "x": 80,
-        "y": 140
+        "y": 70
       }
     }
   },
   "filter":
   {
     "width": 160,
-    "height": 200,
+    "height": 130,
     "properties":
     {
-      "enable":
-      {
-        "controlType": "button",
-        "subType": "circle",
-        "x": 40,
-        "y": 50
-      },
-
-      "disable":
-      {
-        "controlType": "button",
-        "subType": "circle",
-        "x": 80,
-        "y": 50
-      },
-
       "mode":
       {
         "controlType": "selector",
@@ -326,8 +294,8 @@
         "rangeMin": 100,
         "rangeMax": 300,
         "increment": 100,
-        "x": 30,
-        "y": 100
+        "x": 50,
+        "y": 30
       },
 
       "cutoff":
@@ -338,7 +306,7 @@
         "rangeMax": 1,
         "increment": 0.01,
         "x": 40,
-        "y": 140
+        "y": 70
       },
 
       "resonance":
@@ -349,7 +317,7 @@
         "rangeMax": 1,
         "increment": 0.01,
         "x": 80,
-        "y": 140
+        "y": 70
       },
 
       "steepness":
@@ -360,7 +328,7 @@
         "rangeMax": 5,
         "increment": 0.1,
         "x": 120,
-        "y": 140
+        "y": 70
       }
     }
   },
@@ -446,8 +414,18 @@
         "rangeMin": -1,
         "rangeMax": 1,
         "increment": 0.01,
-        "x": 55,
-        "y": 60
+        "x": 40,
+        "y": 70
+      },
+      "points":
+      {
+        "controlType": "knob",
+        "subType": "default",
+        "rangeMin": 1,
+        "rangeMax": 1000,
+        "increment": 1,
+        "x": 80,
+        "y": 70
       }
     }
   },
