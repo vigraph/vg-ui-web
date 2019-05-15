@@ -12,6 +12,7 @@ import Edge from './Edge';
 import Node from './Node';
 
 const csize: number = 5;
+const zoomFactor: number = 1.1;
 
 interface IProps
 {
@@ -256,12 +257,20 @@ export default class Graph extends React.Component<IProps, IState>
   {
     e.preventDefault();
 
-    const newView = {x: 0, y: 0, w: 0, h: 0};
+    const scale = -1 * Math.sign(e.deltaY) > 0 ? 1 / zoomFactor : zoomFactor;
 
-    newView.w = this.state.view.w + (300 * Math.sign(e.deltaY));
-    newView.h = this.state.view.h + (300 * Math.sign(e.deltaY));
-    newView.x = this.state.view.x;
-    newView.y = this.state.view.y;
+    const startPoint = vgUtils.windowToSVGPosition({x: e.pageX, y: e.pageY},
+      this.graphRef);
+
+    const newView = this.state.view;
+
+    newView.x -= (startPoint.x - newView.x) * (scale - 1);
+    newView.y -= (startPoint.y - newView.y) * (scale - 1);
+    newView.w *= scale;
+    newView.h *= scale;
+
+    newView.x = newView.x > 0 ? newView.x : 0;
+    newView.y = newView.y > 0 ? newView.y : 0;
 
     this.setState({view: newView});
   }
