@@ -37,7 +37,7 @@ export default class WebsocketCanvas extends React.Component<IProps>
 
   public componentDidMount()
   {
-    const rxSocket = new WebSocket('ws://localhost:33381/');
+    const rxSocket = new WebSocket('ws://localhost:33382/');
     rxSocket.binaryType = 'arraybuffer';
     rxSocket.onmessage = (e: MessageEvent) => { this.handleFrame(e.data); };
 
