@@ -551,6 +551,40 @@
       }
     }
   },
+  "wait": {
+    "width": 50,
+    "height": 80,
+    "properties":
+    {
+      "for":
+      {
+        "controlType": "knob",
+        "subType": "default",
+        "rangeMin": 0,
+        "rangeMax": 10,
+        "increment": 0.05,
+        "x": 20,
+        "y": 30
+      }
+    }
+  },
+  "set": {
+    "width": 50,
+    "height": 80,
+    "properties":
+    {
+      "value":
+      {
+        "controlType": "knob",
+        "subType": "default",
+        "rangeMin": 0,
+        "rangeMax": 10,
+        "increment": 0.05,
+        "x": 20,
+        "y": 30
+      }
+    }
+  },
   "translate": {
     "width": 150,
     "height": 80,
