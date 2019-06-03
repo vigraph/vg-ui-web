@@ -1,6 +1,8 @@
 import * as React from 'react';
 import * as Model from './model';
 
+import { vgUtils } from './Utils';
+
 interface IProps
 {
   src: Model.Node;
@@ -8,6 +10,7 @@ interface IProps
   dest: Model.Node;
   destInput: string;
   offset: number;
+  graphRef: SVGSVGElement | null;
   removeEdge: (srcID: string, srcOutput: string, destID: string,
     destInput: string, success?: () => void) => void;
   moveEdge: (node: Model.Node, connectorId: string,
@@ -138,11 +141,14 @@ export default class Edge extends React.Component<IProps, IState>
         this.setState({edgeSelected: false});
       }
 
-      const srcMouseDistance = Math.hypot(this.edgeStart.x - this.mouseStart.x,
-        this.edgeStart.y - this.mouseStart.y)
+      const mStart = vgUtils.windowToSVGPosition({x: this.mouseStart.x,
+        y: this.mouseStart.y}, this.props.graphRef);
 
-      const destMouseDistance = Math.hypot(this.edgeStop.x - this.mouseStart.x,
-        this.edgeStop.y - this.mouseStart.y)
+      const srcMouseDistance = Math.hypot(this.edgeStart.x - mStart.x,
+        this.edgeStart.y - mStart.y);
+
+      const destMouseDistance = Math.hypot(this.edgeStop.x - mStart.x,
+        this.edgeStop.y - mStart.y);
 
       if (srcMouseDistance > destMouseDistance)
       {

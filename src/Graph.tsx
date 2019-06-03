@@ -3,7 +3,7 @@ import * as React from 'react';
 import * as Model from './model';
 
 import { graphData } from './data/GraphData';
-import { vgUtils } from './Utils'
+import { vgUtils } from './Utils';
 
 import './Graph.css';
 
@@ -101,6 +101,7 @@ export default class Graph extends React.Component<IProps, IState>
                     return <Edge key={i+","+index} src={node}
                       srcOutput={edge.outputId} dest={edge.dest}
                       destInput={edge.destInput} offset={csize}
+                      graphRef={this.graphRef}
                       removeEdge={this.removeEdge}
                       moveEdge={this.moveEdge}/>
                   });
