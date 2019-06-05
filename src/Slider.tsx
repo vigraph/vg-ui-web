@@ -48,6 +48,7 @@ export default class Slider extends React.Component<IProps, IState>
 
     this.settings = sliderSettings[this.property.subType] ?
       sliderSettings[this.property.subType] : sliderSettings.default;
+    this.sliderRef = null;
 
     this.state =
     {

@@ -21,7 +21,8 @@ interface IProps
 
 interface IState
 {
-  propertiesDisplay: {labels: boolean; controls: boolean},
+  propertiesDisplay: {[key:string]: boolean
+    labels: boolean; controls: boolean},
   tempNodes: {dummy: Model.Node, real: Model.Node} | null,
   tempConnectors:{ dummy: Model.Connector,  real: Model.Connector} | null,
   targetConnector: { connector: Model.Connector, parent: Model.Node } | null,
@@ -67,6 +68,7 @@ export default class Graph extends React.Component<IProps, IState>
     this.mouseClick = {x: 0, y: 0};
     this.subMenu = null;
     this.idCount = 0;
+    this.graphRef = null;
   }
 
   // Load a new graph after mounting

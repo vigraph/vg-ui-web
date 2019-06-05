@@ -36,7 +36,7 @@ const layoutPadding = { x: 100, y: 40 };
 class GraphData
 {
   private rest: rm.RestClient;
-  private generateSuccess: (json: any) => void;
+  private generateSuccess?: (json: any) => void;
   private inputEdgeMap: { [key: string]: string[]};
   private outputEdgeMap: { [key: string]: string[]};
   private propertiesConfig: vgType.IPropertiesConfig;
@@ -49,7 +49,6 @@ class GraphData
     this.inputEdgeMap = {};
     this.outputEdgeMap = {};
     this.layoutData = {};
-
     this.propertiesConfig = require('../json/PropertiesConfig.json');
   }
 
@@ -630,7 +629,7 @@ class GraphData
     });
 
     const graph = { "nodes" : layoutNodes };
-    this.generateSuccess(graph);
+    this.generateSuccess!(graph);
   }
 
   // Generate Graph layout without node position data. Nodes ranked by number of
@@ -721,7 +720,7 @@ class GraphData
     })
 
     const graph = { "nodes" : layoutNodes };
-    this.generateSuccess(graph);
+    this.generateSuccess!(graph);
   }
 }
 

@@ -9,7 +9,8 @@ import Knob from './Knob';
 import Selector from './Selector';
 import Slider from './Slider';
 
-const controlTypes = {"none": null, "knob": Knob, "button": Button,
+const controlTypes: {[key: string]: any} =
+  { "none": null, "knob": Knob, "button": Button,
   "slider": Slider, "colourPicker": ColourPicker, "selector": Selector};
 
 interface IProps

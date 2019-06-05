@@ -46,6 +46,8 @@ export default class ColourPicker extends React.Component<IProps, IState>
     super(props);
 
     this.property = props.property;
+    this.allCurrentValues = { hex: "", r: 0, g: 0, b: 0, h: 0, s: 0, l: 0 };
+    this.pickerRef = null;
 
      const pickerSettings = require('./json/ControlSettings.json').colourPicker;
 

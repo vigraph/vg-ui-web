@@ -68,12 +68,12 @@ export class Node
     if (edges)
     {
       edges.forEach(
-        (toArray: [{ destId: string, destInput: string }], output: string) =>
+        (toArray?: [{ destId: string, destInput: string }], output?: string) =>
         {
-          toArray.forEach(
+          toArray!.forEach(
             (to: {destId: string, destInput: string}, index: number) =>
             {
-              result.push({outputId: output, dest: new Node(to.destId,
+              result.push({outputId: output!, dest: new Node(to.destId,
                 this.graph), destInput: to.destInput})
             });
         });
@@ -92,12 +92,12 @@ export class Node
     if (edges)
     {
       edges.forEach(
-        (fromArray: [{ srcId: string, srcOutput: string }], input: string) =>
+        (fromArray?: [{ srcId: string, srcOutput: string }], input?: string) =>
         {
-          fromArray.forEach(
+          fromArray!.forEach(
             (from: {srcId: string, srcOutput: string}, index: number) =>
             {
-              result.push({inputId: input, src: new Node(from.srcId,
+              result.push({inputId: input!, src: new Node(from.srcId,
                 this.graph), srcOutput: from.srcOutput});
             });
         });
