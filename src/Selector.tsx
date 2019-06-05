@@ -1,12 +1,7 @@
 import * as React from 'react';
 import * as Model from './model';
 
-const selectorSettings: {default: {}, horz: {}, vert: {}} =
-  {
-    default : {length: 80, thickness: 20, horizontal: true},
-    horz : {length: 80, thickness: 20, horizontal: true},
-    vert : {length: 60, thickness: 15, horizontal: false},
-  }
+import * as vgType from './Types';
 
 interface IProps
 {
@@ -35,13 +30,15 @@ export default class Selector extends React.Component<IProps, IState>
 
   private property: Model.Property;
 
-  private settings: {length: number, thickness: number, horizontal: boolean};
+  private settings: vgType.ISelectorSettings;
 
   constructor(props: IProps)
   {
     super(props);
 
     this.property = props.property;
+
+    const selectorSettings = require('./json/ControlSettings.json').selector;
 
     this.settings = selectorSettings[this.property.subType] ?
       selectorSettings[this.property.subType] : selectorSettings.default;

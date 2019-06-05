@@ -25,9 +25,9 @@
 
 import * as rm from 'typed-rest-client/RestClient';
 
-import { vgUtils } from '../Utils'
+import { vgUtils } from '../Utils';
 
-import * as vgType from '../Types'
+import * as vgType from '../Types';
 
 const restURL = 'http://localhost:33381';
 const marginPadding = { x: 40, y: 40 };
@@ -50,7 +50,7 @@ class GraphData
     this.outputEdgeMap = {};
     this.layoutData = {};
 
-    this.propertiesConfig = require('./PropertiesConfig.json');
+    this.propertiesConfig = require('../json/PropertiesConfig.json');
   }
 
   public returnMetadata()

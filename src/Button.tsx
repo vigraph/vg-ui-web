@@ -1,12 +1,7 @@
 import * as React from 'react';
 import * as Model from './model';
 
-const buttonSettings: {default: {}, square: {}, circle: {}} =
-{
-  default: {height: 15, width: 15, rx: 0, ry: 0, offset: 2, latch: true},
-  square: {height: 40, width: 40, rx: 0, ry: 0, offset: 10, latch: true},
-  circle: {height: 40, width: 40, rx: 100, ry: 100, offset: 10, latch: false}
-}
+import * as vgType from './Types';
 
 interface IProps
 {
@@ -35,14 +30,15 @@ export default class Button extends React.Component<IProps, IState>
 
   private property: Model.Property;
 
-  private settings: {height: number, width: number, rx: number, ry: number,
-    offset: number, circle: boolean, latch: boolean};
+  private settings: vgType.IButtonSettings;
 
   constructor(props: IProps)
   {
     super(props);
 
     this.property = props.property;
+
+    const buttonSettings = require('./json/ControlSettings.json').button;
 
     this.settings = buttonSettings[this.property.subType] ?
       buttonSettings[this.property.subType] : buttonSettings.default;

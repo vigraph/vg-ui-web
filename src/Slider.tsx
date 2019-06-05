@@ -3,16 +3,7 @@ import * as Model from './model';
 
 import { vgUtils } from './Utils'
 
-// slideScale - Scale increase whilst sliding slider
-const sliderSettings: {default: {}, horz: {}, vert: {}} =
-  {
-    default : {length: 80, thickness: 20, horizontal: true, slideScale: 1,
-      dialThickness: 1, clickMove: true},
-    horz : {length: 80, thickness: 20, horizontal: true, slideScale: 1.5,
-      dialThickness: 1, clickMove: false},
-    vert : {length: 80, thickness: 20, horizontal: false, slideScale: 1.5,
-      dialThickness: 1, clickMove: false},
-  }
+import * as vgType from './Types';
 
 interface IProps
 {
@@ -43,8 +34,7 @@ export default class Slider extends React.Component<IProps, IState>
 
   private mouseStart: {x: number, y: number};
 
-  private settings: {length: number, thickness: number, horizontal: boolean,
-    slideScale: number, dialThickness: number, clickMove: boolean};
+  private settings: vgType.ISliderSettings;
 
   private sliderRef: SVGSVGElement | null;
 
@@ -53,6 +43,8 @@ export default class Slider extends React.Component<IProps, IState>
     super(props);
 
     this.property = props.property;
+
+    const sliderSettings = require('./json/ControlSettings.json').slider;
 
     this.settings = sliderSettings[this.property.subType] ?
       sliderSettings[this.property.subType] : sliderSettings.default;

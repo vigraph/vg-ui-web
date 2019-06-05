@@ -3,10 +3,7 @@ import * as Model from './model';
 
 import { vgUtils } from './Utils'
 
-const pickerSettings: {default: {}} =
-{
-  default: {barLength: 100, barThickness: 15, padding: 5, indicatorThickness: 6}
-}
+import * as vgType from './Types';
 
 interface IProps
 {
@@ -37,8 +34,7 @@ export default class ColourPicker extends React.Component<IProps, IState>
 
   private property: Model.Property;
 
-  private settings: {barLength: number, barThickness: number, padding: number,
-    indicatorThickness: number};
+  private settings: vgType.IColourPickerSettings;
 
   private allCurrentValues: {hex: string, r: number, g: number, b: number, h: number,
     s: number, l: number};
@@ -50,6 +46,8 @@ export default class ColourPicker extends React.Component<IProps, IState>
     super(props);
 
     this.property = props.property;
+
+     const pickerSettings = require('./json/ControlSettings.json').colourPicker;
 
     this.settings = pickerSettings[this.property.subType] ?
       pickerSettings[this.property.subType] : pickerSettings.default;

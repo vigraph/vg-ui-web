@@ -77,3 +77,58 @@ export interface ILayoutData
     y: number
   }
 }
+
+// radius    - Knob radius
+// overlayRadius - Centre knob overlay radius
+// rangeMin  - Usable knob range minimum from 0 (r, 2r)
+// rangeMax  - Usable knob range maximum from 0 (r, 2r)
+// offset    - Rotation offset of start from 0 (r, 2r)
+// turnScale - Scale increase whilst turning knob
+// logControl - Logarithmic scale control
+export interface IKnobSettings
+{
+  radius: number,
+  overlayRadius: number,
+  rangeMin: number,
+  rangeMax: number,
+  offset: number,
+  turnScale: number,
+  logControl: boolean
+}
+
+export interface ISliderSettings
+{
+  length: number,
+  thickness: number,
+  horizontal: boolean,
+  slideScale: number,
+  dialThickness: number,
+  clickMove: boolean,
+  logControl: boolean
+}
+
+export interface IButtonSettings
+{
+  height: number,
+  width: number,
+  rx: number,
+  ry: number,
+  offset: number,
+  circle: boolean,
+  latch: boolean
+}
+
+export interface ISelectorSettings
+{
+  length: number,
+  thickness: number,
+  horizontal: boolean
+}
+
+export interface IColourPickerSettings
+{
+  barLength: number,
+  barThickness: number,
+  padding: number,
+  indicatorThickness: number
+}

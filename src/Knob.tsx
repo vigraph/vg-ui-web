@@ -1,25 +1,9 @@
 import * as React from 'react';
 import * as Model from './model';
 
-import { vgUtils } from './Utils';
+import * as vgType from './Types';
 
-// turnScale - Scale increase whilst turning knob
-// radius    - Knob radius
-// rangeMin  - Usable knob range minimum from 0 (r, 2r)
-// rangeMax  - Usable knob range maximum from 0 (r, 2r)
-// offset    - Rotation offset of start from 0 (r, 2r)
-// logControl - Logarithmic scale control
-const knobSettings: {default: {}, basic: {}, mini: {}, log: {}} =
-  {
-    default : {radius: 15, overlayRadius: 10, rangeMin: 0, rangeMax: 359,
-      offset: 0, turnScale: 1, logControl: false},
-    basic : {radius: 20, overlayRadius: 7.5, rangeMin: 0, rangeMax: 270,
-      offset: 225, turnScale: 1.5, logControl: false},
-    mini : {radius: 10, overlayRadius: 5, rangeMin: 0, rangeMax: 270,
-      offset: 225, turnScale: 1.5, logControl: false},
-    log : {radius: 15, overlayRadius: 10, rangeMin: 0, rangeMax: 359,
-      offset: 0, turnScale: 1, logControl: true},
-  }
+import { vgUtils } from './Utils';
 
 interface IProps
 {
@@ -53,14 +37,15 @@ export default class Knob extends React.Component<IProps, IState>
   private circleCentre: {x: number, y: number};
   private range: number;
 
-  private settings: {radius: number, overlayRadius: number, rangeMin: number,
-    rangeMax: number, offset: number, turnScale: number, logControl: boolean};
+  private settings: vgType.IKnobSettings;
 
   constructor(props: IProps)
   {
     super(props);
 
     this.property = props.property;
+
+    const knobSettings = require('./json/ControlSettings.json').knob;
 
     this.settings = knobSettings[this.property.subType] ?
       knobSettings[this.property.subType] : knobSettings.default;

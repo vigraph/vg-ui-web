@@ -1,0 +1,144 @@
+{
+  "button": {
+    "default":
+    {
+      "height": 15,
+      "width": 15,
+      "rx": 0,
+      "ry": 0,
+      "offset": 2,
+      "latch": true
+    },
+    "square":
+    {
+      "height": 40,
+      "width": 40,
+      "rx": 0,
+      "ry": 0,
+      "offset": 10,
+      "latch": true
+    },
+    "circle":
+    {
+      "height": 40,
+      "width": 40,
+      "rx": 100,
+      "ry": 100,
+      "offset": 10,
+      "latch": false
+    }
+  },
+  "colourPicker": {
+    "default":
+    {
+      "barLength": 100,
+      "barThickness": 15,
+      "padding": 5,
+      "indicatorThickness": 6
+    }
+  },
+  "knob": {
+    "default":
+    {
+      "radius": 15,
+      "overlayRadius": 10,
+      "rangeMin": 0,
+      "rangeMax": 359,
+      "offset": 0,
+      "turnScale": 1,
+      "logControl": false
+    },
+    "basic":
+    {
+      "radius": 20,
+      "overlayRadius": 7.5,
+      "rangeMin": 0,
+      "rangeMax": 270,
+      "offset": 225,
+      "turnScale": 1.5,
+      "logControl": false
+    },
+    "mini":
+    {
+      "radius": 10,
+      "overlayRadius": 5,
+      "rangeMin": 0,
+      "rangeMax": 270,
+      "offset": 225,
+      "turnScale": 1.5,
+      "logControl": false
+    },
+    "log":
+    {
+      "radius": 15,
+      "overlayRadius": 10,
+      "rangeMin": 0,
+      "rangeMax": 359,
+      "offset": 0,
+      "turnScale": 1,
+      "logControl": true
+    }
+  },
+  "selector": {
+    "default":
+    {
+      "length": 80,
+      "thickness": 20,
+      "horizontal": true
+    },
+    "horz":
+    {
+      "length": 80,
+      "thickness": 20,
+      "horizontal": true
+    },
+    "vert":
+    {
+      "length": 60,
+      "thickness": 15,
+      "horizontal": false
+    }
+  },
+  "slider": {
+    "default":
+    {
+      "length": 80,
+      "thickness": 20,
+      "horizontal": true,
+      "slideScale": 1,
+      "dialThickness": 1,
+      "clickMove": true,
+      "logControl": false
+    },
+    "horz":
+    {
+      "length": 80,
+      "thickness": 20,
+      "horizontal": true,
+      "slideScale": 1.5,
+      "dialThickness": 1,
+      "clickMove": false,
+      "logControl": false
+    },
+    "vert":
+    {
+      "length": 80,
+      "thickness": 20,
+      "horizontal": false,
+      "slideScale": 1.5,
+      "dialThickness": 1,
+      "clickMove": false,
+      "logControl": false
+    },
+    "log":
+    {
+      "length": 80,
+      "thickness": 20,
+      "horizontal": true,
+      "slideScale": 1,
+      "dialThickness": 1,
+      "clickMove": true,
+      "logControl": true
+    }
+  }
+}
