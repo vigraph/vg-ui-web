@@ -1,19 +1,24 @@
 import * as React from 'react';
 import * as Model from './model';
 
+import { vgUtils } from './Utils';
+
 // turnScale - Scale increase whilst turning knob
 // radius    - Knob radius
 // rangeMin  - Usable knob range minimum from 0 (r, 2r)
 // rangeMax  - Usable knob range maximum from 0 (r, 2r)
 // offset    - Rotation offset of start from 0 (r, 2r)
-const knobSettings: {default: {}, basic: {}, mini: {}} =
+// logControl - Logarithmic scale control
+const knobSettings: {default: {}, basic: {}, mini: {}, log: {}} =
   {
     default : {radius: 15, overlayRadius: 10, rangeMin: 0, rangeMax: 359,
-      offset: 0, turnScale: 1},
+      offset: 0, turnScale: 1, logControl: false},
     basic : {radius: 20, overlayRadius: 7.5, rangeMin: 0, rangeMax: 270,
-      offset: 225, turnScale: 1.5},
+      offset: 225, turnScale: 1.5, logControl: false},
     mini : {radius: 10, overlayRadius: 5, rangeMin: 0, rangeMax: 270,
-      offset: 225, turnScale: 1.5},
+      offset: 225, turnScale: 1.5, logControl: false},
+    log : {radius: 15, overlayRadius: 10, rangeMin: 0, rangeMax: 359,
+      offset: 0, turnScale: 1, logControl: true},
   }
 
 interface IProps
@@ -22,7 +27,7 @@ interface IProps
   startUpdate: () => void;
   update: (value: number) => void;
   endUpdate: () => void;
-  position: {x: number, y:number};
+  position: {x: number, y: number};
 }
 
 interface IState
@@ -49,7 +54,7 @@ export default class Knob extends React.Component<IProps, IState>
   private range: number;
 
   private settings: {radius: number, overlayRadius: number, rangeMin: number,
-    rangeMax: number, offset: number, turnScale: number};
+    rangeMax: number, offset: number, turnScale: number, logControl: boolean};
 
   constructor(props: IProps)
   {
@@ -78,10 +83,24 @@ export default class Knob extends React.Component<IProps, IState>
     const r = this.settings.radius
     const oR = this.settings.overlayRadius;
 
+    const settings = this.settings;
+
+    if (settings.logControl && this.property.range.min === 0)
+    {
+      vgUtils.log("Knob Error - Logarithmic control with minimum range set " +
+        "to 0");
+    }
+
+    const rangeMin = settings.logControl ? Math.log10(this.property.range.min) :
+      this.property.range.min;
+    const rangeMax = settings.logControl ? Math.log10(this.property.range.max) :
+      this.property.range.max;
+    const currentValue = settings.logControl ?
+      Math.log10(this.state.currentValue) : this.state.currentValue;
+
     // Current position in degrees from 0
-    const currentPos = ((this.state.currentValue - this.property.range.min) /
-      (this.property.range.max - this.property.range.min) * this.range) +
-      this.settings.rangeMin;
+    const currentPos = ((currentValue - rangeMin) /
+      (rangeMax - rangeMin) * this.range) + settings.rangeMin;
 
     // Calculate knob arc end point from arc start point and angle (position)
     // of the knob
@@ -203,15 +222,24 @@ export default class Knob extends React.Component<IProps, IState>
     const currentX = e.pageX - this.circleCentre.x;
     const currentY = e.pageY - this.circleCentre.y;
 
+    const settings = this.settings;
+    const rangeMin = settings.logControl ? Math.log10(this.property.range.min) :
+      this.property.range.min;
+    const rangeMax = settings.logControl ? Math.log10(this.property.range.max) :
+      this.property.range.max;
+    const currentValue = settings.logControl ?
+      Math.log10(this.state.currentValue) : this.state.currentValue;
+
     // Calculate angle between mouse start position and current mouse posiiton
     // and add to current knob position (angle)
     const dot = (this.mouseStart.x * currentX) + (this.mouseStart.y * currentY);
     const det = (this.mouseStart.x * currentY) - (this.mouseStart.y * currentX);
     const angleRad = Math.atan2(det, dot);
     const angle = angleRad * (180 / Math.PI);
-    let newPos = ((this.state.currentValue - this.property.range.min) /
-      (this.property.range.max - this.property.range.min) * this.range) +
-      this.settings.rangeMin + angle;
+
+    // Current position in degrees from 0
+    let newPos = ((currentValue - rangeMin) /
+      (rangeMax - rangeMin) * this.range) + settings.rangeMin + angle;
 
     // Mouse start can now but current mouse coords
     this.mouseStart.x = currentX;
@@ -219,9 +247,13 @@ export default class Knob extends React.Component<IProps, IState>
 
     newPos = this.limitPosition(newPos);
 
-    const newValue = ((newPos / this.settings.rangeMax) *
-      (this.property.range.max - this.property.range.min)) +
-      this.property.range.min;
+    let newValue = ((newPos / settings.rangeMax) * (rangeMax -
+      rangeMin)) + rangeMin;
+
+    if (settings.logControl)
+    {
+      newValue = Math.pow(10, newValue);
+    }
 
     this.setState({currentValue: newValue});
 
