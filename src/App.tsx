@@ -104,7 +104,9 @@ export default class App extends React.Component
           <button onClick={this.handleRedo}>Redo</button>
           <button onClick={this.handleToggleControls}>Toggle Controls</button>
           <button onClick={this.handleToggleLabels}>Toggle Labels</button>
-        </div>
+          <button onClick={this.setFullScreen}>Full Screen</button>
+          <button onClick={this.setWindowed}>Windowed</button>
+         </div>
         <Graph ref={this.graph} /* from={exampleGraph} */ />
         <WebsocketCanvas size={{ x: 400, y: 400 }} />
       </div>
@@ -142,4 +144,17 @@ export default class App extends React.Component
       this.graph.current.toggleDisplay("labels");
     }
   }
+
+  private setFullScreen = () =>
+    {
+      const req = { "fullscreen": true };
+      (window as any).external.invoke(JSON.stringify(req));
+    }
+
+  private setWindowed = () =>
+    {
+      const req = { "fullscreen": false };
+      (window as any).external.invoke(JSON.stringify(req));
+    }
+
 }
