@@ -5,6 +5,7 @@
   "dependencies": {
     "immutable": "^3.8.2",
     "react": "^16.8.6",
+    "react-app-polyfill": "^1.0.1",
     "react-dom": "^16.8.6",
     "react-scripts": "^3.0.1",
     "typed-rest-client": "^1.4.0"
