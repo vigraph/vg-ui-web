@@ -137,8 +137,8 @@ export default class Knob extends React.Component<IProps, IState>
           onMouseDown={this.handleMouseDown}>
           <circle className={`knob-background`}
             cx={r} cy={r} r={r}
-            transform={"scale("+`${this.state.turning ?
-              this.settings.turnScale : "1"}` + ")"}
+            transform={`scale(${this.state.turning ?
+              this.settings.turnScale : 1})`}
           />
           <path
             className={`knob-arc`}
@@ -146,21 +146,19 @@ export default class Knob extends React.Component<IProps, IState>
               `L${this.arcStart.x},${this.arcStart.y} `+
               `A${r},${r} 1 ${arcSweep},1 `+
               `${newX},${newY} z`}
-            transform={`scale(`+`${this.state.turning?
-              this.settings.turnScale:"1"}) `+
-              `rotate(${this.settings.offset}, ${r}, ${r})`}
+            transform={`scale(${this.state.turning ? this.settings.turnScale :
+              1}) rotate(${this.settings.offset}, ${r}, ${r})`}
           />
           <path
             className={`knob-dial`}
             d={`M${r} ${r} L${newX},${newY} z`}
-            transform={`scale(`+`${this.state.turning?
-              this.settings.turnScale:"1"}) `+
-              `rotate(${this.settings.offset}, ${r}, ${r})`}
+            transform={`scale(${this.state.turning ? this.settings.turnScale :
+              1}) rotate(${this.settings.offset}, ${r}, ${r})`}
           />
           <circle className="knob-overlay"
             cx={r} cy={r} r={oR}
-            transform={"scale("+`${this.state.turning?
-              this.settings.turnScale:"1"}`+")"}
+            transform={`scale(${this.state.turning ?
+              this.settings.turnScale : 1})`}
           />
         </svg>
     );

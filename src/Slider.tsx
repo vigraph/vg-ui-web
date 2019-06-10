@@ -61,11 +61,43 @@ export default class Slider extends React.Component<IProps, IState>
 
   public render()
   {
-    // Current position from 0
-    const currentPos =  ((this.state.currentValue - this.property.range.min) /
-      (this.property.range.max - this.property.range.min)) * this.settings.length;
-    const position = this.props.position;
     const settings = this.settings;
+
+    if (settings.logControl)
+    {
+      if (this.property.range.min === 0)
+      {
+        vgUtils.log("Slider Error - Logarithmic control with minimum range set " +
+          "to 0");
+      }
+
+      if (this.state.currentValue === 0)
+      {
+        vgUtils.log("Slider Error - Logarithmic control with current value 0");
+      }
+    }
+
+    const rangeMin = settings.logControl ? Math.log10(this.property.range.min) :
+      this.property.range.min;
+    const rangeMax = settings.logControl ? Math.log10(this.property.range.max) :
+      this.property.range.max;
+    const currentValue = settings.logControl ?
+      Math.log10(this.state.currentValue) : this.state.currentValue;
+
+    let currentPos;
+
+    if (rangeMin === -Infinity || rangeMax === -Infinity ||
+      currentValue === -Infinity)
+    {
+      currentPos = 0;
+    }
+    else
+    {
+      currentPos = ((currentValue - rangeMin) /
+      (rangeMax - rangeMin)) * settings.length;
+    }
+
+    const position = this.props.position;
 
     return(
         <svg id="slider" className={this.property.subType}
@@ -114,15 +146,27 @@ export default class Slider extends React.Component<IProps, IState>
       this.props.startUpdate();
     }
 
+    const settings = this.settings;
+
     // Move current value to click position
-    if (this.settings.slideScale === 1 && this.settings.clickMove)
+    if (settings.slideScale === 1 && settings.clickMove)
     {
-      const newDistance = this.settings.horizontal ? currentPosition.x:
-        this.settings.length - currentPosition.y;
+      const rangeMin = settings.logControl ?
+        Math.log10(this.property.range.min) : this.property.range.min;
+      const rangeMax = settings.logControl ?
+        Math.log10(this.property.range.max) : this.property.range.max;
+
+      const newDistance = settings.horizontal ? currentPosition.x :
+        settings.length - currentPosition.y;
       const newPos = this.limitPosition(newDistance);
-      const newPercent = newPos / this.settings.length;
-      const newValue = (newPercent * (this.property.range.max -
-        this.property.range.min)) + this.property.range.min;
+      const newPercent = newPos / settings.length;
+      let newValue = (newPercent * (rangeMax -
+        rangeMin)) + rangeMin;
+
+      if (settings.logControl)
+      {
+        newValue = Math.pow(10, newValue);
+      }
 
       this.setState({currentValue: newValue});
       if (this.props.update)
@@ -153,15 +197,26 @@ export default class Slider extends React.Component<IProps, IState>
     const diff = this.settings.horizontal ? currentPosition.x -
       this.mouseStart.x : this.mouseStart.y - currentPosition.y;
 
-    let newPos = (((this.state.currentValue - this.property.range.min ) /
-      (this.property.range.max - this.property.range.min)) * this.settings.length) +
-      (diff / this.settings.slideScale);
+    const settings = this.settings;
+    const rangeMin = settings.logControl ?
+      Math.log10(this.property.range.min) : this.property.range.min;
+    const rangeMax = settings.logControl ?
+      Math.log10(this.property.range.max) : this.property.range.max;
+    const currentValue = settings.logControl ?
+      Math.log10(this.state.currentValue) : this.state.currentValue;
+
+    let newPos = (((currentValue - rangeMin ) / (rangeMax - rangeMin)) *
+      settings.length) + (diff / settings.slideScale);
 
     newPos = this.limitPosition(newPos);
 
-    const newPercent = newPos / this.settings.length;
-    const newValue = (newPercent * (this.property.range.max -
-      this.property.range.min)) + this.property.range.min;
+    const newPercent = newPos / settings.length;
+    let newValue = (newPercent * (rangeMax - rangeMin)) + rangeMin;
+
+    if (settings.logControl)
+    {
+      newValue = Math.pow(10, newValue);
+    }
 
     this.setState({currentValue: newValue});
 
