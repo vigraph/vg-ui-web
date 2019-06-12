@@ -169,10 +169,11 @@ export default class Knob extends React.Component<IProps, IState>
     e.stopPropagation();
     window.addEventListener('mouseup', this.handleMouseUp);
     window.addEventListener('mousemove', this.handleMouseMove);
+
     this.circleCentre.x = e.currentTarget.getBoundingClientRect().left +
-      this.settings.radius + window.scrollX;
+      this.settings.radius;
     this.circleCentre.y = e.currentTarget.getBoundingClientRect().top +
-      this.settings.radius + window.scrollY;
+      this.settings.radius;
 
     // Mouse start coordinates with circle centre as origin
     this.mouseStart.x = e.pageX - this.circleCentre.x;
