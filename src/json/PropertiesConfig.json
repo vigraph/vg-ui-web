@@ -260,9 +260,9 @@
       "freq":
       {
         "controlType": "knob",
-        "subType": "default",
-        "rangeMin": 0,
-        "rangeMax": 1000,
+        "subType": "log",
+        "rangeMin": 20,
+        "rangeMax": 20000,
         "increment": 1,
         "x": 40,
         "y": 70
@@ -1070,6 +1070,21 @@
         "increment": 0.1,
         "x": 20,
         "y": 30
+      }
+    }
+  },
+  "show-blanking":
+  {
+    "width": 80,
+    "height": 60,
+    "properties":
+    {
+      "colour":
+      {
+        "controlType": "colourPicker",
+        "subType": "default",
+        "x": 40,
+        "y": 25
       }
     }
   }
