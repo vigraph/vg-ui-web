@@ -991,7 +991,7 @@
   },
   "channel-out": {
     "width": 80,
-    "height": 130,
+    "height": 180,
     "properties":
     {
       "universe":
@@ -1013,6 +1013,16 @@
         "increment": 1,
         "x": 35,
         "y": 80
+      },
+      "value":
+      {
+        "controlType": "knob",
+        "subType": "default",
+        "rangeMin": 0,
+        "rangeMax": 1,
+        "increment": 0.1,
+        "x": 35,
+        "y": 130
       }
     }
   }
