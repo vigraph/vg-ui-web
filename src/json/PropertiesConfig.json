@@ -988,5 +988,32 @@
         "y": 30
       }
     }
+  },
+  "channel-out": {
+    "width": 80,
+    "height": 130,
+    "properties":
+    {
+      "universe":
+      {
+        "controlType": "knob",
+        "subType": "default",
+        "rangeMin": 1,
+        "rangeMax": 16,
+        "increment": 1,
+        "x": 35,
+        "y": 30
+      },
+      "channel":
+      {
+        "controlType": "knob",
+        "subType": "default",
+        "rangeMin": 1,
+        "rangeMax": 512,
+        "increment": 1,
+        "x": 35,
+        "y": 80
+      }
+    }
   }
 }
