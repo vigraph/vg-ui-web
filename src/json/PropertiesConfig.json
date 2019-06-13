@@ -1025,5 +1025,34 @@
         "y": 130
       }
     }
+  },
+  "delay":
+  {
+    "width": 50,
+    "height": 110,
+    "properties":
+    {
+      "time":
+      {
+        "controlType": "knob",
+        "subType": "log",
+        "rangeMin": 0.001,
+        "rangeMax": 10,
+        "increment": 0.1,
+        "x": 20,
+        "y": 30
+      },
+
+      "feedback":
+      {
+        "controlType": "knob",
+        "subType": "default",
+        "rangeMin": 0,
+        "rangeMax": 1,
+        "increment": 0.01,
+        "x": 20,
+        "y": 70
+      }
+    }
   }
 }
