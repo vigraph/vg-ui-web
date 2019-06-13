@@ -438,9 +438,9 @@
       "value":
       {
         "controlType": "knob",
-        "subType": "default",
-        "rangeMin": 0,
-        "rangeMax": 10,
+        "subType": "log",
+        "rangeMin": 0.01,
+        "rangeMax": 1000,
         "increment": 0.1,
         "x": 20,
         "y": 30
@@ -449,9 +449,9 @@
       "offset":
       {
         "controlType": "knob",
-        "subType": "default",
-        "rangeMin": 0,
-        "rangeMax": 10,
+        "subType": "log",
+        "rangeMin": 0.01,
+        "rangeMax": 1000,
         "increment": 0.1,
         "x": 20,
         "y": 70
@@ -467,9 +467,9 @@
       "value":
       {
         "controlType": "knob",
-        "subType": "default",
-        "rangeMin": 0,
-        "rangeMax": 10,
+        "subType": "log",
+        "rangeMin": 0.001,
+        "rangeMax": 1000,
         "increment": 0.1,
         "x": 20,
         "y": 30
@@ -478,9 +478,9 @@
       "factor":
       {
         "controlType": "knob",
-        "subType": "default",
-        "rangeMin": 0,
-        "rangeMax": 10,
+        "subType": "log",
+        "rangeMin": 0.001,
+        "rangeMax": 1000,
         "increment": 0.1,
         "x": 20,
         "y": 70
@@ -497,8 +497,8 @@
         "controlType": "knob",
         "subType": "default",
         "rangeMin": 0,
-        "rangeMax": 5,
-        "increment": 0.05,
+        "rangeMax": 10,
+        "increment": 0.001,
         "x": 30,
         "y": 30
       },
@@ -507,7 +507,7 @@
         "controlType": "knob",
         "subType": "default",
         "rangeMin": 0,
-        "rangeMax": 5,
+        "rangeMax": 10,
         "increment": 0.05,
         "x": 70,
         "y": 30
@@ -525,9 +525,9 @@
       "release":
       {
         "controlType": "knob",
-        "subType": "default",
+        "subType": "log",
         "rangeMin": 0,
-        "rangeMax": 20,
+        "rangeMax": 30,
         "increment": 0.1,
         "x": 150,
         "y": 30
@@ -542,10 +542,10 @@
       "interval":
       {
         "controlType": "knob",
-        "subType": "default",
-        "rangeMin": 0,
-        "rangeMax": 10,
-        "increment": 0.05,
+        "subType": "log",
+        "rangeMin": 0.001,
+        "rangeMax": 1000,
+        "increment": 0.001,
         "x": 20,
         "y": 30
       }
