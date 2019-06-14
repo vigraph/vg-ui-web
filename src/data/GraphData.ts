@@ -565,7 +565,7 @@ class GraphData
     const itemType = splitType[1];
 
     // Node properties from metadata
-    if (this.propertiesConfig[itemType])
+    if (this.propertiesConfig[item.type])
     {
       for (const key of Object.keys(item.props))
       {
@@ -575,7 +575,7 @@ class GraphData
 
         gProps.push({id: key, value: item.props[key],
           propType,
-          ...this.propertiesConfig[itemType].properties[key]});
+          ...this.propertiesConfig[item.type].properties[key]});
       };
     }
 
@@ -583,7 +583,7 @@ class GraphData
     {
       id: item.id,
       name: metadata[itemSection][itemType].name,
-      type: itemType,
+      type: item.type,
       inputs: metadata[itemSection][itemType].inputs,
       outputs: metadata[itemSection][itemType].outputs,
       edges: gEdges,
