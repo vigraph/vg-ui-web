@@ -91,17 +91,19 @@ export default class Property extends React.Component<IProps, IState>
     return(
       <svg id={this.props.name.toLowerCase()+"-property"}
         className="property-wrapper"
+        x={position.x} y={position.y}
         onMouseEnter={this.mouseEnter}
         onMouseLeave={this.mouseLeave}>
-        {this.props.display.labels && (this.state.hover || this.state.updating) ?
-          <text className="label property-label" x={position.x}
-          y={position.y}>{this.props.name + ": " + displayValue}</text> : ""}
 
         {this.props.display.controls && Component ?
            <Component property={this.property}
             position={{x: position.x, y: position.y}}
             startUpdate={this.startPropertyUpdate} update={this.propertyUpdate}
             endUpdate={this.endPropertyUpdate}/> : ""}
+
+        {this.props.display.labels && (this.state.hover || this.state.updating) ?
+          <text className="label property-label" x={0}
+          y={0}>{this.props.name + ": " + displayValue}</text> : ""}
       </svg>
     );
   }

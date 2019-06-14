@@ -125,6 +125,11 @@ button
     font-size: x-small;
 }
 
+.property-wrapper
+{
+    overflow: visible;
+}
+
 #knob
 {
     overflow: visible;
@@ -298,14 +303,17 @@ button
     height: 100%;
 }
 
-.menu {
+.menu
+{
   width: 140px;
   display: flex;
   flex-direction: column;
   background: #ffffff;
   position: absolute;
 }
-.menu-item {
+
+.menu-item
+{
   cursor: pointer;
   padding: 5px;
   height: 10px;
@@ -314,6 +322,8 @@ button
   font-size: small;
   border-bottom: 1px solid rgb(187, 187, 187);
 }
-.menu-item:hover {
+
+.menu-item:hover
+{
   color: #2980b9;
 }

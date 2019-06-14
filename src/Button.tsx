@@ -58,7 +58,6 @@ export default class Button extends React.Component<IProps, IState>
     return(
         <svg id="button" className={this.property.subType}
           height={this.settings.height} width={this.settings.width}
-          x={position.x} y={position.y}
           onMouseDown={this.handleMouseDown}>
 
           <rect className="button-outer"

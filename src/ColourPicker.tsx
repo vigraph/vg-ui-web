@@ -69,9 +69,8 @@ export default class ColourPicker extends React.Component<IProps, IState>
     this.updateAllFromHex(currentValue);
 
     return(
-        <svg id="colour-picker" className={this.property.subType}
-          ref={(ref) => { this.pickerRef = ref; }}
-          x={position.x} y={position.y}>
+        <svg id="colour-picker-wrapper" className={this.property.subType}
+          ref={(ref) => { this.pickerRef = ref; }}>
 
           <svg id="colour-display" className="display"
             x={0} y={0}>

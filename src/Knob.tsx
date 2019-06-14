@@ -133,7 +133,7 @@ export default class Knob extends React.Component<IProps, IState>
 
     return(
         <svg id="knob" className={this.property.subType}
-          height={r*2} width={r*2} x={position.x} y={position.y}
+          height={r*2} width={r*2}
           onMouseDown={this.handleMouseDown}>
           <circle className={`knob-background`}
             cx={r} cy={r} r={r}

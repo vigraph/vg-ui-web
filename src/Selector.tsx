@@ -61,8 +61,7 @@ export default class Selector extends React.Component<IProps, IState>
 
     return(
         <svg id="selector" className={`${this.property.subType}
-          ${this.state.selecting ? "selecting" : ""}`}
-          x={position.x} y={position.y}>
+          ${this.state.selecting ? "selecting" : ""}`}>
 
           <rect className="selector-background" width={settings.length}
             height={settings.thickness}

@@ -101,7 +101,6 @@ export default class Slider extends React.Component<IProps, IState>
 
     return(
         <svg id="slider" className={this.property.subType}
-          x={position.x} y={position.y}
           ref={(ref) => {this.sliderRef = ref}}
           onMouseDown={this.handleMouseDown}>
 
