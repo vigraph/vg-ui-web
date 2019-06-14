@@ -64,7 +64,6 @@ export default class ColourPicker extends React.Component<IProps, IState>
 
   public render()
   {
-    const position = this.props.position;
     const currentValue = this.state.currentValue;
     this.updateAllFromHex(currentValue);
 

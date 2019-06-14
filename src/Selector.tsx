@@ -52,7 +52,6 @@ export default class Selector extends React.Component<IProps, IState>
 
   public render()
   {
-    const position = this.props.position;
     const settings = this.settings;
     const availablePos = this.props.property.available
     const currentPos = availablePos.indexOf(this.state.currentValue);

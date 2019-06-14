@@ -97,8 +97,6 @@ export default class Slider extends React.Component<IProps, IState>
       (rangeMax - rangeMin)) * settings.length;
     }
 
-    const position = this.props.position;
-
     return(
         <svg id="slider" className={this.property.subType}
           ref={(ref) => {this.sliderRef = ref}}
