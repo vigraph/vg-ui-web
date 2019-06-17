@@ -156,7 +156,7 @@ button
     stroke-width: 3px;
 }
 
-#knob.default .knob-arc
+#knob .knob-arc
 {
     fill: #00ff00;
 }
