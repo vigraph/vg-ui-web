@@ -33,6 +33,7 @@ import { Map } from 'immutable';
 import { Connector } from './Connector';
 import { Node } from './Node';
 import { Property } from './Property';
+import { vgUtils } from '../Utils';
 
 export class Graph
 {
@@ -258,6 +259,22 @@ export class Graph
   public removeEdge(srcId: string, srcOutput: string,
     destId: string, destInput: string)
   {
+    if (!this.getNode(srcId) || !this.state.getIn(["nodes", srcId,
+      "forwardEdges", srcOutput]))
+    {
+      vgUtils.log("Graph removeEdge Error: Node " + srcId + " or Output " +
+        srcOutput + " not found");
+      return;
+    }
+
+    if (!this.getNode(destId) || !this.state.getIn(["nodes", destId,
+      "reverseEdges", destInput]))
+    {
+      vgUtils.log("Graph removeEdge Error: Node " + destId + " or Input " +
+        destInput + " not found");
+      return;
+    }
+
     this.state = this.state
         .deleteIn(["nodes", srcId, "forwardEdges", srcOutput,
           this.state.getIn(["nodes", srcId, "forwardEdges",
