@@ -7,22 +7,6 @@
 // elements (nodes) by ID.
 // Processes and combines graph and metadata to create graph model.
 
-
-// TODO: calculate knob background based on range min and max
-
-// TODO: split property name and value
-// TODO: show values and node labels on (time delay) mouse over
-// TODO: hide/show property value option
-// TODO: layout node properties nicely
-
-// TODO: if a property has an input attached the control should be disabled
-// TODO: default layout - layout without the need for properties config
-// (in a line with type:number = Knob etc)
-// TODO: 'trigger' should have a momentary button
-// TODO: handle 'multiple' value of inputs/outputs and behaviour with 'default'
-// TODO: mouse wheel zoom
-// TODO: nicer create/delete nodes
-
 import * as rm from 'typed-rest-client/RestClient';
 
 import { vgUtils } from '../Utils';

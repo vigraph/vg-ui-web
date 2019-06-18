@@ -526,7 +526,7 @@
       {
         "controlType": "knob",
         "subType": "log",
-        "rangeMin": 0,
+        "rangeMin": 0.01,
         "rangeMax": 30,
         "increment": 0.1,
         "x": 150,
