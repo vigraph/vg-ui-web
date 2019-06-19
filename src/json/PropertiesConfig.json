@@ -390,6 +390,24 @@
       }
     }
   },
+  "audio:shift":
+  {
+    "width": 50,
+    "height": 80,
+    "properties":
+    {
+      "pitch":
+      {
+        "controlType": "knob",
+        "subType": "default",
+        "rangeMin": -60,
+        "rangeMax": 60,
+        "increment": 0.1,
+        "x": 20,
+        "y": 30
+      }
+    }
+  },
   "audio:audio-to-vector":
   {
     "width": 120,
