@@ -21,9 +21,10 @@
 //                                  controlType: string,
 //                                  subType: string,
 //                                  position: {x, y},
-//                                  value: number,
+//                                  value: any,
 //                                  range: {min, max},
-//                                  increment: number
+//                                  increment: number,
+//                                  available: any[]
 //                                }
 //                  }>
 // }
@@ -34,6 +35,7 @@ import { Connector } from './Connector';
 import { Node } from './Node';
 import { Property } from './Property';
 import { vgUtils } from '../Utils';
+import { graphData } from '../data/GraphData';
 
 export class Graph
 {
@@ -391,10 +393,129 @@ export class Graph
     }
   }
 
+  private stateMoveUpdate(currentState: Map<string, any>,
+    newState: Map<string, any>)
+  {
+    const currentToNew = () =>
+    {
+      // Compare current state to new state
+      currentState.get("nodes").forEach((value: any, nodeID: string) =>
+      {
+        const cNode = currentState.getIn(["nodes", nodeID]);
+        const nNode = newState.getIn(["nodes", nodeID]);
+
+        if (typeof nNode === "undefined")
+        {
+          // Node not found in new state so should be deleted
+          graphData.deleteNode(nodeID);
+        }
+        else
+        {
+          const cNodePos = cNode.get("position");
+          const nNodePos = nNode.get("position");
+
+          // Check node position
+          if (cNodePos.x !== nNodePos.x || cNodePos.y !== nNodePos.y)
+          {
+            // Node position has changed between states
+            graphData.updateLayout(nodeID, {x: nNodePos.x, y: nNodePos.y});
+          }
+
+          // Check node property values
+          if (typeof cNode.get("properties") !== "undefined")
+          {
+            cNode.get("properties").forEach((cPropSetting: any, cKey: string) =>
+            {
+              const cValue = cPropSetting.get("value");
+              const nValue = nNode.getIn(["properties", cKey, "value"]);
+
+              if (cValue !== nValue)
+              {
+                // Property value has changed between states
+                graphData.updateProperty(nodeID, cKey, nValue);
+              }
+            });
+          }
+
+          // Check forward edges
+          if (typeof cNode.get("forwardEdges") !== "undefined")
+          {
+            cNode.get("forwardEdges").forEach((destList: any, outputID: string) =>
+            {
+              const nEdges = nNode.getIn(["forwardEdges", outputID]);
+              if (!destList.equals(nEdges))
+              {
+                const newEdges: Array<{dest: string, destInput: string}> = [];
+
+                nEdges.forEach((value: {destId: string, destInput: string}) =>
+                {
+                  newEdges.push({dest: value.destId, destInput: value.destInput});
+                });
+
+                graphData.updateEdges(nodeID, outputID, newEdges);
+              }
+            });
+          }
+        }
+      });
+    }
+
+    let currentToNewFlag = false;
+
+    // Compare nodes in new state to current state
+    newState.get("nodes").forEach((value: any, nodeID: string) =>
+    {
+      if (typeof currentState.getIn(["nodes", nodeID]) === "undefined")
+      {
+        currentToNewFlag = true;
+        // Node not found in current state so should be added
+        graphData.createNode(nodeID, value.get("type"), () =>
+          {
+            // Check forward edges
+            const nNode = newState.getIn(["nodes", nodeID]);
+            if (typeof nNode.get("forwardEdges") !== "undefined")
+            {
+              nNode.get("forwardEdges").forEach((destList: any, outputID: string) =>
+              {
+                const nEdges = nNode.getIn(["forwardEdges", outputID]);
+                const newEdges: Array<{dest: string, destInput: string}> = [];
+
+                nEdges.forEach((value: {destId: string, destInput: string}) =>
+                {
+                  newEdges.push({dest: value.destId, destInput: value.destInput});
+                });
+
+                if (newEdges.length > 0)
+                {
+                  graphData.updateEdges(nodeID, outputID, newEdges);
+                }
+              });
+            }
+
+            // Do current to new comparison now because all nodes needed for
+            // any potential edge changes now exist.
+            // Note: Currently only one action (e.g. node add) per state level.
+            currentToNew();
+          });
+        graphData.updateLayout(nodeID, {x: value.get("position").x,
+          y: value.get("position").y});
+      }
+    });
+
+    // Do current to new comparison now if it hasn't been done already.
+    if (!currentToNewFlag)
+    {
+      currentToNew();
+    }
+  }
+
   public undo()
   {
     if (this.historyIndex > 0)
     {
+      this.stateMoveUpdate(this.history[this.historyIndex],
+        this.history[this.historyIndex - 1]);
+
       this.historyIndex--;
     }
   }
@@ -403,6 +524,9 @@ export class Graph
   {
     if (this.historyIndex < this.history.length - 1)
     {
+      this.stateMoveUpdate(this.history[this.historyIndex],
+        this.history[this.historyIndex + 1]);
+
       this.historyIndex++;
     }
   }

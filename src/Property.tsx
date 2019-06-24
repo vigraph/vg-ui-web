@@ -57,7 +57,11 @@ export default class Property extends React.Component<IProps, IState>
       this.numerical = true;
 
       // Ensure value conforms to increment bounds
-      this.property.value = this.snapValueToIncrement(this.property.value);
+      const snapValue = this.snapValueToIncrement(this.property.value);
+      if (this.property.value !== snapValue)
+      {
+        this.property.value = snapValue;
+      }
     }
     else
     {

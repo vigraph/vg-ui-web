@@ -327,6 +327,7 @@ export default class Graph extends React.Component<IProps, IState>
 
   private createNewNode = (type: string) =>
   {
+    this.graph.beginTransaction();
     let flag = false;
 
     while (!flag)
@@ -359,12 +360,16 @@ export default class Graph extends React.Component<IProps, IState>
 
           this.graph.addNodeFromJSON(node);
           this.forceUpdate();
+
+          this.graph.commitTransaction();
         })
       });
   }
 
   private removeNode = (id: string) =>
   {
+    this.graph.beginTransaction();
+
     graphData.deleteNode(id);
 
     const node = this.graph.getNode(id);
@@ -391,6 +396,7 @@ export default class Graph extends React.Component<IProps, IState>
       this.graph.removeNode(id);
     }
 
+    this.graph.commitTransaction();
     this.forceUpdate();
   }
 
