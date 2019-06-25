@@ -39,6 +39,7 @@ export default class Node extends React.Component<IProps, IState>
   private node: Model.Node;
   private offsetX: number;
   private offsetY: number;
+  private mouseDownPos: {x: number, y: number};
 
   constructor(props: IProps)
   {
@@ -54,6 +55,7 @@ export default class Node extends React.Component<IProps, IState>
     this.node = props.node;
     this.offsetX = 0;
     this.offsetY = 0;
+    this.mouseDownPos = {x: 0, y: 0};
   }
 
   public render()
@@ -118,6 +120,8 @@ export default class Node extends React.Component<IProps, IState>
     const currentPosition = vgUtils.windowToSVGPosition(
       {x: e.pageX, y: e.pageY}, this.props.graphRef);
 
+    this.mouseDownPos = {x: this.state.x, y: this.state.y};
+
     this.offsetX = currentPosition.x - this.state.x;
     this.offsetY = currentPosition.y - this.state.y;
     if (this.props.startUpdate)
@@ -132,8 +136,12 @@ export default class Node extends React.Component<IProps, IState>
     window.removeEventListener('mouseup', this.handleMouseUp);
     window.removeEventListener('mousemove', this.handleMouseMove);
 
-    // Update graph layout data
-    graphData.updateLayout(this.node.id, {x: this.state.x, y: this.state.y});
+    if (this.mouseDownPos.x !== this.state.x || this.mouseDownPos.y !==
+      this.state.y)
+    {
+      // Update graph layout data
+      graphData.updateLayout(this.node.id, {x: this.state.x, y: this.state.y});
+    }
 
     if (this.props.endUpdate)
     {
