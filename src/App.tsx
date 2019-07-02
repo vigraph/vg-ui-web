@@ -106,6 +106,7 @@ export default class App extends React.Component
           <button onClick={this.handleToggleLabels}>Toggle Labels</button>
           <button onClick={this.setFullScreen}>Full Screen</button>
           <button onClick={this.setWindowed}>Windowed</button>
+          <button onClick={this.handleBack}>Back</button>
          </div>
         <Graph ref={this.graph} /* from={exampleGraph} */ />
         <WebsocketCanvas size={{ x: 400, y: 400 }} />
@@ -146,15 +147,23 @@ export default class App extends React.Component
   }
 
   private setFullScreen = () =>
-    {
-      const req = { "fullscreen": true };
-      (window as any).external.invoke(JSON.stringify(req));
-    }
+  {
+    const req = { "fullscreen": true };
+    (window as any).external.invoke(JSON.stringify(req));
+  }
 
   private setWindowed = () =>
+  {
+    const req = { "fullscreen": false };
+    (window as any).external.invoke(JSON.stringify(req));
+  }
+
+  private handleBack = () =>
+  {
+    if (this.graph.current)
     {
-      const req = { "fullscreen": false };
-      (window as any).external.invoke(JSON.stringify(req));
+      this.graph.current.goBack();
     }
+  }
 
 }

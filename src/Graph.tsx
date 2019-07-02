@@ -183,6 +183,16 @@ export default class Graph extends React.Component<IProps, IState>
     this.setState({propertiesDisplay: display});
   }
 
+  public goBack = () =>
+  {
+    if (this.graphIndex > 0)
+    {
+      this.graphIndex--;
+      this.setState({view: viewDefault});
+      this.forceUpdate();
+    }
+  }
+
   private startUpdate = () =>
   {
     this.graph.beginTransaction();
