@@ -13,6 +13,8 @@ import Node from './Node';
 
 const csize: number = 5;
 const zoomFactor: number = 1.1;
+const viewDefault: {x: number, y: number, w: number, h: number} =
+  {x: 0, y: 0, w: 5000, h: 5000};
 
 interface IProps
 {
@@ -67,7 +69,7 @@ export default class Graph extends React.Component<IProps, IState>
       tempConnectors: null,
       targetConnector: null,
       showMenu: false,
-      view: {x: 0, y: 0, w: 5000, h: 5000}
+      view: viewDefault
     };
 
     this.mouseClick = {x: 0, y: 0};
@@ -272,7 +274,7 @@ export default class Graph extends React.Component<IProps, IState>
     const startPoint = vgUtils.windowToSVGPosition({x: e.pageX, y: e.pageY},
       this.graphRef);
 
-    const newView = this.state.view;
+    const newView = Object.assign({}, this.state.view);
 
     newView.x -= (startPoint.x - newView.x) * (scale - 1);
     newView.y -= (startPoint.y - newView.y) * (scale - 1);
@@ -317,7 +319,7 @@ export default class Graph extends React.Component<IProps, IState>
     const diffX = Math.round(currentPosition.x - svgMouseClick.x);
     const diffY = Math.round(currentPosition.y - svgMouseClick.y);
 
-    const newView = this.state.view;
+    const newView = Object.assign({}, this.state.view);
     newView.x = newView.x - diffX > 0 ? newView.x - diffX : 0;
     newView.y = newView.y - diffY > 0 ? newView.y - diffY : 0;
 
@@ -332,13 +334,15 @@ export default class Graph extends React.Component<IProps, IState>
     window.removeEventListener('mouseup', this.handleGraphDragRelease);
   }
 
-  private showNodeGraph = (node: Model.Node) =>
+  private showNodeGraph = (parentNode: Model.Node, nodes: any[]) =>
   {
-    this.parentNodePath = node.path;
+    this.parentNodePath = parentNode.path;
     this.graph = new Model.Graph();
-    graphData.layoutGraph(node.elements, (graph: any) =>
+    graphData.layoutGraph(nodes, (graph: any) =>
     {
+      // Reset View
       this.graph.loadFrom(graph);
+      this.setState({view: viewDefault});
       this.forceUpdate();
     })
   }

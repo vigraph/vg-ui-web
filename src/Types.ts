@@ -27,7 +27,8 @@ export interface IRawGraphItem
   outputs?: { [key: string]: Array<{element: string, prop: string}>},
   props: { [key: string]: number | string | boolean },
   type: string,
-  elements?: Array<IRawGraphItem>
+  elements?: Array<IRawGraphItem>, // Subgraphs
+  graph?: Array<IRawGraphItem>    // Clone
 }
 
 export interface IProcessedGraphItem
@@ -43,7 +44,8 @@ export interface IProcessedGraphItem
   properties?: Array<{ id: string, propType: string, controlType: string,
     subType: string, value: any, rangeMin?: number, rangeMax?: number,
     increment?: number, available?: string[], x: number, y:number}>,
-  elements?: Array<IProcessedGraphItem>
+  elements?: Array<IProcessedGraphItem>, // Subgraphs
+  cloneGraph?: Array<IProcessedGraphItem>
 }
 
 export interface IRawMetadataItem

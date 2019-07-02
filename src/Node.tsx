@@ -16,7 +16,7 @@ interface IProps
   propertiesDisplay: {labels: boolean; controls: boolean};
   graphRef: SVGSVGElement | null;
   removeNode: (node: Model.Node) => void;
-  showNodeGraph: (node: Model.Node) => void;
+  showNodeGraph: (parentNode: Model.Node, nodes: any[]) => void;
 }
 
 interface IState
@@ -125,9 +125,10 @@ export default class Node extends React.Component<IProps, IState>
     const date = new Date();
 
     if (this.mouseDown.t && date.getTime() - this.mouseDown.t < 250 &&
-      this.node.elements)
+      (this.node.elements || this.node.cloneGraph))
     {
-      this.props.showNodeGraph(this.node);
+      this.props.showNodeGraph(this.node, this.node.elements ?
+        this.node.elements : this.node.cloneGraph);
       window.removeEventListener('mouseup', this.handleMouseUp);
       window.removeEventListener('mousemove', this.handleMouseMove);
       return;

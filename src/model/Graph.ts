@@ -28,6 +28,7 @@
 //                                  available: any[]
 //                                },
 //             elements: any[] | null // array of nodes (json - see below)
+//             cloneGraph: any[] | null // array of nodes (json - see below)
 //                  }>
 // }
 
@@ -60,7 +61,8 @@ export class Graph
   //       edges: [ { output, destId, input } ],
   //       properties: [ { id, propType, controlType, subType, x, y, value,
   //                       rangeMin, rangeMax, increment } ],
-  //       elements: node[]
+  //       elements: node[],
+  //       cloneGraph: node[]
   //     } ] }
   public loadFrom(json: any)
   {
@@ -95,6 +97,7 @@ export class Graph
     node.size = { w: n.w || 50, h: n.h || 50 };
     node.path = n.path || n.id;
     node.elements = n.elements || null;
+    node.cloneGraph = n.cloneGraph || null;
     if (n.inputs)
     {
       for (const i of n.inputs)

@@ -519,13 +519,24 @@ class GraphData
   private processSingleGraphItem(item: vgType.IRawGraphItem,
     metadata: vgType.IProcessedMetadata, parentPath?: string)
   {
+    // Subgraph
     const gElements: Array<vgType.IProcessedGraphItem> = [];
-
     if (item.elements)
     {
       item.elements.forEach((element: vgType.IRawGraphItem, index: number) =>
       {
         gElements.push(this.processSingleGraphItem(element, metadata,
+          parentPath ? parentPath + "/" + item.id : item.id));
+      })
+    }
+
+    // Clone
+    const gCloneGraph: Array<vgType.IProcessedGraphItem> = [];
+    if (item.graph)
+    {
+      item.graph.forEach((cloneGraph: vgType.IRawGraphItem, index: number) =>
+      {
+        gCloneGraph.push(this.processSingleGraphItem(cloneGraph, metadata,
           parentPath ? parentPath + "/" + item.id : item.id));
       })
     }
@@ -579,7 +590,8 @@ class GraphData
       outputs: metadata[itemSection][itemType].outputs,
       edges: gEdges,
       properties: gProps,
-      elements: item.elements ? gElements : undefined
+      elements: item.elements ? gElements : undefined,
+      cloneGraph: item.graph ? gCloneGraph : undefined
     };
 
     return node;

@@ -72,6 +72,16 @@ export class Node
     this.graph.setNodeProp(this.id, "elements", elements);
   }
 
+  get cloneGraph(): any[]
+  {
+    return this.graph.getNodeProp(this.id, "cloneGraph");
+  }
+
+  set cloneGraph(cloneGraph: any[])
+  {
+    this.graph.setNodeProp(this.id, "cloneGraph", cloneGraph);
+  }
+
   public addEdge(output: string, dest: Node, destInput: string)
   {
     this.graph.addEdge(this.id, output, dest.id, destInput);
