@@ -16,6 +16,7 @@ const controlTypes: {[key: string]: any} =
 interface IProps
 {
   property: Model.Property;
+  parent: Model.Node;
   name: string;
   display: {labels: boolean, controls: boolean};
   startUpdate: () => void;
@@ -139,7 +140,7 @@ export default class Property extends React.Component<IProps, IState>
 
     this.setState({value: newValue});
 
-    graphData.updateProperty(this.property.parent, this.property.id, value);
+    graphData.updateProperty(this.props.parent.path, this.property.id, value);
 
     this.property.value = newValue;
 

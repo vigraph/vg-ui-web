@@ -10,6 +10,7 @@
 //   nodes: Map<id, {
 //            name: string
 //            type: string
+//            path: string
 //            inputs: Map<id, { connectorType: string, multiple: boolean }>
 //            outputs: Map<id, { connectorType: string, multiple: boolean }>
 //            forwardEdges: Map<output, List<{ destId: string, destInput: string }>>
@@ -25,7 +26,8 @@
 //                                  range: {min, max},
 //                                  increment: number,
 //                                  available: any[]
-//                                }
+//                                },
+//             elements: any[] | null // array of nodes (json - see below)
 //                  }>
 // }
 
@@ -52,12 +54,13 @@ export class Graph
   //
   // Load a graph from the given JSON:
   // { nodes: [
-  //     { id, name, type, x, y, w, h,
+  //     { id, name, type, path, x, y, w, h,
   //       inputs: [ { id, connectorType, multiple }],
   //       outputs: [ { id, connectorType, multiple }],
-  //       edges: [ { output, destId, input } ]
+  //       edges: [ { output, destId, input } ],
   //       properties: [ { id, propType, controlType, subType, x, y, value,
-  //                       rangeMin, rangeMax, increment } ]
+  //                       rangeMin, rangeMax, increment } ],
+  //       elements: node[]
   //     } ] }
   public loadFrom(json: any)
   {
@@ -90,6 +93,8 @@ export class Graph
     node.name = n.name || n.id;
     node.position = { x: n.x || 0, y: n.y || 0 };
     node.size = { w: n.w || 50, h: n.h || 50 };
+    node.path = n.path || n.id;
+    node.elements = n.elements || null;
     if (n.inputs)
     {
       for (const i of n.inputs)
@@ -407,7 +412,7 @@ export class Graph
         if (typeof nNode === "undefined")
         {
           // Node not found in new state so should be deleted
-          graphData.deleteNode(nodeID);
+          graphData.deleteNode(cNode.get("path"), cNode.path);
         }
         else
         {
@@ -418,7 +423,7 @@ export class Graph
           if (cNodePos.x !== nNodePos.x || cNodePos.y !== nNodePos.y)
           {
             // Node position has changed between states
-            graphData.updateLayout(nodeID, {x: nNodePos.x, y: nNodePos.y});
+            graphData.updateLayout(nNode.get("path"), {x: nNodePos.x, y: nNodePos.y});
           }
 
           // Check node property values
@@ -432,7 +437,7 @@ export class Graph
               if (cValue !== nValue)
               {
                 // Property value has changed between states
-                graphData.updateProperty(nodeID, cKey, nValue);
+                graphData.updateProperty(cNode.get("path"), cKey, nValue);
               }
             });
           }
@@ -452,7 +457,7 @@ export class Graph
                   newEdges.push({dest: value.destId, destInput: value.destInput});
                 });
 
-                graphData.updateEdges(nodeID, outputID, newEdges);
+                graphData.updateEdges(cNode.get("path"), outputID, newEdges);
               }
             });
           }
@@ -469,10 +474,20 @@ export class Graph
       {
         currentToNewFlag = true;
         // Node not found in current state so should be added
-        graphData.createNode(nodeID, value.get("type"), () =>
+
+        const path = value.get("path");
+        let parentPath;
+
+        if (path.indexOf("/") > -1)
+        {
+          parentPath = path.slice(0, path.lastIndexOf("/"));
+        }
+
+        graphData.createNode(nodeID, value.get("type"), parentPath, () =>
           {
             // Check forward edges
             const nNode = newState.getIn(["nodes", nodeID]);
+
             if (typeof nNode.get("forwardEdges") !== "undefined")
             {
               nNode.get("forwardEdges").forEach((destList: any, outputID: string) =>
@@ -487,7 +502,7 @@ export class Graph
 
                 if (newEdges.length > 0)
                 {
-                  graphData.updateEdges(nodeID, outputID, newEdges);
+                  graphData.updateEdges(nNode.get("path"), outputID, newEdges);
                 }
               });
             }
@@ -497,7 +512,7 @@ export class Graph
             // Note: Currently only one action (e.g. node add) per state level.
             currentToNew();
           });
-        graphData.updateLayout(nodeID, {x: value.get("position").x,
+        graphData.updateLayout(value.get("path"), {x: value.get("position").x,
           y: value.get("position").y});
       }
     });

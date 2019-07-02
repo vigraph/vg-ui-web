@@ -15,7 +15,8 @@ interface IProps
   padding: number;
   propertiesDisplay: {labels: boolean; controls: boolean};
   graphRef: SVGSVGElement | null;
-  removeNode: (id: string) => void;
+  removeNode: (node: Model.Node) => void;
+  showNodeGraph: (node: Model.Node) => void;
 }
 
 interface IState
@@ -39,7 +40,7 @@ export default class Node extends React.Component<IProps, IState>
   private node: Model.Node;
   private offsetX: number;
   private offsetY: number;
-  private mouseDownPos: {x: number, y: number};
+  private mouseDown: {x: number, y: number, t: number};
 
   constructor(props: IProps)
   {
@@ -55,7 +56,7 @@ export default class Node extends React.Component<IProps, IState>
     this.node = props.node;
     this.offsetX = 0;
     this.offsetY = 0;
-    this.mouseDownPos = {x: 0, y: 0};
+    this.mouseDown = {x: 0, y: 0, t: 0};
   }
 
   public render()
@@ -93,6 +94,7 @@ export default class Node extends React.Component<IProps, IState>
           {
             return <Property key={j} property={property}
               name={property.id}
+              parent={this.node}
               display={this.props.propertiesDisplay}
               startUpdate={this.props.startUpdate}
               update={this.props.update}
@@ -120,7 +122,18 @@ export default class Node extends React.Component<IProps, IState>
     const currentPosition = vgUtils.windowToSVGPosition(
       {x: e.pageX, y: e.pageY}, this.props.graphRef);
 
-    this.mouseDownPos = {x: this.state.x, y: this.state.y};
+    const date = new Date();
+
+    if (this.mouseDown.t && date.getTime() - this.mouseDown.t < 250 &&
+      this.node.elements)
+    {
+      this.props.showNodeGraph(this.node);
+      window.removeEventListener('mouseup', this.handleMouseUp);
+      window.removeEventListener('mousemove', this.handleMouseMove);
+      return;
+    }
+
+    this.mouseDown = {x: this.state.x, y: this.state.y, t: date.getTime()};
 
     this.offsetX = currentPosition.x - this.state.x;
     this.offsetY = currentPosition.y - this.state.y;
@@ -136,11 +149,11 @@ export default class Node extends React.Component<IProps, IState>
     window.removeEventListener('mouseup', this.handleMouseUp);
     window.removeEventListener('mousemove', this.handleMouseMove);
 
-    if (this.mouseDownPos.x !== this.state.x || this.mouseDownPos.y !==
+    if (this.mouseDown.x !== this.state.x || this.mouseDown.y !==
       this.state.y)
     {
       // Update graph layout data
-      graphData.updateLayout(this.node.id, {x: this.state.x, y: this.state.y});
+      graphData.updateLayout(this.node.path, {x: this.state.x, y: this.state.y});
     }
 
     if (this.props.endUpdate)
@@ -161,6 +174,7 @@ export default class Node extends React.Component<IProps, IState>
         y: currentPosition.y - this.offsetY
       });
     }
+
     this.node.position = { x: this.state.x, y: this.state.y };
     if (this.props.update)
     {
@@ -181,7 +195,7 @@ export default class Node extends React.Component<IProps, IState>
   private removeNode = (e: React.MouseEvent<SVGCircleElement>) =>
   {
     e.stopPropagation();
-    this.props.removeNode(this.node.id);
+    this.props.removeNode(this.node);
   }
 }
 

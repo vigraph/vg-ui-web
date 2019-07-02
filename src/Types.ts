@@ -26,7 +26,8 @@ export interface IRawGraphItem
   id: string,
   outputs?: { [key: string]: Array<{element: string, prop: string}>},
   props: { [key: string]: number | string | boolean },
-  type: string
+  type: string,
+  elements?: Array<IRawGraphItem>
 }
 
 export interface IProcessedGraphItem
@@ -34,13 +35,15 @@ export interface IProcessedGraphItem
   id: string,
   name: string,
   type: string,
+  path: string,
   inputs: Array<{ id: string, connectorType: string, multiple?: boolean}>,
   outputs: Array<{ id: string, connectorType: string, multiple?: boolean}>,
   edges: Array<{ output: string, destId: string, input: string}>,
   // propType = "iprop" | "prop" | "oprop"
   properties?: Array<{ id: string, propType: string, controlType: string,
     subType: string, value: any, rangeMin?: number, rangeMax?: number,
-    increment?: number, available?: string[], x: number, y:number}>
+    increment?: number, available?: string[], x: number, y:number}>,
+  elements?: Array<IProcessedGraphItem>
 }
 
 export interface IRawMetadataItem

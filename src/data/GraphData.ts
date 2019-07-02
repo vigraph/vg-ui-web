@@ -21,8 +21,6 @@ class GraphData
 {
   private rest: rm.RestClient;
   private generateSuccess?: (json: any) => void;
-  private inputEdgeMap: { [key: string]: string[]};
-  private outputEdgeMap: { [key: string]: string[]};
   private propertiesConfig: vgType.IPropertiesConfig;
   private processedMetadata?: vgType.IProcessedMetadata;
   private layoutData: vgType.ILayoutData;
@@ -30,8 +28,6 @@ class GraphData
   public constructor()
   {
     this.rest = new rm.RestClient('vigraph-rest', restURL);
-    this.inputEdgeMap = {};
-    this.outputEdgeMap = {};
     this.layoutData = {};
     this.propertiesConfig = require('../json/PropertiesConfig.json');
   }
@@ -79,19 +75,19 @@ class GraphData
       });
   }
 
-  // Update layout data. If no value given then layout data for given node id
-  // is removed
-  public updateLayout(nodeID: string, value?: {x: number, y: number})
+  // Update layout data. If no value given then layout data for given id is
+  // removed. Note: ID is node path
+  public updateLayout(id: string, value?: {x: number, y: number})
   {
     const url = restURL + "/layout";
 
     if (value)
     {
-      this.layoutData[nodeID] = value;
+      this.layoutData[id] = value;
     }
     else
     {
-      delete this.layoutData[nodeID];
+      delete this.layoutData[id];
     }
 
     fetch(url,
@@ -123,10 +119,10 @@ class GraphData
   // Update edges from output Node with an Array of all valid edges.
   // Edge removed by copying current edges, removing the edge and updating with
   // new array.
-  public updateEdges(outputNodeID: string, outputID: string,
+  public updateEdges(outputNodePath: string, outputID: string,
     edges: Array<{dest: string, destInput: string}>, success?: ()=>void)
   {
-    const url = restURL + "/graph/" + outputNodeID + "/" + outputID;
+    const url = restURL + "/graph/" + outputNodePath + "/" + outputID;
 
     const data: Array<{"element": string, "prop": string}> = [];
 
@@ -168,9 +164,12 @@ class GraphData
 
   // Create/add node with ID nodeID and type nodeType to Graph
   // Calls success function on PUT success
-  public createNode(nodeID: string, nodeType: string, success?: ()=>void)
+  public createNode(nodeID: string, nodeType: string, parentPath?: string,
+    success?: ()=>void)
   {
-    const url = restURL + "/graph/" + nodeID;
+    const url = restURL + "/graph/" +
+      (typeof parentPath !== "undefined" ? parentPath + "/" : "") + nodeID;
+
     const data = {type: nodeType}
 
     fetch(url,
@@ -204,11 +203,11 @@ class GraphData
       });
   }
 
-  // Delete node with ID nodeID from Graph
+  // Delete node from Graph
   // Calls success on DELETE success
-  public deleteNode(nodeID: string, success?: ()=>void)
+  public deleteNode(nodePath: string, success?: ()=>void)
   {
-    const url = restURL + "/graph/" + nodeID;
+    const url = restURL + "/graph/" + nodePath;
 
     fetch(url,
     {
@@ -220,7 +219,7 @@ class GraphData
         {
           vgUtils.log("Delete Node Success");
 
-          this.updateLayout(nodeID);
+          this.updateLayout(nodePath);
 
           // Success
           if (success)
@@ -242,28 +241,29 @@ class GraphData
       });
   }
 
-  // Get node (nodeID) and calls success with resulting (processed) node
-  // allowing it to be added to the Graph model
-  public getNode(nodeID: string, success?: (result: any)=>void)
+  // Get node and calls success with resulting (processed) node allowing it to
+  // be added to the Graph model
+  public getNode(nodeID: string, parentPath?: string, success?: (result: any)=>void)
   {
-    this.getNodeByID(nodeID, success);
+    this.getNodeByPath(nodeID, parentPath, success);
   }
 
-  private async getNodeByID(nodeID: string,
+  private async getNodeByPath(nodeID: string, parentPath?: string,
     success?: (result: vgType.IProcessedGraphItem)=>void)
   {
     try
     {
       const res: rm.IRestResponse<vgType.IRawGraphItem> =
-        await this.rest.get<vgType.IRawGraphItem>('/graph/'+nodeID);
+        await this.rest.get<vgType.IRawGraphItem>('/graph/' +
+          (typeof parentPath !== "undefined" ? parentPath + '/' : '') + nodeID);
 
       if (res.statusCode === 200 && res.result && success)
       {
-        vgUtils.log("Get Node By ID Success");
+        vgUtils.log("Get Node By Path Success");
         if (this.processedMetadata)
         {
           const item = this.processSingleGraphItem(res.result,
-            this.processedMetadata)
+            this.processedMetadata, parentPath);
 
           const layout = {h: 0, w: 0};
 
@@ -287,14 +287,14 @@ class GraphData
       else
       {
         // Error with status code
-        vgUtils.log("Get Node By ID Failure with status code: " +
+        vgUtils.log("Get Node By Path Failure with status code: " +
           res.statusCode);
       }
     }
     catch (error)
     {
       // Error
-      vgUtils.log("Get Node By Id Failure with error: " + error);
+      vgUtils.log("Get Node By Path Failure with error: " + error);
     }
   }
 
@@ -506,14 +506,30 @@ class GraphData
       nodes.push(this.processSingleGraphItem(value, metadata));
     })
 
-    this.layoutGraph(nodes);
+    this.layoutGraph(nodes, (graph: any) =>
+      {
+        this.generateSuccess!(graph);
+      });
   }
 
   // Process a single graph item into format to create Graph model
   // (see type definitions)
+  // parentPath is the path to the node (graph item) parent e.g. graph/graph-1
+  // in the case of subgraphs
   private processSingleGraphItem(item: vgType.IRawGraphItem,
-    metadata: vgType.IProcessedMetadata)
+    metadata: vgType.IProcessedMetadata, parentPath?: string)
   {
+    const gElements: Array<vgType.IProcessedGraphItem> = [];
+
+    if (item.elements)
+    {
+      item.elements.forEach((element: vgType.IRawGraphItem, index: number) =>
+      {
+        gElements.push(this.processSingleGraphItem(element, metadata,
+          parentPath ? parentPath + "/" + item.id : item.id));
+      })
+    }
+
     const gEdges:
       Array<{ output: string, destId: string, input: string}> = [];
 
@@ -526,16 +542,6 @@ class GraphData
           {
             gEdges.push({ output: key, destId: vOutput.element,
               input: vOutput.prop})
-
-            // Store input and output IDs used to layout Graph without
-            // node position data
-            this.inputEdgeMap[vOutput.element] ?
-              this.inputEdgeMap[vOutput.element].push(item.id) :
-              this.inputEdgeMap[vOutput.element] = [item.id];
-
-            this.outputEdgeMap[item.id] ?
-              this.outputEdgeMap[item.id].push(vOutput.element) :
-              this.outputEdgeMap[item.id] = [vOutput.element];
           });
       }
     }
@@ -568,33 +574,36 @@ class GraphData
       id: item.id,
       name: metadata[itemSection][itemType].name,
       type: item.type,
+      path: parentPath ? parentPath + "/" + item.id : item.id,
       inputs: metadata[itemSection][itemType].inputs,
       outputs: metadata[itemSection][itemType].outputs,
       edges: gEdges,
-      properties: gProps
+      properties: gProps,
+      elements: item.elements ? gElements : undefined
     };
 
     return node;
   }
 
   // Layout Graph and pass full graph on to final success callback
-  private layoutGraph(nodes: vgType.IProcessedGraphItem[])
+  public layoutGraph(nodes: vgType.IProcessedGraphItem[],
+    success: (json: any) => void)
   {
     this.getLayoutData(nodes,
-      (lNodes: vgType.IProcessedGraphItem[],layout: vgType.ILayoutData) =>
+      (lNodes: vgType.IProcessedGraphItem[], layout: vgType.ILayoutData) =>
         {
-          this.processLayout(lNodes, layout);
+          this.processLayout(lNodes, layout, success);
         },
       (lNodes: vgType.IProcessedGraphItem[]) =>
         {
-          this.generateLayout(lNodes);
+          this.generateLayout(lNodes, success);
         }
     );
   }
 
   // Process layout data and combine with node data
   private processLayout(nodes: vgType.IProcessedGraphItem[], layout:
-    vgType.ILayoutData)
+    vgType.ILayoutData, success: (json: any) => void)
   {
     const layoutNodes: any[] = [];
 
@@ -603,8 +612,8 @@ class GraphData
       const propConfig = this.propertiesConfig[value.type];
       const nodeLayout =
       {
-        x: layout[value.id] ? layout[value.id].x : 0,
-        y: layout[value.id] ? layout[value.id].y : 0,
+        x: layout[value.path] ? layout[value.path].x : 0,
+        y: layout[value.path] ? layout[value.path].y : 0,
         h: propConfig ? propConfig.height : 50,
         w: propConfig ? propConfig.width : 50
       }
@@ -613,13 +622,32 @@ class GraphData
     });
 
     const graph = { "nodes" : layoutNodes };
-    this.generateSuccess!(graph);
+    success(graph);
   }
 
   // Generate Graph layout without node position data. Nodes ranked by number of
-  // parents and layed out without overlapping
-  private generateLayout(nodes: vgType.IProcessedGraphItem[])
+  // parents and laid out without overlapping
+  private generateLayout(nodes: vgType.IProcessedGraphItem[],
+    success: (json: any) => void)
   {
+    // Store input and output IDs used to layout Graph without
+    // node position data
+    const inputEdgeMap: { [key: string]: string[] } = {};
+    const outputEdgeMap: { [key: string]: string[] } = {};
+
+    nodes.forEach((node: vgType.IProcessedGraphItem, index: number) =>
+    {
+      node.edges.forEach((edge: {output: string, destId: string, input: string},
+        eIndex: number) =>
+      {
+        inputEdgeMap[edge.destId] ? inputEdgeMap[edge.destId].push(node.id) :
+          inputEdgeMap[edge.destId] = [node.id];
+
+        outputEdgeMap[node.id] ? outputEdgeMap[node.id].push(edge.destId) :
+          outputEdgeMap[node.id] = [edge.destId];
+      })
+    })
+
     const layoutNodes: any[] = [];
 
     const leaves: string[] = [];
@@ -634,20 +662,20 @@ class GraphData
           ranks[name] = rank;
         }
 
-        if (this.outputEdgeMap[name])
+        if (outputEdgeMap[name])
         {
-          rankNodes(rank+1, this.outputEdgeMap[name]);
+          rankNodes(rank+1, outputEdgeMap[name]);
         }
       });
     }
 
-    for (const key of Object.keys(this.outputEdgeMap))
+    for (const key of Object.keys(outputEdgeMap))
     {
-      if (!this.inputEdgeMap[key])
+      if (!inputEdgeMap[key])
       {
         leaves.push(key);
         ranks[key] = 0;
-        rankNodes(1, this.outputEdgeMap[key]);
+        rankNodes(1, outputEdgeMap[key]);
       }
     }
 
@@ -700,11 +728,11 @@ class GraphData
         y: rankNextPos[nRank+1].y};
 
       layoutNodes.push({...value, ...layout});
-      this.layoutData[value.id] = {x: layout.x, y: layout.y};
+      this.layoutData[value.path] = {x: layout.x, y: layout.y};
     })
 
     const graph = { "nodes" : layoutNodes };
-    this.generateSuccess!(graph);
+    success(graph);
   }
 }
 

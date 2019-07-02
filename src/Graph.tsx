@@ -32,15 +32,20 @@ interface IState
 
 export default class Graph extends React.Component<IProps, IState>
 {
-  private graph: Model.Graph = new Model.Graph();
+  private graphs: Model.Graph[] = [];
+  private graphIndex: number = -1;
   private mouseClick: {x: number, y: number};
   private subMenu: string | null;
   private idCount: number;
   private graphRef: SVGSVGElement | null;
+  private parentNodePath: string | null;
 
   constructor(props: IProps)
   {
     super(props);
+
+    this.graph = new Model.Graph();
+
     if (props.from)
     {
       // Note we load the graph directly, not doing forceUpdate()
@@ -69,6 +74,7 @@ export default class Graph extends React.Component<IProps, IState>
     this.subMenu = null;
     this.idCount = 0;
     this.graphRef = null;
+    this.parentNodePath = null;
   }
 
   // Load a new graph after mounting
@@ -100,7 +106,7 @@ export default class Graph extends React.Component<IProps, IState>
                   (edge: {outputId: string, dest: Model.Node, destInput: string},
                     index) =>
                   {
-                    return <Edge key={i+","+index} src={node}
+                    return <Edge key={node.path+":"+i+","+index} src={node}
                       srcOutput={edge.outputId} dest={edge.dest}
                       destInput={edge.destInput} offset={csize}
                       graphRef={this.graphRef}
@@ -114,14 +120,15 @@ export default class Graph extends React.Component<IProps, IState>
             {
               this.graph.getNodes().map((node: Model.Node, i) =>
               {
-                return <Node key={node.id} node={node}
+                return <Node key={node.path+":"+i} node={node}
                   startUpdate={this.startUpdate}
                   update={this.movementUpdate}
                   endUpdate={this.endUpdate}
                   padding={csize*2}
                   propertiesDisplay={this.state.propertiesDisplay}
                   graphRef={this.graphRef}
-                  removeNode={this.removeNode}>
+                  removeNode={this.removeNode}
+                  showNodeGraph={this.showNodeGraph}>
                   {
                     this.graph.getNodeConnectors(node.id, "input").map(
                     (connector: Model.Connector, j) =>
@@ -325,6 +332,17 @@ export default class Graph extends React.Component<IProps, IState>
     window.removeEventListener('mouseup', this.handleGraphDragRelease);
   }
 
+  private showNodeGraph = (node: Model.Node) =>
+  {
+    this.parentNodePath = node.path;
+    this.graph = new Model.Graph();
+    graphData.layoutGraph(node.elements, (graph: any) =>
+    {
+      this.graph.loadFrom(graph);
+      this.forceUpdate();
+    })
+  }
+
   private createNewNode = (type: string) =>
   {
     this.graph.beginTransaction();
@@ -344,19 +362,21 @@ export default class Graph extends React.Component<IProps, IState>
     }
 
     const id = type+"-"+this.idCount;
+    const path = this.parentNodePath ? this.parentNodePath : undefined;
 
     // Create new node, get with properties etc, add layout data and add to
     // graph model
-    graphData.createNode(id, type, () =>
+    graphData.createNode(id, type, path, () =>
       {
-        graphData.getNode(id, (node: any) =>
+        graphData.getNode(id, path, (node: any) =>
         {
           const svgMouseClick = vgUtils.windowToSVGPosition(
             {x: this.mouseClick.x, y: this.mouseClick.y}, this.graphRef);
           node.x = svgMouseClick.x;
           node.y = svgMouseClick.y;
 
-          graphData.updateLayout(id, {x: svgMouseClick.x, y: svgMouseClick.y});
+          graphData.updateLayout(node.path,
+            {x: svgMouseClick.x, y: svgMouseClick.y});
 
           this.graph.addNodeFromJSON(node);
           this.forceUpdate();
@@ -366,35 +386,33 @@ export default class Graph extends React.Component<IProps, IState>
       });
   }
 
-  private removeNode = (id: string) =>
+  private removeNode = (node: Model.Node) =>
   {
     this.graph.beginTransaction();
 
-    graphData.deleteNode(id);
+    graphData.deleteNode(node.path);
 
-    const node = this.graph.getNode(id);
+    // const node = this.graph.getNode(id);
 
     // Delete node and all of its edges from the model
-    if (node)
+    const reverseEdges = node.getReverseEdges();
+    const forwardEdges = node.getForwardEdges();
+
+    reverseEdges.forEach((value: { inputId: string, src: Model.Node,
+      srcOutput: string}) =>
     {
-      const reverseEdges = node.getReverseEdges();
-      const forwardEdges = node.getForwardEdges();
+      this.graph.removeEdge(value.src.id, value.srcOutput, node.id,
+        value.inputId);
+    });
 
-      reverseEdges.forEach((value: { inputId: string, src: Model.Node,
-        srcOutput: string}) =>
-      {
-        this.graph.removeEdge(value.src.id, value.srcOutput, id, value.inputId);
-      });
+    forwardEdges.forEach((value: { outputId: string, dest: Model.Node,
+      destInput: string}) =>
+    {
+      this.graph.removeEdge(node.id, value.outputId, value.dest.id,
+        value.destInput);
+    });
 
-      forwardEdges.forEach((value: { outputId: string, dest: Model.Node,
-        destInput: string}) =>
-      {
-        this.graph.removeEdge(id, value.outputId, value.dest.id,
-          value.destInput);
-      });
-
-      this.graph.removeNode(id);
-    }
+    this.graph.removeNode(node.id);
 
     this.graph.commitTransaction();
     this.forceUpdate();
@@ -427,7 +445,7 @@ export default class Graph extends React.Component<IProps, IState>
         const edges = src.edgesFromConnector(output);
         edges.push({dest: destID, destInput});
 
-        graphData.updateEdges(srcID, srcOutput, edges, () =>
+        graphData.updateEdges(src.path, srcOutput, edges, () =>
           {
             this.graph.addEdge(srcID, srcOutput, destID, destInput);
             this.forceUpdate();
@@ -450,7 +468,7 @@ export default class Graph extends React.Component<IProps, IState>
           return !(destID === value.dest && destInput === value.destInput);
         });
 
-      graphData.updateEdges(srcID, srcOutput, newEdges, () =>
+      graphData.updateEdges(src.path, srcOutput, newEdges, () =>
         {
           this.graph.removeEdge(srcID, srcOutput, destID, destInput);
           if (success)
@@ -643,4 +661,23 @@ export default class Graph extends React.Component<IProps, IState>
   {
     this.setState({targetConnector: target});
   }
+
+  private get graph(): Model.Graph
+  {
+    return this.graphs[this.graphIndex];
+  }
+
+  private set graph(graph: Model.Graph)
+  {
+    // Move forward
+    this.graphIndex++;
+
+    if (this.graphs.length > this.graphIndex)
+    {
+      this.graphs = this.graphs.slice(0, this.graphIndex);
+    }
+
+    this.graphs.push(graph);
+  }
+
 }
