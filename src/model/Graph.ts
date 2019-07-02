@@ -383,11 +383,12 @@ export class Graph
     }
 
     // Current and previous states are equal (nothing changed in the last
-    // transaction) so undo state
-    if (JSON.stringify(this.state) ===
+    // transaction) so 'undo' state. Only responding to identical states so
+    // don't need a full undo.
+    if (this.historyIndex > 0 && JSON.stringify(this.state) ===
       JSON.stringify(this.history[this.historyIndex-1]))
     {
-      this.undo();
+      this.historyIndex--;
     }
   }
 

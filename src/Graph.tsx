@@ -188,6 +188,16 @@ export default class Graph extends React.Component<IProps, IState>
     if (this.graphIndex > 0)
     {
       this.graphIndex--;
+
+      let newParentPath = null;
+      if (this.parentNodePath && this.parentNodePath.indexOf("/") > -1)
+      {
+        newParentPath = this.parentNodePath.slice(0,
+          this.parentNodePath.lastIndexOf("/"));
+      }
+      this.parentNodePath = newParentPath;
+
+
       this.setState({view: viewDefault});
       this.forceUpdate();
     }
