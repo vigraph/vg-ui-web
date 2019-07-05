@@ -355,3 +355,18 @@ button
 {
   text-anchor: middle;
 }
+
+#message-property .property-label
+{
+  display: none;
+}
+
+#text-display-text
+{
+  text-anchor: middle;
+}
+
+#text-display
+{
+  overflow: visible;
+}

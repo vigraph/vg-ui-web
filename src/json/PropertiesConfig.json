@@ -1144,5 +1144,19 @@
         "y": 50
       }
     }
+  },
+  "core:log": {
+    "width": 200,
+    "height": 50,
+    "properties":
+    {
+      "message":
+      {
+        "controlType": "textDisplay",
+        "subType": "default",
+        "x": 90,
+        "y": 20
+      }
+    }
   }
 }

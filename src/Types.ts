@@ -147,3 +147,9 @@ export interface IGraphSelectorSettings
   width: number,
   columns: number
 }
+
+export interface ITextDisplaySettings
+{
+  height: number,
+  width: number
+}

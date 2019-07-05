@@ -149,5 +149,12 @@
       "columns": 3,
       "padding": 5
     }
+  },
+  "textDisplay": {
+    "default":
+    {
+      "height": 100,
+      "width": 40
+    }
   }
 }
