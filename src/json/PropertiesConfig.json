@@ -1122,5 +1122,27 @@
         "y": 30
       }
     }
+  },
+  "core:selector": {
+    "width": 120,
+    "height": 100,
+    "properties":
+    {
+      "value":
+      {
+        "controlType": "graphSelector",
+        "subType": "default",
+        "available": [],
+        "x": 20,
+        "y": 30
+      },
+      "retrigger":
+      {
+        "controlType": "button",
+        "subType": "default",
+        "x": 95,
+        "y": 50
+      }
+    }
   }
 }

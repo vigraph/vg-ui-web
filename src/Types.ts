@@ -13,7 +13,7 @@ export interface IPropertiesConfig
         rangeMin?: number,
         rangeMax?: number,
         increment?: number,
-        available?: string[],
+        available?: any[],
         x: number,
         y: number
       }
@@ -25,10 +25,11 @@ export interface IRawGraphItem
 {
   id: string,
   outputs?: { [key: string]: Array<{element: string, prop: string}>},
-  props: { [key: string]: number | string | boolean },
-  type: string,
+  props?: { [key: string]: number | string | boolean },
+  type?: string,
   elements?: Array<IRawGraphItem>, // Subgraphs
-  graph?: Array<IRawGraphItem>    // Clone
+  graph?: Array<IRawGraphItem>,    // Clone
+  graphs?: Array<IRawGraphItem>    // Graph Selector
 }
 
 export interface IProcessedGraphItem
@@ -43,9 +44,10 @@ export interface IProcessedGraphItem
   // propType = "iprop" | "prop" | "oprop"
   properties?: Array<{ id: string, propType: string, controlType: string,
     subType: string, value: any, rangeMin?: number, rangeMax?: number,
-    increment?: number, available?: string[], x: number, y:number}>,
+    increment?: number, available?: any[], x: number, y:number}>,
   elements?: Array<IProcessedGraphItem>, // Subgraphs
-  cloneGraph?: Array<IProcessedGraphItem>
+  cloneGraph?: Array<IProcessedGraphItem>, // Clone
+  selectorGraphs?: Array<IProcessedGraphItem>  // Graph Selector
 }
 
 export interface IRawMetadataItem
@@ -136,4 +138,12 @@ export interface IColourPickerSettings
   barThickness: number,
   padding: number,
   indicatorThickness: number
+}
+
+export interface IGraphSelectorSettings
+{
+  padding: number,
+  height: number,
+  width: number,
+  columns: number
 }

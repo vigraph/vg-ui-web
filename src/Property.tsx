@@ -8,10 +8,12 @@ import ColourPicker from './ColourPicker';
 import Knob from './Knob';
 import Selector from './Selector';
 import Slider from './Slider';
+import GraphSelector from './GraphSelector';
 
 const controlTypes: {[key: string]: any} =
   { "none": null, "knob": Knob, "button": Button,
-  "slider": Slider, "colourPicker": ColourPicker, "selector": Selector};
+  "slider": Slider, "colourPicker": ColourPicker, "selector": Selector,
+  "graphSelector": GraphSelector};
 
 interface IProps
 {
@@ -22,6 +24,7 @@ interface IProps
   startUpdate: () => void;
   update: () => void;
   endUpdate: () => void;
+  showPropertyGraph: (nodes: any[]) => void;
 }
 
 interface IState
@@ -80,7 +83,6 @@ export default class Property extends React.Component<IProps, IState>
   public render()
   {
     const position = this.property.position;
-    const Component = controlTypes[this.property.controlType];
 
     let displayValue = "";
 
@@ -100,17 +102,40 @@ export default class Property extends React.Component<IProps, IState>
         onMouseEnter={this.mouseEnter}
         onMouseLeave={this.mouseLeave}>
 
-        {this.props.display.controls && Component ?
-           <Component property={this.property}
-            position={{x: position.x, y: position.y}}
-            startUpdate={this.startPropertyUpdate} update={this.propertyUpdate}
-            endUpdate={this.endPropertyUpdate}/> : ""}
+        {this.props.display.controls && this.createComponent()}
 
         {this.props.display.labels && (this.state.hover || this.state.updating) ?
           <text className="label property-label" x={0}
           y={0}>{this.props.name + ": " + displayValue}</text> : ""}
       </svg>
     );
+  }
+
+  // Create component to allow for special cases
+  private createComponent = () =>
+  {
+    const Component = controlTypes[this.property.controlType];
+    const position = this.property.position;
+
+    if (!Component)
+    {
+      return "";
+    }
+    else if (this.property.controlType === "graphSelector")
+    {
+      return <GraphSelector property={this.property}
+          position={{x: position.x, y: position.y}}
+          startUpdate={this.startPropertyUpdate} update={this.propertyUpdate}
+          endUpdate={this.endPropertyUpdate}
+          showGraph={this.props.showPropertyGraph}/>
+    }
+    else
+    {
+      return <Component property={this.property}
+          position={{x: position.x, y: position.y}}
+          startUpdate={this.startPropertyUpdate} update={this.propertyUpdate}
+          endUpdate={this.endPropertyUpdate}/>
+    }
   }
 
   private startPropertyUpdate = () =>

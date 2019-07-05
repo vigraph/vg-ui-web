@@ -327,3 +327,31 @@ button
 {
   color: #2980b9;
 }
+
+#graph-selector-wrapper,
+#selection-display,
+#graph-selector,
+#graph-selector .graph-selector-item
+{
+  overflow: visible;
+}
+
+#graph-selector-wrapper .selection-display-border,
+#graph-selector .selector-border,
+#graph-selector .selector-item-border
+{
+  stroke: #ccc;
+  stroke-width: 0.5;
+  overflow: visible;
+}
+
+#graph-selector .selector-item-border.selected
+{
+  stroke: white;
+  stroke-width: 1;
+}
+
+#graph-selector-wrapper .label
+{
+  text-anchor: middle;
+}

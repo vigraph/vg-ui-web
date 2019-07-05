@@ -140,5 +140,14 @@
       "clickMove": true,
       "logControl": true
     }
+  },
+  "graphSelector": {
+    "default":
+    {
+      "height": 52,
+      "width": 52,
+      "columns": 3,
+      "padding": 5
+    }
   }
 }

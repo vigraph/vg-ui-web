@@ -98,7 +98,8 @@ export default class Node extends React.Component<IProps, IState>
               display={this.props.propertiesDisplay}
               startUpdate={this.props.startUpdate}
               update={this.props.update}
-              endUpdate={this.props.endUpdate}/>
+              endUpdate={this.props.endUpdate}
+              showPropertyGraph={this.showGraphFromProperty}/>
           })}
         />
       </svg>
@@ -197,6 +198,12 @@ export default class Node extends React.Component<IProps, IState>
   {
     e.stopPropagation();
     this.props.removeNode(this.node);
+  }
+
+  // Allow a property to provide and show a graph of given nodes
+  private showGraphFromProperty = (nodes: any[]) =>
+  {
+    this.props.showNodeGraph(this.node, nodes);
   }
 }
 

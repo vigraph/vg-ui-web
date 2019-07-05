@@ -541,6 +541,17 @@ class GraphData
       })
     }
 
+    // Graph Selector
+    const gSelectorGraphs: Array<vgType.IProcessedGraphItem> = [];
+    if (item.graphs)
+    {
+      item.graphs.forEach((selectorGraph: vgType.IRawGraphItem, index: number) =>
+      {
+        gSelectorGraphs.push(this.processSingleGraphItem(selectorGraph, metadata,
+          parentPath ? parentPath + "/" + item.id : item.id));
+      })
+    }
+
     const gEdges:
       Array<{ output: string, destId: string, input: string}> = [];
 
@@ -559,39 +570,59 @@ class GraphData
 
     const gProps: Array<{ id: string, propType: string, controlType: string,
       subType: string, value: any, rangeMin?: number, rangeMax?: number,
-      increment?: number, available?: string[], x: number, y:number}> = [];
+      increment?: number, available?: any[], x: number, y:number}> = [];
 
-    const splitType = item.type.split(":");
-    const itemSection = splitType[0];
-    const itemType = splitType[1];
+    let itemSection, itemType;
 
-    // Node properties from metadata
-    if (this.propertiesConfig[item.type])
+    if (item.type && item.props)
     {
-      for (const key of Object.keys(item.props))
-      {
-        const fProp =  metadata[itemSection][itemType].properties.find(x =>
-            x.id === key);
-        const propType = fProp ? fProp.propType : "prop";
+      const splitType = item.type.split(":");
+      itemSection = splitType[0];
+      itemType = splitType[1];
 
-        gProps.push({id: key, value: item.props[key],
-          propType,
-          ...this.propertiesConfig[item.type].properties[key]});
-      };
+      // Node properties from metadata
+      if (this.propertiesConfig[item.type])
+      {
+        for (const key of Object.keys(item.props))
+        {
+          const fProp =  metadata[itemSection][itemType].properties.find(x =>
+              x.id === key);
+          const propType = fProp ? fProp.propType : "prop";
+
+          gProps.push({id: key, value: item.props[key],
+            propType,
+            ...this.propertiesConfig[item.type].properties[key]});
+        };
+      }
+
+      // Special case - store selector elements' 'graphs' in the available
+      // section of the value property
+      if (gSelectorGraphs.length > 0)
+      {
+        const valueIndex = gProps.findIndex(x => x.id === "value");
+
+        if (valueIndex)
+        {
+          gProps[valueIndex].available = [...gSelectorGraphs];
+        }
+      }
     }
 
     const node: vgType.IProcessedGraphItem =
     {
       id: item.id,
-      name: metadata[itemSection][itemType].name,
-      type: item.type,
+      name: itemSection && itemType ? metadata[itemSection][itemType].name : "",
+      type: item.type ? item.type : "",
       path: parentPath ? parentPath + "/" + item.id : item.id,
-      inputs: metadata[itemSection][itemType].inputs,
-      outputs: metadata[itemSection][itemType].outputs,
+      inputs: itemSection && itemType ?
+        metadata[itemSection][itemType].inputs : [],
+      outputs: itemSection && itemType ?
+        metadata[itemSection][itemType].outputs : [],
       edges: gEdges,
       properties: gProps,
       elements: item.elements ? gElements : undefined,
-      cloneGraph: item.graph ? gCloneGraph : undefined
+      cloneGraph: item.graph ? gCloneGraph : undefined,
+      selectorGraphs: item.graphs ? gSelectorGraphs : undefined
     };
 
     return node;

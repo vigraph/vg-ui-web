@@ -29,6 +29,7 @@
 //                                },
 //             elements: any[] | null // array of nodes (json - see below)
 //             cloneGraph: any[] | null // array of nodes (json - see below)
+//             selectorGraphs: any[] | null // array of nodes (json - see below)
 //                  }>
 // }
 
@@ -62,7 +63,8 @@ export class Graph
   //       properties: [ { id, propType, controlType, subType, x, y, value,
   //                       rangeMin, rangeMax, increment } ],
   //       elements: node[],
-  //       cloneGraph: node[]
+  //       cloneGraph: node[],
+  //       selectorGraphs: node[]
   //     } ] }
   public loadFrom(json: any)
   {
@@ -98,6 +100,7 @@ export class Graph
     node.path = n.path || n.id;
     node.elements = n.elements || null;
     node.cloneGraph = n.cloneGraph || null;
+    node.selectorGraphs = n.selectorGraphs || null;
     if (n.inputs)
     {
       for (const i of n.inputs)
