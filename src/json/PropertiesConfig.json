@@ -1147,15 +1147,15 @@
   },
   "core:log": {
     "width": 200,
-    "height": 50,
+    "height": 60,
     "properties":
     {
       "message":
       {
         "controlType": "textDisplay",
         "subType": "default",
-        "x": 90,
-        "y": 20
+        "x": 20,
+        "y": 25
       }
     }
   }
