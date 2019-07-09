@@ -130,6 +130,12 @@ button
     overflow: visible;
 }
 
+.property-wrapper.disabled
+{
+  pointer-events: none;
+  opacity: 0.1;
+}
+
 #knob
 {
     overflow: visible;

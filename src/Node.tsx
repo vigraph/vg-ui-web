@@ -69,6 +69,8 @@ export default class Node extends React.Component<IProps, IState>
     const deleteX = padding + size.w;
     const deleteY = size.h;
 
+    const reverseEdges = this.node.getReverseEdges();
+
     return (
       <svg x={this.state.x} y={this.state.y}
         onMouseEnter={this.handleMouseEnter}
@@ -99,7 +101,8 @@ export default class Node extends React.Component<IProps, IState>
               startUpdate={this.props.startUpdate}
               update={this.props.update}
               endUpdate={this.props.endUpdate}
-              showPropertyGraph={this.showGraphFromProperty}/>
+              showPropertyGraph={this.showGraphFromProperty}
+              disabled={!!reverseEdges.find(x => x.inputId === property.id)}/>
           })}
         />
       </svg>

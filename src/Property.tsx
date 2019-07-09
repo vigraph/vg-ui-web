@@ -26,6 +26,7 @@ interface IProps
   update: () => void;
   endUpdate: () => void;
   showPropertyGraph: (nodes: any[]) => void;
+  disabled: boolean;
 }
 
 interface IState
@@ -98,7 +99,7 @@ export default class Property extends React.Component<IProps, IState>
 
     return(
       <svg id={this.props.name.toLowerCase()+"-property"}
-        className="property-wrapper"
+        className={`property-wrapper ${this.props.disabled ? "disabled" : ""}`}
         x={position.x} y={position.y}
         onMouseEnter={this.mouseEnter}
         onMouseLeave={this.mouseLeave}>
