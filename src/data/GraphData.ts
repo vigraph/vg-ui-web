@@ -5,7 +5,7 @@
 // as well as getting property Metadata, using REST protocol API.
 // State is read/sent in JSON.  The URL format identifies a hierarchy of
 // elements (nodes) by ID.
-// Processes and combines graph and metadata to create graph model.
+// Processes and combines graph, metadata and layout data to create graph model.
 
 import * as rm from 'typed-rest-client/RestClient';
 
@@ -22,14 +22,15 @@ class GraphData
   private rest: rm.RestClient;
   private generateSuccess?: (json: any) => void;
   private propertiesConfig: vgType.IPropertiesConfig;
-  private processedMetadata?: vgType.IProcessedMetadata;
+  private processedMetadata: vgType.IProcessedMetadata;
   private layoutData: vgType.ILayoutData;
 
   public constructor()
   {
     this.rest = new rm.RestClient('vigraph-rest', restURL);
-    this.layoutData = {};
     this.propertiesConfig = require('../json/PropertiesConfig.json');
+    this.processedMetadata = {};
+    this.layoutData = {};
   }
 
   public returnMetadata()
@@ -37,10 +38,32 @@ class GraphData
     return this.processedMetadata;
   }
 
+  // Generate Graph by getting metadata, layout data and graph data and then
+  // processing and combining
   public generateGraph(success: (json: any) => void)
   {
     this.generateSuccess = success;
-    this.getGraphData();
+
+    const getLayout = () =>
+    {
+      if (Object.keys(this.layoutData).length > 0)
+      {
+        this.getGraphData();
+      }
+      else
+      {
+        this.getLayoutData(() => { this.getGraphData(); });
+      }
+    }
+
+    if (Object.keys(this.processedMetadata).length > 0)
+    {
+      getLayout();
+    }
+    else
+    {
+      this.getMetadata(() => {getLayout()});
+    }
   }
 
   // Update property (propID) on node (nodeID) with given value (value)
@@ -247,7 +270,8 @@ class GraphData
 
   // Get node and calls success with resulting (processed) node allowing it to
   // be added to the Graph model
-  public getNode(nodeID: string, parentPath?: string, success?: (result: any)=>void)
+  public getNode(nodeID: string, parentPath?: string,
+    success?: (result: any) => void)
   {
     this.getNodeByPath(nodeID, parentPath, success);
   }
@@ -266,8 +290,7 @@ class GraphData
         vgUtils.log("Get Node By Path Success");
         if (this.processedMetadata)
         {
-          const item = this.processSingleGraphItem(res.result,
-            this.processedMetadata, parentPath);
+          const item = this.processSingleGraphItem(res.result, parentPath);
 
           const layout = {h: 0, w: 0};
 
@@ -286,7 +309,6 @@ class GraphData
           vgUtils.log("Process Get Node Failure: Trying to process node " +
             "before full Graph set up");
         }
-
       }
       else
       {
@@ -303,10 +325,7 @@ class GraphData
   }
 
   // Get data for graph layout
-  private async getLayoutData(nodes: vgType.IProcessedGraphItem[],
-    success: (nodes: vgType.IProcessedGraphItem[],
-      layout: vgType.ILayoutData)=>void,
-    failure: (nodes: vgType.IProcessedGraphItem[])=>void)
+  private async getLayoutData(finished: () => void)
   {
     try
     {
@@ -317,25 +336,25 @@ class GraphData
       {
         vgUtils.log("Get Layout Data Success");
         this.layoutData = res.result;
-        success(nodes, this.layoutData);
+        finished();
       }
       else
       {
         // Error with status code
         vgUtils.log("Get Layout Data Failure with status code: " +
           res.statusCode);
-        failure(nodes);
+        finished();
       }
     }
     catch (error)
     {
       // Error
       vgUtils.log("Get Layout Data Failure with error: " + error);
-      failure(nodes);
+      finished();
     }
   }
 
-  // Get data for entire graph and start processing
+  // Get data for entire graph and create graph model
   private async getGraphData()
   {
     try
@@ -346,14 +365,7 @@ class GraphData
       if (res.statusCode === 200 && res.result)
       {
         vgUtils.log("Get Graph Data Success");
-        if (this.processedMetadata)
-        {
-          this.createGraphModel(res.result, this.processedMetadata);
-        }
-        else
-        {
-          this.getMetadata(res.result);
-        }
+        this.createGraphModel(res.result);
       }
       else
       {
@@ -369,8 +381,8 @@ class GraphData
     }
   }
 
-  // Get properties metadata, process and pass on to creating Graph model
-  private async getMetadata(rawGraphData: vgType.IRawGraphItem[])
+  // Get properties metadata, process and then store
+  private async getMetadata(success: () => void)
   {
     try
     {
@@ -380,7 +392,8 @@ class GraphData
       if (res.statusCode === 200 && res.result)
       {
         vgUtils.log("Get Metadata Success");
-        this.createGraphModel(rawGraphData, this.processMetadata(res.result));
+        this.processMetadata(res.result);
+        success();
       }
       else
       {
@@ -494,20 +507,20 @@ class GraphData
         }
     });
 
+    // Store processsed metadata
     this.processedMetadata = processedMetadata;
 
     return processedMetadata;
   }
 
-  // Create Graph model from processed raw graph data and metadata
-  private createGraphModel(rawGraphData: vgType.IRawGraphItem[],
-    metadata: vgType.IProcessedMetadata)
+  // Create Graph model from processed raw graph data
+  private createGraphModel(rawGraphData: vgType.IRawGraphItem[])
   {
     const nodes: vgType.IProcessedGraphItem[] = [];
 
     rawGraphData.forEach((value: vgType.IRawGraphItem, index: number) =>
     {
-      nodes.push(this.processSingleGraphItem(value, metadata));
+      nodes.push(this.processSingleGraphItem(value));
     })
 
     this.layoutGraph(nodes, (graph: any) =>
@@ -521,15 +534,17 @@ class GraphData
   // parentPath is the path to the node (graph item) parent e.g. graph/graph-1
   // in the case of subgraphs
   private processSingleGraphItem(item: vgType.IRawGraphItem,
-    metadata: vgType.IProcessedMetadata, parentPath?: string)
+    parentPath?: string)
   {
+    const metadata = this.processedMetadata;
+
     // Subgraph
     const gElements: Array<vgType.IProcessedGraphItem> = [];
     if (item.elements)
     {
       item.elements.forEach((element: vgType.IRawGraphItem, index: number) =>
       {
-        gElements.push(this.processSingleGraphItem(element, metadata,
+        gElements.push(this.processSingleGraphItem(element,
           parentPath ? parentPath + "/" + item.id : item.id));
       })
     }
@@ -540,7 +555,7 @@ class GraphData
     {
       item.graph.forEach((cloneGraph: vgType.IRawGraphItem, index: number) =>
       {
-        gCloneGraph.push(this.processSingleGraphItem(cloneGraph, metadata,
+        gCloneGraph.push(this.processSingleGraphItem(cloneGraph,
           parentPath ? parentPath + "/" + item.id : item.id));
       })
     }
@@ -549,9 +564,10 @@ class GraphData
     const gSelectorGraphs: Array<vgType.IProcessedGraphItem> = [];
     if (item.graphs)
     {
-      item.graphs.forEach((selectorGraph: vgType.IRawGraphItem, index: number) =>
+      item.graphs.forEach((selectorGraph: vgType.IRawGraphItem,
+        index: number) =>
       {
-        gSelectorGraphs.push(this.processSingleGraphItem(selectorGraph, metadata,
+        gSelectorGraphs.push(this.processSingleGraphItem(selectorGraph,
           parentPath ? parentPath + "/" + item.id : item.id));
       })
     }
@@ -636,27 +652,21 @@ class GraphData
   public layoutGraph(nodes: vgType.IProcessedGraphItem[],
     success: (json: any) => void)
   {
-    this.getLayoutData(nodes,
-      (lNodes: vgType.IProcessedGraphItem[], layout: vgType.ILayoutData) =>
-        {
-          this.processLayout(lNodes, layout, success,
-            (lNodes: vgType.IProcessedGraphItem[]) =>
-            {
-              this.generateLayout(lNodes, success);
-            });
-        },
+    // Process layout using stored layout data. If layout data not found
+    // for given nodes then layout automatically generated
+    this.processLayout(nodes, success,
       (lNodes: vgType.IProcessedGraphItem[]) =>
-        {
-          this.generateLayout(lNodes, success);
-        }
-    );
+      {
+        this.generateLayout(lNodes, success);
+      });
   }
 
   // Process layout data and combine with node data
-  private processLayout(nodes: vgType.IProcessedGraphItem[], layout:
-    vgType.ILayoutData, success: (json: any) => void,
+  private processLayout(nodes: vgType.IProcessedGraphItem[],
+    success: (json: any) => void,
     failure: (nodes: vgType.IProcessedGraphItem[]) => void)
   {
+    const layout = this.layoutData;
     const layoutNodes: any[] = [];
     let successCount = 0;
 
