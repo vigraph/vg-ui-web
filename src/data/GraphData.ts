@@ -76,18 +76,22 @@ class GraphData
   }
 
   // Update layout data. If no value given then layout data for given id is
-  // removed. Note: ID is node path
-  public updateLayout(id: string, value?: {x: number, y: number})
+  // removed. If no id given then this.layoutData is sent with no updates.
+  // Note: ID is node path
+  public updateLayout(id?: string, value?: {x: number, y: number})
   {
     const url = restURL + "/layout";
 
-    if (value)
+    if (id)
     {
-      this.layoutData[id] = value;
-    }
-    else
-    {
-      delete this.layoutData[id];
+      if (value)
+      {
+        this.layoutData[id] = value;
+      }
+      else
+      {
+        delete this.layoutData[id];
+      }
     }
 
     fetch(url,
@@ -635,7 +639,11 @@ class GraphData
     this.getLayoutData(nodes,
       (lNodes: vgType.IProcessedGraphItem[], layout: vgType.ILayoutData) =>
         {
-          this.processLayout(lNodes, layout, success);
+          this.processLayout(lNodes, layout, success,
+            (lNodes: vgType.IProcessedGraphItem[]) =>
+            {
+              this.generateLayout(lNodes, success);
+            });
         },
       (lNodes: vgType.IProcessedGraphItem[]) =>
         {
@@ -646,13 +654,21 @@ class GraphData
 
   // Process layout data and combine with node data
   private processLayout(nodes: vgType.IProcessedGraphItem[], layout:
-    vgType.ILayoutData, success: (json: any) => void)
+    vgType.ILayoutData, success: (json: any) => void,
+    failure: (nodes: vgType.IProcessedGraphItem[]) => void)
   {
     const layoutNodes: any[] = [];
+    let successCount = 0;
 
     nodes.forEach((value: vgType.IProcessedGraphItem) =>
     {
       const propConfig = this.propertiesConfig[value.type];
+
+      if (layout[value.path])
+      {
+        successCount++;
+      }
+
       const nodeLayout =
       {
         x: layout[value.path] ? layout[value.path].x : 0,
@@ -664,8 +680,15 @@ class GraphData
       layoutNodes.push({...value, ...nodeLayout});
     });
 
-    const graph = { "nodes" : layoutNodes };
-    success(graph);
+    if (successCount > 0)
+    {
+      const graph = { "nodes" : layoutNodes };
+      success(graph);
+    }
+    else
+    {
+      failure(nodes);
+    }
   }
 
   // Generate Graph layout without node position data. Nodes ranked by number of
@@ -773,6 +796,8 @@ class GraphData
       layoutNodes.push({...value, ...layout});
       this.layoutData[value.path] = {x: layout.x, y: layout.y};
     })
+
+    this.updateLayout();
 
     const graph = { "nodes" : layoutNodes };
     success(graph);
