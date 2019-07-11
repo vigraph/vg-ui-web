@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as Model from './model';
 
-import { graphData } from './data/GraphData';
+import { vgData } from './data/Data';
 
 import Button from './Button';
 import ColourPicker from './ColourPicker';
@@ -167,7 +167,7 @@ export default class Property extends React.Component<IProps, IState>
 
     this.setState({value: newValue});
 
-    graphData.updateProperty(this.props.parent.path, this.property.id, value);
+    vgData.updateProperty(this.props.parent.path, this.property.id, value);
 
     this.property.value = newValue;
 

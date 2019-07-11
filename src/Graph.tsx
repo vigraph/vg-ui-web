@@ -2,8 +2,8 @@ import * as React from 'react';
 
 import * as Model from './model';
 
-import { graphData } from './data/GraphData';
-import { vgUtils } from './Utils';
+import { vgData } from './data/Data';
+import { vgUtils } from './lib/Utils';
 
 import './Graph.css';
 
@@ -55,7 +55,7 @@ export default class Graph extends React.Component<IProps, IState>
     }
     else
     {
-      graphData.generateGraph((json:any) =>
+      vgData.generateGraph((json:any) =>
         {
           this.graph.loadFrom(json);
           this.forceUpdate();
@@ -220,7 +220,7 @@ export default class Graph extends React.Component<IProps, IState>
 
   private createMenu = () =>
   {
-    const sMetadata = graphData.returnMetadata();
+    const sMetadata = vgData.returnMetadata();
     const aMetadata = [];
 
     if (sMetadata)
@@ -358,7 +358,7 @@ export default class Graph extends React.Component<IProps, IState>
   {
     this.parentNodePath = parentNode.path;
     this.graph = new Model.Graph();
-    graphData.layoutGraph(nodes, (graph: any) =>
+    vgData.layoutGraph(nodes, (graph: any) =>
     {
       // Reset View
       this.graph.loadFrom(graph);
@@ -390,16 +390,16 @@ export default class Graph extends React.Component<IProps, IState>
 
     // Create new node, get with properties etc, add layout data and add to
     // graph model
-    graphData.createNode(id, type, path, () =>
+    vgData.createNode(id, type, path, () =>
       {
-        graphData.getNode(id, path, (node: any) =>
+        vgData.getNode(id, path, (node: any) =>
         {
           const svgMouseClick = vgUtils.windowToSVGPosition(
             {x: this.mouseClick.x, y: this.mouseClick.y}, this.graphRef);
           node.x = svgMouseClick.x;
           node.y = svgMouseClick.y;
 
-          graphData.updateLayout(node.path,
+          vgData.updateLayout(node.path,
             {x: svgMouseClick.x, y: svgMouseClick.y});
 
           this.graph.addNodeFromJSON(node);
@@ -414,7 +414,7 @@ export default class Graph extends React.Component<IProps, IState>
   {
     this.graph.beginTransaction();
 
-    graphData.deleteNode(node.path);
+    vgData.deleteNode(node.path);
 
     // const node = this.graph.getNode(id);
 
@@ -469,7 +469,7 @@ export default class Graph extends React.Component<IProps, IState>
         const edges = src.edgesFromConnector(output);
         edges.push({dest: destID, destInput});
 
-        graphData.updateEdges(src.path, srcOutput, edges, () =>
+        vgData.updateEdges(src.path, srcOutput, edges, () =>
           {
             this.graph.addEdge(srcID, srcOutput, destID, destInput);
             this.forceUpdate();
@@ -492,7 +492,7 @@ export default class Graph extends React.Component<IProps, IState>
           return !(destID === value.dest && destInput === value.destInput);
         });
 
-      graphData.updateEdges(src.path, srcOutput, newEdges, () =>
+      vgData.updateEdges(src.path, srcOutput, newEdges, () =>
         {
           this.graph.removeEdge(srcID, srcOutput, destID, destInput);
           if (success)

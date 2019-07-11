@@ -3,8 +3,8 @@ import * as Model from './model';
 
 import Property from './Property';
 
-import { graphData } from './data/GraphData';
-import { vgUtils } from './Utils'
+import { vgData } from './data/Data';
+import { vgUtils } from './lib/Utils'
 
 interface IProps
 {
@@ -158,7 +158,7 @@ export default class Node extends React.Component<IProps, IState>
       this.state.y)
     {
       // Update graph layout data
-      graphData.updateLayout(this.node.path, {x: this.state.x, y: this.state.y});
+      vgData.updateLayout(this.node.path, {x: this.state.x, y: this.state.y});
     }
 
     if (this.props.endUpdate)

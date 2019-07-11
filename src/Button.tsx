@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as Model from './model';
 
-import * as vgType from './Types';
+import * as vgTypes from './lib/Types';
 
 interface IProps
 {
@@ -30,7 +30,7 @@ export default class Button extends React.Component<IProps, IState>
 
   private property: Model.Property;
 
-  private settings: vgType.IButtonSettings;
+  private settings: vgTypes.IButtonSettings;
 
   constructor(props: IProps)
   {

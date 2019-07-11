@@ -1,9 +1,8 @@
 import * as React from 'react';
 import * as Model from './model';
 
-import { vgUtils } from './Utils'
-
-import * as vgType from './Types';
+import { vgUtils } from './lib/Utils'
+import * as vgTypes from './lib/Types';
 
 interface IProps
 {
@@ -34,7 +33,7 @@ export default class ColourPicker extends React.Component<IProps, IState>
 
   private property: Model.Property;
 
-  private settings: vgType.IColourPickerSettings;
+  private settings: vgTypes.IColourPickerSettings;
 
   private allCurrentValues: {hex: string, r: number, g: number, b: number, h: number,
     s: number, l: number};

@@ -1,9 +1,8 @@
 import * as React from 'react';
 import * as Model from './model';
 
-import * as vgType from './Types';
-
-import { vgUtils } from './Utils';
+import * as vgTypes from './lib/Types';
+import { vgUtils } from './lib/Utils';
 
 interface IProps
 {
@@ -37,7 +36,7 @@ export default class Knob extends React.Component<IProps, IState>
   private circleCentre: {x: number, y: number};
   private range: number;
 
-  private settings: vgType.IKnobSettings;
+  private settings: vgTypes.IKnobSettings;
 
   constructor(props: IProps)
   {

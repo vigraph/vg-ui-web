@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as Model from './model';
 
-import * as vgType from './Types';
+import * as vgTypes from './lib/Types';
 
 interface IProps
 {
@@ -31,7 +31,7 @@ export default class TextDisplay extends React.Component<IProps, IState>
 
   private property: Model.Property;
 
-  private settings: vgType.ITextDisplaySettings;
+  private settings: vgTypes.ITextDisplaySettings;
 
   private mouseUpTime: number;
 

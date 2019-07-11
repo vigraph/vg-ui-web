@@ -38,8 +38,8 @@ import { Map } from 'immutable';
 import { Connector } from './Connector';
 import { Node } from './Node';
 import { Property } from './Property';
-import { vgUtils } from '../Utils';
-import { graphData } from '../data/GraphData';
+import { vgUtils } from '../lib/Utils';
+import { vgData } from '../data/Data';
 
 export class Graph
 {
@@ -419,7 +419,7 @@ export class Graph
         if (typeof nNode === "undefined")
         {
           // Node not found in new state so should be deleted
-          graphData.deleteNode(cNode.get("path"), cNode.path);
+          vgData.deleteNode(cNode.get("path"), cNode.path);
         }
         else
         {
@@ -430,7 +430,7 @@ export class Graph
           if (cNodePos.x !== nNodePos.x || cNodePos.y !== nNodePos.y)
           {
             // Node position has changed between states
-            graphData.updateLayout(nNode.get("path"), {x: nNodePos.x, y: nNodePos.y});
+            vgData.updateLayout(nNode.get("path"), {x: nNodePos.x, y: nNodePos.y});
           }
 
           // Check node property values
@@ -444,7 +444,7 @@ export class Graph
               if (cValue !== nValue)
               {
                 // Property value has changed between states
-                graphData.updateProperty(cNode.get("path"), cKey, nValue);
+                vgData.updateProperty(cNode.get("path"), cKey, nValue);
               }
             });
           }
@@ -464,7 +464,7 @@ export class Graph
                   newEdges.push({dest: value.destId, destInput: value.destInput});
                 });
 
-                graphData.updateEdges(cNode.get("path"), outputID, newEdges);
+                vgData.updateEdges(cNode.get("path"), outputID, newEdges);
               }
             });
           }
@@ -490,7 +490,7 @@ export class Graph
           parentPath = path.slice(0, path.lastIndexOf("/"));
         }
 
-        graphData.createNode(nodeID, value.get("type"), parentPath, () =>
+        vgData.createNode(nodeID, value.get("type"), parentPath, () =>
           {
             // Check forward edges
             const nNode = newState.getIn(["nodes", nodeID]);
@@ -509,7 +509,7 @@ export class Graph
 
                 if (newEdges.length > 0)
                 {
-                  graphData.updateEdges(nNode.get("path"), outputID, newEdges);
+                  vgData.updateEdges(nNode.get("path"), outputID, newEdges);
                 }
               });
             }
@@ -519,7 +519,7 @@ export class Graph
             // Note: Currently only one action (e.g. node add) per state level.
             currentToNew();
           });
-        graphData.updateLayout(value.get("path"), {x: value.get("position").x,
+        vgData.updateLayout(value.get("path"), {x: value.get("position").x,
           y: value.get("position").y});
       }
     });

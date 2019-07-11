@@ -9,21 +9,20 @@
 
 import * as rm from 'typed-rest-client/RestClient';
 
-import { vgUtils } from '../Utils';
-
-import * as vgType from '../Types';
+import * as vgTypes from '../lib/Types';
+import { vgUtils } from '../lib/Utils';
 
 const restURL = 'http://localhost:33381';
 const marginPadding = { x: 40, y: 40 };
 const layoutPadding = { x: 100, y: 40 };
 
-class GraphData
+class Data
 {
   private rest: rm.RestClient;
   private generateSuccess?: (json: any) => void;
-  private propertiesConfig: vgType.IPropertiesConfig;
-  private processedMetadata: vgType.IProcessedMetadata;
-  private layoutData: vgType.ILayoutData;
+  private propertiesConfig: vgTypes.IPropertiesConfig;
+  private processedMetadata: vgTypes.IProcessedMetadata;
+  private layoutData: vgTypes.ILayoutData;
 
   public constructor()
   {
@@ -33,37 +32,13 @@ class GraphData
     this.layoutData = {};
   }
 
+  //============================================================================
+  // Public access/update functions
+  //============================================================================
+
   public returnMetadata()
   {
     return this.processedMetadata;
-  }
-
-  // Generate Graph by getting metadata, layout data and graph data and then
-  // processing and combining
-  public generateGraph(success: (json: any) => void)
-  {
-    this.generateSuccess = success;
-
-    const getLayout = () =>
-    {
-      if (Object.keys(this.layoutData).length > 0)
-      {
-        this.getGraphData();
-      }
-      else
-      {
-        this.getLayoutData(() => { this.getGraphData(); });
-      }
-    }
-
-    if (Object.keys(this.processedMetadata).length > 0)
-    {
-      getLayout();
-    }
-    else
-    {
-      this.getMetadata(() => {getLayout()});
-    }
   }
 
   // Update property (propID) on node (nodeID) with given value (value)
@@ -277,12 +252,12 @@ class GraphData
   }
 
   private async getNodeByPath(nodeID: string, parentPath?: string,
-    success?: (result: vgType.IProcessedGraphItem)=>void)
+    success?: (result: vgTypes.IProcessedGraphItem)=>void)
   {
     try
     {
-      const res: rm.IRestResponse<vgType.IRawGraphItem> =
-        await this.rest.get<vgType.IRawGraphItem>('/graph/' +
+      const res: rm.IRestResponse<vgTypes.IRawGraphItem> =
+        await this.rest.get<vgTypes.IRawGraphItem>('/graph/' +
           (typeof parentPath !== "undefined" ? parentPath + '/' : '') + nodeID);
 
       if (res.statusCode === 200 && res.result && success)
@@ -324,70 +299,49 @@ class GraphData
     }
   }
 
-  // Get data for graph layout
-  private async getLayoutData(finished: () => void)
-  {
-    try
-    {
-      const res: rm.IRestResponse<vgType.ILayoutData> =
-        await this.rest.get<vgType.ILayoutData>('/layout');
+  //============================================================================
+  // Generate Graph from Graph data, Metadata and Layout data
+  //============================================================================
 
-      if (res.statusCode === 200 && res.result)
+  // Generate Graph by getting metadata, layout data and graph data and then
+  // processing and combining
+  public generateGraph(success: (json: any) => void)
+  {
+    this.generateSuccess = success;
+
+    const getLayout = () =>
+    {
+      if (Object.keys(this.layoutData).length > 0)
       {
-        vgUtils.log("Get Layout Data Success");
-        this.layoutData = res.result;
-        finished();
+        this.getGraphData();
       }
       else
       {
-        // Error with status code
-        vgUtils.log("Get Layout Data Failure with status code: " +
-          res.statusCode);
-        finished();
+        this.getLayoutData(() => { this.getGraphData(); });
       }
     }
-    catch (error)
+
+    if (Object.keys(this.processedMetadata).length > 0)
     {
-      // Error
-      vgUtils.log("Get Layout Data Failure with error: " + error);
-      finished();
+      getLayout();
+    }
+    else
+    {
+      this.getMetadata(() => {getLayout()});
     }
   }
 
-  // Get data for entire graph and create graph model
-  private async getGraphData()
-  {
-    try
-    {
-      const res: rm.IRestResponse<vgType.IRawGraphItem[]> =
-        await this.rest.get<vgType.IRawGraphItem[]>('/graph');
-
-      if (res.statusCode === 200 && res.result)
-      {
-        vgUtils.log("Get Graph Data Success");
-        this.createGraphModel(res.result);
-      }
-      else
-      {
-        // Error with status code
-        vgUtils.log("Get Graph Data Failure with status code: " +
-          res.statusCode);
-      }
-    }
-    catch (error)
-    {
-      // Error
-      vgUtils.log("Get Graph Data Failure with error: " + error);
-    }
-  }
+  //============================================================================
+  // Metadata
+  //============================================================================
 
   // Get properties metadata, process and then store
   private async getMetadata(success: () => void)
   {
     try
     {
-      const res: rm.IRestResponse<vgType.IRawMetadataItem[]> =
-        await this.rest.get<vgType.IRawMetadataItem[]>('/meta');
+      const res: rm.IRestResponse<vgTypes.IRawMetadataItem[]> =
+        await this.rest.get<vgTypes.IRawMetadataItem[]>('/meta');
 
       if (res.statusCode === 200 && res.result)
       {
@@ -411,12 +365,12 @@ class GraphData
 
   // Process metadata from raw metadata into a usable format to create Graph
   // model (see type definition file)
-  private processMetadata(rawMetadata: vgType.IRawMetadataItem[]):
-    vgType.IProcessedMetadata
+  private processMetadata(rawMetadata: vgTypes.IRawMetadataItem[]):
+    vgTypes.IProcessedMetadata
   {
-    const processedMetadata: vgType.IProcessedMetadata = {};
+    const processedMetadata: vgTypes.IProcessedMetadata = {};
 
-    rawMetadata.forEach((value: vgType.IRawMetadataItem, index: number) =>
+    rawMetadata.forEach((value: vgTypes.IRawMetadataItem, index: number) =>
     {
       const pInputs:
         Array<{ id: string, connectorType: string, multiple?: boolean}> = [];
@@ -513,12 +467,242 @@ class GraphData
     return processedMetadata;
   }
 
-  // Create Graph model from processed raw graph data
-  private createGraphModel(rawGraphData: vgType.IRawGraphItem[])
-  {
-    const nodes: vgType.IProcessedGraphItem[] = [];
+  //============================================================================
+  // Layout Data
+  //============================================================================
 
-    rawGraphData.forEach((value: vgType.IRawGraphItem, index: number) =>
+  // Get data for graph layout
+  private async getLayoutData(finished: () => void)
+  {
+    try
+    {
+      const res: rm.IRestResponse<vgTypes.ILayoutData> =
+        await this.rest.get<vgTypes.ILayoutData>('/layout');
+
+      if (res.statusCode === 200 && res.result)
+      {
+        vgUtils.log("Get Layout Data Success");
+        this.layoutData = res.result;
+        finished();
+      }
+      else
+      {
+        // Error with status code
+        vgUtils.log("Get Layout Data Failure with status code: " +
+          res.statusCode);
+        finished();
+      }
+    }
+    catch (error)
+    {
+      // Error
+      vgUtils.log("Get Layout Data Failure with error: " + error);
+      finished();
+    }
+  }
+
+  // Layout Graph and pass full graph on to final success callback
+  public layoutGraph(nodes: vgTypes.IProcessedGraphItem[],
+    success: (json: any) => void)
+  {
+    // Process layout using stored layout data. If layout data not found
+    // for given nodes then layout automatically generated
+    this.processLayout(nodes, success,
+      (lNodes: vgTypes.IProcessedGraphItem[]) =>
+      {
+        this.generateLayout(lNodes, success);
+      });
+  }
+
+  // Process layout data and combine with node data
+  private processLayout(nodes: vgTypes.IProcessedGraphItem[],
+    success: (json: any) => void,
+    failure: (nodes: vgTypes.IProcessedGraphItem[]) => void)
+  {
+    const layout = this.layoutData;
+    const layoutNodes: any[] = [];
+    let successCount = 0;
+
+    nodes.forEach((value: vgTypes.IProcessedGraphItem) =>
+    {
+      const propConfig = this.propertiesConfig[value.type];
+
+      if (layout[value.path])
+      {
+        successCount++;
+      }
+
+      const nodeLayout =
+      {
+        x: layout[value.path] ? layout[value.path].x : 0,
+        y: layout[value.path] ? layout[value.path].y : 0,
+        h: propConfig ? propConfig.height : 50,
+        w: propConfig ? propConfig.width : 50
+      }
+
+      layoutNodes.push({...value, ...nodeLayout});
+    });
+
+    if (successCount > 0)
+    {
+      const graph = { "nodes" : layoutNodes };
+      success(graph);
+    }
+    else
+    {
+      failure(nodes);
+    }
+  }
+
+  // Generate Graph layout without node position data. Nodes ranked by number of
+  // parents and laid out without overlapping
+  private generateLayout(nodes: vgTypes.IProcessedGraphItem[],
+    success: (json: any) => void)
+  {
+    // Store input and output IDs used to layout Graph without
+    // node position data
+    const inputEdgeMap: { [key: string]: string[] } = {};
+    const outputEdgeMap: { [key: string]: string[] } = {};
+
+    nodes.forEach((node: vgTypes.IProcessedGraphItem, index: number) =>
+    {
+      node.edges.forEach((edge: {output: string, destId: string, input: string},
+        eIndex: number) =>
+      {
+        inputEdgeMap[edge.destId] ? inputEdgeMap[edge.destId].push(node.id) :
+          inputEdgeMap[edge.destId] = [node.id];
+
+        outputEdgeMap[node.id] ? outputEdgeMap[node.id].push(edge.destId) :
+          outputEdgeMap[node.id] = [edge.destId];
+      })
+    })
+
+    const layoutNodes: any[] = [];
+
+    const leaves: string[] = [];
+    const ranks: { [key: string] : number } = {};
+
+    const rankNodes = (rank: number, rNodes: string[]) =>
+    {
+      rNodes.forEach((name: string) =>
+      {
+        if (!ranks[name] || ranks[name] < rank)
+        {
+          ranks[name] = rank;
+        }
+
+        if (outputEdgeMap[name])
+        {
+          rankNodes(rank+1, outputEdgeMap[name]);
+        }
+      });
+    }
+
+    for (const key of Object.keys(outputEdgeMap))
+    {
+      if (!inputEdgeMap[key])
+      {
+        leaves.push(key);
+        ranks[key] = 0;
+        rankNodes(1, outputEdgeMap[key]);
+      }
+    }
+
+    const ranksCount: number[] = [];
+    const rankNextPos: [{x: number, y: number}] = [{x: 0, y: 0}];
+
+    nodes.forEach((value: vgTypes.IProcessedGraphItem) =>
+    {
+      const layout = {x: 0, y: 0, h: 50, w: 50};
+
+      if (this.propertiesConfig[value.type])
+      {
+        layout.h = this.propertiesConfig[value.type].height;
+        layout.w = this.propertiesConfig[value.type].width;
+      }
+
+      const nRank = ranks[value.id] ? ranks[value.id] : 0;
+
+      if (typeof ranksCount[nRank] === "undefined")
+      {
+        ranksCount[nRank] = 0;
+      }
+      else
+      {
+        ranksCount[nRank] = ranksCount[nRank] + 1;
+      }
+
+      // Position nodes in this rank based on the previous nodes height and
+      // the nodes in the next rank based on the largest (width) node so far
+
+      if (!rankNextPos[nRank])
+      {
+        rankNextPos[nRank] = {x: 0, y: 0};
+      }
+
+      layout.x = (rankNextPos[nRank].x) + (nRank === 0 ? marginPadding.x :
+        layoutPadding.x);
+      layout.y = (rankNextPos[nRank].y) + layoutPadding.y;
+
+      rankNextPos[nRank] = {x: rankNextPos[nRank].x,
+        y: layout.y + layout.h};
+
+      if (!rankNextPos[nRank+1])
+      {
+        rankNextPos[nRank+1] = {x: 0, y: 0};
+      }
+
+      rankNextPos[nRank+1] = {x: Math.max(layout.x + layout.w,
+        rankNextPos[nRank+1].x),
+        y: rankNextPos[nRank+1].y};
+
+      layoutNodes.push({...value, ...layout});
+      this.layoutData[value.path] = {x: layout.x, y: layout.y};
+    })
+
+    this.updateLayout();
+
+    const graph = { "nodes" : layoutNodes };
+    success(graph);
+  }
+
+  //============================================================================
+  // Graph Data
+  //============================================================================
+
+  // Get data for entire graph and create graph model
+  private async getGraphData()
+  {
+    try
+    {
+      const res: rm.IRestResponse<vgTypes.IRawGraphItem[]> =
+        await this.rest.get<vgTypes.IRawGraphItem[]>('/graph');
+
+      if (res.statusCode === 200 && res.result)
+      {
+        vgUtils.log("Get Graph Data Success");
+        this.createGraphModel(res.result);
+      }
+      else
+      {
+        // Error with status code
+        vgUtils.log("Get Graph Data Failure with status code: " +
+          res.statusCode);
+      }
+    }
+    catch (error)
+    {
+      // Error
+      vgUtils.log("Get Graph Data Failure with error: " + error);
+    }
+  }
+
+  // Create Graph model from processed raw graph data
+  private createGraphModel(rawGraphData: vgTypes.IRawGraphItem[])
+  {
+    const nodes: vgTypes.IProcessedGraphItem[] = [];
+
+    rawGraphData.forEach((value: vgTypes.IRawGraphItem, index: number) =>
     {
       nodes.push(this.processSingleGraphItem(value));
     })
@@ -533,16 +717,16 @@ class GraphData
   // (see type definitions)
   // parentPath is the path to the node (graph item) parent e.g. graph/graph-1
   // in the case of subgraphs
-  private processSingleGraphItem(item: vgType.IRawGraphItem,
+  private processSingleGraphItem(item: vgTypes.IRawGraphItem,
     parentPath?: string)
   {
     const metadata = this.processedMetadata;
 
     // Subgraph
-    const gElements: Array<vgType.IProcessedGraphItem> = [];
+    const gElements: Array<vgTypes.IProcessedGraphItem> = [];
     if (item.elements)
     {
-      item.elements.forEach((element: vgType.IRawGraphItem, index: number) =>
+      item.elements.forEach((element: vgTypes.IRawGraphItem, index: number) =>
       {
         gElements.push(this.processSingleGraphItem(element,
           parentPath ? parentPath + "/" + item.id : item.id));
@@ -550,10 +734,10 @@ class GraphData
     }
 
     // Clone
-    const gCloneGraph: Array<vgType.IProcessedGraphItem> = [];
+    const gCloneGraph: Array<vgTypes.IProcessedGraphItem> = [];
     if (item.graph)
     {
-      item.graph.forEach((cloneGraph: vgType.IRawGraphItem, index: number) =>
+      item.graph.forEach((cloneGraph: vgTypes.IRawGraphItem, index: number) =>
       {
         gCloneGraph.push(this.processSingleGraphItem(cloneGraph,
           parentPath ? parentPath + "/" + item.id : item.id));
@@ -561,10 +745,10 @@ class GraphData
     }
 
     // Graph Selector
-    const gSelectorGraphs: Array<vgType.IProcessedGraphItem> = [];
+    const gSelectorGraphs: Array<vgTypes.IProcessedGraphItem> = [];
     if (item.graphs)
     {
-      item.graphs.forEach((selectorGraph: vgType.IRawGraphItem,
+      item.graphs.forEach((selectorGraph: vgTypes.IRawGraphItem,
         index: number) =>
       {
         gSelectorGraphs.push(this.processSingleGraphItem(selectorGraph,
@@ -628,7 +812,7 @@ class GraphData
       }
     }
 
-    const node: vgType.IProcessedGraphItem =
+    const node: vgTypes.IProcessedGraphItem =
     {
       id: item.id,
       name: itemSection && itemType ? metadata[itemSection][itemType].name : "",
@@ -647,171 +831,6 @@ class GraphData
 
     return node;
   }
-
-  // Layout Graph and pass full graph on to final success callback
-  public layoutGraph(nodes: vgType.IProcessedGraphItem[],
-    success: (json: any) => void)
-  {
-    // Process layout using stored layout data. If layout data not found
-    // for given nodes then layout automatically generated
-    this.processLayout(nodes, success,
-      (lNodes: vgType.IProcessedGraphItem[]) =>
-      {
-        this.generateLayout(lNodes, success);
-      });
-  }
-
-  // Process layout data and combine with node data
-  private processLayout(nodes: vgType.IProcessedGraphItem[],
-    success: (json: any) => void,
-    failure: (nodes: vgType.IProcessedGraphItem[]) => void)
-  {
-    const layout = this.layoutData;
-    const layoutNodes: any[] = [];
-    let successCount = 0;
-
-    nodes.forEach((value: vgType.IProcessedGraphItem) =>
-    {
-      const propConfig = this.propertiesConfig[value.type];
-
-      if (layout[value.path])
-      {
-        successCount++;
-      }
-
-      const nodeLayout =
-      {
-        x: layout[value.path] ? layout[value.path].x : 0,
-        y: layout[value.path] ? layout[value.path].y : 0,
-        h: propConfig ? propConfig.height : 50,
-        w: propConfig ? propConfig.width : 50
-      }
-
-      layoutNodes.push({...value, ...nodeLayout});
-    });
-
-    if (successCount > 0)
-    {
-      const graph = { "nodes" : layoutNodes };
-      success(graph);
-    }
-    else
-    {
-      failure(nodes);
-    }
-  }
-
-  // Generate Graph layout without node position data. Nodes ranked by number of
-  // parents and laid out without overlapping
-  private generateLayout(nodes: vgType.IProcessedGraphItem[],
-    success: (json: any) => void)
-  {
-    // Store input and output IDs used to layout Graph without
-    // node position data
-    const inputEdgeMap: { [key: string]: string[] } = {};
-    const outputEdgeMap: { [key: string]: string[] } = {};
-
-    nodes.forEach((node: vgType.IProcessedGraphItem, index: number) =>
-    {
-      node.edges.forEach((edge: {output: string, destId: string, input: string},
-        eIndex: number) =>
-      {
-        inputEdgeMap[edge.destId] ? inputEdgeMap[edge.destId].push(node.id) :
-          inputEdgeMap[edge.destId] = [node.id];
-
-        outputEdgeMap[node.id] ? outputEdgeMap[node.id].push(edge.destId) :
-          outputEdgeMap[node.id] = [edge.destId];
-      })
-    })
-
-    const layoutNodes: any[] = [];
-
-    const leaves: string[] = [];
-    const ranks: { [key: string] : number } = {};
-
-    const rankNodes = (rank: number, rNodes: string[]) =>
-    {
-      rNodes.forEach((name: string) =>
-      {
-        if (!ranks[name] || ranks[name] < rank)
-        {
-          ranks[name] = rank;
-        }
-
-        if (outputEdgeMap[name])
-        {
-          rankNodes(rank+1, outputEdgeMap[name]);
-        }
-      });
-    }
-
-    for (const key of Object.keys(outputEdgeMap))
-    {
-      if (!inputEdgeMap[key])
-      {
-        leaves.push(key);
-        ranks[key] = 0;
-        rankNodes(1, outputEdgeMap[key]);
-      }
-    }
-
-    const ranksCount: number[] = [];
-    const rankNextPos: [{x: number, y: number}] = [{x: 0, y: 0}];
-
-    nodes.forEach((value: vgType.IProcessedGraphItem) =>
-    {
-      const layout = {x: 0, y: 0, h: 50, w: 50};
-
-      if (this.propertiesConfig[value.type])
-      {
-        layout.h = this.propertiesConfig[value.type].height;
-        layout.w = this.propertiesConfig[value.type].width;
-      }
-
-      const nRank = ranks[value.id] ? ranks[value.id] : 0;
-
-      if (typeof ranksCount[nRank] === "undefined")
-      {
-        ranksCount[nRank] = 0;
-      }
-      else
-      {
-        ranksCount[nRank] = ranksCount[nRank] + 1;
-      }
-
-      // Position nodes in this rank based on the previous nodes height and
-      // the nodes in the next rank based on the largest (width) node so far
-
-      if (!rankNextPos[nRank])
-      {
-        rankNextPos[nRank] = {x: 0, y: 0};
-      }
-
-      layout.x = (rankNextPos[nRank].x) + (nRank === 0 ? marginPadding.x :
-        layoutPadding.x);
-      layout.y = (rankNextPos[nRank].y) + layoutPadding.y;
-
-      rankNextPos[nRank] = {x: rankNextPos[nRank].x,
-        y: layout.y + layout.h};
-
-      if (!rankNextPos[nRank+1])
-      {
-        rankNextPos[nRank+1] = {x: 0, y: 0};
-      }
-
-      rankNextPos[nRank+1] = {x: Math.max(layout.x + layout.w,
-        rankNextPos[nRank+1].x),
-        y: rankNextPos[nRank+1].y};
-
-      layoutNodes.push({...value, ...layout});
-      this.layoutData[value.path] = {x: layout.x, y: layout.y};
-    })
-
-    this.updateLayout();
-
-    const graph = { "nodes" : layoutNodes };
-    success(graph);
-  }
 }
 
-export const graphData = new GraphData();
+export const vgData = new Data();

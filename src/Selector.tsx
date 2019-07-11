@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as Model from './model';
 
-import * as vgType from './Types';
+import * as vgTypes from './lib/Types';
 
 interface IProps
 {
@@ -30,7 +30,7 @@ export default class Selector extends React.Component<IProps, IState>
 
   private property: Model.Property;
 
-  private settings: vgType.ISelectorSettings;
+  private settings: vgTypes.ISelectorSettings;
 
   constructor(props: IProps)
   {

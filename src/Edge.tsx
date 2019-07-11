@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as Model from './model';
 
-import { vgUtils } from './Utils';
+import { vgUtils } from './lib/Utils';
 
 interface IProps
 {
