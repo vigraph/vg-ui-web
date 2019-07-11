@@ -199,7 +199,6 @@ export default class Graph extends React.Component<IProps, IState>
 
 
       this.setState({view: viewDefault});
-      this.forceUpdate();
     }
   }
 
@@ -363,7 +362,6 @@ export default class Graph extends React.Component<IProps, IState>
       // Reset View
       this.graph.loadFrom(graph);
       this.setState({view: viewDefault});
-      this.forceUpdate();
     })
   }
 
@@ -596,8 +594,6 @@ export default class Graph extends React.Component<IProps, IState>
 
     this.setState({ tempNodes: {dummy: dummyNode, real: node }});
     this.setState({ tempConnectors: {dummy: dummyConnector, real: connector}});
-
-    this.forceUpdate();
   }
 
   private dropConnectorEdge = (e: MouseEvent) =>
