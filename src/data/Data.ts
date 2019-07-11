@@ -43,7 +43,7 @@ class Data
 
   // Update property (propID) on node (nodeID) with given value (value)
   public updateProperty(nodeID: string, propID: string,
-    value: number | string | boolean)
+    value: number | string | boolean, success?: () => void)
   {
     const url = restURL + "/graph/" + nodeID + "/" + propID;
 
@@ -58,6 +58,10 @@ class Data
         {
           // Success
           // vgUtils.log("Update Property Success");
+          if (success)
+          {
+            success();
+          }
         }
         else
         {

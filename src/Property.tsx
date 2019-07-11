@@ -167,14 +167,16 @@ export default class Property extends React.Component<IProps, IState>
 
     this.setState({value: newValue});
 
-    vgData.updateProperty(this.props.parent.path, this.property.id, value);
+    vgData.updateProperty(this.props.parent.path, this.property.id, value,
+      () =>
+      {
+        this.property.value = newValue;
 
-    this.property.value = newValue;
-
-    if (this.props.update)
-    {
-      this.props.update();
-    }
+        if (this.props.update)
+        {
+          this.props.update();
+        }
+      });
   }
 
   // Calculate the value to display with the same accuracy as the given
