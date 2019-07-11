@@ -19,6 +19,7 @@ interface IState
   // property.available
   currentValue: number;
   selecting: boolean;
+  currentMouseDown: number | null;
   showSelector: boolean;
 }
 
@@ -57,7 +58,8 @@ export default class GraphSelector extends React.Component<IProps, IState>
     {
       currentValue: this.property.value,
       selecting: false,
-      showSelector: false
+      showSelector: false,
+      currentMouseDown: null
     };
   }
 
@@ -65,15 +67,15 @@ export default class GraphSelector extends React.Component<IProps, IState>
   {
      const settings = this.settings;
      const available = this.props.property.available;
-     let currentSelection;
+     let currentMouseDown;
 
      if (this.state.currentValue < 0)
      {
-       currentSelection = "none";
+       currentMouseDown = "none";
      }
      else
      {
-       currentSelection = available[this.state.currentValue].id;
+       currentMouseDown = available[this.state.currentValue].id;
      }
 
     return(
@@ -89,7 +91,7 @@ export default class GraphSelector extends React.Component<IProps, IState>
             <text className="selection-display-text label"
               x={settings.width / 2}
               y={settings.height / 2}>
-              {currentSelection}
+              {currentMouseDown}
             </text>
           </svg>
 
@@ -140,8 +142,19 @@ export default class GraphSelector extends React.Component<IProps, IState>
             currentCol++;
           }
 
+          let itemClass = "";
+
+          if (this.state.currentMouseDown === index)
+          {
+            itemClass = "mousedown";
+          }
+          else if (this.state.currentValue === index)
+          {
+            itemClass = "selected";
+          }
+
           return <svg id={`${value.id}`}
-            className={"graph-selector-item"}
+            className={"graph-selector-item " + itemClass}
             key={index}
             x={5 + (currentCol * (settings.width + settings.padding))}
             y={5 + (currentRow * (settings.height + settings.padding))}
@@ -170,6 +183,10 @@ export default class GraphSelector extends React.Component<IProps, IState>
     e.stopPropagation();
     const date = new Date();
     this.lastMouseTime.down = date.getTime();
+
+    this.setState({currentMouseDown:
+      this.property.available.indexOf(this.property.available.find(
+      x => x.id === e.currentTarget.id))});
   }
 
   private handleMouseUp = (e: React.MouseEvent<SVGElement>) =>
@@ -178,6 +195,8 @@ export default class GraphSelector extends React.Component<IProps, IState>
 
     const graph = this.property.available.find(
       x => x.id === e.currentTarget.id);
+
+    this.setState({currentMouseDown: null});
 
     // Long press - select Graph without showing
     if (this.lastMouseTime.down && date.getTime() -

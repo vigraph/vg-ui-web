@@ -362,6 +362,16 @@ button
   text-anchor: middle;
 }
 
+#graph-selector .selected
+{
+  fill: #00ff00;
+}
+
+#graph-selector .mousedown
+{
+  fill: #444;
+}
+
 #message-property .property-label
 {
   display: none;
