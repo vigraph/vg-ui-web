@@ -120,6 +120,11 @@ button
   fill: #44c;
 }
 
+.connector.disabled
+{
+  opacity: 0.6;
+}
+
 .connector-label
 {
   font-size: x-small;
