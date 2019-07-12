@@ -86,53 +86,26 @@ export default class Knob extends React.Component<IProps, IState>
     const currentPos = ((currentValue - rangeMin) /
       (rangeMax - rangeMin) * this.range) + settings.rangeMin;
 
-    // Calculate knob arc end point from arc start point and angle (position)
-    // of the knob
-    const num90 = Math.floor(currentPos / 90);
-    const remain90 = currentPos % 90;
-    const remain90rad = (remain90 * Math.PI) / 180;
+    const arcEnd = this.positionToCords(currentPos);
+    const arcSweep = currentPos > 180 ? 1 : 0;
 
-    const z = Math.sqrt((r*r) + (r*r) - (2*r*r*Math.cos(remain90rad)));
-
-    const x = Math.sin(remain90rad)*r;
-    const y = Math.sqrt((z*z) - (x*x));
-
-    let newX = this.arcStart.x;
-    let newY = this.arcStart.y;
-
-    switch (num90)
-    {
-      case 0:
-        newX = this.arcStart.x - x;
-        newY = this.arcStart.y - y;
-        break;
-
-      case 1:
-        newX = 0 + y;
-        newY = r - x;
-        break;
-
-      case 2:
-        newX = r + x;
-        newY = 0 + y;
-        break;
-
-      case 3:
-        newX = (r*2) - y;
-        newY = (r) + x;
-        break;
-
-      default:
-        break;
-    }
-
-    const arcSweep = currentPos > 180 ? 1 : 0
+    const backgroundEnd = this.positionToCords(settings.rangeMax);
+    const backgroundSweep = settings.rangeMax > 180 ? 1 : 0;
 
     return(
         <svg id="knob" className={this.property.subType}
           height={r*2} width={r*2}
           onMouseDown={this.handleMouseDown}>
-          <circle className={`knob-background`}
+          <path
+            className={`knob-background range`}
+            d={`M${r} ${r} `+
+              `L${this.arcStart.x},${this.arcStart.y} `+
+              `A${r},${r} 1 ${backgroundSweep},1 `+
+              `${backgroundEnd.x},${backgroundEnd.y} z`}
+            transform={`scale(${this.state.turning ? settings.turnScale :
+              1}) rotate(${settings.offset}, ${r}, ${r})`}
+          />
+          <circle className={`knob-background full`}
             cx={r} cy={r} r={r}
             transform={`scale(${this.state.turning ? settings.turnScale : 1})`}
           />
@@ -141,13 +114,13 @@ export default class Knob extends React.Component<IProps, IState>
             d={`M${r} ${r} `+
               `L${this.arcStart.x},${this.arcStart.y} `+
               `A${r},${r} 1 ${arcSweep},1 `+
-              `${newX},${newY} z`}
+              `${arcEnd.x},${arcEnd.y} z`}
             transform={`scale(${this.state.turning ? settings.turnScale :
               1}) rotate(${settings.offset}, ${r}, ${r})`}
           />
           <path
             className={`knob-dial`}
-            d={`M${r} ${r} L${newX},${newY} z`}
+            d={`M${r} ${r} L${arcEnd.x},${arcEnd.y} z`}
             transform={`scale(${this.state.turning ? settings.turnScale :
               1}) rotate(${settings.offset}, ${r}, ${r})`}
           />
@@ -255,5 +228,51 @@ export default class Knob extends React.Component<IProps, IState>
     }
 
     return position
+  }
+
+  // Calculate knob arc end point from arc start point and angle (position)
+  // of the knob
+  private positionToCords = (position: number) =>
+  {
+    const r = this.settings.radius
+    const num90 = Math.floor(position / 90);
+    const remain90 = position % 90;
+    const remain90rad = (remain90 * Math.PI) / 180;
+
+    const z = Math.sqrt((r*r) + (r*r) - (2*r*r*Math.cos(remain90rad)));
+
+    const x = Math.sin(remain90rad)*r;
+    const y = Math.sqrt((z*z) - (x*x));
+
+    let newX = this.arcStart.x;
+    let newY = this.arcStart.y;
+
+    switch (num90)
+    {
+      case 0:
+        newX = this.arcStart.x - x;
+        newY = this.arcStart.y - y;
+        break;
+
+      case 1:
+        newX = 0 + y;
+        newY = r - x;
+        break;
+
+      case 2:
+        newX = r + x;
+        newY = 0 + y;
+        break;
+
+      case 3:
+        newX = (r*2) - y;
+        newY = (r) + x;
+        break;
+
+      default:
+        break;
+    }
+
+    return {x: newX, y: newY}
   }
 }

@@ -2,132 +2,132 @@
 {
 /*    width: 100%;
     height: 100%;*/
-    background-color: black;
+  background-color: black;
 }
 
 button
 {
-    -webkit-user-select: none; /* Safari */
-    -moz-user-select: none; /* Firefox */
-    -ms-user-select: none; /* IE10+/Edge */
-    user-select: none; /* Standard */
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE10+/Edge */
+  user-select: none; /* Standard */
 }
 
 .node
 {
-    fill: #111;
-    fill-opacity: 0.7;
-    stroke: #ccc;
-    stroke-width: 0.75;
-    overflow: visible;
+  fill: #111;
+  fill-opacity: 0.7;
+  stroke: #ccc;
+  stroke-width: 0.75;
+  overflow: visible;
 }
 
 .node.dragging
 {
-    fill: #444;
+  fill: #444;
 }
 
 .label
 {
-    font-size: small;
-    fill: #ccc;
-    -webkit-user-select: none; /* Safari */
-    -moz-user-select: none; /* Firefox */
-    -ms-user-select: none; /* IE10+/Edge */
-    user-select: none; /* Standard */
+  font-size: small;
+  fill: #ccc;
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE10+/Edge */
+  user-select: none; /* Standard */
 }
 
 .node-label
 {
-    font-weight: bold;
-    text-anchor: middle;
+  font-weight: bold;
+  text-anchor: middle;
 }
 
 .dummynode
 {
-    display: none;
+  display: none;
 }
 
 .dummyconnector
 {
-    pointer-events: none;
+  pointer-events: none;
 }
 
 .edge
 {
-    stroke: white;
-    stroke-width: 2;
-    stroke-opacity: 0.2;
-    fill: none;
+  stroke: white;
+  stroke-width: 2;
+  stroke-opacity: 0.2;
+  fill: none;
 }
 
 .edge.selected
 {
-    stroke: grey;
-    stroke-opacity: 1;
+  stroke: grey;
+  stroke-opacity: 1;
 }
 
 .edge.hover
 {
-    stroke-opacity: 1;
+  stroke-opacity: 1;
 }
 
 .edge.hover.dummy
 {
-    stroke-opacity: 0.2;
+  stroke-opacity: 0.2;
 }
 
 .edge-boundary
 {
-    stroke: transparent;
-    stroke-width: 10;
-    fill: none;
+  stroke: transparent;
+  stroke-width: 10;
+  fill: none;
 }
 
 .node-delete,
 .edge-delete
 {
-    fill: red;
+  fill: red;
 }
 
 .delete-line
 {
-    stroke: white;
-    stroke-width: 1;
-    fill: none;
-    pointer-events: none;
+  stroke: white;
+  stroke-width: 1;
+  fill: none;
+  pointer-events: none;
 }
 
 .connector
 {
-    fill: white;
-    stroke: none;
-    pointer-events: none;
+  fill: white;
+  stroke: none;
+  pointer-events: none;
 }
 
 .connector-boundary
 {
-    fill: transparent;
+  fill: transparent;
 }
 
 .connector.input
 {
-    fill: #a44;
+  fill: #a44;
 }
 
 .connector.output
 {
-    fill: #44c;
+  fill: #44c;
 }
 
 .connector-label
 {
-    font-size: x-small;
+  font-size: x-small;
 }
 
 .property-wrapper
 {
-    overflow: visible;
+  overflow: visible;
 }
 
 .property-wrapper.disabled
@@ -138,175 +138,180 @@ button
 
 #knob
 {
-    overflow: visible;
+  overflow: visible;
 }
 
 .knob-wrapper
 {
-    overflow: visible
+  overflow: visible
 }
 
 .knob-background
 {
-    fill: #444;
+  fill: #444;
+}
+
+.knob-background.full
+{
+  display: none;
 }
 
 .knob-arc
 {
-    fill: green;
+  fill: green;
 }
 
 .knob-dial
 {
-    stroke: black;
-    stroke-width: 3px;
+  stroke: black;
+  stroke-width: 3px;
 }
 
 #knob .knob-arc
 {
-    fill: #00ff00;
+  fill: #00ff00;
 }
 
 #knob.basic .knob-overlay,
 #knob.basic .knob-dial
 {
-    display: none;
+  display: none;
 }
 
 #knob.basic .knob-background
 {
-    stroke: blue;
-    stroke-width: 5px;
+  stroke: blue;
+  stroke-width: 5px;
 }
 
 #button
 {
-    overflow: visible;
+  overflow: visible;
 }
 
 .button-outer
 {
-    stroke: grey;
-    stroke-width: 2px;
+  stroke: grey;
+  stroke-width: 2px;
 }
 
 .button-inner
 {
-    fill: grey;
+  fill: grey;
 }
 
 .button-inner.pressing,
 .button-inner.pressing.true
 {
-    fill: #80ff80;
+  fill: #80ff80;
 }
 
 .button-inner.true
 {
-    fill: #00ff00;
+  fill: #00ff00;
 }
 
 #slider
 {
-    overflow: visible;
+  overflow: visible;
 }
 
 .slider-background
 {
-    fill: #444;
+  fill: #444;
 }
 
 .slider-value
 {
-    fill: #00ff00;
+  fill: #00ff00;
 }
 
 .slider-dial
 {
-    stroke: grey;
-    stroke-width: 3px;
+  stroke: grey;
+  stroke-width: 3px;
 }
 
 .picker
 {
-    stroke: white;
-    stroke-width: 1px;
-    overflow: visible;
+  stroke: white;
+  stroke-width: 1px;
+  overflow: visible;
 }
 
 .picker-indicator
 {
-    stroke: none;
+  stroke: none;
 }
 
 .indicator-top
 {
-    fill: black;
+  fill: black;
 }
 
 .indicator-bottom
 {
-    fill: white;
+  fill: white;
 }
 
 .picker-wrapper-background
 {
-    stroke: white;
-    stroke-width: 1px;
-    fill: #383838;
+  stroke: white;
+  stroke-width: 1px;
+  fill: #383838;
 }
 
 #selector
 {
-    overflow: visible;
+  overflow: visible;
 }
 
 .selector-position
 {
-    stroke: #888;
-    stroke-width: 1px;
-    fill: #444;
+  stroke: #888;
+  stroke-width: 1px;
+  fill: #444;
 }
 
 .selector-position.selected
 {
-    fill: #00ff00;
+  fill: #00ff00;
 }
 
 .selector-dial
 {
-    stroke: black;
-    stroke-width: 3px;
-    pointer-events: none;
+  stroke: black;
+  stroke-width: 3px;
+  pointer-events: none;
 }
 
 .selector-background
 {
-    fill: green;
+  fill: green;
 }
 
 #selector.default .selector-label,
 #selector.horz .selector-label
 {
-    display: none;
+  display: none;
 }
 
 #colour-picker .picker-label
 {
-    font-size: small;
-    text-anchor: middle;
-    fill: grey;
+  font-size: small;
+  text-anchor: middle;
+  fill: grey;
 }
 
 #colour-property .property-label
 {
-    display: none;
+  display: none;
 }
 
 .wrapper
 {
-    width: 100%;
-    height: 100%;
+  width: 100%;
+  height: 100%;
 }
 
 .menu
