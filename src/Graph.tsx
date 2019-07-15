@@ -513,8 +513,7 @@ export default class Graph extends React.Component<IProps, IState>
     {
       selfRemove(() =>
         {
-          this.graph.beginTransaction();
-          this.newMovingConnectorEdge(node, connector, e, true);
+          this.newMovingConnectorEdge(node, connector, e);
         });
     }
   }
@@ -540,25 +539,22 @@ export default class Graph extends React.Component<IProps, IState>
     {
       const sNode: Model.Node = srcNode;
       const sConnector: Model.Connector = srcConnector;
+      e.persist();
       this.removeEdge(sNode.id, sConnector.id, inNode.id, inConnector.id,
         () =>
         {
-          this.graph.beginTransaction();
-          this.newMovingConnectorEdge(sNode, sConnector, e, true);
+          this.newMovingConnectorEdge(sNode, sConnector, e);
         });
     }
   }
 
   private newMovingConnectorEdge = (node: Model.Node, connector: Model.Connector,
-    e: React.MouseEvent | MouseEvent, transactionStarted: boolean) =>
+    e: React.MouseEvent | MouseEvent) =>
   {
     window.addEventListener('mouseup', this.dropConnectorEdge);
     window.addEventListener('mousemove', this.moveConnectorEdge);
 
-    if (!transactionStarted)
-    {
-      this.graph.beginTransaction();
-    }
+    this.graph.beginTransaction();
 
     // Create dummy node and connect to selected connector to simulate
     // moving unconnected edge

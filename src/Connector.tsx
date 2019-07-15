@@ -70,7 +70,8 @@ export default class Connector extends React.Component<IProps,IState>
       this.props.outputConnectorSelected(this.props.parent,
         this.props.connector, e, false);
     }
-    else if (connector.direction === "input" && connector.multiple)
+    else if (connector.direction === "input" &&
+      this.props.parent.edgesFromConnector(this.props.connector).length === 1)
     {
       this.props.inputConnectorSelected(this.props.parent, this.props.connector,
         e);
