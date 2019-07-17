@@ -153,3 +153,14 @@ export interface ITextDisplaySettings
   height: number,
   width: number
 }
+
+export interface ISequenceSettings
+{
+  inputHeight: number,
+  inputWidth: number,
+  itemHeight: number,
+  itemWidth: number,
+  itemLength: number,
+  colourSeq: boolean,
+  seqLength: number
+}

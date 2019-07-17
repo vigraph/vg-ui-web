@@ -156,5 +156,27 @@
       "height": 20,
       "width": 180
     }
+  },
+  "sequence": {
+    "default":
+    {
+      "inputHeight": 20,
+      "inputWidth": 40,
+      "itemHeight": 20,
+      "itemWidth": 40,
+      "colourSeq": false,
+      "seqLength": 10,
+      "itemLength": 4
+    },
+    "colour":
+    {
+      "inputHeight": 20,
+      "inputWidth": 60,
+      "itemHeight": 20,
+      "itemWidth": 20,
+      "colourSeq": true,
+      "seqLength": 10,
+      "itemLength": 7
+    }
   }
 }

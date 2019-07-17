@@ -404,3 +404,43 @@ button
   stroke-width: 1;
   fill-opacity: 0;
 }
+
+#sequence .sequence-input-border,
+#sequence .sequence-items-wrapper-border
+{
+  stroke: #444;
+  stroke-width: 1;
+  fill-opacity: 0;
+}
+
+#sequence .sequence-input-border.inputting
+{
+  stroke: white;
+}
+
+#sequence-text
+{
+  text-anchor: middle;
+}
+
+#sequence,
+#sequence-control-wrapper,
+#sequence-items-wrapper
+{
+  overflow: visible;
+}
+
+#sequence .sequence-add
+{
+  fill: #a44;
+}
+
+#sequence .sequence-show-icon
+{
+  fill: green;
+}
+
+#sequence .item
+{
+  font-size: x-small;
+}

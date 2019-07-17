@@ -836,7 +836,7 @@
     }
   },
   "vector:pattern": {
-    "width": 50,
+    "width": 200,
     "height": 80,
     "properties":
     {
@@ -849,6 +849,13 @@
         "increment": 1,
         "x": 20,
         "y": 30
+      },
+      "colours":
+      {
+        "controlType": "sequence",
+        "subType": "colour",
+        "x": 80,
+        "y": 25
       }
     }
   },
@@ -1155,6 +1162,20 @@
         "controlType": "textDisplay",
         "subType": "default",
         "x": 20,
+        "y": 25
+      }
+    }
+  },
+  "core:sequence": {
+    "width": 200,
+    "height": 120,
+    "properties":
+    {
+      "values":
+      {
+        "controlType": "sequence",
+        "subType": "default",
+        "x": 40,
         "y": 25
       }
     }
