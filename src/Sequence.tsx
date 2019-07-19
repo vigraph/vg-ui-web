@@ -43,11 +43,11 @@ export default class Sequence extends React.Component<IProps, IState>
 
     this.property = props.property;
 
-    const textDisplaySettings =
+    const sequenceSettings =
       require('./json/ControlSettings.json').sequence;
 
-    this.settings = textDisplaySettings[this.property.subType] ?
-      textDisplaySettings[this.property.subType] : textDisplaySettings.default;
+    this.settings = sequenceSettings[this.property.subType] ?
+      sequenceSettings[this.property.subType] : sequenceSettings.default;
 
     this.mouseUpTime = 0;
 

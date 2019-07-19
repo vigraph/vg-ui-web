@@ -11,12 +11,13 @@ import Slider from './Slider';
 import GraphSelector from './GraphSelector';
 import TextDisplay from './TextDisplay';
 import Sequence from './Sequence';
+import Curve from './Curve';
 
 const controlTypes: {[key: string]: any} =
   { "none": null, "knob": Knob, "button": Button,
   "slider": Slider, "colourPicker": ColourPicker, "selector": Selector,
   "graphSelector": GraphSelector, "textDisplay": TextDisplay,
-  "sequence": Sequence};
+  "sequence": Sequence, "curve": Curve};
 
 interface IProps
 {

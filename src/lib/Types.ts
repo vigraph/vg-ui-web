@@ -164,3 +164,11 @@ export interface ISequenceSettings
   colourSeq: boolean,
   seqLength: number
 }
+
+export interface ICurveSettings
+{
+  height: number,
+  width: number,
+  maxValue: number,
+  barThickness: number,
+}

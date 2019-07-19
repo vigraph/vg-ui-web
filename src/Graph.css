@@ -444,3 +444,33 @@ button
 {
   font-size: x-small;
 }
+
+#curve .curve-axis
+{
+  fill: #444;
+}
+
+#curve-points-wrapper,
+#curve-area-wrapper
+{
+  overflow: visible;
+}
+
+#curve-area-wrapper
+{
+  fill: black;
+}
+
+#curve .curve-point
+{
+  fill: #00ff00
+}
+
+#curve .curve-line
+{
+  stroke: white;
+  stroke-width: 2;
+  stroke-opacity: 0.5;
+  fill: none;
+  pointer-events: none;
+}
