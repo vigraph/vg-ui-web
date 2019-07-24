@@ -6,6 +6,8 @@ import Property from './Property';
 import { vgData } from './data/Data';
 import { vgUtils } from './lib/Utils'
 
+const fontSize = 12;
+
 interface IProps
 {
   node: Model.Node;
@@ -89,8 +91,7 @@ export default class Node extends React.Component<IProps, IState>
             <path className="delete-line" d={`M ${deleteX-5} ${deleteY+5} L` +
               `${deleteX+5} ${deleteY-5}`}/>
         </svg>}
-        <text className={"node-label label " + this.props.node.id}
-          x={(size.w/2)+padding} y={15}>{this.node.name}</text>
+        {this.generateTitle()}
         {this.props.children}
         {properties.map((property: Model.Property, j) =>
           {
@@ -107,6 +108,23 @@ export default class Node extends React.Component<IProps, IState>
         />
       </svg>
     );
+  }
+
+  private generateTitle = () =>
+  {
+    const size = this.props.node.size;
+    const padding = this.props.padding;
+
+    const linesArray = vgUtils.wrapText(this.node.name, size.w, fontSize);
+
+    return <text className={"node-label " + this.props.node.id}
+      fontSize={fontSize} x={(size.w/2)+padding} y={15}>
+        {linesArray.map((word: string, index: number) =>
+          {
+            return <tspan x={(size.w/2)+padding} dy={index*fontSize}>
+              {word}</tspan>
+          })}
+      </text>
   }
 
   // Do nothing - prevents browser context menu from showing

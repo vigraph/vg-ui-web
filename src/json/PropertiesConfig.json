@@ -1000,7 +1000,7 @@
         "rangeMax": 10,
         "increment": 1,
         "x": 30,
-        "y": 30
+        "y": 40
       },
       "trailing":
       {
@@ -1010,7 +1010,7 @@
         "rangeMax": 10,
         "increment": 1,
         "x": 70,
-        "y": 30
+        "y": 40
       }
     }
   },

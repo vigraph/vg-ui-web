@@ -41,6 +41,7 @@ button
 {
   font-weight: bold;
   text-anchor: middle;
+  fill: #ccc;
 }
 
 .dummynode
