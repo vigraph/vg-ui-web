@@ -43,7 +43,7 @@ class Data
 
   // Update property (propID) on node (nodeID) with given value (value)
   public updateProperty(nodeID: string, propID: string,
-    value: number | string | boolean, success?: () => void)
+    value: any, success?: () => void)
   {
     const url = restURL + "/graph/" + nodeID + "/" + propID;
 

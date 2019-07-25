@@ -63,11 +63,17 @@ export default class Curve extends React.Component<IProps, IState>
       updating: false,
       moving: false
     };
+
+    if (this.state.currentCurve.length === 0)
+    {
+      vgUtils.log("Curve Component: Setting to default curve " +
+        JSON.stringify(this.settings.defaultCurve));
+      this.props.update(this.settings.defaultCurve);
+    }
   }
 
   public render()
   {
-
     const width = this.settings.width;
     const height = this.settings.height;
     const thickness = this.settings.barThickness;
@@ -191,19 +197,29 @@ export default class Curve extends React.Component<IProps, IState>
       const updatedPoint = this.positionToPoint(updatedCoords);
 
       const newCurve = [...this.state.currentCurve];
-      newCurve[this.movingPoint] = updatedPoint;
 
-      // Resort and refind current moving point index
-      newCurve.sort((a: {t: number, value: number},
-      b: {t: number, value: number}) =>
+      // Only update value for first and last points
+      if (this.movingPoint === 0 || this.movingPoint === newCurve.length-1)
       {
-        return a.t - b.t;
-      });
+        newCurve[this.movingPoint].value = updatedPoint.value;
+      }
+      else if (updatedPoint.t > 0 && updatedPoint.t < 1 &&
+        updatedPoint.value >= 0 && updatedPoint.value <= this.settings.maxValue)
+      {
+        newCurve[this.movingPoint] = updatedPoint;
 
-      this.movingPoint = newCurve.findIndex((point: {t: number,
-        value: number}) =>
-        point.t === updatedPoint.t &&
-        point.value === updatedPoint.value);
+        // Resort and refind current moving point index
+        newCurve.sort((a: {t: number, value: number},
+        b: {t: number, value: number}) =>
+        {
+          return a.t - b.t;
+        });
+
+        this.movingPoint = newCurve.findIndex((point: {t: number,
+          value: number}) =>
+          point.t === updatedPoint.t &&
+          point.value === updatedPoint.value);
+      }
 
       this.setState({currentCurve: newCurve});
       this.props.update(newCurve);

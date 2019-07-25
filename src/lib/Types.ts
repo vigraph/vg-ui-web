@@ -171,4 +171,5 @@ export interface ICurveSettings
   width: number,
   maxValue: number,
   barThickness: number,
+  defaultCurve: [{t: number, value: number}, {t: number, value: number}];
 }
