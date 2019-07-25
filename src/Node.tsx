@@ -112,19 +112,27 @@ export default class Node extends React.Component<IProps, IState>
 
   private generateTitle = () =>
   {
-    const size = this.props.node.size;
+    const size = this.node.size;
     const padding = this.props.padding;
 
-    const linesArray = vgUtils.wrapText(this.node.name, size.w, fontSize);
+    if (typeof this.node.name === "undefined")
+    {
+      return "";
+    }
+    else
+    {
+      const linesArray = vgUtils.wrapText(this.node.name, size.w, fontSize);
 
-    return <text className={"node-label " + this.props.node.id}
-      fontSize={fontSize} x={(size.w/2)+padding} y={15}>
-        {linesArray.map((word: string, index: number) =>
-          {
-            return <tspan x={(size.w/2)+padding} dy={index*fontSize}>
-              {word}</tspan>
-          })}
-      </text>
+      return <text className={"node-label " + this.props.node.id}
+        fontSize={fontSize} x={(size.w/2)+padding} y={15}>
+          {linesArray.map((word: string, index: number) =>
+            {
+              return <tspan key={index} x={(size.w/2)+padding}
+                dy={index*fontSize}>{word}</tspan>
+            })}
+        </text>
+    }
+
   }
 
   // Do nothing - prevents browser context menu from showing
