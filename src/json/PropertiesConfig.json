@@ -86,6 +86,21 @@
     "width": 85,
     "height": 35
   },
+  "vector:send":
+  {
+    "width": 80,
+    "height": 80,
+    "properties":
+    {
+      "copy":
+      {
+        "controlType": "button",
+        "subType": "default",
+        "x": 40,
+        "y": 50
+      }
+    }
+  },
   "vector:colour":
   {
     "width": 80,
@@ -408,6 +423,25 @@
       }
     }
   },
+  "audio:combine":
+  {
+    "width": 120,
+    "height": 140,
+    "properties":
+    {
+      "mode":
+      {
+        "controlType": "selector",
+        "subType": "vert",
+        "available": ["add","multiply"],
+        "rangeMin": 100,
+        "rangeMax": 160,
+        "increment": 60,
+        "x": 30,
+        "y": 50
+      }
+    }
+  },
   "audio:audio-to-vector":
   {
     "width": 120,
@@ -640,7 +674,7 @@
       }
     }
   },
-  "audio:scale": {
+  "vector:scale": {
     "width": 150,
     "height": 80,
     "properties":
