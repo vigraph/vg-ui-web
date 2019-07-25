@@ -621,11 +621,13 @@ export default class Graph extends React.Component<IProps, IState>
       this.graph.removeNode(dnode.id);
 
       // If the target connector has the same connector type as the previously
-      // selected connector, the same direction as the dummy connector and can
-      // accept multiple connections (input only), then add a permanent
-      // edge between selected connector and target connector.
+      // selected connector (or "any"), the same direction as the dummy
+      // connector and can accept multiple connections (input only), then add
+      // a permanent edge between selected connector and target connector.
       if (tconnector && tconnector.connector && tconnector.parent &&
-        tconnector.connector.connectorType === rconnector.connectorType &&
+        (tconnector.connector.connectorType === rconnector.connectorType ||
+        tconnector.connector.connectorType === "any" ||
+        rconnector.connectorType === "any") &&
         tconnector.connector.direction === dconnector.direction)
       {
         if (tconnector.connector.direction === "input")

@@ -257,7 +257,8 @@ export class Graph
     const destConnector = this.getNodeConnector(destInput, destId, "input");
 
     if (srcConnector && destConnector && (srcConnector.connectorType ===
-      destConnector.connectorType))
+      destConnector.connectorType || srcConnector.connectorType === "any" ||
+      destConnector.connectorType === "any"))
     {
       this.state = this.state
         .setIn(["nodes", srcId, "forwardEdges", srcOutput],
