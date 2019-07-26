@@ -300,9 +300,6 @@ export default class Graph extends React.Component<IProps, IState>
     newView.w *= scale;
     newView.h *= scale;
 
-    newView.x = newView.x > 0 ? newView.x : 0;
-    newView.y = newView.y > 0 ? newView.y : 0;
-
     this.setState({view: newView});
   }
 
@@ -339,8 +336,8 @@ export default class Graph extends React.Component<IProps, IState>
     const diffY = Math.round(currentPosition.y - svgMouseClick.y);
 
     const newView = Object.assign({}, this.state.view);
-    newView.x = newView.x - diffX > 0 ? newView.x - diffX : 0;
-    newView.y = newView.y - diffY > 0 ? newView.y - diffY : 0;
+    newView.x = newView.x - diffX;
+    newView.y = newView.y - diffY;
 
     this.mouseClick = {x: e.pageX, y: e.pageY};
 

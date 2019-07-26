@@ -81,7 +81,7 @@ export default class Edge extends React.Component<IProps, IState>
     this.edgeStop = {x: dx, y: dy};
 
     return (
-      <svg>
+      <svg id="edge-wrapper">
         <path className={`edge ${this.state.edgeSelected ? "selected" : ""} ` +
           `${this.state.hover ? "hover" : "" }` +
           `${(this.props.src.type === "dummy" ||

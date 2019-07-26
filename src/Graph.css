@@ -5,6 +5,13 @@
   background-color: black;
 }
 
+#nodes,
+#edges,
+#edge-wrapper
+{
+  overflow: visible;
+}
+
 button
 {
   -webkit-user-select: none; /* Safari */

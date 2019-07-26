@@ -1,5 +1,6 @@
 {
-  "core:lfo": {
+  "core:lfo":
+  {
     "width": 190,
     "height": 140,
     "properties":
@@ -73,9 +74,6 @@
         "controlType": "selector",
         "subType": "vert",
         "available": ["sin","square","triangle","saw","random"],
-        "rangeMin": 100,
-        "rangeMax": 500,
-        "increment": 80,
         "x": 120,
         "y": 20
       }
@@ -146,9 +144,6 @@
         "controlType": "selector",
         "subType": "default",
         "available": ["sin","square","triangle","saw","random"],
-        "rangeMin": 100,
-        "rangeMax": 500,
-        "increment": 100,
         "x": 60,
         "y": 100
       },
@@ -202,9 +197,6 @@
         "controlType": "selector",
         "subType": "default",
         "available": ["sin","square","triangle","saw","random"],
-        "rangeMin": 100,
-        "rangeMax": 500,
-        "increment": 100,
         "x": 60,
         "y": 200
       },
@@ -265,9 +257,6 @@
         "controlType": "selector",
         "subType": "default",
         "available": ["sin","square","triangle","saw","random"],
-        "rangeMin": 100,
-        "rangeMax": 500,
-        "increment": 100,
         "x": 30,
         "y": 30
       },
@@ -306,9 +295,6 @@
         "controlType": "selector",
         "subType": "default",
         "available": ["low-pass","high-pass","band-pass"],
-        "rangeMin": 100,
-        "rangeMax": 300,
-        "increment": 100,
         "x": 50,
         "y": 30
       },
@@ -453,9 +439,6 @@
         "controlType": "selector",
         "subType": "default",
         "available": ["free","rising","falling"],
-        "rangeMin": 100,
-        "rangeMax": 300,
-        "increment": 100,
         "x": 30,
         "y": 30
       },
@@ -1147,7 +1130,8 @@
       }
     }
   },
-  "core:clone": {
+  "core:clone":
+  {
     "width": 50,
     "height": 80,
     "properties":
@@ -1164,7 +1148,8 @@
       }
     }
   },
-  "core:selector": {
+  "core:selector":
+  {
     "width": 120,
     "height": 100,
     "properties":
@@ -1173,7 +1158,6 @@
       {
         "controlType": "graphSelector",
         "subType": "default",
-        "available": [],
         "x": 20,
         "y": 30
       },
@@ -1186,7 +1170,8 @@
       }
     }
   },
-  "core:log": {
+  "core:log":
+  {
     "width": 200,
     "height": 60,
     "properties":
@@ -1200,7 +1185,8 @@
       }
     }
   },
-  "core:sequence": {
+  "core:sequence":
+  {
     "width": 200,
     "height": 120,
     "properties":
@@ -1214,7 +1200,8 @@
       }
     }
   },
-  "core:interpolate": {
+  "core:interpolate":
+  {
     "width": 300,
     "height": 260,
     "properties":
