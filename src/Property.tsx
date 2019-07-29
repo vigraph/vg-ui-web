@@ -102,7 +102,8 @@ export default class Property extends React.Component<IProps, IState>
 
     return(
       <svg id={this.props.name.toLowerCase()+"-property"}
-        className={`property-wrapper ${this.props.disabled ? "disabled" : ""}`}
+        className={`property-wrapper ${this.property.controlType}
+          ${this.props.disabled ? "disabled" : ""}`}
         x={position.x} y={position.y}
         onMouseEnter={this.mouseEnter}
         onMouseLeave={this.mouseLeave}>
@@ -132,6 +133,7 @@ export default class Property extends React.Component<IProps, IState>
           position={{x: position.x, y: position.y}}
           startUpdate={this.startPropertyUpdate} update={this.propertyUpdate}
           endUpdate={this.endPropertyUpdate}
+          disabled={this.props.disabled}
           showGraph={this.props.showPropertyGraph}/>
     }
     else
@@ -139,7 +141,7 @@ export default class Property extends React.Component<IProps, IState>
       return <Component property={this.property}
           position={{x: position.x, y: position.y}}
           startUpdate={this.startPropertyUpdate} update={this.propertyUpdate}
-          endUpdate={this.endPropertyUpdate}/>
+          endUpdate={this.endPropertyUpdate} disabled={this.props.disabled}/>
     }
   }
 
