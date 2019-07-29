@@ -41,6 +41,7 @@ export default class Graph extends React.Component<IProps, IState>
   private idCount: number;
   private graphRef: SVGSVGElement | null;
   private parentNodePath: string | null;
+  private firstLoad: boolean;
 
   constructor(props: IProps)
   {
@@ -77,6 +78,7 @@ export default class Graph extends React.Component<IProps, IState>
     this.idCount = 0;
     this.graphRef = null;
     this.parentNodePath = null;
+    this.firstLoad = true;
   }
 
   // Load a new graph after mounting
@@ -164,6 +166,43 @@ export default class Graph extends React.Component<IProps, IState>
     );
   }
 
+  // Centre graph in display on first load
+  public componentDidUpdate()
+  {
+    if (this.firstLoad)
+    {
+      this.firstLoad = false;
+
+      const nodes = this.graph.getNodes();
+
+      let min = nodes[0].position;
+      let max = {x: nodes[0].position.x + nodes[0].size.w,
+        y: nodes[0].position.y + nodes[0].size.h};
+
+      nodes.forEach((node: Model.Node, index: number) =>
+        {
+          let nodeX = node.position.x;
+          let nodeY = node.position.y;
+          let nodeW = node.size.w;
+          let nodeH = node.size.h;
+
+          min.x = nodeX < min.x ? nodeX : min.x;
+          min.y = nodeY < min.y ? nodeY : min.y;
+          max.x = nodeX + nodeW > max.x ? nodeX + nodeW : max.x;
+          max.y = nodeY + nodeH > max.y ? nodeY + nodeH : max.y;
+        });
+
+      const centre = {x: (min.x + max.x)/2, y: (min.y + max.y)/2};
+      const screenCentreSVG = vgUtils.windowToSVGPosition(
+        {x: window.innerWidth/2, y: window.innerHeight/2}, this.graphRef);
+
+      const newView = Object.assign({}, this.state.view);
+      newView.x = -(screenCentreSVG.x - centre.x);
+      newView.y = -(screenCentreSVG.y - centre.y);
+      this.setState({view: newView});
+    }
+  }
+
   public undo = () =>
   {
     this.graph.undo();
@@ -197,7 +236,7 @@ export default class Graph extends React.Component<IProps, IState>
       }
       this.parentNodePath = newParentPath;
 
-
+      this.firstLoad = true;
       this.setState({view: viewDefault});
     }
   }
@@ -357,6 +396,7 @@ export default class Graph extends React.Component<IProps, IState>
     vgData.layoutGraph(nodes, (graph: any) =>
     {
       // Reset View
+      this.firstLoad = true;
       this.graph.loadFrom(graph);
       this.setState({view: viewDefault});
     })
@@ -410,8 +450,6 @@ export default class Graph extends React.Component<IProps, IState>
     this.graph.beginTransaction();
 
     vgData.deleteNode(node.path);
-
-    // const node = this.graph.getNode(id);
 
     // Delete node and all of its edges from the model
     const reverseEdges = node.getReverseEdges();
