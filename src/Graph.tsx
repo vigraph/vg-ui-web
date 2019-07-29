@@ -175,6 +175,11 @@ export default class Graph extends React.Component<IProps, IState>
 
       const nodes = this.graph.getNodes();
 
+      if (nodes.length === 0)
+      {
+        return;
+      }
+
       let min = {...nodes[0].position};
       let max = {x: nodes[0].position.x + nodes[0].size.w,
         y: nodes[0].position.y + nodes[0].size.h};
