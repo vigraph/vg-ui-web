@@ -143,7 +143,7 @@
       {
         "controlType": "selector",
         "subType": "default",
-        "available": ["sin","square","triangle","saw","random"],
+        "available": ["sin","square","triangle","saw","random","none"],
         "x": 60,
         "y": 100
       },
@@ -196,7 +196,7 @@
       {
         "controlType": "selector",
         "subType": "default",
-        "available": ["sin","square","triangle","saw","random"],
+        "available": ["sin","square","triangle","saw","random","none"],
         "x": 60,
         "y": 200
       },
@@ -256,7 +256,7 @@
       {
         "controlType": "selector",
         "subType": "default",
-        "available": ["sin","square","triangle","saw","random"],
+        "available": ["sin","square","triangle","saw","random","none"],
         "x": 30,
         "y": 30
       },

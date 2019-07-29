@@ -11,6 +11,7 @@ interface IProps
   update: (value: {}) => void;
   endUpdate: () => void;
   position: {x: number, y:number};
+  disabled: boolean;
 }
 
 interface IState

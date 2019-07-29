@@ -11,6 +11,7 @@ interface IProps
   endUpdate: () => void;
   position: {x: number, y: number};
   showGraph: (nodes: any[]) => void;
+  disabled: boolean;
 }
 
 interface IState
@@ -200,7 +201,7 @@ export default class GraphSelector extends React.Component<IProps, IState>
 
     // Long press - select Graph without showing
     if (this.lastMouseTime.down && date.getTime() -
-      this.lastMouseTime.down > 1000)
+      this.lastMouseTime.down > 1000 && !this.props.disabled)
     {
       this.selectGraph(graph);
     }

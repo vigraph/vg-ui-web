@@ -356,6 +356,12 @@ button
   color: #2980b9;
 }
 
+.property-wrapper.graphSelector.disabled
+{
+  pointer-events: auto;
+  opacity: 1;
+}
+
 #graph-selector-wrapper,
 #selection-display,
 #graph-selector,

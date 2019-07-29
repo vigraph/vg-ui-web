@@ -52,8 +52,7 @@ export default class Connector extends React.Component<IProps,IState>
           cx={position.x+(2*radius)}
           cy={position.y}
           r={radius} />
-        {this.props.connector.direction === "input" && this.state.hover ?
-          <text className="label connector-label input"
+        {this.state.hover ? <text className="label connector-label input"
             x={position.x + (radius*3)}
             y={position.y}>{this.props.connector.id}</text> : ""}
       </svg>
