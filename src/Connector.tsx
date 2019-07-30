@@ -41,22 +41,39 @@ export default class Connector extends React.Component<IProps,IState>
       this.props.parent.edgesFromConnector(this.props.connector).length > 0);
 
     return (
-      <svg>
+      <svg id={`connector-${this.props.connector.id}`} className={"connector"}>
         <rect className={"connector-boundary " + this.props.connector.id}
           x={position.x} y={position.y-(2*radius)}
           width={radius*4} height={radius*4} onMouseEnter={this.mouseEnter}
           onMouseLeave={this.mouseLeave}
           onMouseDown={this.mouseDown} />
-        <circle className={`connector ${this.props.connector.id}` +
+        <circle className={`connector-icon ${this.props.connector.id}` +
           ` ${this.props.connector.direction} ${disabled ? "disabled":""}`}
           cx={position.x+(2*radius)}
           cy={position.y}
           r={radius} />
-        {this.state.hover ? <text className="label connector-label input"
-            x={position.x + (radius*3)}
-            y={position.y}>{this.props.connector.id}</text> : ""}
+        {this.state.hover ? this.createLabels() : ""}
       </svg>
     );
+  }
+
+  private createLabels = () =>
+  {
+    const position = this.props.connector.position;
+    const radius = this.props.radius;
+
+    if (this.props.connector.direction === "input")
+    {
+      return <text className="label connector-label input"
+                x={position.x}
+                y={position.y}>{this.props.connector.id}</text>
+    }
+    else
+    {
+      return <text className="label connector-label output"
+                x={position.x + (radius*3)}
+                y={position.y}>{this.props.connector.id}</text>
+    }
   }
 
   private mouseDown = (e: React.MouseEvent<SVGRectElement>) =>

@@ -74,11 +74,12 @@ export default class Node extends React.Component<IProps, IState>
     const reverseEdges = this.node.getReverseEdges();
 
     return (
-      <svg x={this.state.x} y={this.state.y}
+      <svg id={`node-${this.node.id}`} className={"node"}
+        x={this.state.x} y={this.state.y}
         onMouseEnter={this.handleMouseEnter}
         onMouseLeave={this.handleMouseLeave}>
         <rect x={padding} width={size.w} height={size.h}
-          className={`node ${this.state.dragging ? "dragging" : ""}`}
+          className={`node-border ${this.state.dragging ? "dragging" : ""}`}
           onMouseDown={this.handleMouseDown}
           onContextMenu={this.handleContextMenu}
         />

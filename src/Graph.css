@@ -22,6 +22,11 @@ button
 
 .node
 {
+  overflow: visible;
+}
+
+.node-border
+{
   fill: #111;
   fill-opacity: 0.7;
   stroke: #ccc;
@@ -112,6 +117,11 @@ button
 
 .connector
 {
+  overflow: visible;
+}
+
+.connector-icon
+{
   fill: white;
   stroke: none;
   pointer-events: none;
@@ -122,17 +132,17 @@ button
   fill: transparent;
 }
 
-.connector.input
+.connector-icon.input
 {
   fill: #a44;
 }
 
-.connector.output
+.connector-icon.output
 {
   fill: #44c;
 }
 
-.connector.disabled
+.connector-icon.disabled
 {
   opacity: 0.6;
 }
@@ -140,6 +150,11 @@ button
 .connector-label
 {
   font-size: x-small;
+}
+
+.connector-label.input
+{
+  text-anchor: end;
 }
 
 .property-wrapper
