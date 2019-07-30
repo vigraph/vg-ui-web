@@ -23,8 +23,6 @@ interface IProps
 
 interface IState
 {
-  propertiesDisplay: {[key:string]: boolean
-    labels: boolean; controls: boolean},
   tempNodes: {dummy: Model.Node, real: Model.Node} | null,
   tempConnectors:{ dummy: Model.Connector,  real: Model.Connector} | null,
   targetConnector: { connector: Model.Connector, parent: Model.Node } | null,
@@ -65,7 +63,6 @@ export default class Graph extends React.Component<IProps, IState>
 
     this.state =
     {
-      propertiesDisplay: {labels: true, controls: true},
       tempNodes: null,
       tempConnectors: null,
       targetConnector: null,
@@ -129,7 +126,6 @@ export default class Graph extends React.Component<IProps, IState>
                   update={this.movementUpdate}
                   endUpdate={this.endUpdate}
                   padding={csize*2}
-                  propertiesDisplay={this.state.propertiesDisplay}
                   graphRef={this.graphRef}
                   removeNode={this.removeNode}
                   showNodeGraph={this.showNodeGraph}>
@@ -218,13 +214,6 @@ export default class Graph extends React.Component<IProps, IState>
   {
     this.graph.redo();
     this.forceUpdate();
-  }
-
-  public toggleDisplay = (prop: string) =>
-  {
-    const display = this.state.propertiesDisplay;
-    display[prop] = !display[prop];
-    this.setState({propertiesDisplay: display});
   }
 
   public goBack = () =>

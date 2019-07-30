@@ -24,7 +24,6 @@ interface IProps
   property: Model.Property;
   parent: Model.Node;
   name: string;
-  display: {labels: boolean, controls: boolean};
   startUpdate: () => void;
   update: () => void;
   endUpdate: () => void;
@@ -108,11 +107,11 @@ export default class Property extends React.Component<IProps, IState>
         onMouseEnter={this.mouseEnter}
         onMouseLeave={this.mouseLeave}>
 
-        {this.props.display.controls && this.createComponent()}
+        {this.createComponent()}
 
-        {this.props.display.labels && (this.state.hover || this.state.updating) ?
-          <text className="label property-label" x={0}
-          y={0}>{this.props.name + ": " + displayValue}</text> : ""}
+        {(this.state.hover || this.state.updating) ?
+          <text className="label property-label" x={0} y={0}>
+          {this.props.name + ": " + displayValue}</text> : ""}
       </svg>
     );
   }

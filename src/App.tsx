@@ -102,8 +102,6 @@ export default class App extends React.Component
         <div id="buttons">
           <button onClick={this.handleUndo}>Undo</button>
           <button onClick={this.handleRedo}>Redo</button>
-          <button onClick={this.handleToggleControls}>Toggle Controls</button>
-          <button onClick={this.handleToggleLabels}>Toggle Labels</button>
           <button onClick={this.setFullScreen}>Full Screen</button>
           <button onClick={this.setWindowed}>Windowed</button>
           <button onClick={this.handleBack}>Back</button>
@@ -127,22 +125,6 @@ export default class App extends React.Component
     if (this.graph.current)
     {
       this.graph.current.redo();
-    }
-  }
-
-  private handleToggleControls = () =>
-  {
-    if (this.graph.current)
-    {
-      this.graph.current.toggleDisplay("controls");
-    }
-  }
-
-  private handleToggleLabels = () =>
-  {
-    if (this.graph.current)
-    {
-      this.graph.current.toggleDisplay("labels");
     }
   }
 
