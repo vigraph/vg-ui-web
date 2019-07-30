@@ -15,7 +15,6 @@ interface IProps
   update: () => void;
   endUpdate: () => void;
   padding: number;
-  propertiesDisplay: {labels: boolean; controls: boolean};
   graphRef: SVGSVGElement | null;
   removeNode: (node: Model.Node) => void;
   showNodeGraph: (parentNode: Model.Node, nodes: any[]) => void;
@@ -99,7 +98,6 @@ export default class Node extends React.Component<IProps, IState>
             return <Property key={j} property={property}
               name={property.id}
               parent={this.node}
-              display={this.props.propertiesDisplay}
               startUpdate={this.props.startUpdate}
               update={this.props.update}
               endUpdate={this.props.endUpdate}
