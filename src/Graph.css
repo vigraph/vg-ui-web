@@ -94,7 +94,7 @@
   overflow: visible;
 }
 
-.node.dragging
+.node .dragging
 {
   fill: #444;
 }
@@ -111,6 +111,7 @@
 
 .node-label
 {
+  pointer-events: none;
   font-weight: bold;
   text-anchor: middle;
   fill: #ccc;
