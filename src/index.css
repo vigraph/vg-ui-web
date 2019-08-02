@@ -4,9 +4,3 @@ body {
   font-family: sans-serif;
   overflow: hidden;
 }
-
-#root
-{
-  width: 5000px;
-  height: 5000px;
-}

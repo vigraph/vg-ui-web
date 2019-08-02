@@ -19,6 +19,7 @@ const viewDefault: {x: number, y: number, w: number, h: number} =
 interface IProps
 {
   from?: any;
+  notifyGraphRoot: (graphRoot: boolean) => void;
 }
 
 interface IState
@@ -232,6 +233,8 @@ export default class Graph extends React.Component<IProps, IState>
 
       this.firstLoad = true;
       this.setState({view: viewDefault});
+
+      this.props.notifyGraphRoot(this.graphIndex < 1);
     }
   }
 
@@ -723,6 +726,8 @@ export default class Graph extends React.Component<IProps, IState>
     {
       this.graphs = this.graphs.slice(0, this.graphIndex);
     }
+
+    this.props.notifyGraphRoot(this.graphIndex < 1);
 
     this.graphs.push(graph);
   }
