@@ -12,43 +12,6 @@
   overflow: visible;
 }
 
-#buttons
-{
-  height: 32px;
-  width: 100%;
-}
-
-#buttons .app-button
-{
-  margin: 2px;
-}
-
-#buttons .app-button.history
-{
-  width: 28px;
-  height: 27px;
-  float: left;
-}
-
-#buttons .app-button.window
-{
-  width: 27px;
-  height: 27px;
-  float: left;
-}
-
-#buttons .app-button.back
-{
-  width: 20px;
-  height: 20px;
-  float: right;
-}
-
-#buttons .icon
-{
-  fill: white;
-}
-
 .wrapper
 {
   width: 5000px;
