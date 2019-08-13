@@ -199,31 +199,29 @@ export default class Property extends React.Component<IProps, IState>
       });
   }
 
-  // Calculate the value to display with the same accuracy as the given
-  // increment.
-  private formatValueForDisplay = (value: number) =>
-  {
-    const increment = this.property.increment;
-    const split = increment.toString().split(".");
-    const decimalPlaces = split[1] ? split[1].length : 0;
-
-    const roundedDisplayValue = value.toFixed(decimalPlaces);
-
-    return parseFloat(roundedDisplayValue);
-  }
-
   // Snap value to closest increment
+  // Return value is rounded to the same accuracy as the increment
   private snapValueToIncrement = (value: number) =>
   {
     const increment = this.property.increment;
-    const mod = value % increment;
-    const diff = value - mod;
+
+    const split = increment.toString().split(".");
+    const decimalPlaces = split[1] ? split[1].length : 0;
+    const multiplier = (Math.pow(10, decimalPlaces));
+
+    const iValue = Math.round(Math.abs(value) * multiplier);
+    const iIncrement = Math.round(increment * multiplier);
+
+    const mod = iValue % iIncrement;
+    const diff = iValue - mod;
 
     // Snap to the closest increment
-    const snap = (mod > increment/2) ? increment : 0;
-    const newValue = diff + snap;
+    const snap = (mod > iIncrement/2) ? iIncrement : 0;
+    const nValue = diff + snap;
 
-    return this.formatValueForDisplay(newValue);
+    const newValue = (nValue / multiplier) * Math.sign(value);
+
+    return newValue;
   }
 
   private mouseEnter = (event: React.MouseEvent<SVGSVGElement>) =>
