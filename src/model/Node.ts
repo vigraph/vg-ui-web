@@ -62,22 +62,22 @@ export class Node
     this.graph.setNodeProp(this.id, "size", size);
   }
 
-  get elements(): any[]
+  get subGraph(): boolean
   {
-    return this.graph.getNodeProp(this.id, "elements");
+    return this.graph.getNodeProp(this.id, "subGraph");
   }
 
-  set elements(elements: any[])
+  set subGraph(subGraph: boolean)
   {
-    this.graph.setNodeProp(this.id, "elements", elements);
+    this.graph.setNodeProp(this.id, "subGraph", subGraph);
   }
 
-  get cloneGraph(): any[]
+  get cloneGraph(): boolean
   {
     return this.graph.getNodeProp(this.id, "cloneGraph");
   }
 
-  set cloneGraph(cloneGraph: any[])
+  set cloneGraph(cloneGraph: boolean)
   {
     this.graph.setNodeProp(this.id, "cloneGraph", cloneGraph);
   }

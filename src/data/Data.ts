@@ -77,6 +77,41 @@ class Data
       });
   }
 
+  // Update node (nodeID) with given (non-property) data
+  public updateNode(nodeID: string, data: any, success?: () => void)
+  {
+    const url = restURL + "/graph/" + nodeID;
+
+    fetch(url,
+    {
+      method: "POST",
+      body: JSON.stringify(data)
+    })
+    .then(response =>
+      {
+        if (response.status === 200)
+        {
+          // Success
+          // vgUtils.log("Update Node Data Success");
+          if (success)
+          {
+            success();
+          }
+        }
+        else
+        {
+          // Error
+          vgUtils.log("Update Node Data Failure with response status: " +
+            response.status)
+        }
+      })
+    .catch(error =>
+      {
+        // Error
+        vgUtils.log("Update Node Data Failure with error: " + error);
+      });
+  }
+
   // Update layout data. If no value given then layout data for given id is
   // removed. If no id given then this.layoutData is sent with no updates.
   // Note: ID is node path
@@ -168,6 +203,161 @@ class Data
       });
   }
 
+  // Delete given path (e.g. Graph in Graph selector)
+  // Calls success on DELETE success
+  public deletePath(path: string, success?: ()=>void)
+  {
+    const url = restURL + "/graph/" + path;
+
+    fetch(url,
+    {
+      method: "DELETE"
+    })
+    .then(response =>
+      {
+        if (response.status === 200)
+        {
+          vgUtils.log("Delete Path Success");
+
+
+          // Success
+          if (success)
+          {
+            success();
+          }
+        }
+        else
+        {
+          // Error
+          vgUtils.log("Delete Path Failure with response" +
+            " status: " + response.status);
+        }
+      })
+    .catch(error =>
+      {
+        // Error
+        vgUtils.log("Delete Path Failure with error: " + error);
+      });
+  }
+
+  // Add an empty graph with given ID (used by Graph Selector)
+  // Calls success function on PUT success with processed empty graph item
+  public addEmptyGraph(id: string, path: string,
+    success?: (graph: vgTypes.IProcessedGraphItem)=>void)
+  {
+    const url = restURL + "/graph/" + path + "/graph/" + id;
+
+    const data: [] = [];
+
+    fetch(url,
+    {
+      method: "PUT",
+      body: JSON.stringify(data)
+    })
+    .then(response =>
+      {
+        if (response.status === 200)
+        {
+          vgUtils.log("Add Graph Success");
+
+          // Success
+          if (success)
+          {
+            const item = this.processSingleGraphItem({id, elements: []},
+              path+'/graph');
+            success(item);
+          }
+        }
+        else
+        {
+          // Error
+          vgUtils.log("Add Graph Failure with response status: " +
+            response.status);
+        }
+      })
+    .catch(error =>
+      {
+        // Error
+        vgUtils.log("Add Graph Failure with error: " + error);
+      });
+  }
+
+  public getRawSelectorGraphs(path: string,
+    success?: (graphs: vgTypes.IRawGraphItem[])=>void)
+  {
+    this.getRawGraphItem(path, (result: vgTypes.IRawGraphItem) =>
+    {
+      if (success)
+      {
+        success(result.graphs?result.graphs:[]);
+      }
+    })
+  }
+
+  // Get node and calls success with resulting (processed) node allowing it to
+  // be added to the Graph model
+  public getNode(nodeID: string, parentPath?: string,
+    success?: (result: any) => void)
+  {
+    vgUtils.log("Get Node: " + nodeID);
+
+    const path = (typeof parentPath !== "undefined" ? parentPath + '/' : '') +
+      nodeID;
+
+    this.getRawGraphItem(path, (result) =>
+    {
+      vgUtils.log("Process raw node");
+      if (this.processedMetadata)
+      {
+        const item = this.processSingleGraphItem(result, parentPath);
+
+        const layout = {h: 0, w: 0};
+
+        // Node properties layout from config
+        if (this.propertiesConfig[item.type])
+        {
+          layout.h = this.propertiesConfig[item.type].height;
+          layout.w = this.propertiesConfig[item.type].width;
+        }
+
+        if (success) success({...item, ...layout});
+      }
+      else
+      {
+        // Error - trying to create node before Graph set up
+        vgUtils.log("Process Get Node Failure: Trying to process node " +
+          "before full Graph set up");
+      }
+    })
+  }
+
+  private async getRawGraphItem(path: string,
+    success?: (result: vgTypes.IRawGraphItem)=>void)
+  {
+    try
+    {
+      const res: rm.IRestResponse<vgTypes.IRawGraphItem> =
+        await this.rest.get<vgTypes.IRawGraphItem>('/graph/' + path);
+
+      if (res.statusCode === 200 && res.result && success)
+      {
+        vgUtils.log("Get Raw Graph Item By Path Success");
+        success(res.result);
+      }
+      else
+      {
+        // Error with status code
+        vgUtils.log("Get Raw Graph Item Failure with status code: " +
+          res.statusCode);
+      }
+    }
+    catch (error)
+    {
+      // Error
+      vgUtils.log("Get Raw Graph Item Failure with error: " + error);
+    }
+  }
+
   // Create/add node with ID nodeID and type nodeType to Graph
   // Calls success function on PUT success
   public createNode(nodeID: string, nodeType: string, parentPath?: string,
@@ -247,69 +437,14 @@ class Data
       });
   }
 
-  // Get node and calls success with resulting (processed) node allowing it to
-  // be added to the Graph model
-  public getNode(nodeID: string, parentPath?: string,
-    success?: (result: any) => void)
-  {
-    this.getNodeByPath(nodeID, parentPath, success);
-  }
-
-  private async getNodeByPath(nodeID: string, parentPath?: string,
-    success?: (result: vgTypes.IProcessedGraphItem)=>void)
-  {
-    try
-    {
-      const res: rm.IRestResponse<vgTypes.IRawGraphItem> =
-        await this.rest.get<vgTypes.IRawGraphItem>('/graph/' +
-          (typeof parentPath !== "undefined" ? parentPath + '/' : '') + nodeID);
-
-      if (res.statusCode === 200 && res.result && success)
-      {
-        vgUtils.log("Get Node By Path Success");
-        if (this.processedMetadata)
-        {
-          const item = this.processSingleGraphItem(res.result, parentPath);
-
-          const layout = {h: 0, w: 0};
-
-          // Node properties layout from config
-          if (this.propertiesConfig[item.type])
-          {
-            layout.h = this.propertiesConfig[item.type].height;
-            layout.w = this.propertiesConfig[item.type].width;
-          }
-
-          success({...item, ...layout});
-        }
-        else
-        {
-          // Error - trying to create node before Graph set up
-          vgUtils.log("Process Get Node Failure: Trying to process node " +
-            "before full Graph set up");
-        }
-      }
-      else
-      {
-        // Error with status code
-        vgUtils.log("Get Node By Path Failure with status code: " +
-          res.statusCode);
-      }
-    }
-    catch (error)
-    {
-      // Error
-      vgUtils.log("Get Node By Path Failure with error: " + error);
-    }
-  }
-
   //============================================================================
   // Generate Graph from Graph data, Metadata and Layout data
   //============================================================================
 
   // Generate Graph by getting metadata, layout data and graph data and then
   // processing and combining
-  public generateGraph(success: (json: any) => void)
+  public generateGraph(success: (json: any) => void, source?:
+    {sourcePath: string, parentPath?: string})
   {
     this.generateSuccess = success;
 
@@ -317,7 +452,14 @@ class Data
     {
       if (Object.keys(this.layoutData).length > 0)
       {
-        this.getGraphData();
+        if (source)
+        {
+          this.getGraphDataFromSource(source);
+        }
+        else
+        {
+          this.getGraphData();
+        }
       }
       else
       {
@@ -701,14 +843,44 @@ class Data
     }
   }
 
+  // Get data for entire graph and create graph model
+  private async getGraphDataFromSource(source: {sourcePath: string,
+    parentPath?: string})
+  {
+    try
+    {
+      const res: rm.IRestResponse<vgTypes.IRawGraphItem[]> =
+        await this.rest.get<vgTypes.IRawGraphItem[]>('/graph/' +
+          source.sourcePath);
+
+      if (res.statusCode === 200 && res.result)
+      {
+        vgUtils.log("Get Graph Data From Source Success");
+        this.createGraphModel(res.result, source.parentPath);
+      }
+      else
+      {
+        // Error with status code
+        vgUtils.log("Get Graph Data From Source Failure with status code: " +
+          res.statusCode);
+      }
+    }
+    catch (error)
+    {
+      // Error
+      vgUtils.log("Get Graph Data From Source Failure with error: " + error);
+    }
+  }
+
   // Create Graph model from processed raw graph data
-  private createGraphModel(rawGraphData: vgTypes.IRawGraphItem[])
+  private createGraphModel(rawGraphData: vgTypes.IRawGraphItem[],
+    parentPath?: string)
   {
     const nodes: vgTypes.IProcessedGraphItem[] = [];
 
     rawGraphData.forEach((value: vgTypes.IRawGraphItem, index: number) =>
     {
-      nodes.push(this.processSingleGraphItem(value));
+      nodes.push(this.processSingleGraphItem(value, parentPath));
     })
 
     this.layoutGraph(nodes, (graph: any) =>
@@ -726,37 +898,17 @@ class Data
   {
     const metadata = this.processedMetadata;
 
-    // Subgraph
-    const gElements: Array<vgTypes.IProcessedGraphItem> = [];
-    if (item.elements)
-    {
-      item.elements.forEach((element: vgTypes.IRawGraphItem, index: number) =>
-      {
-        gElements.push(this.processSingleGraphItem(element,
-          parentPath ? parentPath + "/" + item.id : item.id));
-      })
-    }
-
-    // Clone
-    const gCloneGraph: Array<vgTypes.IProcessedGraphItem> = [];
-    if (item.graph)
-    {
-      item.graph.forEach((cloneGraph: vgTypes.IRawGraphItem, index: number) =>
-      {
-        gCloneGraph.push(this.processSingleGraphItem(cloneGraph,
-          parentPath ? parentPath + "/" + item.id : item.id));
-      })
-    }
-
     // Graph Selector
-    const gSelectorGraphs: Array<vgTypes.IProcessedGraphItem> = [];
+    const gSelectorGraphs: Array<{id: string, path: string}> = [];
     if (item.graphs)
     {
       item.graphs.forEach((selectorGraph: vgTypes.IRawGraphItem,
         index: number) =>
       {
-        gSelectorGraphs.push(this.processSingleGraphItem(selectorGraph,
-          parentPath ? parentPath + "/" + item.id : item.id));
+        gSelectorGraphs.push({id: selectorGraph.id,
+          path: parentPath ?
+            (parentPath + "/" + item.id + "/graph/" + selectorGraph.id) :
+            (item.id + "/graph/" + selectorGraph.id)});
       })
     }
 
@@ -804,7 +956,7 @@ class Data
       }
 
       // Special case - store selector elements' 'graphs' in the available
-      // section of the value property
+      // section of the value property (id and path)
       if (gSelectorGraphs.length > 0)
       {
         const valueIndex = gProps.findIndex(x => x.id === "value");
@@ -828,8 +980,8 @@ class Data
         metadata[itemSection][itemType].outputs : [],
       edges: gEdges,
       properties: gProps,
-      elements: item.elements ? gElements : undefined,
-      cloneGraph: item.graph ? gCloneGraph : undefined,
+      subGraph: !!item.elements,
+      cloneGraph: !!item.graph,
       selectorGraphs: item.graphs ? gSelectorGraphs : undefined
     };
 

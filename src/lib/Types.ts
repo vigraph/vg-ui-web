@@ -45,9 +45,9 @@ export interface IProcessedGraphItem
   properties?: Array<{ id: string, propType: string, controlType: string,
     subType: string, value: any, rangeMin?: number, rangeMax?: number,
     increment?: number, available?: any[], x: number, y:number}>,
-  elements?: Array<IProcessedGraphItem>, // Subgraphs
-  cloneGraph?: Array<IProcessedGraphItem>, // Clone
-  selectorGraphs?: Array<IProcessedGraphItem>  // Graph Selector
+  subGraph?: boolean, // Subgraphs
+  cloneGraph?: boolean, // Clone
+  selectorGraphs?: Array<{id: string, path: string}>  // Graph Selector
 }
 
 export interface IRawMetadataItem
@@ -145,7 +145,7 @@ export interface IGraphSelectorSettings
   padding: number,
   height: number,
   width: number,
-  columns: number
+  rows: number
 }
 
 export interface ITextDisplaySettings

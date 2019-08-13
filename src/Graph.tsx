@@ -39,7 +39,7 @@ export default class Graph extends React.Component<IProps, IState>
   private subMenu: string | null;
   private idCount: number;
   private graphRef: SVGSVGElement | null;
-  private parentNodePath: string | null;
+  private currentGraphPath: Array<{path: string, pathSpecific?: string}>;
   private firstLoad: boolean;
 
   constructor(props: IProps)
@@ -75,8 +75,8 @@ export default class Graph extends React.Component<IProps, IState>
     this.subMenu = null;
     this.idCount = 0;
     this.graphRef = null;
-    this.parentNodePath = null;
     this.firstLoad = true;
+    this.currentGraphPath = [];
   }
 
   // Load a new graph after mounting
@@ -223,13 +223,7 @@ export default class Graph extends React.Component<IProps, IState>
     {
       this.graphIndex--;
 
-      let newParentPath = null;
-      if (this.parentNodePath && this.parentNodePath.indexOf("/") > -1)
-      {
-        newParentPath = this.parentNodePath.slice(0,
-          this.parentNodePath.lastIndexOf("/"));
-      }
-      this.parentNodePath = newParentPath;
+      this.currentGraphPath.pop();
 
       this.firstLoad = true;
       this.setState({view: viewDefault});
@@ -386,17 +380,24 @@ export default class Graph extends React.Component<IProps, IState>
     window.removeEventListener('mouseup', this.handleGraphDragRelease);
   }
 
-  private showNodeGraph = (parentNode: Model.Node, nodes: any[]) =>
+  private showNodeGraph = (path: string, pathSpecific?: string,
+    sourceSpecific?: string) =>
   {
-    this.parentNodePath = parentNode.path;
+    this.currentGraphPath.push({path, pathSpecific});
+
     this.graph = new Model.Graph();
-    vgData.layoutGraph(nodes, (graph: any) =>
-    {
-      // Reset View
-      this.firstLoad = true;
-      this.graph.loadFrom(graph);
-      this.setState({view: viewDefault});
-    })
+
+    const sourcePath = path + (sourceSpecific ? sourceSpecific : "");
+    const parentPath = path + (pathSpecific ? pathSpecific : "");
+
+    vgData.generateGraph((json:any) =>
+      {
+        // Reset View
+        this.firstLoad = true;
+        this.graph.loadFrom(json);
+        this.setState({view: viewDefault});
+      },
+      {sourcePath, parentPath});
   }
 
   private createNewNode = (type: string) =>
@@ -418,7 +419,21 @@ export default class Graph extends React.Component<IProps, IState>
     }
 
     const id = type+"-"+this.idCount;
-    const path = this.parentNodePath ? this.parentNodePath : undefined;
+
+    const currGraphPathLen = this.currentGraphPath.length;
+
+    let path: string | undefined;
+
+    if (currGraphPathLen === 0)
+    {
+      path = undefined;
+    }
+    else
+    {
+      const currentPath = this.currentGraphPath[currGraphPathLen-1];
+      path = currentPath.pathSpecific ? (currentPath.path +
+        currentPath.pathSpecific) : currentPath.path;
+    }
 
     // Create new node, get with properties etc, add layout data and add to
     // graph model

@@ -17,7 +17,8 @@ interface IProps
   padding: number;
   graphRef: SVGSVGElement | null;
   removeNode: (node: Model.Node) => void;
-  showNodeGraph: (parentNode: Model.Node, nodes: any[]) => void;
+  showNodeGraph: (path: string, pathSpecific?: string,
+    sourceSpecific?: string) => void;
 }
 
 interface IState
@@ -101,7 +102,7 @@ export default class Node extends React.Component<IProps, IState>
               startUpdate={this.props.startUpdate}
               update={this.props.update}
               endUpdate={this.props.endUpdate}
-              showPropertyGraph={this.showGraphFromProperty}
+              showNodeGraph={this.props.showNodeGraph}
               disabled={!!reverseEdges.find(x => x.inputId === property.id)}/>
           })}
         />
@@ -153,13 +154,18 @@ export default class Node extends React.Component<IProps, IState>
 
     const date = new Date();
 
-    if (this.mouseDown.t && date.getTime() - this.mouseDown.t < 250 &&
-      (this.node.elements || this.node.cloneGraph))
+    if (this.mouseDown.t && date.getTime() - this.mouseDown.t < 250)
     {
-      this.props.showNodeGraph(this.node, this.node.elements ?
-        this.node.elements : this.node.cloneGraph);
       window.removeEventListener('mouseup', this.handleMouseUp);
       window.removeEventListener('mousemove', this.handleMouseMove);
+      if (this.node.subGraph)
+      {
+        this.props.showNodeGraph(this.node.path, undefined, "/elements");
+      }
+      else if (this.node.cloneGraph)
+      {
+        this.props.showNodeGraph(this.node.path, "/graph", "/graph");
+      }
       return;
     }
 
@@ -226,12 +232,6 @@ export default class Node extends React.Component<IProps, IState>
   {
     e.stopPropagation();
     this.props.removeNode(this.node);
-  }
-
-  // Allow a property to provide and show a graph of given nodes
-  private showGraphFromProperty = (nodes: any[]) =>
-  {
-    this.props.showNodeGraph(this.node, nodes);
   }
 }
 

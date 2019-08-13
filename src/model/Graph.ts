@@ -98,8 +98,8 @@ export class Graph
     node.position = { x: n.x || 0, y: n.y || 0 };
     node.size = { w: n.w || 50, h: n.h || 50 };
     node.path = n.path || n.id;
-    node.elements = n.elements || null;
-    node.cloneGraph = n.cloneGraph || null;
+    node.subGraph = n.subGraph || false;
+    node.cloneGraph = n.cloneGraph || false;
     node.selectorGraphs = n.selectorGraphs || null;
     if (n.inputs)
     {

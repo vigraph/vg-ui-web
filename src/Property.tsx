@@ -27,7 +27,8 @@ interface IProps
   startUpdate: () => void;
   update: () => void;
   endUpdate: () => void;
-  showPropertyGraph: (nodes: any[]) => void;
+  showNodeGraph: (path: string, pathSpecific?: string,
+    sourceSpecific?: string) => void;
   disabled: boolean;
 }
 
@@ -133,7 +134,9 @@ export default class Property extends React.Component<IProps, IState>
           startUpdate={this.startPropertyUpdate} update={this.propertyUpdate}
           endUpdate={this.endPropertyUpdate}
           disabled={this.props.disabled}
-          showGraph={this.props.showPropertyGraph}/>
+          showGraph={this.props.showNodeGraph}
+          updateGraphs={this.nonPropertyUpdate}
+          parentPath={this.props.parent.path}/>
     }
     else
     {
@@ -176,6 +179,19 @@ export default class Property extends React.Component<IProps, IState>
       {
         this.property.value = newValue;
 
+        if (this.props.update)
+        {
+          this.props.update();
+        }
+      });
+  }
+
+  // Update a non-property value in parent node
+  private nonPropertyUpdate = (data: any) =>
+  {
+    vgData.updateNode(this.props.parent.path, data,
+      () =>
+      {
         if (this.props.update)
         {
           this.props.update();

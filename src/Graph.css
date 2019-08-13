@@ -403,9 +403,25 @@
   fill: #00ff00;
 }
 
-#graph-selector .mousedown
+#graph-selector .choice
 {
   fill: #444;
+}
+
+#graph-selector-add
+{
+  fill: green;
+}
+
+#graph-selector-delete
+{
+  fill: red;
+}
+
+#graph-selector-up,
+#graph-selector-down
+{
+  fill: blue;
 }
 
 #message-property .property-label

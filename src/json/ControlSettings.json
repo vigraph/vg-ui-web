@@ -144,9 +144,9 @@
   "graphSelector": {
     "default":
     {
-      "height": 52,
-      "width": 52,
-      "columns": 3,
+      "height": 20,
+      "width": 62,
+      "rows": 6,
       "padding": 5
     }
   },

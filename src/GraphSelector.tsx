@@ -3,14 +3,18 @@ import * as Model from './model';
 
 import * as vgTypes from './lib/Types';
 
+import { vgData } from './data/Data';
+
 interface IProps
 {
   property: Model.Property;
   startUpdate: () => void;
-  update: (value: number) => void;
+  update: (value: any) => void;
+  updateGraphs: (value: any) => void;
   endUpdate: () => void;
   position: {x: number, y: number};
-  showGraph: (nodes: any[]) => void;
+  showGraph: (id: string) => void;
+  parentPath: string;
   disabled: boolean;
 }
 
@@ -20,8 +24,8 @@ interface IState
   // property.available
   currentValue: number;
   selecting: boolean;
-  currentMouseDown: number | null;
   showSelector: boolean;
+  currentChoice: number;
 }
 
 export default class GraphSelector extends React.Component<IProps, IState>
@@ -60,7 +64,7 @@ export default class GraphSelector extends React.Component<IProps, IState>
       currentValue: this.property.value,
       selecting: false,
       showSelector: false,
-      currentMouseDown: null
+      currentChoice: -1
     };
   }
 
@@ -68,15 +72,15 @@ export default class GraphSelector extends React.Component<IProps, IState>
   {
      const settings = this.settings;
      const available = this.props.property.available;
-     let currentMouseDown;
+     let currentDisplay;
 
      if (this.state.currentValue < 0)
      {
-       currentMouseDown = "none";
+       currentDisplay = "none";
      }
      else
      {
-       currentMouseDown = available[this.state.currentValue].id;
+       currentDisplay = available[this.state.currentValue].id;
      }
 
     return(
@@ -91,8 +95,8 @@ export default class GraphSelector extends React.Component<IProps, IState>
               height={settings.height}/>
             <text className="selection-display-text label"
               x={settings.width / 2}
-              y={settings.height / 2}>
-              {currentMouseDown}
+              y={(settings.height / 2) + 4}>
+              {currentDisplay}
             </text>
           </svg>
 
@@ -107,47 +111,95 @@ export default class GraphSelector extends React.Component<IProps, IState>
   {
     e.stopPropagation();
     const show = !this.state.showSelector;
+
+    if (!show)
+    {
+      this.setState({currentChoice: -1});
+    }
+
     this.setState({showSelector: show});
   }
 
-  // Layout graph selections in a grid starting top left and moving right,
-  // starting a new row when 'settings.columns' number of items created
+  // Layout graph selections in a grid starting top left and moving down,
+  // starting a new column when 'settings.rows' number of items created
   private createSelector = () =>
   {
     const numAvailable = this.property.available.length;
     const settings = this.settings;
-    let currentRow = 0;
-    let currentCol = -1;
+    let currentColumn = 0;
+    let currentRow = -1;
+
+    const calcBorderW = (5*2) + (Math.ceil(numAvailable / settings.rows) *
+      settings.width) + ((Math.ceil(numAvailable / settings.rows) - 1) *
+      settings.padding);
+    const nRows = numAvailable <= settings.rows ? numAvailable : settings.rows;
+    const calcBorderH = (5*2) + 20 + (nRows * settings.height) +
+      (settings.padding * (nRows - 1));
+
+    const borderWidth = numAvailable === 0 || calcBorderW < 90 ?
+      90 : calcBorderW;
+    const borderHeight = numAvailable === 0 ? 24 : calcBorderH;
 
     return <svg id="graph-selector" x={5} y={settings.height + 10}>
 
       <rect className="selector-border"
         x={0} y={0}
-        width={(5*2) + (settings.columns * settings.width) +
-          (settings.padding * (settings.columns -1))}
-        height={(5*2) + (Math.ceil(numAvailable /
-          settings.columns) * settings.height) +
-          ((Math.ceil(numAvailable / settings.columns)
-          - 1) * settings.padding)}/>
+        width={borderWidth}
+        height={borderHeight}/>
+
+      <svg id="graph-selector-icons">
+
+        <svg id="graph-selector-add" className="graph-selector-icon"
+          x={2} y={2} width={20} height={20}
+          onMouseDown={this.handleAdd}>
+          <rect className="add-icon horz" x={0} y={8} width={20} height={4}/>
+          <rect className="add-icon vert" x={8} y={0} width={4} height={20}/>
+        </svg>
+
+        <svg id="graph-selector-delete" className="graph-selector-icon"
+          x={24} y={2} width={20} height={20}
+          onMouseDown={this.handleDelete}>
+          <rect className="delete-icon horz" x={0} y={8} width={20} height={4}
+            transform="rotate(45 10 10)"/>
+          <rect className="delete-icon vert" x={8} y={0} width={4} height={20}
+            transform="rotate(45 10 10)"/>
+        </svg>
+
+        <svg id="graph-selector-up" className="graph-selector-icon"
+          x={46} y={2} width={20} height={20}
+          onMouseDown={this.handleUp}>
+          <rect className="up-icon vert" x={8} y={5} width={4} height={15}/>
+          <path className="up-icon arrow" d={`M 0,10 10,0 20,10 z`}/>
+        </svg>
+
+        <svg id="graph-selector-down" className="graph-selector-icon"
+          x={68} y={2} width={20} height={20}
+          onMouseDown={this.handleDown}>
+          <rect className="down-icon vert" x={8} y={0} width={4} height={15}/>
+          <path className="down-icon arrow" d={`M 0,10 10,20 20,10 z`}/>
+        </svg>
+
+      </svg>
 
       {
-        this.props.property.available.map((value: any, index: number) =>
+        this.props.property.available.map((value: {id: string, path: string},
+          index: number) =>
         {
-          if (currentCol + 1 > settings.columns - 1)
+          if (currentRow + 1 > settings.rows - 1)
           {
-            currentCol = 0;
-            currentRow++;
+            currentRow = 0;
+            currentColumn++;
           }
           else
           {
-            currentCol++;
+            currentRow++;
           }
 
           let itemClass = "";
 
-          if (this.state.currentMouseDown === index)
+          if (this.state.currentChoice === index)
           {
-            itemClass = "mousedown";
+            itemClass = "choice";
           }
           else if (this.state.currentValue === index)
           {
@@ -157,8 +209,8 @@ export default class GraphSelector extends React.Component<IProps, IState>
           return <svg id={`${value.id}`}
             className={"graph-selector-item " + itemClass}
             key={index}
-            x={5 + (currentCol * (settings.width + settings.padding))}
-            y={5 + (currentRow * (settings.height + settings.padding))}
+            x={5 + (currentColumn * (settings.width + settings.padding))}
+            y={25 + (currentRow * (settings.height + settings.padding))}
             onMouseDown={this.handleMouseDown}
             onMouseUp={this.handleMouseUp}
             onMouseLeave={this.handleMouseLeave}>
@@ -166,12 +218,168 @@ export default class GraphSelector extends React.Component<IProps, IState>
               index ? "selected" : ""}`}
               x={0} y={0} width={settings.width} height={settings.height}/>
             <text className="selector-item-text label"
-              x={settings.width / 2} y={settings.height / 2}>{value.id}</text>
-            </svg>
+              x={settings.width / 2} y={(settings.height / 2) + 4}>
+              {value.id}
+            </text>
+          </svg>
         })
       }
 
     </svg>
+  }
+
+  // Add a new empty graph to the selector
+  private handleAdd = () =>
+  {
+    let idCount = this.property.available.length;
+
+    let flag = false;
+
+    while (!flag)
+    {
+      const graph = this.property.available.find(
+      x => x.id === "graph-"+idCount);
+
+      if (graph)
+      {
+        idCount++;
+      }
+      else
+      {
+        flag = true;
+      }
+    }
+
+    vgData.addEmptyGraph("graph-"+idCount, this.props.parentPath,
+      (newGraph: vgTypes.IProcessedGraphItem) =>
+      {
+        this.props.startUpdate();
+        const newAvailable: Array<{id: string, path: string}> =
+          [...this.property.available];
+        newAvailable.push({id: newGraph.id, path: newGraph.path});
+        this.property.available = newAvailable;
+        this.props.endUpdate();
+      })
+
+  }
+
+  // Delete current graph 'choice' (highlighted)
+  private handleDelete = () =>
+  {
+    if (this.state.currentChoice !== -1)
+    {
+      vgData.deletePath(
+        this.property.available[this.state.currentChoice].path,
+        () =>
+        {
+          this.props.startUpdate();
+          const newAvailable: Array<{id: string, path: string}> =
+            [...this.property.available];
+          newAvailable.splice(this.state.currentChoice, 1);
+          this.property.available = newAvailable;
+          this.setState({currentChoice: -1});
+          this.props.endUpdate();
+        });
+    }
+  }
+
+  // Move current graph choice up in the list (closer to the start)
+  private handleUp = () =>
+  {
+    if (this.state.currentChoice === 0 || this.state.currentChoice === -1)
+    {
+      return;
+    }
+
+    const currentAvailable = this.property.available;
+    const newGraphsList: vgTypes.IRawGraphItem[] = [];
+
+    vgData.getRawSelectorGraphs(this.props.parentPath,
+      (graphs: vgTypes.IRawGraphItem[]) =>
+    {
+      const currentGraphsList = [...graphs];
+      const newAvailable: Array<{id: string, path: string}> =
+        this.property.available.map((value: {id: string, path: string},
+          index: number) =>
+        {
+          if (index === this.state.currentChoice)
+          {
+            newGraphsList[index] = currentGraphsList[index-1];
+            return currentAvailable[index-1];
+          }
+          else if (index === this.state.currentChoice - 1)
+          {
+            newGraphsList[index] = currentGraphsList[index+1];
+            return currentAvailable[index+1];
+          }
+          else
+          {
+            newGraphsList[index] = currentGraphsList[index];
+            return value;
+          }
+        });
+
+      this.updateGraphList(newAvailable, newGraphsList,
+        this.state.currentChoice-1);
+    });
+  }
+
+  // Move current graph choice down in the list (closer to the end)
+  private handleDown = () =>
+  {
+    if (this.state.currentChoice === this.property.available.length - 1 ||
+      this.state.currentChoice === -1)
+    {
+      return;
+    }
+
+    const currentAvailable = this.property.available;
+    const newGraphsList: vgTypes.IRawGraphItem[] = [];
+
+    vgData.getRawSelectorGraphs(this.props.parentPath,
+      (graphs: vgTypes.IRawGraphItem[]) =>
+    {
+      const currentGraphsList = [...graphs];
+      const newAvailable: Array<{id: string, path: string}> =
+        this.property.available.map((value: {id: string, path: string},
+          index: number) =>
+        {
+          if (index === this.state.currentChoice)
+          {
+            newGraphsList[index] = currentGraphsList[index+1];
+            return currentAvailable[index+1];
+          }
+          else if (index === this.state.currentChoice + 1)
+          {
+            newGraphsList[index] = currentGraphsList[index-1];
+            return currentAvailable[index-1];
+          }
+          else
+          {
+            newGraphsList[index] = currentGraphsList[index];
+            return value;
+          }
+        });
+
+      this.updateGraphList(newAvailable, newGraphsList,
+        this.state.currentChoice+1);
+    });
+  }
+
+  private updateGraphList(newAvailable: {id: string, path: string}[],
+    newGraphsList: vgTypes.IRawGraphItem[], newCurrentChoice: number)
+  {
+    this.setState({selecting: true});
+      this.props.startUpdate();
+
+      this.property.available = newAvailable;
+      const updateGraphs = {"graphs": newGraphsList};
+
+      this.props.updateGraphs(updateGraphs);
+      this.setState({currentChoice: newCurrentChoice});
+
+      this.props.endUpdate();
+      this.setState({selecting: true});
   }
 
   private handleMouseLeave = (e: React.MouseEvent<SVGElement>) =>
@@ -185,19 +393,16 @@ export default class GraphSelector extends React.Component<IProps, IState>
     const date = new Date();
     this.lastMouseTime.down = date.getTime();
 
-    this.setState({currentMouseDown:
-      this.property.available.indexOf(this.property.available.find(
-      x => x.id === e.currentTarget.id))});
+    this.setState({currentChoice: this.property.available.findIndex(
+      x => x.id === e.currentTarget.id)});
   }
 
   private handleMouseUp = (e: React.MouseEvent<SVGElement>) =>
   {
     const date = new Date();
 
-    const graph = this.property.available.find(
+    const graph: {id: string, path: string} = this.property.available.find(
       x => x.id === e.currentTarget.id);
-
-    this.setState({currentMouseDown: null});
 
     // Long press - select Graph without showing
     if (this.lastMouseTime.down && date.getTime() -
@@ -208,20 +413,16 @@ export default class GraphSelector extends React.Component<IProps, IState>
     // Double click - show graph without selecting
     else if (date.getTime() - this.lastMouseTime.up < 250)
     {
-      this.showGraph(graph);
+      this.props.showGraph(this.props.parentPath+"/graph/"+e.currentTarget.id);
     }
 
     this.lastMouseTime.up = date.getTime();
   }
 
-  private showGraph = (graph: any) =>
+  private selectGraph = (graph: {id: string, path: string}) =>
   {
-    this.props.showGraph(graph.elements);
-  }
-
-  private selectGraph = (graph: any) =>
-  {
-    const index = this.property.available.indexOf(graph);
+    const index = this.property.available.findIndex(
+      x => x.id === graph.id)
 
     this.setState({selecting: true});
     this.props.startUpdate();
