@@ -191,6 +191,28 @@ export class Node
     return result;
   }
 
+  // Get connector position based on size of node and index of connector
+  public getConnectorPosition(connector: Connector): {x: number, y: number}
+  {
+    let x = 0;
+    let y = 0;
+
+    if (connector.direction === "input")
+    {
+      x = 0;
+      y = ((this.size.h) / (this.graph.getNodeConnectors(this.id,
+        "input").length + 1)) * (connector.index + 1);
+    }
+    else
+    {
+      x = this.size.w;
+      y = ((this.size.h) / (this.graph.getNodeConnectors(this.id,
+        "output").length + 1)) * (connector.index + 1);
+    }
+
+    return ({x,y});
+  }
+
   // Return array of properties for this node
   public getProperties(): Property[]
   {

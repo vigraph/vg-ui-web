@@ -140,7 +140,8 @@ export default class Graph extends React.Component<IProps, IState>
                         inputConnectorSelected={this.moveEdgeFromInput}
                         outputConnectorSelected={this.newMovingConnectorEdge}
                         updateTargetConnector={this.updateTargetConnector}
-                        radius={csize}/>
+                        radius={csize}
+                        position={node.getConnectorPosition(connector)}/>
                     })}
                   {this.graph.getNodeConnectors(node.id, "output").map(
                     (connector: Model.Connector, j) =>
@@ -151,7 +152,8 @@ export default class Graph extends React.Component<IProps, IState>
                         inputConnectorSelected={this.moveEdgeFromInput}
                         outputConnectorSelected={this.newMovingConnectorEdge}
                         updateTargetConnector={this.updateTargetConnector}
-                        radius={csize}/>
+                        radius={csize}
+                        position={node.getConnectorPosition(connector)}/>
                     })}
                 </Node>
               })
@@ -620,8 +622,8 @@ export default class Graph extends React.Component<IProps, IState>
     const currentPosition = vgUtils.windowToSVGPosition(
       {x: e.pageX, y: e.pageY}, this.graphRef);
 
-    dummyNode.position = {x: currentPosition.x - (3*csize),
-      y: currentPosition.y - csize}
+    dummyNode.position = {x: currentPosition.x - (2*csize),
+      y: currentPosition.y}
 
     let dummyConnector;
 
@@ -641,7 +643,7 @@ export default class Graph extends React.Component<IProps, IState>
     }
 
     dummyConnector.multiple = false;
-    dummyConnector.position = {x: csize, y: csize};
+    dummyConnector.index = 0;
 
     this.setState({ tempNodes: {dummy: dummyNode, real: node }});
     this.setState({ tempConnectors: {dummy: dummyConnector, real: connector}});
@@ -720,8 +722,8 @@ export default class Graph extends React.Component<IProps, IState>
       const currentPosition = vgUtils.windowToSVGPosition(
         {x: e.pageX, y: e.pageY}, this.graphRef);
 
-      dnode.position = {x: currentPosition.x - (3*csize),
-        y: currentPosition.y - csize};
+      dnode.position = {x: currentPosition.x - (2*csize),
+        y: currentPosition.y};
 
       this.setState({tempNodes: {dummy: dnode,
         real: this.state.tempNodes.real}});

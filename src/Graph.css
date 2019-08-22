@@ -57,9 +57,19 @@
   overflow: visible;
 }
 
+.node-resize
+{
+  fill: #ccc;
+}
+
 .node .dragging
 {
   fill: #444;
+}
+
+.node .resizing
+{
+  stroke-width: 1.5;
 }
 
 .label
@@ -84,12 +94,12 @@
   user-select: none; /* Standard */
 }
 
-.dummynode
+#node-dummynode
 {
-  display: none;
+  pointer-events: none;
 }
 
-.dummyconnector
+#node-dummyconnector
 {
   pointer-events: none;
 }
@@ -123,6 +133,11 @@
   stroke: transparent;
   stroke-width: 10;
   fill: none;
+}
+
+.delete-wrapper
+{
+  overflow: visible;
 }
 
 .node-delete,

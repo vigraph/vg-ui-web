@@ -25,18 +25,6 @@ export class Connector
       "connectorType");
   }
 
-  get position(): { x: number, y: number }
-  {
-    return this.graph.getNodeConnectorProp(this.id, this.parent, this.direction,
-      "position");
-  }
-
-  set position(pos: { x: number, y: number })
-  {
-    this.graph.setNodeConnectorProp(this.id, this.parent, this.direction,
-      "position", pos);
-  }
-
   get multiple(): boolean
   {
     return this.graph.getNodeConnectorProp(this.id, this.parent, this.direction,
@@ -47,5 +35,17 @@ export class Connector
   {
     this.graph.setNodeConnectorProp(this.id, this.parent, this.direction,
       "multiple", multiple);
+  }
+
+  get index(): number
+  {
+    return this.graph.getNodeConnectorProp(this.id, this.parent, this.direction,
+      "index");
+  }
+
+  set index(index: number)
+  {
+    this.graph.setNodeConnectorProp(this.id, this.parent, this.direction,
+      "index", index);
   }
 }

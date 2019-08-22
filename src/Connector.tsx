@@ -12,6 +12,7 @@ interface IProps
   updateTargetConnector: (target: {connector: Model.Connector,
     parent: Model.Node } | null) => void;
   radius: number;
+  position: {x: number, y: number};
 }
 
 interface IState
@@ -33,7 +34,7 @@ export default class Connector extends React.Component<IProps,IState>
 
   public render()
   {
-    const position = this.props.connector.position;
+    const position = this.props.position;
     const radius = this.props.radius;
 
     const disabled = (this.props.connector.direction === "input" &&
@@ -59,7 +60,7 @@ export default class Connector extends React.Component<IProps,IState>
 
   private createLabels = () =>
   {
-    const position = this.props.connector.position;
+    const position = this.props.position;
     const radius = this.props.radius;
 
     if (this.props.connector.direction === "input")

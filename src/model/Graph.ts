@@ -11,8 +11,8 @@
 //            name: string
 //            type: string
 //            path: string
-//            inputs: Map<id, { connectorType: string, multiple: boolean }>
-//            outputs: Map<id, { connectorType: string, multiple: boolean }>
+//            inputs: Map<id, { connectorType: string, multiple: boolean, index: number }>
+//            outputs: Map<id, { connectorType: string, multiple: boolean, index: number }>
 //            forwardEdges: Map<output, List<{ destId: string, destInput: string }>>
 //            reverseEdges: Map<input, List<{ srcId: string, srcOutput: string }>>
 //            position: { x, y },
@@ -103,23 +103,21 @@ export class Graph
     node.selectorGraphs = n.selectorGraphs || null;
     if (n.inputs)
     {
-      for (const i of n.inputs)
+      for (const [index, i] of n.inputs.entries())
       {
         const input = this.addNodeInput(n.id, i.id, i.connectorType);
         input.multiple = i.multiple || false;
-        input.position = { x: 0,
-          y: ((node.size.h)/(n.inputs.length+1))*(n.inputs.indexOf(i)+1)};
+        input.index = index;
       }
     }
 
     if (n.outputs)
     {
-      for (const o of n.outputs)
+      for (const [index, o] of n.outputs.entries())
       {
-        const input = this.addNodeOutput(n.id, o.id, o.connectorType);
-        input.multiple = o.multiple || false;
-        input.position = { x: node.size.w,
-          y: ((node.size.h)/(n.outputs.length+1))*(n.outputs.indexOf(o)+1)};
+        const output = this.addNodeOutput(n.id, o.id, o.connectorType);
+        output.multiple = o.multiple || false;
+        output.index = index;
       }
     }
 

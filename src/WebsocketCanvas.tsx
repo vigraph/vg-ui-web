@@ -22,10 +22,13 @@ export default class WebsocketCanvas extends React.Component<IProps>
   }
 
   private canvasRef = React.createRef<HTMLCanvasElement>()
+  private previousSize: {x: number, y: number};
 
   constructor(props: IProps)
   {
     super(props);
+
+    this.previousSize = {x: 0, y: 0};
   }
 
   public render()
@@ -46,8 +49,22 @@ export default class WebsocketCanvas extends React.Component<IProps>
     this.updateCanvas();
   }
 
+  public componentDidUpdate()
+  {
+    this.updateCanvas();
+  }
+
   private updateCanvas()
   {
+    // No change in size so don't update canvas
+    if (this.previousSize.x === this.props.size.x && this.previousSize.y ===
+      this.props.size.y)
+    {
+      return;
+    }
+
+    this.previousSize = this.props.size;
+
     const canvas = this.canvasRef.current;
     if (canvas)
     {

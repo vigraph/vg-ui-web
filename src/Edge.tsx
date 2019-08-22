@@ -62,10 +62,14 @@ export default class Edge extends React.Component<IProps, IState>
 
     if (outputConnector && inputConnector)
     {
-      sx += outputConnector.position.x;
-      sy += outputConnector.position.y;
-      dx += inputConnector.position.x;
-      dy += inputConnector.position.y;
+      const outputPosition =
+        this.props.src.getConnectorPosition(outputConnector);
+      const inputPosition =
+        this.props.dest.getConnectorPosition(inputConnector);
+      sx += outputPosition.x;
+      sy += outputPosition.y;
+      dx += inputPosition.x;
+      dy += inputPosition.y;
     }
 
     // Calculate distance of control point as fraction of the distance,
