@@ -2,6 +2,7 @@ import * as React from 'react';
 import * as Model from './model';
 
 import Property from './Property';
+import WebsocketCanvas from './WebsocketCanvas';
 
 import { vgData } from './data/Data';
 import { vgUtils } from './lib/Utils'
@@ -94,6 +95,7 @@ export default class Node extends React.Component<IProps, IState>
         </svg>}
         {this.generateTitle()}
         {this.props.children}
+        {this.generateSpecialCases()}
         {properties.map((property: Model.Property, j) =>
           {
             return <Property key={j} property={property}
@@ -132,7 +134,25 @@ export default class Node extends React.Component<IProps, IState>
             })}
         </text>
     }
+  }
 
+  private generateSpecialCases = () =>
+  {
+    const size = this.props.node.size;
+    const padding = this.props.padding;
+
+    const portProperty = this.props.node.getProperties().find(
+      x => x.id === "port");
+
+    if (this.node.type === "vector:websocket-display" && portProperty)
+    {
+      return <foreignObject id="ws-canvas-wrapper"
+        className={"ws-canvas " + this.props.node.id}
+        x={2 * padding} y={15 + padding}>
+        <WebsocketCanvas size={{ x: size.w - (2 * padding),
+          y: size.h - (2 * padding) - 15 }} port={portProperty.value}/>
+      </foreignObject>
+    }
   }
 
   // Do nothing - prevents browser context menu from showing

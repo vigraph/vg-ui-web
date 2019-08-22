@@ -2,7 +2,6 @@ import * as React from 'react';
 
 import './App.css';
 import Graph from './Graph';
-import WebsocketCanvas from './WebsocketCanvas';
 
 interface IProps
 {
@@ -111,7 +110,6 @@ export default class App extends React.Component<IProps, IState>
           }
          </div>
         <Graph ref={this.graph} notifyGraphRoot={this.notifyGraphRoot} />
-        <WebsocketCanvas size={{ x: 100, y: 100 }} />
       </div>
     );
   }

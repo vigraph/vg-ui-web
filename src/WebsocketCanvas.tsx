@@ -7,6 +7,7 @@ interface IProps
   projection: boolean;
   beam_multiplier: number;
   points: boolean;
+  port: number;
 }
 
 export default class WebsocketCanvas extends React.Component<IProps>
@@ -16,7 +17,8 @@ export default class WebsocketCanvas extends React.Component<IProps>
     beams: false,
     projection: true,
     beam_multiplier: 10,
-    points: false
+    points: false,
+    port: 33382
   }
 
   private canvasRef = React.createRef<HTMLCanvasElement>()
@@ -37,15 +39,10 @@ export default class WebsocketCanvas extends React.Component<IProps>
 
   public componentDidMount()
   {
-    const rxSocket = new WebSocket('ws://localhost:33382/');
+    const rxSocket = new WebSocket('ws://localhost:'+this.props.port+'/');
     rxSocket.binaryType = 'arraybuffer';
     rxSocket.onmessage = (e: MessageEvent) => { this.handleFrame(e.data); };
 
-    this.updateCanvas();
-  }
-
-  public componentDidUpdate()
-  {
     this.updateCanvas();
   }
 

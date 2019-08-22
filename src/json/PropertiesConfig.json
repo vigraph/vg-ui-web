@@ -1224,5 +1224,13 @@
         "y": 30
       }
     }
+  },
+  "vector:websocket-display":
+  {
+    "width": 200,
+    "height": 200,
+    "properties":
+    {
+    }
   }
 }

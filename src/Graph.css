@@ -516,3 +516,8 @@
   fill: none;
   pointer-events: none;
 }
+
+#canvas
+{
+  border: solid 1px #444;
+}
