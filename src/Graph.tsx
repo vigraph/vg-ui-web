@@ -97,7 +97,7 @@ export default class Graph extends React.Component<IProps, IState>
         <svg id="graph"
           viewBox={`${view.x} ${view.y} ${view.w} ${view.h}`}
           ref={(ref) => { this.graphRef = ref; }}
-          onMouseDown={this.handleMouseDown}
+          onMouseDown={this.handleGraphMouseDown}
           onContextMenu={this.handleContextMenu}
           onWheel={this.handleMouseWheel}>
           <svg id="edges">
@@ -283,6 +283,10 @@ export default class Graph extends React.Component<IProps, IState>
     </div>
   }
 
+  //============================================================================
+  // Mouse click/move functions
+  //============================================================================
+
   private handleMenuMouseDown = (e: React.MouseEvent<HTMLDivElement>) =>
   {
     const target = e.currentTarget.id;
@@ -333,7 +337,7 @@ export default class Graph extends React.Component<IProps, IState>
     this.setState({view: newView});
   }
 
-  private handleMouseDown = (e: React.MouseEvent<SVGSVGElement>) =>
+  private handleGraphMouseDown = (e: React.MouseEvent<SVGSVGElement>) =>
   {
     e.preventDefault();
     this.mouseClick = {x: e.pageX, y: e.pageY};
@@ -379,6 +383,10 @@ export default class Graph extends React.Component<IProps, IState>
     window.removeEventListener('mousemove', this.handleGraphDrag);
     window.removeEventListener('mouseup', this.handleGraphDragRelease);
   }
+
+  //============================================================================
+  // Node/Edge functions
+  //============================================================================
 
   private showNodeGraph = (path: string, pathSpecific?: string,
     sourceSpecific?: string) =>

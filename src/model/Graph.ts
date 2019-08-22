@@ -27,8 +27,8 @@
 //                                  increment: number,
 //                                  available: any[]
 //                                },
-//             elements: any[] | null // array of nodes (json - see below)
-//             cloneGraph: any[] | null // array of nodes (json - see below)
+//             subGraph: boolean
+//             cloneGraph: boolean
 //             selectorGraphs: any[] | null // array of nodes (json - see below)
 //                  }>
 // }
@@ -62,8 +62,8 @@ export class Graph
   //       edges: [ { output, destId, input } ],
   //       properties: [ { id, propType, controlType, subType, x, y, value,
   //                       rangeMin, rangeMax, increment } ],
-  //       elements: node[],
-  //       cloneGraph: node[],
+  //       subGraph: boolean,
+  //       cloneGraph: boolean,
   //       selectorGraphs: node[]
   //     } ] }
   public loadFrom(json: any)
