@@ -1213,15 +1213,15 @@
         "rangeMin": 0,
         "rangeMax": 1,
         "increment": 0.1,
-        "x": 30,
-        "y": 30
+        "x": 20,
+        "y": 20
       },
       "curve":
       {
         "controlType": "curve",
         "subType": "default",
-        "x": 80,
-        "y": 30
+        "x": 60,
+        "y": 15
       }
     }
   },

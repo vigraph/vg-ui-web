@@ -167,8 +167,6 @@ export interface ISequenceSettings
 
 export interface ICurveSettings
 {
-  height: number,
-  width: number,
   maxValue: number,
   barThickness: number,
   defaultCurve: [{t: number, value: number}, {t: number, value: number}];

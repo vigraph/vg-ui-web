@@ -12,6 +12,7 @@ interface IProps
   endUpdate: () => void;
   position: {x: number, y: number};
   disabled: boolean;
+  size: {w: number, h: number};
 }
 
 interface IState
@@ -75,8 +76,8 @@ export default class Curve extends React.Component<IProps, IState>
 
   public render()
   {
-    const width = this.settings.width;
-    const height = this.settings.height;
+    const width = this.props.size.w;
+    const height = this.props.size.h;
     const thickness = this.settings.barThickness;
     const points: Array<{id: string, x: number, y: number}> =
       this.state.currentCurve.map((point: {t: number, value: number}) =>
@@ -264,13 +265,12 @@ export default class Curve extends React.Component<IProps, IState>
   // Convert click location to point and add to property
   private positionToPoint = (position: {x: number, y: number}) =>
   {
-    const width = this.settings.width;
-    const height = this.settings.height;
+    const width = this.props.size.w;
+    const height = this.props.size.h;
 
     const newPoint = {
       t: position.x / width,
-      value: (((height - position.y ) / this.settings.width ) *
-        this.settings.maxValue)
+      value: (((height - position.y ) / width ) * this.settings.maxValue)
     }
 
     return newPoint;

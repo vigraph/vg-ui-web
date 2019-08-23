@@ -182,8 +182,6 @@
   "curve": {
     "default":
     {
-      "height": 180,
-      "width": 180,
       "maxValue": 1,
       "barThickness": 4,
       "defaultCurve": [{"t": 0, "value": 0}, {"t": 1, "value": 1}]

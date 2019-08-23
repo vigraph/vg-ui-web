@@ -49,6 +49,7 @@ export default class Node extends React.Component<IProps, IState>
   private offsetY: number;
   private mouseDown: {x: number, y: number, t: number};
   private resizeMouseDown: {x: number, y: number};
+  private titleHeight: number;
 
   constructor(props: IProps)
   {
@@ -69,6 +70,7 @@ export default class Node extends React.Component<IProps, IState>
     this.offsetY = 0;
     this.mouseDown = {x: 0, y: 0, t: 0};
     this.resizeMouseDown = {x: 0, y: 0};
+    this.titleHeight = fontSize;
   }
 
   public render()
@@ -117,7 +119,8 @@ export default class Node extends React.Component<IProps, IState>
               update={this.props.update}
               endUpdate={this.props.endUpdate}
               showNodeGraph={this.props.showNodeGraph}
-              disabled={!!reverseEdges.find(x => x.inputId === property.id)}/>
+              disabled={!!reverseEdges.find(x => x.inputId === property.id)}
+              padding={this.props.padding}/>
           })}
         />
       </svg>
@@ -136,6 +139,8 @@ export default class Node extends React.Component<IProps, IState>
     else
     {
       const linesArray = vgUtils.wrapText(this.node.name, width, fontSize);
+
+      this.titleHeight = linesArray.length * fontSize;
 
       return <text className={"node-label " + this.props.node.id}
         fontSize={fontSize} x={(width/2)+padding} y={15}>
@@ -159,9 +164,10 @@ export default class Node extends React.Component<IProps, IState>
     {
       return <foreignObject id="ws-canvas-wrapper"
         className={"ws-canvas " + this.props.node.id}
-        x={2 * padding} y={15 + padding}>
+        x={2 * padding} y={this.titleHeight + padding}>
         <WebsocketCanvas size={{ x: this.state.w - (2 * padding),
-          y: this.state.h - (2 * padding) - 15 }} port={portProperty.value}/>
+          y: this.state.h - (2 * padding) - this.titleHeight }}
+          port={portProperty.value}/>
       </foreignObject>
     }
   }
@@ -304,7 +310,7 @@ export default class Node extends React.Component<IProps, IState>
     newState.h += diffY;
     newState.w += diffX;
 
-    if (newState.h >= 50 && newState.w >= 50)
+    if (newState.h >= 100 && newState.w >= 100)
     {
       this.setState(newState);
 

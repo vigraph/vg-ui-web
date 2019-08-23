@@ -30,6 +30,7 @@ interface IProps
   showNodeGraph: (path: string, pathSpecific?: string,
     sourceSpecific?: string) => void;
   disabled: boolean;
+  padding: number;
 }
 
 interface IState
@@ -137,6 +138,19 @@ export default class Property extends React.Component<IProps, IState>
           showGraph={this.props.showNodeGraph}
           updateGraphs={this.nonPropertyUpdate}
           parentPath={this.props.parent.path}/>
+    }
+    else if (this.property.controlType === "curve")
+    {
+      const curveSize =
+        { w: this.props.parent.size.w - position.x - (2 * this.props.padding),
+          h: this.props.parent.size.h - position.y - (2 * this.props.padding) };
+
+      return <Curve property={this.property}
+          position={{x: position.x, y: position.y}}
+          startUpdate={this.startPropertyUpdate} update={this.propertyUpdate}
+          endUpdate={this.endPropertyUpdate} disabled={this.props.disabled}
+          size={curveSize}/>
+
     }
     else
     {
