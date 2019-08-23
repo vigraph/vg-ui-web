@@ -429,7 +429,19 @@ export class Graph
           if (cNodePos.x !== nNodePos.x || cNodePos.y !== nNodePos.y)
           {
             // Node position has changed between states
-            vgData.updateLayout(nNode.get("path"), {x: nNodePos.x, y: nNodePos.y});
+            vgData.updateLayout(nNode.get("path"),
+              {x: nNodePos.x, y: nNodePos.y});
+          }
+
+          const cNodeSize = cNode.get("size");
+          const nNodeSize = nNode.get("size");
+
+          // Check node size
+          if (cNodeSize.w !== nNodeSize.w || cNodeSize.h !== nNodeSize.h)
+          {
+            // Node size has changed between states
+            vgData.updateLayout(nNode.get("path"), undefined,
+              {w: nNodeSize.w, h: nNodeSize.h});
           }
 
           // Check node property values
@@ -518,8 +530,10 @@ export class Graph
             // Note: Currently only one action (e.g. node add) per state level.
             currentToNew();
           });
+
         vgData.updateLayout(value.get("path"), {x: value.get("position").x,
-          y: value.get("position").y});
+          y: value.get("position").y}, {w: value.get("size").w,
+          h: value.get("size").h});
       }
     });
 

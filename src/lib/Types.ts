@@ -80,8 +80,10 @@ export interface IProcessedMetadata
 export interface ILayoutData
 {
   [key: string]: {
-    x: number,
-    y: number
+    x?: number,
+    y?: number,
+    w?: number,
+    h?: number
   }
 }
 

@@ -334,6 +334,9 @@ export default class Node extends React.Component<IProps, IState>
 
     this.resizeMouseDown = {x: 0, y: 0};
 
+    vgData.updateLayout(this.node.path, undefined, {w: this.state.w,
+      h: this.state.h});
+
     if (this.props.endUpdate)
     {
       this.props.endUpdate();

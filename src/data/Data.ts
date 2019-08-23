@@ -112,22 +112,24 @@ class Data
       });
   }
 
-  // Update layout data. If no value given then layout data for given id is
-  // removed. If no id given then this.layoutData is sent with no updates.
+  // Update layout data. If no position or size given then layout data for
+  // given id is removed. If no id given then this.layoutData is sent with
+  // no updates.
   // Note: ID is node path
-  public updateLayout(id?: string, value?: {x: number, y: number})
+  public updateLayout(id?: string, position?: {x: number, y: number},
+    size?: {w: number, h: number})
   {
     const url = restURL + "/layout";
 
     if (id)
     {
-      if (value)
+      if (!position && !size)
       {
-        this.layoutData[id] = value;
+        delete this.layoutData[id];
       }
       else
       {
-        delete this.layoutData[id];
+        this.layoutData[id] = {...this.layoutData[id], ...position, ...size};
       }
     }
 
@@ -311,14 +313,14 @@ class Data
       {
         const item = this.processSingleGraphItem(result, parentPath);
 
-        const layout = {h: 0, w: 0};
+        const propConfig = this.propertiesConfig[item.type];
 
-        // Node properties layout from config
-        if (this.propertiesConfig[item.type])
-        {
-          layout.h = this.propertiesConfig[item.type].height;
-          layout.w = this.propertiesConfig[item.type].width;
-        }
+        // Node properties layout (height and width)
+        const h = this.layoutData[item.path] && this.layoutData[item.path].h ?
+          this.layoutData[item.path].h : (propConfig ? propConfig.height : 0);
+        const w = this.layoutData[item.path] && this.layoutData[item.path].w ?
+          this.layoutData[item.path].w : (propConfig ? propConfig.width : 0);
+        const layout = {h, w}
 
         if (success) success({...item, ...layout});
       }
@@ -678,12 +680,17 @@ class Data
         successCount++;
       }
 
+      const height = layout[value.path] && layout[value.path].h ?
+        layout[value.path].h : (propConfig ? propConfig.height : 50);
+      const width = layout[value.path] && layout[value.path].w ?
+        layout[value.path].w : (propConfig ? propConfig.width : 50);
+
       const nodeLayout =
       {
         x: layout[value.path] ? layout[value.path].x : 0,
         y: layout[value.path] ? layout[value.path].y : 0,
-        h: propConfig ? propConfig.height : 50,
-        w: propConfig ? propConfig.width : 50
+        h: height,
+        w: width
       }
 
       layoutNodes.push({...value, ...nodeLayout});
