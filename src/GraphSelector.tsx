@@ -235,12 +235,12 @@ export default class GraphSelector extends React.Component<IProps, IState>
 
     let flag = false;
 
+    const findGraph = (graphID: string) =>
+      { return this.property.available.find(x => x.id === graphID); };
+
     while (!flag)
     {
-      const graph = this.property.available.find(
-      x => x.id === "graph-"+idCount);
-
-      if (graph)
+      if (findGraph("graph-"+idCount))
       {
         idCount++;
       }
