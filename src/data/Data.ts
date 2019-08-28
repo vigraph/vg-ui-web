@@ -585,12 +585,6 @@ class Data
             alias?: boolean}) =>
           {
             pOutputs.push({id: output.id, connectorType: output.type});
-
-            if (!output.alias)
-            {
-              pProps.push({id: output.id, type: output.type, propType: "oprop",
-                description: output.description });
-            }
           });
       }
 
