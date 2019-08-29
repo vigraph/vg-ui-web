@@ -177,10 +177,12 @@ export default class Node extends React.Component<IProps, IState>
     if (this.node.type === "vector:websocket-display" || this.node.type ===
       "core:interpolate")
     {
-      return <rect className={"node-resize"}
-        x={this.state.w+this.props.padding-3} y={this.state.h-3}
-        width={6} height={6} onMouseDown={this.handleResizeMouseDown}
-      />
+      return <svg id={"node-resize-wrapper"}
+        x={this.state.w+this.props.padding-3} y={this.state.h-3}>
+        <rect className={"node-resize-boundary"} x={-3} y={-3} width={15}
+          height={15} onMouseDown={this.handleResizeMouseDown}/>
+        <rect className={"node-resize-icon"} x={0} y={0} width={6} height={6}/>
+      </svg>
     }
   }
 
@@ -278,7 +280,7 @@ export default class Node extends React.Component<IProps, IState>
     this.setState({hover: false});
   }
 
-  private handleResizeMouseDown = (e: React.MouseEvent<SVGRectElement>) =>
+  private handleResizeMouseDown = (e: React.MouseEvent<SVGElement>) =>
   {
     e.stopPropagation();
 
@@ -309,6 +311,9 @@ export default class Node extends React.Component<IProps, IState>
     const newState = {...this.state};
     newState.h += diffY;
     newState.w += diffX;
+
+    const aspectRatio = this.state.h / this.state.w;
+    newState.h = newState.w * aspectRatio;
 
     if (newState.h >= 100 && newState.w >= 100)
     {

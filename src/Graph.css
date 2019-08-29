@@ -57,10 +57,22 @@
   overflow: visible;
 }
 
-.node-resize
+#node-resize-wrapper
+{
+  overflow: visible;
+}
+
+.node-resize-icon
 {
   fill: #ccc;
+  pointer-events: none;
 }
+
+.node-resize-boundary
+{
+  fill: transparent;
+}
+
 
 .node .dragging
 {
@@ -535,4 +547,5 @@
 #canvas
 {
   border: solid 1px #444;
+  pointer-events: none;
 }
