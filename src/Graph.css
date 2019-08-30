@@ -20,11 +20,9 @@
 
 .menu
 {
-  width: 140px;
-  display: flex;
-  flex-direction: column;
-  background: #ffffff;
+  display: block;
   position: absolute;
+  pointer-events: none;
 }
 
 .menu-item
@@ -41,6 +39,16 @@
 .menu-item:hover
 {
   color: #2980b9;
+}
+
+.menu-parent-wrapper,
+.menu-children-wrapper
+{
+  float: left;
+  background: #ffffff;
+  border: 1px solid rgb(187, 187, 187);
+  pointer-events: auto;
+  margin-right: 1px;
 }
 
 .node

@@ -10,6 +10,7 @@ import './Graph.css';
 import Connector from './Connector';
 import Edge from './Edge';
 import Node from './Node';
+import Menu from './Menu';
 
 const csize: number = 5;
 const zoomFactor: number = 1.1;
@@ -36,7 +37,6 @@ export default class Graph extends React.Component<IProps, IState>
   private graphs: Model.Graph[] = [];
   private graphIndex: number = -1;
   private mouseClick: {x: number, y: number};
-  private subMenu: string | null;
   private idCount: number;
   private graphRef: SVGSVGElement | null;
   private currentGraphPath: Array<{path: string, pathSpecific?: string}>;
@@ -72,7 +72,6 @@ export default class Graph extends React.Component<IProps, IState>
     };
 
     this.mouseClick = {x: 0, y: 0};
-    this.subMenu = null;
     this.idCount = 0;
     this.graphRef = null;
     this.firstLoad = true;
@@ -93,7 +92,10 @@ export default class Graph extends React.Component<IProps, IState>
 
     return (
       <div className="wrapper">
-        {this.state.showMenu && this.createMenu()}
+        {this.state.showMenu && <Menu position={this.mouseClick}
+          menuClosed={this.menuClosed}
+          menuItemSelected={this.menuItemSelected}/>}
+
         <svg id="graph"
           viewBox={`${view.x} ${view.y} ${view.w} ${view.h}`}
           ref={(ref) => { this.graphRef = ref; }}
@@ -249,69 +251,9 @@ export default class Graph extends React.Component<IProps, IState>
     this.graph.commitTransaction();
   }
 
-  private createMenu = () =>
-  {
-    const sMetadata = vgData.returnMetadata();
-    const aMetadata = [];
-
-    if (sMetadata)
-    {
-      if (this.subMenu)
-      {
-        for (const key of Object.keys(sMetadata[this.subMenu]))
-        {
-          aMetadata.push(key);
-        }
-      }
-      else
-      {
-        for (const key of Object.keys(sMetadata))
-        {
-          aMetadata.push(key);
-        }
-      }
-    }
-
-    return <div className="menu" style={{left: this.mouseClick.x,
-        top: this.mouseClick.y}} onContextMenu={this.handleMenuContextMenu}>
-      {
-        aMetadata.map((value: string, index: number) =>
-        {
-          const id = this.subMenu ? this.subMenu+":"+value : value;
-          return <div key={index} id={"menu-"+id} className="menu-item"
-            onMouseDown={this.handleMenuMouseDown}> {value} </div>
-        })
-      }
-    </div>
-  }
-
   //============================================================================
   // Mouse click/move functions
   //============================================================================
-
-  private handleMenuMouseDown = (e: React.MouseEvent<HTMLDivElement>) =>
-  {
-    const target = e.currentTarget.id;
-    const id = target.substring(5, target.length);
-
-    if (!this.subMenu)
-    {
-      this.subMenu = id;
-      this.forceUpdate();
-    }
-    else
-    {
-      this.subMenu = null;
-      this.setState({showMenu: false});
-      this.createNewNode(id);
-    }
-  }
-
-  // Do nothing - prevents browser context menu from showing
-  private handleMenuContextMenu = (e: React.MouseEvent<HTMLDivElement>) =>
-  {
-    e.preventDefault();
-  }
 
   // Do nothing - prevents browser context menu from showing
   private handleContextMenu = (e: React.MouseEvent<SVGSVGElement>) =>
@@ -344,14 +286,12 @@ export default class Graph extends React.Component<IProps, IState>
     e.preventDefault();
     this.mouseClick = {x: e.pageX, y: e.pageY};
 
-    if (e.button === 2)
+    if (e.button === 2 && !this.state.showMenu)
     {
-      this.subMenu = null;
       this.setState({showMenu: true});
     }
     else
     {
-      this.subMenu = null;
       this.setState({showMenu: false});
 
       window.addEventListener('mousemove', this.handleGraphDrag);
@@ -384,6 +324,20 @@ export default class Graph extends React.Component<IProps, IState>
   {
     window.removeEventListener('mousemove', this.handleGraphDrag);
     window.removeEventListener('mouseup', this.handleGraphDragRelease);
+  }
+
+  //============================================================================
+  // Menu functions
+  //============================================================================
+
+  private menuClosed = () =>
+  {
+    this.setState({showMenu: false});
+  }
+
+  private menuItemSelected = (id: string) =>
+  {
+    this.createNewNode(id);
   }
 
   //============================================================================
