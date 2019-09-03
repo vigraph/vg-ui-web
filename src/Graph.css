@@ -18,17 +18,16 @@
   height: 5000px;
 }
 
-.menu
+#menu.menu
 {
   display: block;
-  position: absolute;
   pointer-events: none;
 }
 
-.menu-item
+#menu .menu-item
 {
   cursor: pointer;
-  padding: 5px;
+  padding: 3px;
   height: 10px;
   width: 130px;
   line-height: 10px;
@@ -36,19 +35,59 @@
   border-bottom: 1px solid rgb(187, 187, 187);
 }
 
-.menu-item:hover
+#menu .menu-parent-wrapper .menu-item
+{
+  width: 50px;
+}
+
+#menu .menu-item:hover
 {
   color: #2980b9;
 }
 
-.menu-parent-wrapper,
-.menu-children-wrapper
+#menu .menu-item.selected
 {
-  float: left;
+  color: #2980b9;
+  font-weight: bold;
+}
+
+#menu .menu-parent-wrapper,
+#menu .menu-children-wrapper
+{
   background: #ffffff;
   border: 1px solid rgb(187, 187, 187);
+  border-bottom: 0px;
   pointer-events: auto;
   margin-right: 1px;
+  position: absolute;
+}
+
+#menu .sub-menu,
+#menu .nav-wrapper
+{
+  float: left;
+}
+
+#menu .sub-menu
+{
+  border-right: 1px solid rgb(187, 187, 187);
+}
+
+#menu .nav-wrapper
+{
+  width: 10px;
+}
+
+#menu .menu-nav
+{
+  width: 10px;
+  height: 10px;
+}
+
+#menu-next
+{
+  position: absolute;
+  bottom: 1px;
 }
 
 .node
