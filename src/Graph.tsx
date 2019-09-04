@@ -110,12 +110,8 @@ export default class Graph extends React.Component<IProps, IState>
                   (edge: {outputId: string, dest: Model.Node, destInput: string},
                     index) =>
                   {
-                    return <Edge key={node.path+":"+i+","+index} src={node}
-                      srcOutput={edge.outputId} dest={edge.dest}
-                      destInput={edge.destInput} offset={csize}
-                      graphRef={this.graphRef}
-                      removeEdge={this.removeEdge}
-                      moveEdge={this.moveEdge}/>
+                    return edge.dest.id !== "dummynode" ? this.createEdge(
+                      node, edge, node.path+":"+i+","+index) : "";
                   });
               })
             }
@@ -124,47 +120,69 @@ export default class Graph extends React.Component<IProps, IState>
             {
               this.graph.getNodes().map((node: Model.Node, i) =>
               {
-                return <Node key={node.path+":"+i} node={node}
-                  startUpdate={this.startUpdate}
-                  update={this.movementUpdate}
-                  endUpdate={this.endUpdate}
-                  padding={csize*2}
-                  graphRef={this.graphRef}
-                  removeNode={this.removeNode}
-                  showNodeGraph={this.showNodeGraph}>
-                  {
-                    this.graph.getNodeConnectors(node.id, "input").map(
-                    (connector: Model.Connector, j) =>
-                    {
-                      return <Connector key={j}
-                        parent={node}
-                        connector={connector}
-                        inputConnectorSelected={this.moveEdgeFromInput}
-                        outputConnectorSelected={this.newMovingConnectorEdge}
-                        updateTargetConnector={this.updateTargetConnector}
-                        radius={csize}
-                        position={node.getConnectorPosition(connector)}/>
-                    })}
-                  {this.graph.getNodeConnectors(node.id, "output").map(
-                    (connector: Model.Connector, j) =>
-                    {
-                      return <Connector key={j}
-                        parent={node}
-                        connector={connector}
-                        inputConnectorSelected={this.moveEdgeFromInput}
-                        outputConnectorSelected={this.newMovingConnectorEdge}
-                        updateTargetConnector={this.updateTargetConnector}
-                        radius={csize}
-                        position={node.getConnectorPosition(connector)}/>
-                    })}
-                </Node>
+                return node.id !== "dummynode" ? this.createNode(node, i) : "";
               })
             }
           </svg>
+          {this.createDummyNode()}
           }
         </svg>
       </div>
     );
+  }
+
+  private createNode = (node: Model.Node, i: number) =>
+  {
+    return <Node key={node.path+":"+i} node={node}
+      startUpdate={this.startUpdate} update={this.movementUpdate}
+      endUpdate={this.endUpdate} padding={csize*2} graphRef={this.graphRef}
+      removeNode={this.removeNode} showNodeGraph={this.showNodeGraph}>
+      {
+        this.graph.getNodeConnectors(node.id, "input").map(
+        (connector: Model.Connector, j) =>
+        {
+          return <Connector key={j} parent={node} connector={connector}
+            inputConnectorSelected={this.moveEdgeFromInput}
+            outputConnectorSelected={this.newMovingConnectorEdge}
+            updateTargetConnector={this.updateTargetConnector}
+            radius={csize} position={node.getConnectorPosition(connector)}/>
+        })}
+      {
+        this.graph.getNodeConnectors(node.id, "output").map(
+        (connector: Model.Connector, j) =>
+        {
+          return <Connector key={j} parent={node} connector={connector}
+            inputConnectorSelected={this.moveEdgeFromInput}
+            outputConnectorSelected={this.newMovingConnectorEdge}
+            updateTargetConnector={this.updateTargetConnector}
+            radius={csize} position={node.getConnectorPosition(connector)}/>
+        })}
+    </Node>
+  }
+
+  private createEdge = (node: Model.Node, edge?: {outputId: string,
+    dest: Model.Node, destInput: string}, key?: string) =>
+  {
+    if (edge)
+    {
+      return <Edge key={key} src={node} srcOutput={edge.outputId}
+        dest={edge.dest} destInput={edge.destInput} offset={csize}
+        graphRef={this.graphRef} removeEdge={this.removeEdge}
+        moveEdge={this.moveEdge}/>
+    }
+  }
+
+  private createDummyNode = () =>
+  {
+    if (this.state.tempNodes)
+    {
+      return <svg id="dummynode">
+        {this.createNode(this.state.tempNodes.dummy, 0)}
+        {this.createEdge(this.state.tempNodes.real,
+          this.state.tempNodes.real.getForwardEdges().find(x => x.dest.id ===
+          "dummynode"), "0")}
+      </svg>
+    }
   }
 
   // Centre graph in display on first load
@@ -597,7 +615,6 @@ export default class Graph extends React.Component<IProps, IState>
     }
 
     dummyConnector.multiple = false;
-    dummyConnector.index = 0;
 
     this.setState({ tempNodes: {dummy: dummyNode, real: node }});
     this.setState({ tempConnectors: {dummy: dummyConnector, real: connector}});

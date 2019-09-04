@@ -107,7 +107,6 @@ export default class Node extends React.Component<IProps, IState>
               `${deleteX+5} ${deleteY-5}`}/>
         </svg>}
         {this.generateTitle()}
-        {this.props.children}
         {this.generateSpecialCases()}
         {this.generateResizeIcon()}
         {properties.map((property: Model.Property, j) =>
@@ -122,6 +121,7 @@ export default class Node extends React.Component<IProps, IState>
               disabled={!!reverseEdges.find(x => x.inputId === property.id)}
               padding={this.props.padding}/>
           })}
+        {this.props.children}
         />
       </svg>
     );
@@ -305,11 +305,9 @@ export default class Node extends React.Component<IProps, IState>
     const currentPosition = vgUtils.windowToSVGPosition(
       {x: e.pageX, y: e.pageY}, this.props.graphRef);
 
-    const diffX = currentPosition.x - this.resizeMouseDown.x;
-    const diffY = currentPosition.y - this.resizeMouseDown.y;
+    const diffX = currentPosition.x - this.resizeMouseDown.x
 
     const newState = {...this.state};
-    newState.h += diffY;
     newState.w += diffX;
 
     const aspectRatio = this.state.h / this.state.w;

@@ -749,7 +749,7 @@
     }
   },
   "vector:clip": {
-    "width": 110,
+    "width": 160,
     "height": 160,
     "properties":
     {
@@ -760,8 +760,13 @@
         "rangeMin": -0.5,
         "rangeMax": 0.5,
         "increment": 0.01,
-        "x": 30,
-        "y": 30
+        "x": 65,
+        "y": 25,
+        "connector":
+        {
+          "x": 20,
+          "y": 27.5
+        }
       },
       "max.x":
       {
@@ -770,8 +775,13 @@
         "rangeMin": -0.5,
         "rangeMax": 0.5,
         "increment": 0.01,
-        "x": 70,
-        "y": 30
+        "x": 100,
+        "y": 25,
+        "connector":
+        {
+          "x": 35,
+          "y": 27.5
+        }
       },
       "min.y":
       {
@@ -780,8 +790,13 @@
         "rangeMin": -0.5,
         "rangeMax": 0.5,
         "increment": 0.01,
-        "x": 30,
-        "y": 70
+        "x": 65,
+        "y": 55,
+        "connector":
+        {
+          "x": 20,
+          "y": 45
+        }
       },
       "max.y":
       {
@@ -790,8 +805,13 @@
         "rangeMin": -0.5,
         "rangeMax": 0.5,
         "increment": 0.01,
-        "x": 70,
-        "y": 70
+        "x": 100,
+        "y": 55,
+        "connector":
+        {
+          "x": 35,
+          "y": 45
+        }
       },
       "min.z":
       {
@@ -800,8 +820,13 @@
         "rangeMin": -0.5,
         "rangeMax": 0.5,
         "increment": 0.01,
-        "x": 30,
-        "y": 110
+        "x": 65,
+        "y": 85,
+        "connector":
+        {
+          "x": 20,
+          "y": 62.5
+        }
       },
       "max.z":
       {
@@ -810,8 +835,13 @@
         "rangeMin": -0.5,
         "rangeMax": 0.5,
         "increment": 0.01,
-        "x": 70,
-        "y": 110
+        "x": 100,
+        "y": 85,
+        "connector":
+        {
+          "x": 35,
+          "y": 62.5
+        }
       }
     }
   },

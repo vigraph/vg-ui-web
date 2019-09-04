@@ -521,7 +521,8 @@ class Data
     rawMetadata.forEach((value: vgTypes.IRawMetadataItem, index: number) =>
     {
       const pInputs:
-        Array<{ id: string, connectorType: string, multiple?: boolean}> = [];
+        Array<{ id: string, connectorType: string, multiple?: boolean,
+          prop?: boolean}> = [];
 
       const pOutputs:
         Array<{ id: string, connectorType: string, multiple?: boolean}> = [];
@@ -545,7 +546,8 @@ class Data
           (input: {id: string, description: string, type: string,
             alias?: boolean}) =>
           {
-            pInputs.push({id: input.id, connectorType: input.type});
+            pInputs.push({id: input.id, connectorType: input.type,
+              prop: true});
 
             if (!input.alias)
             {
@@ -935,14 +937,19 @@ class Data
 
     let itemSection, itemType;
 
-    if (item.type && item.props)
+    let gInputs: Array<{ id: string, connectorType: string,
+      multiple?: boolean, prop?: boolean, x?: number, y?: number}> = [];
+
+    if (item.type)
     {
       const splitType = item.type.split(":");
       itemSection = splitType[0];
       itemType = splitType[1];
 
+      gInputs = metadata[itemSection][itemType].inputs;
+
       // Node properties from metadata
-      if (this.propertiesConfig[item.type])
+      if (this.propertiesConfig[item.type] && item.props)
       {
         for (const key of Object.keys(item.props))
         {
@@ -953,6 +960,14 @@ class Data
           gProps.push({id: key, value: item.props[key],
             propType,
             ...this.propertiesConfig[item.type].properties[key]});
+
+          // Iprop connector position
+          const ipropIndex = gInputs.findIndex(x => x.id === key);
+          if (ipropIndex && this.propertiesConfig[item.type].properties[key])
+          {
+            gInputs[ipropIndex] = {...gInputs[ipropIndex],
+              ...this.propertiesConfig[item.type].properties[key].connector};
+          }
         };
       }
 
@@ -975,8 +990,7 @@ class Data
       name: itemSection && itemType ? metadata[itemSection][itemType].name : "",
       type: item.type ? item.type : "",
       path: parentPath ? parentPath + "/" + item.id : item.id,
-      inputs: itemSection && itemType ?
-        metadata[itemSection][itemType].inputs : [],
+      inputs: gInputs,
       outputs: itemSection && itemType ?
         metadata[itemSection][itemType].outputs : [],
       edges: gEdges,

@@ -7,7 +7,8 @@
 
 #nodes,
 #edges,
-#edge-wrapper
+#edge-wrapper,
+#dummynode
 {
   overflow: visible;
 }
@@ -245,6 +246,11 @@
   opacity: 0.6;
 }
 
+#connector-dummyconnector .connector-icon
+{
+  opacity: 1;
+}
+
 .connector-label
 {
   font-size: x-small;
@@ -293,7 +299,7 @@
 
 .knob-dial
 {
-  stroke: black;
+  stroke: #8a9597;
   stroke-width: 3px;
 }
 

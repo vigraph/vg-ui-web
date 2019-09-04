@@ -37,15 +37,27 @@ export class Connector
       "multiple", multiple);
   }
 
-  get index(): number
+  get prop(): boolean
   {
     return this.graph.getNodeConnectorProp(this.id, this.parent, this.direction,
-      "index");
+      "prop");
   }
 
-  set index(index: number)
+  set prop(prop: boolean)
   {
     this.graph.setNodeConnectorProp(this.id, this.parent, this.direction,
-      "index", index);
+      "prop", prop);
+  }
+
+  get position(): {x: number, y: number} | null
+  {
+    return this.graph.getNodeConnectorProp(this.id, this.parent, this.direction,
+      "position");
+  }
+
+  set position(position: {x: number, y: number} | null)
+  {
+    this.graph.setNodeConnectorProp(this.id, this.parent, this.direction,
+      "position", position);
   }
 }

@@ -15,7 +15,11 @@ export interface IPropertiesConfig
         increment?: number,
         available?: any[],
         x: number,
-        y: number
+        y: number,
+        connector?: {
+          x: number,
+          y: number
+        }
       }
     }
   }
@@ -38,13 +42,15 @@ export interface IProcessedGraphItem
   name: string,
   type: string,
   path: string,
-  inputs: Array<{ id: string, connectorType: string, multiple?: boolean}>,
+  inputs: Array<{ id: string, connectorType: string, multiple?: boolean,
+    prop?: boolean, x?: number, y?: number}>,
   outputs: Array<{ id: string, connectorType: string, multiple?: boolean}>,
   edges: Array<{ output: string, destId: string, input: string}>,
   // propType = "iprop" | "prop" | "oprop"
   properties?: Array<{ id: string, propType: string, controlType: string,
     subType: string, value: any, rangeMin?: number, rangeMax?: number,
-    increment?: number, available?: any[], x: number, y:number}>,
+    increment?: number, available?: any[], x: number, y: number, connector?:
+    {x?: number, y?: number}}>,
   subGraph?: boolean, // Subgraphs
   cloneGraph?: boolean, // Clone
   selectorGraphs?: Array<{id: string, path: string}>  // Graph Selector
@@ -69,7 +75,8 @@ export interface IProcessedMetadata
     [key: string]: {
       name: string,
       section: string,
-      inputs: Array<{ id: string, connectorType: string, multiple?: boolean}>,
+      inputs: Array<{ id: string, connectorType: string, multiple?: boolean,
+        prop?: boolean}>,
       outputs: Array<{ id: string, connectorType: string, multiple?: boolean}>,
       properties: Array<{ id: string, type: string, propType: string,
         description: string}>,
