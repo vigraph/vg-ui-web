@@ -42,6 +42,7 @@ export interface IProcessedGraphItem
   name: string,
   type: string,
   path: string,
+  description: string,
   inputs: Array<{ id: string, connectorType: string, multiple?: boolean,
     prop?: boolean, x?: number, y?: number}>,
   outputs: Array<{ id: string, connectorType: string, multiple?: boolean}>,
@@ -75,6 +76,7 @@ export interface IProcessedMetadata
     [key: string]: {
       name: string,
       section: string,
+      description: string,
       inputs: Array<{ id: string, connectorType: string, multiple?: boolean,
         prop?: boolean}>,
       outputs: Array<{ id: string, connectorType: string, multiple?: boolean}>,

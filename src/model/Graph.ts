@@ -11,6 +11,7 @@
 //            name: string
 //            type: string
 //            path: string
+//            description: string
 //            inputs: Map<id, { connectorType: string, multiple: boolean,
 //              prop: boolean, position: {x, y} }>
 //            outputs: Map<id, { connectorType: string, multiple: boolean }>
@@ -57,7 +58,7 @@ export class Graph
   //
   // Load a graph from the given JSON:
   // { nodes: [
-  //     { id, name, type, path, x, y, w, h,
+  //     { id, name, type, path, description, x, y, w, h,
   //       inputs: [ { id, connectorType, multiple, prop, x, y }],
   //       outputs: [ { id, connectorType, multiple }],
   //       edges: [ { output, destId, input } ],
@@ -99,6 +100,7 @@ export class Graph
     node.position = { x: n.x || 0, y: n.y || 0 };
     node.size = { w: n.w || 50, h: n.h || 50 };
     node.path = n.path || n.id;
+    node.description = n.description || "";
     node.subGraph = n.subGraph || false;
     node.cloneGraph = n.cloneGraph || false;
     node.selectorGraphs = n.selectorGraphs || null;

@@ -599,6 +599,7 @@ class Data
         {
           name: value.name,
           section: value.section,
+          description: value.description,
           inputs: pInputs,
           outputs: pOutputs,
           properties: pProps
@@ -990,6 +991,8 @@ class Data
       name: itemSection && itemType ? metadata[itemSection][itemType].name : "",
       type: item.type ? item.type : "",
       path: parentPath ? parentPath + "/" + item.id : item.id,
+      description: itemSection && itemType ?
+        metadata[itemSection][itemType].description : "",
       inputs: gInputs,
       outputs: itemSection && itemType ?
         metadata[itemSection][itemType].outputs : [],

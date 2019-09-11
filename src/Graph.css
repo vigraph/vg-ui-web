@@ -91,6 +91,60 @@
   bottom: 1px;
 }
 
+#info
+{
+  width: 280px;
+  height: 95px;
+  border: 1px solid white;
+  background: #222222;
+  position: absolute;
+  top: 0px;
+  left: 50%;
+  margin-left: -100px;
+  color: white;
+}
+
+#info .info-text
+{
+  position: absolute;
+  text-align: center;
+  font-size: 10px;
+  width: 95%;
+  margin-left: 2.5%;
+}
+
+#info .name
+{
+  top: 14px;
+  font-weight: bold;
+  font-size: 16px;
+  height: 16px;
+}
+
+#info .id
+{
+  top: 36px;
+  font-size: 12px;
+}
+
+#info .description
+{
+  line-height: 16px;
+  top: 56px;
+  font-size: 14px;
+  height: 16px;
+}
+
+#info .section
+{
+  position: absolute;
+  top: 2px;
+  right: 0px;
+  text-align: right;
+  height: 12px;
+  margin-right: 1%;
+}
+
 .node
 {
   overflow: visible;

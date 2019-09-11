@@ -11,6 +11,7 @@ import Connector from './Connector';
 import Edge from './Edge';
 import Node from './Node';
 import Menu from './Menu';
+import Info from './Info';
 
 const csize: number = 5;
 const zoomFactor: number = 1.1;
@@ -29,6 +30,7 @@ interface IState
   tempConnectors:{ dummy: Model.Connector,  real: Model.Connector} | null,
   targetConnector: { connector: Model.Connector, parent: Model.Node } | null,
   showMenu: boolean,
+  showInfo: Model.Node | null,
   view: {x: number, y: number, w: number, h: number}
 }
 
@@ -68,6 +70,7 @@ export default class Graph extends React.Component<IProps, IState>
       tempConnectors: null,
       targetConnector: null,
       showMenu: false,
+      showInfo: null,
       view: viewDefault
     };
 
@@ -96,6 +99,9 @@ export default class Graph extends React.Component<IProps, IState>
           menuClosed={this.menuClosed}
           menuItemSelected={this.menuItemSelected}/>}
 
+        {this.state.showInfo && <Info graph={this.graph}
+          node={this.state.showInfo} deleteNode={this.removeNode}/>}
+
         <svg id="graph"
           viewBox={`${view.x} ${view.y} ${view.w} ${view.h}`}
           ref={(ref) => { this.graphRef = ref; }}
@@ -110,8 +116,9 @@ export default class Graph extends React.Component<IProps, IState>
                   (edge: {outputId: string, dest: Model.Node, destInput: string},
                     index) =>
                   {
-                    return edge.dest.id !== "dummynode" ? this.createEdge(
-                      node, edge, node.path+":"+i+","+index) : "";
+                    return edge.dest.id !== "dummynode" ?
+                      this.createEdgeComponent(node, edge,
+                      node.path+":"+i+","+index) : "";
                   });
               })
             }
@@ -120,7 +127,8 @@ export default class Graph extends React.Component<IProps, IState>
             {
               this.graph.getNodes().map((node: Model.Node, i) =>
               {
-                return node.id !== "dummynode" ? this.createNode(node, i) : "";
+                return node.id !== "dummynode" ?
+                  this.createNodeComponent(node, i) : "";
               })
             }
           </svg>
@@ -131,12 +139,13 @@ export default class Graph extends React.Component<IProps, IState>
     );
   }
 
-  private createNode = (node: Model.Node, i: number) =>
+  private createNodeComponent = (node: Model.Node, i: number) =>
   {
     return <Node key={node.path+":"+i} node={node}
       startUpdate={this.startUpdate} update={this.movementUpdate}
       endUpdate={this.endUpdate} padding={csize*2} graphRef={this.graphRef}
-      removeNode={this.removeNode} showNodeGraph={this.showNodeGraph}>
+      removeNode={this.removeNode} showNodeGraph={this.showNodeGraph}
+      showNodeInfo={this.showNodeInfo}>
       {
         this.graph.getNodeConnectors(node.id, "input").map(
         (connector: Model.Connector, j) =>
@@ -160,7 +169,7 @@ export default class Graph extends React.Component<IProps, IState>
     </Node>
   }
 
-  private createEdge = (node: Model.Node, edge?: {outputId: string,
+  private createEdgeComponent = (node: Model.Node, edge?: {outputId: string,
     dest: Model.Node, destInput: string}, key?: string) =>
   {
     if (edge)
@@ -177,8 +186,8 @@ export default class Graph extends React.Component<IProps, IState>
     if (this.state.tempNodes)
     {
       return <svg id="dummynode">
-        {this.createNode(this.state.tempNodes.dummy, 0)}
-        {this.createEdge(this.state.tempNodes.real,
+        {this.createNodeComponent(this.state.tempNodes.dummy, 0)}
+        {this.createEdgeComponent(this.state.tempNodes.real,
           this.state.tempNodes.real.getForwardEdges().find(x => x.dest.id ===
           "dummynode"), "0")}
       </svg>
@@ -310,7 +319,12 @@ export default class Graph extends React.Component<IProps, IState>
     }
     else
     {
-      this.setState({showMenu: false});
+      if (this.state.showMenu)
+      {
+        this.setState({showMenu: false});
+      }
+
+      this.clearInfo();
 
       window.addEventListener('mousemove', this.handleGraphDrag);
       window.addEventListener('mouseup', this.handleGraphDragRelease);
@@ -362,9 +376,27 @@ export default class Graph extends React.Component<IProps, IState>
   // Node/Edge functions
   //============================================================================
 
+  private showNodeInfo = (node: Model.Node) =>
+  {
+    if (!this.state.showInfo || node.id !== this.state.showInfo.id)
+    {
+      this.setState({showInfo: node});
+    }
+  }
+
+  private clearInfo = () =>
+  {
+    if (this.state.showInfo)
+    {
+      this.setState({showInfo: null});
+    }
+  }
+
   private showNodeGraph = (path: string, pathSpecific?: string,
     sourceSpecific?: string) =>
   {
+    this.clearInfo();
+
     this.currentGraphPath.push({path, pathSpecific});
 
     this.graph = new Model.Graph();
@@ -442,6 +474,8 @@ export default class Graph extends React.Component<IProps, IState>
   private removeNode = (node: Model.Node) =>
   {
     this.graph.beginTransaction();
+
+    this.clearInfo();
 
     vgData.deleteNode(node.path);
 
