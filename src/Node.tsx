@@ -51,6 +51,7 @@ export default class Node extends React.Component<IProps, IState>
   private mouseDown: {x: number, y: number, t: number};
   private resizeMouseDown: {x: number, y: number};
   private titleHeight: number;
+  private updateStarted: boolean;
 
   constructor(props: IProps)
   {
@@ -72,6 +73,7 @@ export default class Node extends React.Component<IProps, IState>
     this.mouseDown = {x: 0, y: 0, t: 0};
     this.resizeMouseDown = {x: 0, y: 0};
     this.titleHeight = fontSize;
+    this.updateStarted = false;
   }
 
   public render()
@@ -228,10 +230,6 @@ export default class Node extends React.Component<IProps, IState>
 
     this.offsetX = currentPosition.x - this.state.x;
     this.offsetY = currentPosition.y - this.state.y;
-    if (this.props.startUpdate)
-    {
-      this.props.startUpdate();
-    }
   }
 
   private handleMouseUp = (e: MouseEvent) =>
@@ -251,12 +249,20 @@ export default class Node extends React.Component<IProps, IState>
     {
       this.props.endUpdate();
     }
+
+    this.updateStarted = false;
   }
 
   private handleMouseMove = (e: MouseEvent) =>
   {
     const currentPosition = vgUtils.windowToSVGPosition(
       {x: e.pageX, y: e.pageY}, this.props.graphRef);
+
+    if (this.props.startUpdate && !this.updateStarted)
+    {
+      this.updateStarted = true;
+      this.props.startUpdate();
+    }
 
     if (this.state.dragging)
     {

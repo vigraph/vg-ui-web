@@ -36,8 +36,7 @@ interface IState
 
 export default class Graph extends React.Component<IProps, IState>
 {
-  private graphs: Model.Graph[] = [];
-  private graphIndex: number = -1;
+  private graph: Model.Graph;
   private mouseClick: {x: number, y: number};
   private idCount: number;
   private graphRef: SVGSVGElement | null;
@@ -53,13 +52,13 @@ export default class Graph extends React.Component<IProps, IState>
     if (props.from)
     {
       // Note we load the graph directly, not doing forceUpdate()
-      this.graph.loadFrom(props.from);
+      this.graph.loadFrom(props.from, true, "graph");
     }
     else
     {
       vgData.generateGraph((json:any) =>
         {
-          this.graph.loadFrom(json);
+          this.graph.loadFrom(json, true, "graph");
           this.forceUpdate();
         });
     }
@@ -79,14 +78,6 @@ export default class Graph extends React.Component<IProps, IState>
     this.graphRef = null;
     this.firstLoad = true;
     this.currentGraphPath = [];
-  }
-
-  // Load a new graph after mounting
-  public loadFrom(json: any)
-  {
-    this.graph = new Model.Graph();
-    this.graph.loadFrom(json);
-    this.forceUpdate();
   }
 
   public render()
@@ -238,29 +229,32 @@ export default class Graph extends React.Component<IProps, IState>
 
   public undo = () =>
   {
+    this.clearInfo();
     this.graph.undo();
-    this.forceUpdate();
+    this.resetView();
   }
 
   public redo = () =>
   {
+    this.clearInfo();
     this.graph.redo();
-    this.forceUpdate();
+    this.resetView();
   }
 
   public goBack = () =>
   {
-    if (this.graphIndex > 0)
+    this.clearInfo();
+    if (this.graph.back() <= 1)
     {
-      this.graphIndex--;
-
-      this.currentGraphPath.pop();
-
-      this.firstLoad = true;
-      this.setState({view: viewDefault});
-
-      this.props.notifyGraphRoot(this.graphIndex < 1);
+      this.props.notifyGraphRoot(true);
     }
+    this.resetView();
+  }
+
+  private resetView = () =>
+  {
+    this.firstLoad = true;
+    this.setState({view: viewDefault});
   }
 
   private startUpdate = () =>
@@ -399,17 +393,15 @@ export default class Graph extends React.Component<IProps, IState>
 
     this.currentGraphPath.push({path, pathSpecific});
 
-    this.graph = new Model.Graph();
-
     const sourcePath = path + (sourceSpecific ? sourceSpecific : "");
     const parentPath = path + (pathSpecific ? pathSpecific : "");
 
     vgData.generateGraph((json:any) =>
       {
         // Reset View
-        this.firstLoad = true;
-        this.graph.loadFrom(json);
-        this.setState({view: viewDefault});
+        this.graph.forward(json, "graph/" + path);
+        this.resetView();
+        this.props.notifyGraphRoot(false);
       },
       {sourcePath, parentPath});
   }
@@ -741,25 +733,4 @@ export default class Graph extends React.Component<IProps, IState>
   {
     this.setState({targetConnector: target});
   }
-
-  private get graph(): Model.Graph
-  {
-    return this.graphs[this.graphIndex];
-  }
-
-  private set graph(graph: Model.Graph)
-  {
-    // Move forward
-    this.graphIndex++;
-
-    if (this.graphs.length > this.graphIndex)
-    {
-      this.graphs = this.graphs.slice(0, this.graphIndex);
-    }
-
-    this.props.notifyGraphRoot(this.graphIndex < 1);
-
-    this.graphs.push(graph);
-  }
-
 }

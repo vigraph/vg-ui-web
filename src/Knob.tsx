@@ -208,11 +208,14 @@ export default class Knob extends React.Component<IProps, IState>
       newValue = Math.pow(10, newValue);
     }
 
-    this.setState({currentValue: newValue});
-
-    if (this.props.update)
+    if (this.state.currentValue !== newValue)
     {
-      this.props.update(newValue);
+      this.setState({currentValue: newValue});
+
+      if (this.props.update)
+      {
+        this.props.update(newValue);
+      }
     }
   }
 

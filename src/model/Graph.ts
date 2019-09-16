@@ -7,6 +7,7 @@
 
 // State structure:
 // {
+//   id: string,
 //   nodes: Map<id, {
 //            name: string
 //            type: string
@@ -48,6 +49,7 @@ export class Graph
   private history: Array<Map<string, any>> = [];
   private historyIndex: number = 0;  // Index of current state
   private inTransaction: boolean = false;
+  private lastUndoIndex: number = 0;
 
   public constructor()
   {
@@ -68,9 +70,13 @@ export class Graph
   //       cloneGraph: boolean,
   //       selectorGraphs: node[]
   //     } ] }
-  public loadFrom(json: any)
+  // Baseline set if given json is the baseline graph
+  public loadFrom(json: any, baseline: boolean, id: string)
   {
     this.beginTransaction();
+
+    this.setGraphID(id);
+
     // First pass to create nodes, connectors and properties
     for (const n of json.nodes)
     {
@@ -90,7 +96,20 @@ export class Graph
     }
 
     this.commitTransaction();
-    this.resetBaseline();
+    if (baseline)
+    {
+      this.resetBaseline();
+    }
+  }
+
+  public setGraphID(id: string)
+  {
+    this.state = this.state.setIn(["id"], id);
+  }
+
+  public getGraphID(): string
+  {
+    return this.state.get("id");
   }
 
   public addNodeFromJSON(n: any)
@@ -549,26 +568,110 @@ export class Graph
     }
   }
 
+  // Undo - go back in state history until two graph states have the same id.
+  // Undo from the newer state to the older state.
   public undo()
   {
     if (this.historyIndex > 0)
     {
-      this.stateMoveUpdate(this.history[this.historyIndex],
-        this.history[this.historyIndex - 1]);
+      let flag = false;
+      const indexStart = this.historyIndex;
 
-      this.historyIndex--;
+      while (!flag)
+      {
+        const currentStateID = this.getGraphID();
+        this.historyIndex--;
+        const newStateID = this.getGraphID();
+
+        if (currentStateID === newStateID)
+        {
+          flag = true;
+          this.stateMoveUpdate(this.history[this.historyIndex + 1],
+            this.history[this.historyIndex]);
+        }
+        else if (this.historyIndex < 1)
+        {
+          flag = true;
+          this.historyIndex = indexStart;
+        }
+      }
+
+      this.lastUndoIndex = this.historyIndex;
     }
   }
 
+  // Redo - from the index of the last undo (to account for navigation without
+  // state change) look forward until two graph state ids match, then redo from
+  // the older to the newer.
   public redo()
   {
-    if (this.historyIndex < this.history.length - 1)
+    if (this.lastUndoIndex < this.history.length - 1)
     {
-      this.stateMoveUpdate(this.history[this.historyIndex],
-        this.history[this.historyIndex + 1]);
+      let flag = false;
+      const indexStart = this.lastUndoIndex;
+      this.historyIndex = indexStart;
 
-      this.historyIndex++;
+      while (!flag)
+      {
+        const currentStateID = this.getGraphID();
+        this.historyIndex++;
+        const newStateID = this.getGraphID();
+
+        if (currentStateID === newStateID)
+        {
+          flag = true;
+          this.stateMoveUpdate(this.history[this.historyIndex - 1],
+            this.history[this.historyIndex]);
+        }
+        else if (this.historyIndex === this.history.length - 1)
+        {
+          flag = true;
+          this.historyIndex = indexStart;
+        }
+      }
+
+      this.lastUndoIndex = this.historyIndex;
     }
+  }
+
+  // Go forward in graph navigation - set current state (history) to a new clear
+  // graph
+  public forward(json: any, id: string)
+  {
+    this.history.push(Map<string, any>());
+    this.historyIndex = this.history.length - 1;
+
+    this.loadFrom(json, false, id);
+  }
+
+  // Go back in graph navigation - set current state (history) to the last
+  // occurance of the graph (by ID) in state history.
+  public back()
+  {
+    const currentID = this.getGraphID();
+    const newID = currentID.slice(0,currentID.lastIndexOf("/"));
+
+    let flag = false;
+
+    while (!flag)
+    {
+      this.historyIndex--;
+
+      if (this.historyIndex < 1)
+      {
+        flag = true;
+      }
+      else if (this.getGraphID() === newID)
+      {
+        flag = true;
+
+        this.history.push(this.state);
+        this.historyIndex = this.history.length - 1;
+      }
+    }
+
+    // Return graph navigation depth (1 = root graph)
+    return this.getGraphID().split("/").length;
   }
 
   private get state(): Map<string, any>
