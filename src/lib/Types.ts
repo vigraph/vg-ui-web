@@ -47,7 +47,7 @@ export interface IProcessedGraphItem
     prop?: boolean, x?: number, y?: number}>,
   outputs: Array<{ id: string, connectorType: string, multiple?: boolean}>,
   edges: Array<{ output: string, destId: string, input: string}>,
-  // propType = "iprop" | "prop" | "oprop"
+  // propType = "input" | "setting"
   properties?: Array<{ id: string, propType: string, controlType: string,
     subType: string, value: any, rangeMin?: number, rangeMax?: number,
     increment?: number, available?: any[], x: number, y: number, connector?:

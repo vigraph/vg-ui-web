@@ -551,7 +551,7 @@ class Data
 
             if (!input.alias)
             {
-              pProps.push({id: input.id, type: input.type, propType: "iprop",
+              pProps.push({id: input.id, type: input.type, propType: "input",
                 description: input.description });
             }
           });
@@ -565,7 +565,7 @@ class Data
             {
               if (!prop.alias)
               {
-                pProps.push({id: prop.id, type: prop.type, propType: "prop",
+                pProps.push({id: prop.id, type: prop.type, propType: "setting",
                   description: prop.description });
               }
             });
@@ -956,7 +956,7 @@ class Data
         {
           const fProp =  metadata[itemSection][itemType].properties.find(x =>
               x.id === key);
-          const propType = fProp ? fProp.propType : "prop";
+          const propType = fProp ? fProp.propType : "";
 
           gProps.push({id: key, value: item.props[key],
             propType,

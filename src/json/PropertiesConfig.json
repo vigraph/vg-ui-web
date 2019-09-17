@@ -1261,6 +1261,93 @@
     "height": 200,
     "properties":
     {
+      "port":
+      {
+        "controlType": "none",
+        "subType": "default",
+        "x": 10,
+        "y": 18
+      }
+    }
+  },
+  "laser:idn-transmit":
+  {
+    "width": 130,
+    "height": 100,
+    "properties":
+    {
+      "config.interval":
+      {
+        "controlType": "none",
+        "subType": "default",
+        "x": 10,
+        "y": 16
+      },
+      "host.address":
+      {
+        "controlType": "none",
+        "subType": "default",
+        "x": 10,
+        "y": 22
+      },
+      "host.port":
+      {
+        "controlType": "none",
+        "subType": "default",
+        "x": 10,
+        "y": 28
+      },
+      "intensity.enabled":
+      {
+        "controlType": "none",
+        "subType": "default",
+        "x": 10,
+        "y": 34
+      },
+      "packet.size":
+      {
+        "controlType": "none",
+        "subType": "default",
+        "x": 10,
+        "y": 40
+      },
+      "source.address":
+      {
+        "controlType": "none",
+        "subType": "default",
+        "x": 10,
+        "y": 46
+      }
+    }
+  },
+  "midi:midi":
+  {
+    "width": 120,
+    "height": 55,
+    "properties":
+    {
+      "channel-offset":
+      {
+        "controlType": "none",
+        "subType": "default",
+        "x": 10,
+        "y": 16
+      },
+      "device":
+      {
+        "controlType": "none",
+        "subType": "default",
+        "x": 10,
+        "y": 22
+      }
+    }
+  },
+  "midi:distributor":
+  {
+    "width": 100,
+    "height": 40,
+    "properties":
+    {
     }
   }
 }

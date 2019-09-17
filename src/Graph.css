@@ -212,6 +212,11 @@
   user-select: none; /* Standard */
 }
 
+.settings.label
+{
+  font-size: x-small;
+}
+
 #node-dummynode
 {
   pointer-events: none;

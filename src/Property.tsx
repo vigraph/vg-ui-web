@@ -111,7 +111,8 @@ export default class Property extends React.Component<IProps, IState>
 
         {this.createComponent()}
 
-        {(this.state.hover || this.state.updating) ?
+        {((this.state.hover || this.state.updating) &&
+          controlTypes[this.property.controlType]) ?
           <text className="label property-label" x={0} y={0}>
           {this.props.name + ": " + displayValue}</text> : ""}
       </svg>
@@ -126,7 +127,17 @@ export default class Property extends React.Component<IProps, IState>
 
     if (!Component)
     {
-      return "";
+      if (this.property.propType === "setting")
+      {
+        return <text className="settings label" x={this.property.position.x}
+          y={this.property.position.y}>
+            {this.property.id + ": " + this.property.value}
+          </text>
+      }
+      else
+      {
+        return "";
+      }
     }
     else if (this.property.controlType === "graphSelector")
     {
