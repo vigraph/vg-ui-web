@@ -141,7 +141,8 @@ export default class Node extends React.Component<IProps, IState>
     }
     else
     {
-      const linesArray = vgUtils.wrapText(this.node.name, width, fontSize);
+      const linesArray = vgUtils.wrapText(this.node.name,
+        width - this.props.padding, fontSize);
 
       this.titleHeight = linesArray.length * fontSize;
 

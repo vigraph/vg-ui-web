@@ -14,6 +14,7 @@ import Menu from './Menu';
 import Info from './Info';
 
 const csize: number = 5;
+const labelFontSize: number = 10;
 const zoomFactor: number = 1.1;
 const viewDefault: {x: number, y: number, w: number, h: number} =
   {x: 0, y: 0, w: 5000, h: 5000};
@@ -124,6 +125,7 @@ export default class Graph extends React.Component<IProps, IState>
             }
           </svg>
           {this.createDummyNode()}
+          {this.createConnectorLabel()}
           }
         </svg>
       </div>
@@ -182,6 +184,47 @@ export default class Graph extends React.Component<IProps, IState>
           this.state.tempNodes.real.getForwardEdges().find(x => x.dest.id ===
           "dummynode"), "0")}
       </svg>
+    }
+  }
+
+  private createConnectorLabel = () =>
+  {
+    if (this.state.targetConnector)
+    {
+      const node = this.state.targetConnector.parent;
+      const connector = this.state.targetConnector.connector;
+
+      const position = node.getConnectorPosition(connector);
+
+      const x = node.position.x + position.x;
+      const y = node.position.y + position.y;
+
+      const textBox = vgUtils.textBoundingSize(connector.id, labelFontSize);
+
+      if (connector.direction === "input")
+      {
+        return <svg className="connector-label-wrapper input"
+          x={x - textBox.width - csize} y={y - ((textBox.height + 8) / 2)}>
+          <rect className="connector-label-border" height={textBox.height+8}
+            width={textBox.width+8} x={0} y={0}/>
+          <text className="label connector-label input"
+            fontSize={labelFontSize} x={4} y={textBox.height+2}>
+            {connector.id}
+          </text>
+          </svg>
+      }
+      else
+      {
+        return <svg className="connector-label-wrapper output"
+          x={x + (3 * csize) + 1} y={y - ((textBox.height + 8) / 2)}>
+          <rect className="connector-label-border" height={textBox.height+8}
+            width={textBox.width+8} x={0} y={0}/>
+          <text className="label connector-label output"
+            fontSize={labelFontSize} x={4} y={textBox.height+2}>
+            {connector.id}
+          </text>
+          </svg>
+      }
     }
   }
 

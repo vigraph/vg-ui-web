@@ -192,7 +192,6 @@
 
 .label
 {
-  font-size: small;
   fill: #ccc;
   -webkit-user-select: none; /* Safari */
   -moz-user-select: none; /* Firefox */
@@ -314,14 +313,19 @@
   opacity: 1;
 }
 
-.connector-label
+.connector-label-wrapper
 {
-  font-size: x-small;
+  overflow: visible;
+  pointer-events: none;
 }
 
-.connector-label.input
+.connector-label-border
 {
-  text-anchor: end;
+  fill: #111;
+  fill-opacity: 0.7;
+  stroke: #ccc;
+  stroke-width: 0.75;
+  overflow: visible;
 }
 
 .property-wrapper

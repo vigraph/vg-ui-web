@@ -15,21 +15,11 @@ interface IProps
   position: {x: number, y: number};
 }
 
-interface IState
-{
-  hover: boolean;
-}
-
-export default class Connector extends React.Component<IProps,IState>
+export default class Connector extends React.Component<IProps>
 {
   constructor(props: IProps)
   {
     super(props);
-
-    this.state =
-    {
-      hover: false
-    }
   }
 
   public render()
@@ -53,28 +43,8 @@ export default class Connector extends React.Component<IProps,IState>
           cx={position.x+(2*radius)}
           cy={position.y}
           r={radius} />
-        {this.state.hover ? this.createLabels() : ""}
       </svg>
     );
-  }
-
-  private createLabels = () =>
-  {
-    const position = this.props.position;
-    const radius = this.props.radius;
-
-    if (this.props.connector.direction === "input")
-    {
-      return <text className="label connector-label input"
-                x={position.x}
-                y={position.y}>{this.props.connector.id}</text>
-    }
-    else
-    {
-      return <text className="label connector-label output"
-                x={position.x + (radius*3)}
-                y={position.y}>{this.props.connector.id}</text>
-    }
   }
 
   private mouseDown = (e: React.MouseEvent<SVGRectElement>) =>
@@ -99,15 +69,11 @@ export default class Connector extends React.Component<IProps,IState>
   {
     this.props.updateTargetConnector({connector: this.props.connector,
       parent: this.props.parent});
-
-    this.setState({hover: true});
   }
 
   private mouseLeave = (e: React.MouseEvent<SVGRectElement>) =>
   {
     this.props.updateTargetConnector(null);
-
-    this.setState({hover: false});
   }
 
 }

@@ -39,6 +39,21 @@ class Utils
     return svgPosition;
   }
 
+  // Calculate text bounding box
+  public textBoundingSize(text: string, fontSize: number)
+  {
+    const svgEle = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    const textEle = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    svgEle.appendChild(textEle);
+    document.body.appendChild(svgEle);
+    textEle.textContent = text;
+    textEle.setAttribute("font-size", fontSize.toString());
+    const boundingRect = textEle.getBoundingClientRect();
+    document.body.removeChild(svgEle);
+
+    return {height: boundingRect.height, width: boundingRect.width};
+  }
+
   // Calculate text wrapping and return text split into array of wrapped lines
   public wrapText(text: string, lineWidth: number, fontSize: number)
   {
@@ -48,6 +63,7 @@ class Utils
     const textEle = document.createElementNS('http://www.w3.org/2000/svg', 'text');
     svgEle.appendChild(textEle);
     document.body.appendChild(svgEle);
+    textEle.setAttribute("font-size", fontSize.toString());
 
     const wordsWithComputedWidth = words.map(word =>
     {
