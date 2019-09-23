@@ -22,6 +22,7 @@
 //            size: { w, h },
 //            properties: Map<id, {
 //                                  propType: string,
+//                                  valueType: string,
 //                                  controlType: string,
 //                                  subType: string,
 //                                  position: {x, y},
@@ -64,8 +65,8 @@ export class Graph
   //       inputs: [ { id, connectorType, multiple, prop, x, y }],
   //       outputs: [ { id, connectorType, multiple }],
   //       edges: [ { output, destId, input } ],
-  //       properties: [ { id, propType, controlType, subType, x, y, value,
-  //                       rangeMin, rangeMax, increment } ],
+  //       properties: [ { id, propType, valueType, controlType, subType, x, y,
+  //                       value, rangeMin, rangeMax, increment } ],
   //       subGraph: boolean,
   //       cloneGraph: boolean,
   //       selectorGraphs: node[]
@@ -150,7 +151,8 @@ export class Graph
       for (const p of n.properties)
       {
         const property = this.addProperty(n.id, p.id, p.propType);
-        property.controlType = p.controlType || "default"
+        property.valueType = p.valueType || "";
+        property.controlType = p.controlType || "default";
         property.subType = p.subType || "?";
         property.position = { x: p.x || 0, y: p.y || 0 };
         property.value = p.value || 0;

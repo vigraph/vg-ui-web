@@ -932,9 +932,10 @@ class Data
       }
     }
 
-    const gProps: Array<{ id: string, propType: string, controlType: string,
-      subType: string, value: any, rangeMin?: number, rangeMax?: number,
-      increment?: number, available?: any[], x: number, y:number}> = [];
+    const gProps: Array<{ id: string, propType: string, valueType: string,
+      controlType: string, subType: string, value: any, rangeMin?: number,
+      rangeMax?: number, increment?: number, available?: any[], x: number,
+      y:number}> = [];
 
     let itemSection, itemType;
 
@@ -957,9 +958,10 @@ class Data
           const fProp =  metadata[itemSection][itemType].properties.find(x =>
               x.id === key);
           const propType = fProp ? fProp.propType : "";
+          const valueType = fProp ? fProp.type : "";
 
           gProps.push({id: key, value: item.props[key],
-            propType,
+            propType, valueType,
             ...this.propertiesConfig[item.type].properties[key]});
 
           // Iprop connector position
