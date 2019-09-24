@@ -187,7 +187,7 @@ export default class ColourPicker extends React.Component<IProps, IState>
       </linearGradient>
 
       <svg id="picker-wrapper" className="picker wrapper"
-        x={30} y={0}>
+        x={0} y={25}>
 
         <rect className="picker-wrapper-background" x={0} y={0}
           width={settings.barLength + (padding * 2)}
@@ -310,7 +310,7 @@ export default class ColourPicker extends React.Component<IProps, IState>
     const svgPosition = vgUtils.windowToSVGPosition({x: e.pageX, y: e.pageY},
         this.pickerRef);
 
-    const position = svgPosition.x - this.props.position.x + this.settings.padding;
+    const position = svgPosition.x - this.settings.padding;
     const newAttr = position / this.settings.barLength;
     const newValue = JSON.parse(JSON.stringify(this.allCurrentValues));
 
@@ -373,7 +373,7 @@ export default class ColourPicker extends React.Component<IProps, IState>
     const svgPosition = vgUtils.windowToSVGPosition({x: e.pageX, y: e.pageY},
       this.pickerRef);
 
-    const position = svgPosition.x - this.props.position.x + this.settings.padding;
+    const position = svgPosition.x - this.settings.padding;
     const newAttr = position / this.settings.barLength;
     const newValue = JSON.parse(JSON.stringify(this.allCurrentValues));
 
