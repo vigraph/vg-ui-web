@@ -5,7 +5,7 @@ import Property from './Property';
 import WebsocketCanvas from './WebsocketCanvas';
 
 import { vgData } from './data/Data';
-import { vgUtils } from './lib/Utils'
+import { vgUtils } from './lib/Utils';
 
 const fontSize = 12;
 
@@ -21,6 +21,8 @@ interface IProps
   showNodeGraph: (path: string, pathSpecific?: string,
     sourceSpecific?: string) => void;
   showNodeInfo: (node: Model.Node) => void;
+  updateTargetProperty: (updateID: string, property: Model.Property | null,
+    updating: boolean) => void;
 }
 
 interface IState
@@ -122,7 +124,8 @@ export default class Node extends React.Component<IProps, IState>
               endUpdate={this.props.endUpdate}
               showNodeGraph={this.props.showNodeGraph}
               disabled={!!reverseEdges.find(x => x.inputId === property.id)}
-              padding={this.props.padding}/>
+              padding={this.props.padding}
+              updateTargetProperty={this.props.updateTargetProperty}/>
           })}
         {this.props.children}
         />

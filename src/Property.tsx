@@ -33,6 +33,8 @@ interface IProps
     sourceSpecific?: string) => void;
   disabled: boolean;
   padding: number;
+  updateTargetProperty: (updateID: string, property: Model.Property | null,
+    updating: boolean) => void;
 }
 
 interface IState
@@ -53,7 +55,6 @@ export default class Property extends React.Component<IProps, IState>
   }
 
   private property: Model.Property;
-  private numerical: boolean;
 
   constructor(props: IProps)
   {
@@ -61,23 +62,16 @@ export default class Property extends React.Component<IProps, IState>
 
     this.property = props.property;
 
-    // Buttons, knobs and sliders are numerical and snap to increments. All
-    // other types e.g. selectors and colourPicker are not numerical.
+    // Knobs and sliders are numerical and snap to increments.
     if (this.property.controlType === "knob" || this.property.controlType ===
       "slider")
     {
-      this.numerical = true;
-
       // Ensure value conforms to increment bounds
       const snapValue = this.snapValueToIncrement(this.property.value);
       if (this.property.value !== snapValue)
       {
         this.property.value = snapValue;
       }
-    }
-    else
-    {
-      this.numerical = false;
     }
 
     this.state =
@@ -92,17 +86,6 @@ export default class Property extends React.Component<IProps, IState>
   {
     const position = this.property.position;
 
-    let displayValue = "";
-
-    if (this.numerical && typeof this.property.value === "number")
-    {
-      displayValue = this.property.value.toString();
-    }
-    else if (typeof this.property.value === "string")
-    {
-      displayValue = this.property.value;
-    }
-
     return(
       <svg id={this.props.name.toLowerCase()+"-property"}
         className={`property-wrapper ${this.property.controlType}
@@ -112,11 +95,6 @@ export default class Property extends React.Component<IProps, IState>
         onMouseLeave={this.mouseLeave}>
 
         {this.createComponent()}
-
-        {((this.state.hover || this.state.updating) &&
-          controlTypes[this.property.controlType]) ?
-          <text className="label property-label" x={0} y={0}>
-          {this.props.name + ": " + displayValue}</text> : ""}
       </svg>
     );
   }
@@ -163,7 +141,6 @@ export default class Property extends React.Component<IProps, IState>
           startUpdate={this.startPropertyUpdate} update={this.propertyUpdate}
           endUpdate={this.endPropertyUpdate} disabled={this.props.disabled}
           size={curveSize}/>
-
     }
     else
     {
@@ -177,6 +154,7 @@ export default class Property extends React.Component<IProps, IState>
   private startPropertyUpdate = () =>
   {
     this.setState({updating: true});
+    this.props.updateTargetProperty(this.property.id, this.property, true);
 
     if (this.props.startUpdate)
     {
@@ -187,6 +165,8 @@ export default class Property extends React.Component<IProps, IState>
   private endPropertyUpdate = () =>
   {
     this.setState({updating: false});
+    this.props.updateTargetProperty(this.property.id, this.state.hover ?
+      this.property : null, false);
 
     if (this.props.endUpdate)
     {
@@ -196,7 +176,7 @@ export default class Property extends React.Component<IProps, IState>
 
   private propertyUpdate = (value: any) =>
   {
-    const newValue = this.numerical && typeof value === "number" ?
+    const newValue = this.property.valueType === "number" ?
       this.snapValueToIncrement(value) : value;
 
     this.setState({value: newValue});
@@ -254,11 +234,19 @@ export default class Property extends React.Component<IProps, IState>
   private mouseEnter = (event: React.MouseEvent<SVGSVGElement>) =>
   {
     this.setState({hover: true});
+    if (!this.state.updating)
+    {
+      this.props.updateTargetProperty(this.property.id, this.property, false);
+    }
   }
 
   private mouseLeave = (event: React.MouseEvent<SVGSVGElement>) =>
   {
     this.setState({hover: false});
+    if (!this.state.updating)
+    {
+      this.props.updateTargetProperty(this.property.id, null, false);
+    }
   }
 
 }

@@ -155,7 +155,7 @@ export class Graph
         property.controlType = p.controlType || "default";
         property.subType = p.subType || "?";
         property.position = { x: p.x || 0, y: p.y || 0 };
-        property.value = p.value || 0;
+        property.value = p.value;
         property.range = { min: p.rangeMin || 0, max: p.rangeMax || 1};
         property.increment = p.increment || 1;
         property.available = p.available || [];

@@ -501,11 +501,6 @@
   fill: grey;
 }
 
-#colour-property .property-label
-{
-  display: none;
-}
-
 .property-wrapper.graphSelector.disabled
 {
   pointer-events: auto;
@@ -564,11 +559,6 @@
 #graph-selector-down
 {
   fill: blue;
-}
-
-#message-property .property-label
-{
-  display: none;
 }
 
 #text-display-text
@@ -673,4 +663,31 @@
 .settings.label.centre
 {
   text-anchor: middle;
+}
+
+.property-label-wrapper
+{
+  overflow: visible;
+  pointer-events: none;
+}
+
+.property-label-border
+{
+  fill: #111;
+  fill-opacity: 0.8;
+  stroke: #ccc;
+  stroke-width: 0.75;
+  overflow: visible;
+}
+
+.property-label
+{
+  text-anchor: middle;
+}
+
+.property-label-wrapper.graphSelector,
+.property-label-wrapper.colourPicker,
+.property-label-wrapper.textDisplay
+{
+  display: none;
 }

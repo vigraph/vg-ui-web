@@ -14,7 +14,8 @@ import Menu from './Menu';
 import Info from './Info';
 
 const csize: number = 5;
-const labelFontSize: number = 10;
+const connectorLabelFontSize: number = 10;
+const propertyLabelFontSize: number = 10;
 const zoomFactor: number = 1.1;
 const viewDefault: {x: number, y: number, w: number, h: number} =
   {x: 0, y: 0, w: 5000, h: 5000};
@@ -27,12 +28,13 @@ interface IProps
 
 interface IState
 {
-  tempNodes: {dummy: Model.Node, real: Model.Node} | null,
-  tempConnectors:{ dummy: Model.Connector,  real: Model.Connector} | null,
+  tempNodes: { dummy: Model.Node, real: Model.Node } | null,
+  tempConnectors:{ dummy: Model.Connector,  real: Model.Connector } | null,
   targetConnector: { connector: Model.Connector, parent: Model.Node } | null,
+  targetProperty: { property: Model.Property | null, updating: boolean },
   showMenu: boolean,
   showInfo: Model.Node | null,
-  view: {x: number, y: number, w: number, h: number}
+  view: { x: number, y: number, w: number, h: number }
 }
 
 export default class Graph extends React.Component<IProps, IState>
@@ -69,6 +71,7 @@ export default class Graph extends React.Component<IProps, IState>
       tempNodes: null,
       tempConnectors: null,
       targetConnector: null,
+      targetProperty: {property: null, updating: false},
       showMenu: false,
       showInfo: null,
       view: viewDefault
@@ -126,6 +129,7 @@ export default class Graph extends React.Component<IProps, IState>
           </svg>
           {this.createDummyNode()}
           {this.createConnectorLabel()}
+          {this.createPropertyLabel()}
           }
         </svg>
       </div>
@@ -138,7 +142,8 @@ export default class Graph extends React.Component<IProps, IState>
       startUpdate={this.startUpdate} update={this.movementUpdate}
       endUpdate={this.endUpdate} padding={csize*2} graphRef={this.graphRef}
       removeNode={this.removeNode} showNodeGraph={this.showNodeGraph}
-      showNodeInfo={this.showNodeInfo}>
+      showNodeInfo={this.showNodeInfo}
+      updateTargetProperty={this.updateTargetProperty}>
       {
         this.graph.getNodeConnectors(node.id, "input").map(
         (connector: Model.Connector, j) =>
@@ -199,7 +204,8 @@ export default class Graph extends React.Component<IProps, IState>
       const x = node.position.x + position.x;
       const y = node.position.y + position.y;
 
-      const textBox = vgUtils.textBoundingSize(connector.id, labelFontSize);
+      const textBox = vgUtils.textBoundingSize(connector.id,
+        connectorLabelFontSize);
 
       if (connector.direction === "input")
       {
@@ -208,7 +214,7 @@ export default class Graph extends React.Component<IProps, IState>
           <rect className="connector-label-border" height={textBox.height+8}
             width={textBox.width+8} x={0} y={0}/>
           <text className="label connector-label input"
-            fontSize={labelFontSize} x={4} y={textBox.height+2}>
+            fontSize={connectorLabelFontSize} x={4} y={textBox.height+2}>
             {connector.id}
           </text>
           </svg>
@@ -220,11 +226,49 @@ export default class Graph extends React.Component<IProps, IState>
           <rect className="connector-label-border" height={textBox.height+8}
             width={textBox.width+8} x={0} y={0}/>
           <text className="label connector-label output"
-            fontSize={labelFontSize} x={4} y={textBox.height+2}>
+            fontSize={connectorLabelFontSize} x={4} y={textBox.height+2}>
             {connector.id}
           </text>
           </svg>
       }
+    }
+  }
+
+  private createPropertyLabel = () =>
+  {
+    if (this.state.targetProperty.property)
+    {
+      const property = this.state.targetProperty.property;
+      const fSize = propertyLabelFontSize;
+      const padding = 3;
+      const value = property.value.toString();
+
+      const nameSize = vgUtils.textBoundingSize(property.id, fSize);
+      const valueSize = vgUtils.textBoundingSize(value, fSize);
+      const textWidth = Math.max(nameSize.width, valueSize.width);
+      const width = textWidth + (2 * padding);
+
+      const node = this.graph.getNode(property.parent);
+      const x = property.position.x + (node ? node.position.x : 0) +
+        (width / 2);
+      const y = property.position.y + (node ? node.position.y : 0) -
+        ((fSize * 2) + (padding * 2));
+
+      return <svg className={"property-label-wrapper " + property.id + " " +
+        property.controlType} x={x} y={y}>
+        <rect className="property-label-border"
+          x={-width / 2} y={0} width={width}
+          height={(fSize * 2) + (padding * 2)}/>
+        <text className="label property-label" x={padding} y={8 + (padding)}
+          fontSize={fSize}>
+          <tspan x={0} dy={0}>{property.id}</tspan>
+          <tspan x={0} dy={fSize+1}>{value}</tspan>
+        </text>
+      </svg>
+    }
+    else
+    {
+      return "";
     }
   }
 
@@ -775,5 +819,19 @@ export default class Graph extends React.Component<IProps, IState>
     parent: Model.Node} | null) =>
   {
     this.setState({targetConnector: target});
+  }
+
+  // Target (mouse over) property
+  private updateTargetProperty = (updateID: string,
+    property: Model.Property | null, updating: boolean) =>
+  {
+    // Only update if there was no previous target property, or the current
+    // target property is update. To account for changing a property whilst
+    // hovering over another.
+    if (!this.state.targetProperty.property ||
+      updateID === this.state.targetProperty.property.id)
+    {
+      this.setState({targetProperty: {property, updating}});
+    }
   }
 }
