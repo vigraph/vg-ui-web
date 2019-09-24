@@ -211,11 +211,6 @@
   user-select: none; /* Standard */
 }
 
-.settings.label
-{
-  font-size: x-small;
-}
-
 #node-dummynode
 {
   pointer-events: none;
@@ -668,4 +663,14 @@
 {
   border: solid 1px #444;
   pointer-events: none;
+}
+
+.settings.label
+{
+  pointer-events: none;
+}
+
+.settings.label.centre
+{
+  text-anchor: middle;
 }

@@ -168,9 +168,9 @@ export default class Node extends React.Component<IProps, IState>
     {
       return <foreignObject id="ws-canvas-wrapper"
         className={"ws-canvas " + this.props.node.id}
-        x={2 * padding} y={this.titleHeight + (3 * padding)}>
+        x={2 * padding} y={this.titleHeight + (1 * padding)}>
         <WebsocketCanvas size={{ x: this.state.w - (2 * padding),
-          y: this.state.h - (4 * padding) - this.titleHeight }}
+          y: this.state.h - (2 * padding) - this.titleHeight }}
           port={portProperty.value}/>
       </foreignObject>
     }

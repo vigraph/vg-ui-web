@@ -13,6 +13,8 @@ import TextDisplay from './TextDisplay';
 import Sequence from './Sequence';
 import Curve from './Curve';
 
+const settingsFontSize: number = 10;
+
 const controlTypes: {[key: string]: any} =
   { "none": null, "knob": Knob, "button": Button,
   "slider": Slider, "colourPicker": ColourPicker, "selector": Selector,
@@ -127,12 +129,12 @@ export default class Property extends React.Component<IProps, IState>
 
     if (!Component)
     {
-      if (this.property.propType === "setting")
+      if (this.property.propType === "setting" &&
+        this.property.subType !== "none")
       {
-        return <text className="settings label" x={this.property.position.x}
-          y={this.property.position.y}>
-            {this.property.id + ": " + this.property.value}
-          </text>
+        return <text className={"settings label " + this.property.subType}
+          fontSize={settingsFontSize} x={this.property.position.x}
+          y={this.property.position.y}>{this.property.value}</text>
       }
       else
       {
