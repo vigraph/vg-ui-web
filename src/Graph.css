@@ -91,64 +91,6 @@
   bottom: 1px;
 }
 
-#info
-{
-  width: 280px;
-  height: 95px;
-  border: 1px solid white;
-  background: #222222;
-  position: absolute;
-  top: 0px;
-  left: 50%;
-  margin-left: -100px;
-  color: white;
-}
-
-#info .info-text
-{
-  position: absolute;
-  text-align: center;
-  font-size: 10px;
-  width: 95%;
-  margin-left: 2.5%;
-  -webkit-user-select: none; /* Safari */
-  -moz-user-select: none; /* Firefox */
-  -ms-user-select: none; /* IE10+/Edge */
-  user-select: none; /* Standard */
-}
-
-#info .name
-{
-  top: 14px;
-  font-weight: bold;
-  font-size: 16px;
-  height: 16px;
-}
-
-#info .id
-{
-  top: 36px;
-  font-size: 12px;
-}
-
-#info .description
-{
-  line-height: 16px;
-  top: 56px;
-  font-size: 14px;
-  height: 16px;
-}
-
-#info .section
-{
-  position: absolute;
-  top: 2px;
-  right: 0px;
-  text-align: right;
-  height: 12px;
-  margin-right: 1%;
-}
-
 .node
 {
   overflow: visible;
@@ -690,4 +632,113 @@
 .property-label-wrapper.textDisplay
 {
   display: none;
+}
+
+#info
+{
+  position: absolute;
+  height: auto;
+  padding: 5px;
+  border: 1px solid white;
+  background: #222222;
+  top: 30px;
+  right: 0px;
+}
+
+#info.empty
+{
+  display: none;
+}
+
+#info.hidden
+{
+  width: 30px;
+}
+
+#info.shown
+{
+  width: 200px;
+}
+
+#info .info-visible-icon
+{
+  width: 20px;
+  height: 20px;
+}
+
+#info .info-text
+{
+  color: white;
+  font-size: 10px;
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE10+/Edge */
+  user-select: none; /* Standard */
+}
+
+#info-panel .info-text.node
+{
+  width: 200px;
+  text-align: center;
+  margin-top: 10px;
+}
+
+#info-panel .node.name
+{
+  font-size: 16px;
+  margin-top: 15px;
+}
+
+#info-panel .node.id
+{
+  font-size: 12px;
+}
+
+#info-panel .node.desc
+{
+  font-size: 14px;
+}
+
+#info-panel .node.section
+{
+  position: absolute;
+  right: 0px;
+  top: 40px;
+  text-align: right;
+  padding-right: 5px;
+  margin-top: 0px;
+}
+
+#info-panel .info-section-wrapper
+{
+  padding-top: 10px;
+  margin-top: 10px;
+  border-top: 1px solid white;
+  width: 100%;
+  height: auto;
+}
+
+#info-panel .input-wrapper,
+#info-panel .setting-wrapper
+{
+  width: 196px;
+  margin: 2px;
+  display: inline-block;
+}
+
+#info-panel .input.desc,
+#info-panel .setting.desc
+{
+  float: left;
+  max-width: 80%;
+  min-width: 50%;
+}
+
+#info-panel .input.value,
+#info-panel .setting.value
+{
+  float: right;
+  min-width: 20%;
+  max-width: 50%;
+  text-align: right;
 }

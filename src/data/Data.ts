@@ -932,10 +932,10 @@ class Data
       }
     }
 
-    const gProps: Array<{ id: string, propType: string, valueType: string,
-      controlType: string, subType: string, value: any, rangeMin?: number,
-      rangeMax?: number, increment?: number, available?: any[], x: number,
-      y:number}> = [];
+    const gProps: Array<{ id: string, description: string, propType: string,
+      valueType: string, controlType: string, subType: string, value: any,
+      rangeMin?: number, rangeMax?: number, increment?: number,
+      available?: any[], x: number, y:number}> = [];
 
     let itemSection, itemType;
 
@@ -959,9 +959,10 @@ class Data
               x.id === key);
           const propType = fProp ? fProp.propType : "";
           const valueType = fProp ? fProp.type : "";
+          const description = fProp ? fProp.description : "";
 
           gProps.push({id: key, value: item.props[key],
-            propType, valueType,
+            propType, valueType, description,
             ...this.propertiesConfig[item.type].properties[key]});
 
           // Iprop connector position

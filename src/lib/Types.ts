@@ -48,10 +48,10 @@ export interface IProcessedGraphItem
   outputs: Array<{ id: string, connectorType: string, multiple?: boolean}>,
   edges: Array<{ output: string, destId: string, input: string}>,
   // propType = "input" | "setting"
-  properties?: Array<{ id: string, propType: string, controlType: string,
-    subType: string, value: any, rangeMin?: number, rangeMax?: number,
-    increment?: number, available?: any[], x: number, y: number, connector?:
-    {x?: number, y?: number}}>,
+  properties?: Array<{ id: string, description: string, propType: string,
+    controlType: string, subType: string, value: any, rangeMin?: number,
+    rangeMax?: number, increment?: number, available?: any[], x: number,
+    y: number, connector?: {x?: number, y?: number}}>,
   subGraph?: boolean, // Subgraphs
   cloneGraph?: boolean, // Clone
   selectorGraphs?: Array<{id: string, path: string}>  // Graph Selector

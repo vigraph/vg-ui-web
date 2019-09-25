@@ -22,6 +22,16 @@ export class Property
     return this.graph.getPropertyProp(this.id, this.parent, "propType");
   }
 
+  get description(): string
+  {
+    return this.graph.getPropertyProp(this.id, this.parent, "description");
+  }
+
+  set description(description: string)
+  {
+    this.graph.setPropertyProp(this.id, this.parent, "description", description);
+  }
+
   get valueType(): string
   {
     return this.graph.getPropertyProp(this.id, this.parent, "valueType");

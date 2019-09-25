@@ -11,7 +11,7 @@ import Connector from './Connector';
 import Edge from './Edge';
 import Node from './Node';
 import Menu from './Menu';
-import Info from './Info';
+import InfoPanel from './InfoPanel';
 
 const csize: number = 5;
 const connectorLabelFontSize: number = 10;
@@ -94,8 +94,8 @@ export default class Graph extends React.Component<IProps, IState>
           menuClosed={this.menuClosed}
           menuItemSelected={this.menuItemSelected}/>}
 
-        {this.state.showInfo && <Info graph={this.graph}
-          node={this.state.showInfo} deleteNode={this.removeNode}/>}
+        <InfoPanel graph={this.graph} node={this.state.showInfo}
+        deleteNode={this.removeNode}/>
 
         <svg id="graph"
           viewBox={`${view.x} ${view.y} ${view.w} ${view.h}`}
@@ -316,21 +316,32 @@ export default class Graph extends React.Component<IProps, IState>
 
   public undo = () =>
   {
-    this.clearInfo();
     this.graph.undo();
+
+    // Clear the info panel if the node shown no longer exists after undo
+    if (this.state.showInfo && !this.graph.getNode(this.state.showInfo.id))
+    {
+      this.clearInfo();
+    }
+
     this.resetView();
   }
 
   public redo = () =>
   {
-    this.clearInfo();
     this.graph.redo();
+
+    // Clear the info panel if the node shown no longer exists after redo
+    if (this.state.showInfo && !this.graph.getNode(this.state.showInfo.id))
+    {
+      this.clearInfo();
+    }
+
     this.resetView();
   }
 
   public goBack = () =>
   {
-    this.clearInfo();
     if (this.graph.back() <= 1)
     {
       this.props.notifyGraphRoot(true);
@@ -405,8 +416,6 @@ export default class Graph extends React.Component<IProps, IState>
         this.setState({showMenu: false});
       }
 
-      this.clearInfo();
-
       window.addEventListener('mousemove', this.handleGraphDrag);
       window.addEventListener('mouseup', this.handleGraphDragRelease);
     }
@@ -476,8 +485,6 @@ export default class Graph extends React.Component<IProps, IState>
   private showNodeGraph = (path: string, pathSpecific?: string,
     sourceSpecific?: string) =>
   {
-    this.clearInfo();
-
     this.currentGraphPath.push({path, pathSpecific});
 
     const sourcePath = path + (sourceSpecific ? sourceSpecific : "");
@@ -554,7 +561,10 @@ export default class Graph extends React.Component<IProps, IState>
   {
     this.graph.beginTransaction();
 
-    this.clearInfo();
+    if (this.state.showInfo && node.id === this.state.showInfo.id)
+    {
+      this.clearInfo();
+    }
 
     vgData.deleteNode(node.path);
 
