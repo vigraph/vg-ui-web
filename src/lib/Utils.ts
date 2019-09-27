@@ -109,6 +109,29 @@ class Utils
 
     return linesArray
   }
+
+  // Snap value to closest increment
+  // Return value is rounded to the same accuracy as the increment
+  public snapValueToIncrement = (value: number, increment: number) =>
+  {
+    const split = increment.toString().split(".");
+    const decimalPlaces = split[1] ? split[1].length : 0;
+    const multiplier = (Math.pow(10, decimalPlaces));
+
+    const iValue = Math.round(Math.abs(value) * multiplier);
+    const iIncrement = Math.round(increment * multiplier);
+
+    const mod = iValue % iIncrement;
+    const diff = iValue - mod;
+
+    // Snap to the closest increment
+    const snap = (mod > iIncrement/2) ? iIncrement : 0;
+    const nValue = diff + snap;
+
+    const newValue = (nValue / multiplier) * Math.sign(value);
+
+    return newValue;
+  }
 }
 
 export const vgUtils = new Utils();

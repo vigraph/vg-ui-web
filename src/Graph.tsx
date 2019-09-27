@@ -95,7 +95,7 @@ export default class Graph extends React.Component<IProps, IState>
           menuItemSelected={this.menuItemSelected}/>}
 
         <InfoPanel graph={this.graph} node={this.state.showInfo}
-        deleteNode={this.removeNode}/>
+          update={this.update}/>
 
         <svg id="graph"
           viewBox={`${view.x} ${view.y} ${view.w} ${view.h}`}
@@ -139,7 +139,7 @@ export default class Graph extends React.Component<IProps, IState>
   private createNodeComponent = (node: Model.Node, i: number) =>
   {
     return <Node key={node.path+":"+i} node={node}
-      startUpdate={this.startUpdate} update={this.movementUpdate}
+      startUpdate={this.startUpdate} update={this.update}
       endUpdate={this.endUpdate} padding={csize*2} graphRef={this.graphRef}
       removeNode={this.removeNode} showNodeGraph={this.showNodeGraph}
       showNodeInfo={this.showNodeInfo}
@@ -360,7 +360,7 @@ export default class Graph extends React.Component<IProps, IState>
     this.graph.beginTransaction();
   }
 
-  private movementUpdate = () =>
+  private update = () =>
   {
     this.forceUpdate();
   }

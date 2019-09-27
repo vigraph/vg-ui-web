@@ -934,8 +934,8 @@ class Data
 
     const gProps: Array<{ id: string, description: string, propType: string,
       valueType: string, controlType: string, subType: string, value: any,
-      rangeMin?: number, rangeMax?: number, increment?: number,
-      available?: any[], x: number, y:number}> = [];
+      valueFormat?: string, rangeMin?: number, rangeMax?: number,
+      increment?: number, available?: any[], x: number, y:number}> = [];
 
     let itemSection, itemType;
 

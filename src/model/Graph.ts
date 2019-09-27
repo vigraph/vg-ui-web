@@ -24,6 +24,7 @@
 //                                  description: string,
 //                                  propType: string,
 //                                  valueType: string,
+//                                  valueFormat: string,
 //                                  controlType: string,
 //                                  subType: string,
 //                                  position: {x, y},
@@ -66,8 +67,9 @@ export class Graph
   //       inputs: [ { id, connectorType, multiple, prop, x, y }],
   //       outputs: [ { id, connectorType, multiple }],
   //       edges: [ { output, destId, input } ],
-  //       properties: [ { id, description, propType, valueType, controlType,
-  //                       subType, x, y, value, rangeMin, rangeMax, increment
+  //       properties: [ { id, description, propType, valueType, valueFormat,
+  //                       controlType, subType, x, y, value, rangeMin,
+  //                       rangeMax, increment
   //                   } ],
   //       subGraph: boolean,
   //       cloneGraph: boolean,
@@ -157,6 +159,7 @@ export class Graph
         property.valueType = p.valueType || "";
         property.controlType = p.controlType || "default";
         property.subType = p.subType || "?";
+        property.valueFormat = p.valueFormat || "";
         property.position = { x: p.x || 0, y: p.y || 0 };
         property.value = p.value;
         property.range = { min: p.rangeMin || 0, max: p.rangeMax || 1};

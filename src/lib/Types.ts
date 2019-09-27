@@ -10,6 +10,7 @@ export interface IPropertiesConfig
       [key: string]: {
         controlType: string,
         subType: string,
+        valueFormat?: string,
         rangeMin?: number,
         rangeMax?: number,
         increment?: number,
@@ -49,9 +50,10 @@ export interface IProcessedGraphItem
   edges: Array<{ output: string, destId: string, input: string}>,
   // propType = "input" | "setting"
   properties?: Array<{ id: string, description: string, propType: string,
-    controlType: string, subType: string, value: any, rangeMin?: number,
-    rangeMax?: number, increment?: number, available?: any[], x: number,
-    y: number, connector?: {x?: number, y?: number}}>,
+    controlType: string, subType: string, value: any, valueType: string,
+    valueFormat?: string, rangeMin?: number, rangeMax?: number,
+    increment?: number, available?: any[], x: number, y: number,
+    connector?: {x?: number, y?: number}}>,
   subGraph?: boolean, // Subgraphs
   cloneGraph?: boolean, // Clone
   selectorGraphs?: Array<{id: string, path: string}>  // Graph Selector

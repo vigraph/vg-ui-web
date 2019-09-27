@@ -2,6 +2,7 @@ import * as React from 'react';
 import * as Model from './model';
 
 import { vgData } from './data/Data';
+import { vgUtils } from './lib/Utils';
 
 import Button from './Button';
 import ColourPicker from './ColourPicker';
@@ -67,7 +68,8 @@ export default class Property extends React.Component<IProps, IState>
       "slider")
     {
       // Ensure value conforms to increment bounds
-      const snapValue = this.snapValueToIncrement(this.property.value);
+      const snapValue = vgUtils.snapValueToIncrement(this.property.value,
+        this.property.increment);
       if (this.property.value !== snapValue)
       {
         this.property.value = snapValue;
@@ -177,7 +179,7 @@ export default class Property extends React.Component<IProps, IState>
   private propertyUpdate = (value: any) =>
   {
     const newValue = this.property.valueType === "number" ?
-      this.snapValueToIncrement(value) : value;
+      vgUtils.snapValueToIncrement(value, this.property.increment) : value;
 
     this.setState({value: newValue});
 
@@ -204,31 +206,6 @@ export default class Property extends React.Component<IProps, IState>
           this.props.update();
         }
       });
-  }
-
-  // Snap value to closest increment
-  // Return value is rounded to the same accuracy as the increment
-  private snapValueToIncrement = (value: number) =>
-  {
-    const increment = this.property.increment;
-
-    const split = increment.toString().split(".");
-    const decimalPlaces = split[1] ? split[1].length : 0;
-    const multiplier = (Math.pow(10, decimalPlaces));
-
-    const iValue = Math.round(Math.abs(value) * multiplier);
-    const iIncrement = Math.round(increment * multiplier);
-
-    const mod = iValue % iIncrement;
-    const diff = iValue - mod;
-
-    // Snap to the closest increment
-    const snap = (mod > iIncrement/2) ? iIncrement : 0;
-    const nValue = diff + snap;
-
-    const newValue = (nValue / multiplier) * Math.sign(value);
-
-    return newValue;
   }
 
   private mouseEnter = (event: React.MouseEvent<SVGSVGElement>) =>

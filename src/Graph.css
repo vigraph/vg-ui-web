@@ -443,6 +443,19 @@
   fill: grey;
 }
 
+#colour-display,
+#colour-picker-wrapper
+{
+  overflow: visible;
+}
+
+#colour-display .colour-display
+{
+  stroke: #ccc;
+  stroke-width: 0.5;
+  overflow: visible;
+}
+
 .property-wrapper.graphSelector.disabled
 {
   pointer-events: auto;
@@ -475,6 +488,7 @@
 #graph-selector-wrapper .label
 {
   text-anchor: middle;
+  font-size: small;
 }
 
 #graph-selector .selected
@@ -559,6 +573,11 @@
 #sequence .item
 {
   font-size: x-small;
+}
+
+#sequence .label
+{
+  font-size: small;
 }
 
 #curve .curve-axis
@@ -674,6 +693,7 @@
   -moz-user-select: none; /* Firefox */
   -ms-user-select: none; /* IE10+/Edge */
   user-select: none; /* Standard */
+  pointer-events: none;
 }
 
 #info-panel .info-text.node

@@ -109,6 +109,7 @@
       {
         "controlType": "colourPicker",
         "subType": "default",
+        "valueFormat": "hex-colour",
         "x": 40,
         "y": 25
       }
@@ -749,8 +750,8 @@
     }
   },
   "vector:clip": {
-    "width": 160,
-    "height": 160,
+    "width": 140,
+    "height": 200,
     "properties":
     {
       "min.x":
@@ -841,6 +842,46 @@
         {
           "x": 35,
           "y": 62.5
+        }
+      },
+      "alpha":
+      {
+        "controlType": "knob",
+        "subType": "default",
+        "rangeMin": -0.5,
+        "rangeMax": 0.5,
+        "increment": 0.01,
+        "x": 65,
+        "y": 125,
+        "connector":
+        {
+          "x": 20,
+          "y": 125
+        }
+      },
+      "exclude":
+      {
+        "controlType": "button",
+        "subType": "default",
+        "x": 110,
+        "y": 130,
+        "connector":
+        {
+          "x": 35,
+          "y": 125
+        }
+      },
+      "outline":
+      {
+        "controlType": "colourPicker",
+        "subType": "default",
+        "valueFormat": "hex-colour",
+        "x": 65,
+        "y": 160,
+        "connector":
+        {
+          "x": 20,
+          "y": 142.5
         }
       }
     }
@@ -1155,6 +1196,7 @@
       {
         "controlType": "colourPicker",
         "subType": "default",
+        "valueFormat": "hex-colour",
         "x": 40,
         "y": 25
       }
@@ -1287,6 +1329,7 @@
       {
         "controlType": "none",
         "subType": "centre",
+        "valueFormat": "ip-address",
         "x": 38,
         "y": 16
       },
@@ -1348,6 +1391,21 @@
     "height": 40,
     "properties":
     {
+    }
+  },
+  "core:svg":
+  {
+    "width": 50,
+    "height": 50,
+    "properties":
+    {
+      "file":
+      {
+        "controlType": "none",
+        "subType": "none",
+        "x": 0,
+        "y": 0
+      }
     }
   }
 }

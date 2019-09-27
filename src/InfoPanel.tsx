@@ -1,12 +1,13 @@
 import * as React from 'react';
-
 import * as Model from './model';
+
+import { vgUtils } from './lib/Utils';
 
 interface IProps
 {
   graph: Model.Graph;
   node: Model.Node | null;
-  deleteNode: (node: Model.Node) => void;
+  update: () => void;
 }
 
 interface IState
@@ -17,6 +18,7 @@ interface IState
 export default class InfoPanel extends React.Component<IProps, IState>
 {
   private graph: Model.Graph;
+  private node: Model.Node | null;
 
   constructor(props: IProps)
   {
@@ -28,6 +30,7 @@ export default class InfoPanel extends React.Component<IProps, IState>
     }
 
     this.graph = props.graph;
+    this.node = props.node;
   }
 
   public render()
@@ -111,7 +114,8 @@ export default class InfoPanel extends React.Component<IProps, IState>
       return <div id="inputs-info-wrapper" className="info-section-wrapper">
         {inputs.map((input: Model.Property, index: number) =>
           {
-            return <div id={input.id + "-wrapper"} key={"input-"+index}
+            return <div id={input.id + "-wrapper"} key={"input-"+index+"-"+
+              input.value.toString()}
               className="input-wrapper">
               <div id={input.id+"-desc"} className="info-text input desc">
                 {input.description}
@@ -119,6 +123,7 @@ export default class InfoPanel extends React.Component<IProps, IState>
               <div id={input.id+"-value"} className="info-text input value">
                 {input.value.toString()}
               </div>
+              {this.createValueControl(input)}
             </div>
           })}
       </div>
@@ -145,16 +150,126 @@ export default class InfoPanel extends React.Component<IProps, IState>
               <div id={setting.id+"-value"} className="info-text setting value">
                 {setting.value.toString()}
               </div>
+              {this.createValueControl(setting)}
             </div>
           })}
       </div>
     }
+  }
 
+  private createValueControl = (property: Model.Property) =>
+  {
+    if (property.valueType === "number" || property.valueType === "text")
+    {
+      return <input id={property.id} className={"value-input " +
+        property.propType} type="text" onBlur={this.textBoxFocusOut}
+        defaultValue={property.value.toString()}/>
+    }
+    else if (property.valueType === "boolean")
+    {
+      return <input id={property.id} className={"value-input " +
+        property.propType} type="checkbox" checked={property.value}
+        onChange={this.checkBoxValueChange}/>
+    }
   }
 
   private toggleShow = () =>
   {
     const show = !this.state.show;
     this.setState({show});
+  }
+
+  private textBoxFocusOut = (e: React.FocusEvent<HTMLInputElement>) =>
+  {
+    const textBox =
+      document.getElementById(e.currentTarget.id) as HTMLInputElement;
+
+    if (textBox)
+    {
+      if (this.props.node)
+      {
+        const property = this.props.node.getProperties().find(x => x.id ===
+        e.currentTarget.id);
+
+        if (property)
+        {
+          let newValue: any = "";
+
+          if (property.valueType === "number")
+          {
+            newValue = parseFloat(textBox.value);
+          }
+          else
+          {
+            newValue = textBox.value;
+          }
+
+          newValue = this.validateValue(newValue, property);
+
+          textBox.value = newValue.toString();
+
+          if (textBox.value !== textBox.defaultValue)
+          {
+            property.value = textBox.value;
+            this.props.update();
+          }
+        }
+      }
+    }
+  }
+
+  private validateValue = (value: any, property: Model.Property) =>
+  {
+    let newValue = value;
+
+    if (property.valueFormat === "hex-colour")
+    {
+      if (newValue[0] !== "#")
+      {
+        newValue = "#" + newValue;
+      }
+
+      if (!(/^#[0-9a-f]*$/i.test(newValue)) || (newValue.length !== 7 &&
+        newValue.length !== 4))
+      {
+        newValue = property.value;
+      }
+    }
+    else if (property.valueFormat === "ip-address")
+    {
+      if (!(/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/i.test(newValue)))
+      {
+        newValue = property.value;
+      }
+    }
+    else if (property.valueType === "number")
+    {
+      newValue = vgUtils.snapValueToIncrement(value, property.increment);
+      newValue = Math.min(newValue, property.range.max);
+      newValue = Math.max(newValue, property.range.min);
+    }
+
+    return newValue;
+  }
+
+  private checkBoxValueChange = (e: React.FocusEvent<HTMLInputElement>) =>
+  {
+    const checkBox =
+      document.getElementById(e.currentTarget.id) as HTMLInputElement;
+
+    if (checkBox)
+    {
+      if (this.props.node)
+      {
+        const property = this.props.node.getProperties().find(x => x.id ===
+        e.currentTarget.id);
+
+        if (property)
+        {
+          property.value = checkBox.checked;
+          this.props.update();
+        }
+      }
+    }
   }
 }

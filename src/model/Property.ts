@@ -42,6 +42,16 @@ export class Property
     this.graph.setPropertyProp(this.id, this.parent, "valueType", valueType);
   }
 
+  get valueFormat(): string
+  {
+    return this.graph.getPropertyProp(this.id, this.parent, "valueFormat");
+  }
+
+  set valueFormat(valueFormat: string)
+  {
+    this.graph.setPropertyProp(this.id, this.parent, "valueFormat", valueFormat);
+  }
+
   get controlType(): string
   {
     return this.graph.getPropertyProp(this.id, this.parent, "controlType");
