@@ -648,7 +648,8 @@
 
 .property-label-wrapper.graphSelector,
 .property-label-wrapper.colourPicker,
-.property-label-wrapper.textDisplay
+.property-label-wrapper.textDisplay,
+.property-label-wrapper.sequence
 {
   display: none;
 }

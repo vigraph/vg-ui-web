@@ -180,7 +180,14 @@ export default class Sequence extends React.Component<IProps, IState>
 
   private addToSequence = () =>
   {
-    if (this.state.inputText !== "" && this.state.inputText !== "#")
+    if (this.settings.colourSeq &&
+      (!(/^#[0-9a-f]*$/i.test(this.state.inputText)) ||
+      (this.state.inputText.length !== 7 && this.state.inputText.length !== 4)))
+    {
+      const newInput = "#";
+      this.setState({inputText: newInput});
+    }
+    else if (this.state.inputText !== "" && this.state.inputText !== "#")
     {
       let newSeq = [...this.state.currentSequence];
       newSeq.push(this.state.inputText)
