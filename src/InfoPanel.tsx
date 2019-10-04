@@ -159,7 +159,8 @@ export default class InfoPanel extends React.Component<IProps, IState>
 
   private createValueControl = (property: Model.Property) =>
   {
-    if (property.valueType === "number" || property.valueType === "text")
+    if (property.valueType === "number" || property.valueType === "text" ||
+      property.valueType === "file")
     {
       return <input id={property.id} className={"value-input " +
         property.propType} type="text" onBlur={this.textBoxFocusOut}
@@ -170,6 +171,17 @@ export default class InfoPanel extends React.Component<IProps, IState>
       return <input id={property.id} className={"value-input " +
         property.propType} type="checkbox" checked={property.value}
         onChange={this.checkBoxValueChange}/>
+    }
+    else if (property.valueType === "choice")
+    {
+      return <select id={property.id} className={"value-select " +
+        property.propType} onChange={this.choiceValueChange}
+        value={property.available.indexOf(property.value)}>
+        {property.available.map((option: string, index: number) =>
+        {
+          return <option key={property.id+index} value={index}>{option}</option>
+        })}
+        </select>
     }
     else if (property.valueType === "curve")
     {
@@ -438,6 +450,27 @@ export default class InfoPanel extends React.Component<IProps, IState>
             property.value = newCurve;
             this.props.update();
           }
+        }
+      }
+    }
+  }
+
+  private choiceValueChange = (e: React.FocusEvent<HTMLSelectElement>) =>
+  {
+    const selector =
+      document.getElementById(e.currentTarget.id) as HTMLSelectElement;
+
+    if (selector)
+    {
+      if (this.props.node)
+      {
+        const property = this.props.node.getProperties().find(x => x.id ===
+        e.currentTarget.id);
+
+        if (property)
+        {
+          property.value = property.available[selector.selectedIndex];
+          this.props.update();
         }
       }
     }
