@@ -580,7 +580,7 @@
   font-size: small;
 }
 
-#curve .curve-axis
+#curve-wrapper .curve-axis
 {
   fill: #444;
 }
@@ -596,12 +596,12 @@
   fill: black;
 }
 
-#curve .curve-point
+#curve-wrapper .curve-point
 {
   fill: #00ff00
 }
 
-#curve .curve-line
+#curve-wrapper .curve-line
 {
   stroke: white;
   stroke-width: 2;
@@ -649,7 +649,8 @@
 .property-label-wrapper.graphSelector,
 .property-label-wrapper.colourPicker,
 .property-label-wrapper.textDisplay,
-.property-label-wrapper.sequence
+.property-label-wrapper.sequence,
+.property-label-wrapper.curve
 {
   display: none;
 }

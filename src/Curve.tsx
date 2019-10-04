@@ -84,12 +84,12 @@ export default class Curve extends React.Component<IProps, IState>
       {
         const id = point.t + "," + point.value;
         const x = point.t * width;
-        const y = height - ((point.value / this.settings.maxValue) *  height);
+        const y = height - ((point.value / this.property.range.max) *  height);
         return {id, x, y};
       });
 
     return(
-        <svg id="curve" className={this.property.subType}>
+        <svg id="curve-wrapper" className={this.property.subType}>
           <svg id="curve-control-wrapper"
             x={0} y={0}
             width={width + 20 + thickness}
@@ -200,13 +200,17 @@ export default class Curve extends React.Component<IProps, IState>
 
       const newCurve = [...this.state.currentCurve];
 
+      if (updatedPoint.value < 0 || updatedPoint.value > this.property.range.max)
+      {
+        return;
+      }
+
       // Only update value for first and last points
-      if (this.movingPoint === 0 || this.movingPoint === newCurve.length-1)
+      if (this.movingPoint === 0 || this.movingPoint === newCurve.length - 1)
       {
         newCurve[this.movingPoint].value = updatedPoint.value;
       }
-      else if (updatedPoint.t > 0 && updatedPoint.t < 1 &&
-        updatedPoint.value >= 0 && updatedPoint.value <= this.settings.maxValue)
+      else if (updatedPoint.t > 0 && updatedPoint.t < 1)
       {
         newCurve[this.movingPoint] = updatedPoint;
 
@@ -270,8 +274,11 @@ export default class Curve extends React.Component<IProps, IState>
 
     const newPoint = {
       t: position.x / width,
-      value: (((height - position.y ) / width ) * this.settings.maxValue)
+      value: (((height - position.y ) / width ) * this.property.range.max)
     }
+
+    newPoint.t = Math.round(newPoint.t * 100000) / 100000;
+    newPoint.value = Math.round(newPoint.value * 100000) / 100000;
 
     return newPoint;
   }

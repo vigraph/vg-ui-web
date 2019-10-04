@@ -1292,6 +1292,7 @@
       {
         "controlType": "curve",
         "subType": "default",
+        "rangeMax": 1,
         "x": 60,
         "y": 15
       }
