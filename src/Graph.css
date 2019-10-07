@@ -615,6 +615,11 @@
   pointer-events: none;
 }
 
+foreignObject
+{
+  overflow: visible;
+}
+
 #canvas
 {
   border: solid 1px #444;
