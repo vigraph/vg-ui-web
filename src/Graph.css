@@ -540,7 +540,12 @@
 {
   stroke: #444;
   stroke-width: 1;
-  fill-opacity: 0;
+  fill-opacity: 0.7;
+}
+
+#sequence .sequence-items-wrapper-border.full-sequence
+{
+  stroke: white;
 }
 
 #sequence .sequence-input-border.inputting
@@ -575,7 +580,7 @@
   font-size: x-small;
 }
 
-#sequence .label
+#sequence .input.label
 {
   font-size: small;
 }

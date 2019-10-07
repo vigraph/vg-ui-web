@@ -163,10 +163,11 @@
       "inputHeight": 20,
       "inputWidth": 40,
       "itemHeight": 20,
-      "itemWidth": 40,
+      "itemWidth": 35,
       "colourSeq": false,
       "seqLength": 10,
-      "itemLength": 4
+      "itemLength": 4,
+      "rows": 5
     },
     "colour":
     {
@@ -176,7 +177,8 @@
       "itemWidth": 20,
       "colourSeq": true,
       "seqLength": 10,
-      "itemLength": 7
+      "itemLength": 7,
+      "rows": 5
     }
   },
   "curve": {

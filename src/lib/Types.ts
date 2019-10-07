@@ -175,7 +175,8 @@ export interface ISequenceSettings
   itemWidth: number,
   itemLength: number,
   colourSeq: boolean,
-  seqLength: number
+  seqLength: number,
+  rows: number
 }
 
 export interface ICurveSettings
