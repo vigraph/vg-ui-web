@@ -1308,6 +1308,8 @@
       {
         "controlType": "none",
         "subType": "none",
+        "rangeMin": 0,
+        "rangeMax": 65535,
         "x": 0,
         "y": 0
       }
@@ -1338,6 +1340,8 @@
       {
         "controlType": "none",
         "subType": "none",
+        "rangeMin": 0,
+        "rangeMax": 65535,
         "x": 0,
         "y": 0
       },
