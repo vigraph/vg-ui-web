@@ -168,11 +168,14 @@ export default class Node extends React.Component<IProps, IState>
 
     if (this.node.type === "vector:websocket-display" && portProperty)
     {
+      const width = this.state.w - (2 * padding);
+      const height = this.state.h - (2 * padding) - this.titleHeight;
+
       return <foreignObject id="ws-canvas-wrapper"
         className={"ws-canvas " + this.props.node.id}
-        x={2 * padding} y={this.titleHeight + (1 * padding)}>
-        <WebsocketCanvas size={{ x: this.state.w - (2 * padding),
-          y: this.state.h - (2 * padding) - this.titleHeight }}
+        width={width} height={height} x={2 * padding}
+        y={this.titleHeight + (1 * padding)}>
+        <WebsocketCanvas size={{ x: width, y: height }}
           port={portProperty.value}/>
       </foreignObject>
     }
