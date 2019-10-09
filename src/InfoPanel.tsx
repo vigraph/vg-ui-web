@@ -123,7 +123,7 @@ export default class InfoPanel extends React.Component<IProps, IState>
               <div id={input.id+"-value"} className="info-text input value">
                 {input.value.toString()}
               </div>
-              {this.createValueControl(input)}
+              {this.createValueControl(input, input.hasConnection())}
             </div>
           })}
       </div>
@@ -150,33 +150,33 @@ export default class InfoPanel extends React.Component<IProps, IState>
               <div id={setting.id+"-value"} className="info-text setting value">
                 {setting.value.toString()}
               </div>
-              {this.createValueControl(setting)}
+              {this.createValueControl(setting, false)}
             </div>
           })}
       </div>
     }
   }
 
-  private createValueControl = (property: Model.Property) =>
+  private createValueControl = (property: Model.Property, disabled: boolean) =>
   {
     if (property.valueType === "number" || property.valueType === "text" ||
       property.valueType === "file")
     {
       return <input id={property.id} className={"value-input " +
         property.propType} type="text" onBlur={this.textBoxFocusOut}
-        defaultValue={property.value.toString()}/>
+        defaultValue={property.value.toString()} disabled={disabled}/>
     }
     else if (property.valueType === "boolean")
     {
       return <input id={property.id} className={"value-input " +
         property.propType} type="checkbox" checked={property.value}
-        onChange={this.checkBoxValueChange}/>
+        onChange={this.checkBoxValueChange} disabled={disabled}/>
     }
     else if (property.valueType === "choice")
     {
       return <select id={property.id} className={"value-select " +
         property.propType} onChange={this.choiceValueChange}
-        value={property.available.indexOf(property.value)}>
+        value={property.available.indexOf(property.value)} disabled={disabled}>
         {property.available.map((option: string, index: number) =>
         {
           return <option key={property.id+index} value={index}>{option}</option>
@@ -186,7 +186,8 @@ export default class InfoPanel extends React.Component<IProps, IState>
     else if (property.valueType === "curve")
     {
       return <div id="curve-control-wrapper" className="value-input-wrapper">
-        <select id={property.id + "-display"} className="curve-points-list">
+        <select id={property.id + "-display"} className="curve-points-list"
+          disabled={disabled}>
         {property.value.map((point: {t: number, value: number}, index: number) =>
         {
           return <option key={property.id+index} value={index}>
@@ -203,7 +204,8 @@ export default class InfoPanel extends React.Component<IProps, IState>
         <div id="add-curve-label" className="info-text add-curve">
           {"t,value"}</div>
         <input type="text" id={property.id} className="add-curve-input"
-          defaultValue={"0,0"} onBlur={this.curveTextBoxFocusOut}/>
+          defaultValue={"0,0"} onBlur={this.curveTextBoxFocusOut}
+          disabled={disabled}/>
         <svg id={property.id + "-add"} className="curve-add-icon" width={20}
           height={20} onMouseDown={this.addPointToCurve}>
           <rect className="add-icon horz" x={0} y={8} width={20} height={4}/>
@@ -380,7 +382,7 @@ export default class InfoPanel extends React.Component<IProps, IState>
       const property = this.props.node.getProperties().find(x => x.id ===
        propID);
 
-      if (property)
+      if (property && !property.hasConnection())
       {
         const curveInputBox =
           document.getElementById(propID) as HTMLInputElement;
@@ -427,7 +429,7 @@ export default class InfoPanel extends React.Component<IProps, IState>
       const property = this.props.node.getProperties().find(x => x.id ===
        propID);
 
-      if (property)
+      if (property && !property.hasConnection())
       {
         const curveDisplay =
           document.getElementById(propID+"-display") as HTMLSelectElement;

@@ -122,4 +122,28 @@ export class Property
     this.graph.setPropertyProp(this.id, this.parent, "available", available);
   }
 
+  // Return if the property has a connection
+  public hasConnection(): boolean
+  {
+    // Only input propTypes can have a connection
+    if (this.propType !== "input")
+    {
+      return false;
+    }
+    else
+    {
+      const node = this.graph.getNode(this.parent);
+
+      if (node)
+      {
+        const reverseEdges = node.getReverseEdges();
+        return !!reverseEdges.find(x => x.inputId === this.id)
+      }
+      else
+      {
+        return false;
+      }
+    }
+  }
+
 }

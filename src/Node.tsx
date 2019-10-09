@@ -123,7 +123,6 @@ export default class Node extends React.Component<IProps, IState>
               update={this.props.update}
               endUpdate={this.props.endUpdate}
               showNodeGraph={this.props.showNodeGraph}
-              disabled={!!reverseEdges.find(x => x.inputId === property.id)}
               padding={this.props.padding}
               updateTargetProperty={this.props.updateTargetProperty}/>
           })}

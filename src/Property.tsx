@@ -32,7 +32,6 @@ interface IProps
   endUpdate: () => void;
   showNodeGraph: (path: string, pathSpecific?: string,
     sourceSpecific?: string) => void;
-  disabled: boolean;
   padding: number;
   updateTargetProperty: (updateID: string, property: Model.Property | null,
     updating: boolean) => void;
@@ -87,22 +86,23 @@ export default class Property extends React.Component<IProps, IState>
   public render()
   {
     const position = this.property.position;
+    const controlDisabled = this.property.hasConnection();
 
     return(
       <svg id={this.props.name.toLowerCase()+"-property"}
         className={`property-wrapper ${this.property.controlType}
-          ${this.props.disabled ? "disabled" : ""}`}
+          ${controlDisabled ? "disabled" : ""}`}
         x={position.x} y={position.y}
         onMouseEnter={this.mouseEnter}
         onMouseLeave={this.mouseLeave}>
 
-        {this.createComponent()}
+        {this.createComponent(controlDisabled)}
       </svg>
     );
   }
 
   // Create component to allow for special cases
-  private createComponent = () =>
+  private createComponent = (controlDisabled: boolean) =>
   {
     const Component = controlTypes[this.property.controlType];
     const position = this.property.position;
@@ -127,7 +127,7 @@ export default class Property extends React.Component<IProps, IState>
           position={{x: position.x, y: position.y}}
           startUpdate={this.startPropertyUpdate} update={this.propertyUpdate}
           endUpdate={this.endPropertyUpdate}
-          disabled={this.props.disabled}
+          disabled={controlDisabled}
           showGraph={this.props.showNodeGraph}
           updateGraphs={this.nonPropertyUpdate}
           parentPath={this.props.parent.path}/>
@@ -141,7 +141,7 @@ export default class Property extends React.Component<IProps, IState>
       return <Curve property={this.property}
           position={{x: position.x, y: position.y}}
           startUpdate={this.startPropertyUpdate} update={this.propertyUpdate}
-          endUpdate={this.endPropertyUpdate} disabled={this.props.disabled}
+          endUpdate={this.endPropertyUpdate} disabled={controlDisabled}
           size={curveSize}/>
     }
     else
@@ -149,7 +149,7 @@ export default class Property extends React.Component<IProps, IState>
       return <Component property={this.property}
           position={{x: position.x, y: position.y}}
           startUpdate={this.startPropertyUpdate} update={this.propertyUpdate}
-          endUpdate={this.endPropertyUpdate} disabled={this.props.disabled}/>
+          endUpdate={this.endPropertyUpdate} disabled={controlDisabled}/>
     }
   }
 

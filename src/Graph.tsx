@@ -346,6 +346,7 @@ export default class Graph extends React.Component<IProps, IState>
     {
       this.props.notifyGraphRoot(true);
     }
+    this.clearInfo();
     this.resetView();
   }
 
@@ -486,6 +487,8 @@ export default class Graph extends React.Component<IProps, IState>
     sourceSpecific?: string) =>
   {
     this.currentGraphPath.push({path, pathSpecific});
+    this.setState({targetProperty: {property: null, updating: false}});
+    this.clearInfo();
 
     const sourcePath = path + (sourceSpecific ? sourceSpecific : "");
     const parentPath = path + (pathSpecific ? pathSpecific : "");
@@ -836,7 +839,7 @@ export default class Graph extends React.Component<IProps, IState>
     property: Model.Property | null, updating: boolean) =>
   {
     // Only update if there was no previous target property, or the current
-    // target property is update. To account for changing a property whilst
+    // target property is updated. To account for changing a property whilst
     // hovering over another.
     if (!this.state.targetProperty.property ||
       updateID === this.state.targetProperty.property.id)
