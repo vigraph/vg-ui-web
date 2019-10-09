@@ -164,7 +164,8 @@ export default class InfoPanel extends React.Component<IProps, IState>
     {
       return <input id={property.id} className={"value-input " +
         property.propType} type="text" onBlur={this.textBoxFocusOut}
-        defaultValue={property.value.toString()} disabled={disabled}/>
+        defaultValue={property.value.toString()} disabled={disabled}
+        onKeyDown={this.textBoxKeyDown}/>
     }
     else if (property.valueType === "boolean")
     {
@@ -205,7 +206,7 @@ export default class InfoPanel extends React.Component<IProps, IState>
           {"t,value"}</div>
         <input type="text" id={property.id} className="add-curve-input"
           defaultValue={"0,0"} onBlur={this.curveTextBoxFocusOut}
-          disabled={disabled}/>
+          disabled={disabled} onKeyDown={this.textBoxKeyDown}/>
         <svg id={property.id + "-add"} className="curve-add-icon" width={20}
           height={20} onMouseDown={this.addPointToCurve}>
           <rect className="add-icon horz" x={0} y={8} width={20} height={4}/>
@@ -219,6 +220,17 @@ export default class InfoPanel extends React.Component<IProps, IState>
   {
     const show = !this.state.show;
     this.setState({show});
+  }
+
+  private textBoxKeyDown = (e: React.KeyboardEvent) =>
+  {
+    const textBox =
+      document.getElementById(e.currentTarget.id) as HTMLInputElement;
+
+    if (textBox && e.which === 13)
+    {
+      textBox.blur();
+    }
   }
 
   private textBoxFocusOut = (e: React.FocusEvent<HTMLInputElement>) =>
