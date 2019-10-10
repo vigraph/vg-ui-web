@@ -774,3 +774,9 @@ foreignObject
   max-width: 50%;
   text-align: right;
 }
+
+#info-panel .colours option:disabled,
+#info-panel .sequence option:disabled
+{
+  color: #000000FE;
+}

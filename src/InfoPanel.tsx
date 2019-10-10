@@ -209,6 +209,23 @@ export default class InfoPanel extends React.Component<IProps, IState>
         </svg>
       </div>
     }
+    else if (property.valueType === "sequence" ||
+      property.valueType === "colours")
+    {
+      return <select id={property.id} className={"display " +
+        property.propType + " " + property.valueType}
+        name={property.id + "-display"} disabled={disabled}>
+        <option value={"default"} selected disabled hidden>
+          {property.id}
+        </option>
+        {property.value.map((option: string, index: number) =>
+        {
+          return <option key={property.id+index} value={index} disabled>
+            {option}
+            </option>
+        })}
+        </select>
+    }
   }
 
   private toggleShow = () =>
