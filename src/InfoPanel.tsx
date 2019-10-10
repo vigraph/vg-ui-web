@@ -2,6 +2,7 @@ import * as React from 'react';
 import * as Model from './model';
 
 import { vgUtils } from './lib/Utils';
+import { vgData } from './data/Data';
 
 interface IProps
 {
@@ -17,9 +18,6 @@ interface IState
 
 export default class InfoPanel extends React.Component<IProps, IState>
 {
-  private graph: Model.Graph;
-  private node: Model.Node | null;
-
   constructor(props: IProps)
   {
     super(props);
@@ -28,9 +26,6 @@ export default class InfoPanel extends React.Component<IProps, IState>
     {
       show: true
     }
-
-    this.graph = props.graph;
-    this.node = props.node;
   }
 
   public render()
@@ -268,8 +263,7 @@ export default class InfoPanel extends React.Component<IProps, IState>
 
           if (textBox.value !== textBox.defaultValue)
           {
-            property.value = textBox.value;
-            this.props.update();
+            this.updateValue(property, newValue);
           }
         }
       }
@@ -350,8 +344,7 @@ export default class InfoPanel extends React.Component<IProps, IState>
 
         if (property)
         {
-          property.value = checkBox.checked;
-          this.props.update();
+          this.updateValue(property, checkBox.checked);
         }
       }
     }
@@ -422,8 +415,7 @@ export default class InfoPanel extends React.Component<IProps, IState>
                   return a.t - b.t;
                 });
 
-            property.value = newCurve;
-            this.props.update();
+            this.updateValue(property, newCurve);
 
             curveInputBox.value = "0,0";
           }
@@ -461,8 +453,7 @@ export default class InfoPanel extends React.Component<IProps, IState>
                   selection.value);
               });
 
-            property.value = newCurve;
-            this.props.update();
+            this.updateValue(property, newCurve);
           }
         }
       }
@@ -483,10 +474,22 @@ export default class InfoPanel extends React.Component<IProps, IState>
 
         if (property)
         {
-          property.value = property.available[selector.selectedIndex];
-          this.props.update();
+          this.updateValue(property, property.available[selector.selectedIndex]);
         }
       }
+    }
+  }
+
+  private updateValue = (property: Model.Property, value: any) =>
+  {
+    if (this.props.node)
+    {
+      vgData.updateProperty(this.props.node.path, property.id, value,
+        () =>
+        {
+          property.value = value;
+          this.props.update();
+        });
     }
   }
 }
