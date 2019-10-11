@@ -766,15 +766,6 @@ foreignObject
   min-width: 50%;
 }
 
-#info-panel .input.value,
-#info-panel .setting.value
-{
-  float: right;
-  min-width: 20%;
-  max-width: 50%;
-  text-align: right;
-}
-
 #info-panel .colours option:disabled,
 #info-panel .sequence option:disabled
 {
