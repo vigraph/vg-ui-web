@@ -13,7 +13,8 @@ interface IProps
   updateGraphs: (value: any) => void;
   endUpdate: () => void;
   position: {x: number, y: number};
-  showGraph: (id: string) => void;
+  showGraph: (path: string, pathSpecific?: string,
+    sourceSpecific?: string) => void;
   parentPath: string;
   disabled: boolean;
 }
@@ -413,7 +414,8 @@ export default class GraphSelector extends React.Component<IProps, IState>
     // Double click - show graph without selecting
     else if (date.getTime() - this.lastMouseTime.up < 250)
     {
-      this.props.showGraph(this.props.parentPath+"/graph/"+e.currentTarget.id);
+      this.props.showGraph(this.props.parentPath, "/graph/"+e.currentTarget.id,
+        "/graph/"+e.currentTarget.id);
     }
 
     this.lastMouseTime.up = date.getTime();
