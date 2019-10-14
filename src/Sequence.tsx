@@ -36,8 +36,6 @@ export default class Sequence extends React.Component<IProps, IState>
 
   private settings: vgTypes.ISequenceSettings;
 
-  private mouseUpTime: number;
-
   constructor(props: IProps)
   {
     super(props);
@@ -49,8 +47,6 @@ export default class Sequence extends React.Component<IProps, IState>
 
     this.settings = sequenceSettings[this.property.subType] ?
       sequenceSettings[this.property.subType] : sequenceSettings.default;
-
-    this.mouseUpTime = 0;
 
     this.state =
     {
@@ -141,7 +137,7 @@ export default class Sequence extends React.Component<IProps, IState>
 
           return <svg id={index.toString()} key={index} className="sequence-item"
               x={0 + (column * itemW)} y={itemH*row} width={itemW}
-              height={itemH} onMouseUp={this.handleItemMouseUp}>
+              height={itemH} onDoubleClick={this.handleItemDoubleClick}>
 
             {this.settings.colourSeq && <rect id="sequence-item-background"
               fill={value} x={0} y={0} width={itemW} height={itemH}/>}
@@ -250,22 +246,10 @@ export default class Sequence extends React.Component<IProps, IState>
   }
 
   // Double click to remove item from sequence
-  private handleItemMouseUp = (e: React.MouseEvent<SVGElement>) =>
+  private handleItemDoubleClick = (e: React.MouseEvent<SVGElement>) =>
   {
-    const date = new Date();
-    const now = date.getTime();
-
-    if (now - this.mouseUpTime < 250)
-    {
-      let newSeq = [...this.state.currentSequence];
-      newSeq.splice(parseInt(e.currentTarget.id), 1);
-      this.updateSequence(newSeq, false);
-      this.mouseUpTime = 0;
-    }
-    else
-    {
-      this.mouseUpTime = now;
-    }
-
+    let newSeq = [...this.state.currentSequence];
+    newSeq.splice(parseInt(e.currentTarget.id), 1);
+    this.updateSequence(newSeq, false);
   }
 }

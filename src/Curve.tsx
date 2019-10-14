@@ -36,8 +36,6 @@ export default class Curve extends React.Component<IProps, IState>
 
   private settings: vgTypes.ICurveSettings;
 
-  private mouseUpTimeMain: number;
-  private mouseUpTimePoint: number;
   private movingPoint: number;
 
   private curveRef: SVGSVGElement | null;
@@ -54,8 +52,6 @@ export default class Curve extends React.Component<IProps, IState>
     this.settings = curveSettings[this.property.subType] ?
       curveSettings[this.property.subType] : curveSettings.default;
 
-    this.mouseUpTimeMain = 0;
-    this.mouseUpTimePoint = 0;
     this.movingPoint = -1;
     this.curveRef = null;
 
@@ -108,8 +104,7 @@ export default class Curve extends React.Component<IProps, IState>
 
               <rect className="curve-area-background" x={0} y={0}
                 width={width} height={height}
-                onMouseDown={this.handleMainMouseDown}
-                onMouseUp={this.handleMainMouseUp}/>
+                onDoubleClick={this.handleCurveDoubleClick}/>
 
               <svg id="curve-line-wrapper">
               {points.map(
@@ -136,7 +131,7 @@ export default class Curve extends React.Component<IProps, IState>
                   className={`curve-point`}
                   key={index} cx={point.x} cy={point.y} r={5}
                   onMouseDown={this.handlePointMouseDown}
-                  onMouseUp={this.handlePointMouseUp}/>
+                  onDoubleClick={this.handlePointDoubleClick}/>
                 })}
               </svg>
 
@@ -147,27 +142,14 @@ export default class Curve extends React.Component<IProps, IState>
     );
   }
 
-  private handleMainMouseDown = (e: React.MouseEvent<SVGRectElement>) =>
-  {
-    e.stopPropagation();
-  }
-
   // Double click to add a new point
-  private handleMainMouseUp = (e: React.MouseEvent<SVGRectElement>) =>
+  private handleCurveDoubleClick = (e: React.MouseEvent<SVGRectElement>) =>
   {
-    const date = new Date();
-    const now = date.getTime();
+    const newCurve = [...this.state.currentCurve];
+    newCurve.push(this.positionToPoint(vgUtils.windowToSVGPosition(
+      {x: e.pageX, y: e.pageY}, this.curveRef)));
 
-    if (now - this.mouseUpTimeMain < 250)
-    {
-      const newCurve = [...this.state.currentCurve];
-      newCurve.push(this.positionToPoint(vgUtils.windowToSVGPosition(
-        {x: e.pageX, y: e.pageY}, this.curveRef)));
-
-      this.updateCurve(newCurve);
-    }
-
-    this.mouseUpTimeMain = now;
+    this.updateCurve(newCurve);
   }
 
   // Mouse down on single point - index of point stored to be updated if moved
@@ -242,28 +224,19 @@ export default class Curve extends React.Component<IProps, IState>
     this.props.endUpdate();
   }
 
-  // Mouse up whilst over point - remove point if it was a double click
-  private handlePointMouseUp = (e: React.MouseEvent<SVGCircleElement>) =>
+  // Remove point on double click
+  private handlePointDoubleClick = (e: React.MouseEvent<SVGCircleElement>) =>
   {
-    const date = new Date();
-    const now = date.getTime();
+    const pointID = e.currentTarget.id.split(",");
 
-    // Double click
-    if (now - this.mouseUpTimePoint < 250)
-    {
-      const pointID = e.currentTarget.id.split(",");
+    const newCurve = this.state.currentCurve.filter(
+      (point: {t: number, value: number}) =>
+      {
+        return !(point.t === parseFloat(pointID[0]) &&
+          point.value === parseFloat(pointID[1]));
+      });
 
-      const newCurve = this.state.currentCurve.filter(
-        (point: {t: number, value: number}) =>
-        {
-          return !(point.t === parseFloat(pointID[0]) &&
-            point.value === parseFloat(pointID[1]));
-        });
-
-      this.updateCurve(newCurve);
-    }
-
-    this.mouseUpTimePoint = now;
+    this.updateCurve(newCurve);
   }
 
   // Convert click location to point and add to property

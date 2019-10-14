@@ -50,7 +50,7 @@ export default class Node extends React.Component<IProps, IState>
   private node: Model.Node;
   private offsetX: number;
   private offsetY: number;
-  private mouseDown: {x: number, y: number, t: number};
+  private mouseDown: {x: number, y: number};
   private resizeMouseDown: {x: number, y: number};
   private titleHeight: number;
   private updateStarted: boolean;
@@ -72,7 +72,7 @@ export default class Node extends React.Component<IProps, IState>
     this.node = props.node;
     this.offsetX = 0;
     this.offsetY = 0;
-    this.mouseDown = {x: 0, y: 0, t: 0};
+    this.mouseDown = {x: 0, y: 0};
     this.resizeMouseDown = {x: 0, y: 0};
     this.titleHeight = fontSize;
     this.updateStarted = false;
@@ -89,8 +89,6 @@ export default class Node extends React.Component<IProps, IState>
     const deleteX = padding + width;
     const deleteY = 0;
 
-    const reverseEdges = this.node.getReverseEdges();
-
     return (
       <svg id={`node-${this.node.id}`} className={"node"}
         x={this.state.x} y={this.state.y}
@@ -100,6 +98,7 @@ export default class Node extends React.Component<IProps, IState>
           className={`node-border ${this.state.dragging ? "dragging" : ""} ` +
             `${this.state.resizing ? "resizing" : ""}`}
           onMouseDown={this.handleMouseDown}
+          onDoubleClick={this.handleDoubleClick}
           onContextMenu={this.handleContextMenu}
         />
         {this.state.hover && <svg className="delete-wrapper">
@@ -202,6 +201,21 @@ export default class Node extends React.Component<IProps, IState>
     e.stopPropagation();
   }
 
+  private handleDoubleClick = (e: React.MouseEvent<SVGRectElement>) =>
+  {
+    this.setState({ dragging: false });
+    window.removeEventListener('mouseup', this.handleMouseUp);
+    window.removeEventListener('mousemove', this.handleMouseMove);
+    if (this.node.subGraph)
+    {
+      this.props.showNodeGraph(this.node.path, undefined, "/elements");
+    }
+    else if (this.node.cloneGraph)
+    {
+      this.props.showNodeGraph(this.node.path, "/graph", "/graph");
+    }
+  }
+
   private handleMouseDown = (e: React.MouseEvent<SVGRectElement>) =>
   {
     e.stopPropagation();
@@ -216,23 +230,7 @@ export default class Node extends React.Component<IProps, IState>
 
     const date = new Date();
 
-    if (this.mouseDown.t && date.getTime() - this.mouseDown.t < 250)
-    {
-      this.setState({ dragging: false });
-      window.removeEventListener('mouseup', this.handleMouseUp);
-      window.removeEventListener('mousemove', this.handleMouseMove);
-      if (this.node.subGraph)
-      {
-        this.props.showNodeGraph(this.node.path, undefined, "/elements");
-      }
-      else if (this.node.cloneGraph)
-      {
-        this.props.showNodeGraph(this.node.path, "/graph", "/graph");
-      }
-      return;
-    }
-
-    this.mouseDown = {x: this.state.x, y: this.state.y, t: date.getTime()};
+    this.mouseDown = {x: this.state.x, y: this.state.y};
 
     this.offsetX = currentPosition.x - this.state.x;
     this.offsetY = currentPosition.y - this.state.y;

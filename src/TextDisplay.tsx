@@ -34,8 +34,6 @@ export default class TextDisplay extends React.Component<IProps, IState>
 
   private settings: vgTypes.ITextDisplaySettings;
 
-  private mouseUpTime: number;
-
   constructor(props: IProps)
   {
     super(props);
@@ -47,8 +45,6 @@ export default class TextDisplay extends React.Component<IProps, IState>
 
     this.settings = textDisplaySettings[this.property.subType] ?
       textDisplaySettings[this.property.subType] : textDisplaySettings.default;
-
-    this.mouseUpTime = 0;
 
     this.state =
     {
@@ -62,7 +58,7 @@ export default class TextDisplay extends React.Component<IProps, IState>
   {
     return(
         <svg id="text-display" className={this.property.subType}
-          onMouseUp={this.handleMouseUp}>
+          onDoubleClick={this.handleDoubleClick}>
           <svg id="text-display-wrapper"
             x={0} y={0}
             width={this.settings.width} height={this.settings.height}>
@@ -80,26 +76,18 @@ export default class TextDisplay extends React.Component<IProps, IState>
     );
   }
 
-  private handleMouseUp = () =>
+  private handleDoubleClick = () =>
   {
-    const date = new Date();
-    const now = date.getTime();
-
-    if (now - this.mouseUpTime < 250)
+    const newEditState = !this.state.editing;
+    this.setState({editing: newEditState});
+    if (newEditState)
     {
-      const newEditState = !this.state.editing;
-      this.setState({editing: newEditState});
-      if (newEditState)
-      {
-        window.addEventListener("keydown", this.handleKeyDown);
-      }
-      else
-      {
-        window.removeEventListener("keydown", this.handleKeyDown);
-      }
+      window.addEventListener("keydown", this.handleKeyDown);
     }
-
-    this.mouseUpTime = now;
+    else
+    {
+      window.removeEventListener("keydown", this.handleKeyDown);
+    }
   }
 
   private handleKeyDown = (e: KeyboardEvent) =>

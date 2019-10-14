@@ -45,7 +45,7 @@ export default class GraphSelector extends React.Component<IProps, IState>
 
   private pickerRef: SVGSVGElement | null;
 
-  private lastMouseTime: {up: number, down: number};
+  private lastMouseTime: number;
 
   constructor(props: IProps)
   {
@@ -53,7 +53,7 @@ export default class GraphSelector extends React.Component<IProps, IState>
 
     this.property = props.property;
     this.pickerRef = null;
-    this.lastMouseTime = {up: 0, down: 0};
+    this.lastMouseTime = 0;
 
     const gSelectorSettings = require('./json/ControlSettings.json').graphSelector;
 
@@ -214,7 +214,8 @@ export default class GraphSelector extends React.Component<IProps, IState>
             y={25 + (currentRow * (settings.height + settings.padding))}
             onMouseDown={this.handleMouseDown}
             onMouseUp={this.handleMouseUp}
-            onMouseLeave={this.handleMouseLeave}>
+            onMouseLeave={this.handleMouseLeave}
+            onDoubleClick={this.handleDoubleClick}>
             <rect className={`selector-item-border ${this.state.currentValue ===
               index ? "selected" : ""}`}
               x={0} y={0} width={settings.width} height={settings.height}/>
@@ -385,14 +386,14 @@ export default class GraphSelector extends React.Component<IProps, IState>
 
   private handleMouseLeave = (e: React.MouseEvent<SVGElement>) =>
   {
-    this.lastMouseTime = {up: 0, down: 0};
+    this.lastMouseTime = 0;
   }
 
   private handleMouseDown = (e: React.MouseEvent<SVGElement>) =>
   {
     e.stopPropagation();
     const date = new Date();
-    this.lastMouseTime.down = date.getTime();
+    this.lastMouseTime = date.getTime();
 
     this.setState({currentChoice: this.property.available.findIndex(
       x => x.id === e.currentTarget.id)});
@@ -406,19 +407,18 @@ export default class GraphSelector extends React.Component<IProps, IState>
       x => x.id === e.currentTarget.id);
 
     // Long press - select Graph without showing
-    if (this.lastMouseTime.down && date.getTime() -
-      this.lastMouseTime.down > 1000 && !this.props.disabled)
+    if (this.lastMouseTime && date.getTime() -
+      this.lastMouseTime > 1000 && !this.props.disabled)
     {
       this.selectGraph(graph);
     }
-    // Double click - show graph without selecting
-    else if (date.getTime() - this.lastMouseTime.up < 250)
-    {
-      this.props.showGraph(this.props.parentPath, "/graph/"+e.currentTarget.id,
-        "/graph/"+e.currentTarget.id);
-    }
+  }
 
-    this.lastMouseTime.up = date.getTime();
+  // Double click - show graph without selecting
+  private handleDoubleClick = (e: React.MouseEvent<SVGElement>) =>
+  {
+    this.props.showGraph(this.props.parentPath, "/graph/"+e.currentTarget.id,
+      "/graph/"+e.currentTarget.id);
   }
 
   private selectGraph = (graph: {id: string, path: string}) =>
