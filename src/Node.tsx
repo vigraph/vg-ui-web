@@ -20,7 +20,7 @@ interface IProps
   removeNode: (node: Model.Node) => void;
   showNodeGraph: (path: string, pathSpecific?: string,
     sourceSpecific?: string) => void;
-  showNodeInfo: (node: Model.Node) => void;
+  targetNode: (node: Model.Node) => void;
   updateTargetProperty: (updateID: string, property: Model.Property | null,
     updating: boolean) => void;
 }
@@ -223,7 +223,7 @@ export default class Node extends React.Component<IProps, IState>
     window.addEventListener('mousemove', this.handleMouseMove);
     this.setState({ dragging: true });
 
-    this.props.showNodeInfo(this.node);
+    this.props.targetNode(this.node);
 
     const currentPosition = vgUtils.windowToSVGPosition(
       {x: e.pageX, y: e.pageY}, this.props.graphRef);
