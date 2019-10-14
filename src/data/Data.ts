@@ -43,7 +43,7 @@ class Data
 
   // Update property (propID) on node (nodeID) with given value (value)
   public updateProperty(nodeID: string, propID: string,
-    value: any, success?: () => void)
+    value: any, success?: () => void, failure?: () => void)
   {
     const url = restURL + "/graph/" + nodeID + "/" + propID;
 
@@ -68,17 +68,28 @@ class Data
           // Error
           vgUtils.log("Update Property Failure with response status: " +
             response.status)
+
+          if (failure)
+          {
+            failure();
+          }
         }
       })
     .catch(error =>
       {
         // Error
         vgUtils.log("Update Property Failure with error: " + error);
+
+        if (failure)
+        {
+          failure();
+        }
       });
   }
 
   // Update node (nodeID) with given (non-property) data
-  public updateNode(nodeID: string, data: any, success?: () => void)
+  public updateNode(nodeID: string, data: any, success?: () => void,
+    failure?: () => void)
   {
     const url = restURL + "/graph/" + nodeID;
 
@@ -103,12 +114,22 @@ class Data
           // Error
           vgUtils.log("Update Node Data Failure with response status: " +
             response.status)
+
+          if (failure)
+          {
+            failure();
+          }
         }
       })
     .catch(error =>
       {
         // Error
         vgUtils.log("Update Node Data Failure with error: " + error);
+
+        if (failure)
+        {
+          failure();
+        }
       });
   }
 
@@ -163,7 +184,8 @@ class Data
   // Edge removed by copying current edges, removing the edge and updating with
   // new array.
   public updateEdges(outputNodePath: string, outputID: string,
-    edges: Array<{dest: string, destInput: string}>, success?: ()=>void)
+    edges: Array<{dest: string, destInput: string}>, success?: ()=>void,
+    failure?: () => void)
   {
     const url = restURL + "/graph/" + outputNodePath + "/" + outputID;
 
@@ -196,18 +218,28 @@ class Data
           // Error
           vgUtils.log("Update Edges Success with response status: " +
             response.status);
+
+          if (failure)
+          {
+            failure();
+          }
         }
       })
     .catch(error =>
       {
         // Error
         vgUtils.log("Update Edges Success with error: " + error);
+
+        if (failure)
+        {
+          failure();
+        }
       });
   }
 
   // Delete given path (e.g. Graph in Graph selector)
   // Calls success on DELETE success
-  public deletePath(path: string, success?: ()=>void)
+  public deletePath(path: string, success?: ()=>void, failure?: () => void)
   {
     const url = restURL + "/graph/" + path;
 
@@ -221,7 +253,6 @@ class Data
         {
           vgUtils.log("Delete Path Success");
 
-
           // Success
           if (success)
           {
@@ -233,19 +264,29 @@ class Data
           // Error
           vgUtils.log("Delete Path Failure with response" +
             " status: " + response.status);
+
+          if (failure)
+          {
+            failure();
+          }
         }
       })
     .catch(error =>
       {
         // Error
         vgUtils.log("Delete Path Failure with error: " + error);
+
+        if (failure)
+        {
+          failure();
+        }
       });
   }
 
   // Add an empty graph with given ID (used by Graph Selector)
   // Calls success function on PUT success with processed empty graph item
   public addEmptyGraph(id: string, path: string,
-    success?: (graph: vgTypes.IProcessedGraphItem)=>void)
+    success?: (graph: vgTypes.IProcessedGraphItem)=>void, failure?: () => void)
   {
     const url = restURL + "/graph/" + path + "/graph/" + id;
 
@@ -275,17 +316,27 @@ class Data
           // Error
           vgUtils.log("Add Graph Failure with response status: " +
             response.status);
+
+          if (failure)
+          {
+            failure();
+          }
         }
       })
     .catch(error =>
       {
         // Error
         vgUtils.log("Add Graph Failure with error: " + error);
+
+        if (failure)
+        {
+          failure();
+        }
       });
   }
 
   public getRawSelectorGraphs(path: string,
-    success?: (graphs: vgTypes.IRawGraphItem[])=>void)
+    success?: (graphs: vgTypes.IRawGraphItem[])=>void, failure?: () => void)
   {
     this.getRawGraphItem(path, (result: vgTypes.IRawGraphItem) =>
     {
@@ -293,13 +344,20 @@ class Data
       {
         success(result.graphs?result.graphs:[]);
       }
+    },
+    () =>
+    {
+      if (failure)
+      {
+        failure();
+      }
     })
   }
 
   // Get node and calls success with resulting (processed) node allowing it to
   // be added to the Graph model
   public getNode(nodeID: string, parentPath?: string,
-    success?: (result: any) => void)
+    success?: (result: any) => void, failure?: () => void)
   {
     vgUtils.log("Get Node: " + nodeID);
 
@@ -329,12 +387,24 @@ class Data
         // Error - trying to create node before Graph set up
         vgUtils.log("Process Get Node Failure: Trying to process node " +
           "before full Graph set up");
+
+        if (failure)
+        {
+          failure();
+        }
+      }
+    },
+    () =>
+    {
+      if (failure)
+      {
+        failure();
       }
     })
   }
 
   private async getRawGraphItem(path: string,
-    success?: (result: vgTypes.IRawGraphItem)=>void)
+    success?: (result: vgTypes.IRawGraphItem)=>void, failure?: () => void)
   {
     try
     {
@@ -351,19 +421,29 @@ class Data
         // Error with status code
         vgUtils.log("Get Raw Graph Item Failure with status code: " +
           res.statusCode);
+
+        if (failure)
+        {
+          failure();
+        }
       }
     }
     catch (error)
     {
       // Error
       vgUtils.log("Get Raw Graph Item Failure with error: " + error);
+
+      if (failure)
+      {
+        failure();
+      }
     }
   }
 
   // Create/add node with ID nodeID and type nodeType to Graph
   // Calls success function on PUT success
   public createNode(nodeID: string, nodeType: string, parentPath?: string,
-    success?: ()=>void)
+    success?: ()=>void, failure?: () => void)
   {
     const url = restURL + "/graph/" +
       (typeof parentPath !== "undefined" ? parentPath + "/" : "") + nodeID;
@@ -392,18 +472,28 @@ class Data
           // Error
           vgUtils.log("Create Node Failure with response status: " +
             response.status);
+
+          if (failure)
+          {
+            failure();
+          }
         }
       })
     .catch(error =>
       {
         // Error
         vgUtils.log("Create Node Failure with error: " + error);
+
+        if (failure)
+        {
+          failure();
+        }
       });
   }
 
   // Delete node from Graph
   // Calls success on DELETE success
-  public deleteNode(nodePath: string, success?: ()=>void)
+  public deleteNode(nodePath: string, success?: ()=>void, failure?: () => void)
   {
     const url = restURL + "/graph/" + nodePath;
 
@@ -430,12 +520,22 @@ class Data
           // Error
           vgUtils.log("Delete Node Failure with response status: " +
             response.status);
+
+          if (failure)
+          {
+            failure();
+          }
         }
       })
     .catch(error =>
       {
         // Error
         vgUtils.log("Delete Node Failure with error: " + error);
+
+        if (failure)
+        {
+          failure();
+        }
       });
   }
 

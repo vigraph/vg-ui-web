@@ -555,6 +555,11 @@ export default class InfoPanel extends React.Component<IProps, IState>
         {
           property.value = value;
           this.props.update();
+        },
+        () =>
+        {
+          // Update on failure to draw infoPanel and reset values
+          this.props.update();
         });
     }
   }

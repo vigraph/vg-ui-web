@@ -10,7 +10,7 @@ interface IProps
   property: Model.Property;
   startUpdate: () => void;
   update: (value: any) => void;
-  updateGraphs: (value: any) => void;
+  updateGraphs: (value: any, success?: () => void) => void;
   endUpdate: () => void;
   position: {x: number, y: number};
   showGraph: (path: string, pathSpecific?: string,
@@ -262,7 +262,6 @@ export default class GraphSelector extends React.Component<IProps, IState>
         this.property.available = newAvailable;
         this.props.endUpdate();
       })
-
   }
 
   // Delete current graph 'choice' (highlighted)
@@ -377,8 +376,10 @@ export default class GraphSelector extends React.Component<IProps, IState>
       this.property.available = newAvailable;
       const updateGraphs = {"graphs": newGraphsList};
 
-      this.props.updateGraphs(updateGraphs);
-      this.setState({currentChoice: newCurrentChoice});
+      this.props.updateGraphs(updateGraphs, () =>
+        {
+          this.setState({currentChoice: newCurrentChoice});
+        });
 
       this.props.endUpdate();
       this.setState({selecting: true});

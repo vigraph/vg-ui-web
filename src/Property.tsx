@@ -192,11 +192,16 @@ export default class Property extends React.Component<IProps, IState>
         {
           this.props.update();
         }
+      },
+      () =>
+      {
+        // Reset UI to actual property value on failure
+        this.setState({value: this.property.value});
       });
   }
 
   // Update a non-property value in parent node
-  private nonPropertyUpdate = (data: any) =>
+  private nonPropertyUpdate = (data: any, success?: () => void) =>
   {
     vgData.updateNode(this.props.parent.path, data,
       () =>
@@ -204,6 +209,11 @@ export default class Property extends React.Component<IProps, IState>
         if (this.props.update)
         {
           this.props.update();
+        }
+
+        if (success)
+        {
+          success();
         }
       });
   }

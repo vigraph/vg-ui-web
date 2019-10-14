@@ -551,7 +551,8 @@ export default class Graph extends React.Component<IProps, IState>
 
     // Create new node, get with properties etc, add layout data and add to
     // graph model
-    vgData.createNode(id, type, path, () =>
+    vgData.createNode(id, type, path,
+      () =>
       {
         vgData.getNode(id, path, (node: any) =>
         {
@@ -567,7 +568,14 @@ export default class Graph extends React.Component<IProps, IState>
           this.forceUpdate();
 
           this.graph.commitTransaction();
+        }, () =>
+        {
+          this.graph.commitTransaction();
         })
+      },
+      () =>
+      {
+        this.graph.commitTransaction();
       });
   }
 
@@ -580,30 +588,36 @@ export default class Graph extends React.Component<IProps, IState>
       this.clearTargetNode();
     }
 
-    vgData.deleteNode(node.path);
+    vgData.deleteNode(node.path,
+      () =>
+      {
+        // Delete node and all of its edges from the model
+        const reverseEdges = node.getReverseEdges();
+        const forwardEdges = node.getForwardEdges();
 
-    // Delete node and all of its edges from the model
-    const reverseEdges = node.getReverseEdges();
-    const forwardEdges = node.getForwardEdges();
+        reverseEdges.forEach((value: { inputId: string, src: Model.Node,
+          srcOutput: string}) =>
+        {
+          this.graph.removeEdge(value.src.id, value.srcOutput, node.id,
+            value.inputId);
+        });
 
-    reverseEdges.forEach((value: { inputId: string, src: Model.Node,
-      srcOutput: string}) =>
-    {
-      this.graph.removeEdge(value.src.id, value.srcOutput, node.id,
-        value.inputId);
-    });
+        forwardEdges.forEach((value: { outputId: string, dest: Model.Node,
+          destInput: string}) =>
+        {
+          this.graph.removeEdge(node.id, value.outputId, value.dest.id,
+            value.destInput);
+        });
 
-    forwardEdges.forEach((value: { outputId: string, dest: Model.Node,
-      destInput: string}) =>
-    {
-      this.graph.removeEdge(node.id, value.outputId, value.dest.id,
-        value.destInput);
-    });
+        this.graph.removeNode(node.id);
 
-    this.graph.removeNode(node.id);
-
-    this.graph.commitTransaction();
-    this.forceUpdate();
+        this.graph.commitTransaction();
+        this.forceUpdate();
+      },
+      () =>
+      {
+        this.graph.commitTransaction();
+      });
   }
 
   private addEdge = (srcID: string, srcOutput: string, destID: string,
