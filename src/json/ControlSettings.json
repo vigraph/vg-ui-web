@@ -153,8 +153,9 @@
   "textDisplay": {
     "default":
     {
-      "height": 20,
-      "width": 180
+      "width": 180,
+      "defaultText": "default-text",
+      "fontSize": 12
     }
   },
   "sequence": {

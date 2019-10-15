@@ -163,8 +163,9 @@ export interface IGraphSelectorSettings
 
 export interface ITextDisplaySettings
 {
-  height: number,
-  width: number
+  width: number,
+  defaultText: string,
+  fontSize: number
 }
 
 export interface ISequenceSettings

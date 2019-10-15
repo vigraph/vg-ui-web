@@ -2,6 +2,7 @@ import * as React from 'react';
 import * as Model from './model';
 
 import * as vgTypes from './lib/Types';
+import { vgUtils } from './lib/Utils';
 
 interface IProps
 {
@@ -52,41 +53,62 @@ export default class TextDisplay extends React.Component<IProps, IState>
       editing: false,
       updating: false
     };
+
+    if (this.state.currentText === "")
+    {
+      vgUtils.log("TextDisplay Component: Setting to default text " +
+        JSON.stringify(this.settings.defaultText));
+      this.props.update(this.settings.defaultText);
+    }
   }
 
   public render()
   {
+    const fontSize = this.settings.fontSize;
+
+    const linesArray = vgUtils.wrapText(this.state.currentText,
+        this.settings.width, fontSize);
+
+    const height = linesArray.length * (vgUtils.textBoundingSize(linesArray[0],
+      fontSize).height + 2);
+
     return(
         <svg id="text-display" className={this.property.subType}
-          onDoubleClick={this.handleDoubleClick}>
+          onDoubleClick={this.toggleEditing}>
           <svg id="text-display-wrapper"
             x={0} y={0}
-            width={this.settings.width} height={this.settings.height}>
+            width={this.settings.width} height={height}>
             <text id="text-display-text" className="label"
-              x={this.settings.width/2} y={15}>
-            {this.state.currentText}
+              fontSize={fontSize} x={this.settings.width/2} y={15}>
+            {linesArray.map((word: string, index: number) =>
+            {
+              return <tspan key={index} x={this.settings.width/2}
+                dy={index*(fontSize+2)}>{word}</tspan>
+            })}
             </text>
           </svg>
           {this.state.editing && <svg className="text-display-editing-wrapper">
             <rect className="text-display-editing-border"
               x={0} y={0}
-              width={this.settings.width} height={this.settings.height}/>
+              width={this.settings.width} height={height}/>
         </svg>}
         </svg>
     );
   }
 
-  private handleDoubleClick = () =>
+  private toggleEditing = () =>
   {
     const newEditState = !this.state.editing;
     this.setState({editing: newEditState});
     if (newEditState)
     {
       window.addEventListener("keydown", this.handleKeyDown);
+      window.addEventListener("mousedown", this.toggleEditing);
     }
     else
     {
       window.removeEventListener("keydown", this.handleKeyDown);
+      window.removeEventListener("mousedown", this.toggleEditing);
     }
   }
 
