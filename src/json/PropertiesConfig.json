@@ -1412,5 +1412,180 @@
         "y": 0
       }
     }
+  },
+  "core/beat": {
+    "width": 130,
+    "height": 100,
+    "description": "Regular beat pulse",
+    "properties":
+    {
+      "interval":
+      {
+        "description": "Interval in seconds",
+        "controlType": "knob",
+        "subType": "log",
+        "rangeMin": 0.001,
+        "rangeMax": 1000,
+        "increment": 0.001,
+        "x": 60,
+        "y": 22,
+        "connector":
+        {
+          "x": 15,
+          "y": 26
+        }
+      },
+      "offset":
+      {
+        "description": "Offset",
+        "controlType": "knob",
+        "subType": "default",
+        "rangeMin": 0,
+        "rangeMax": 1,
+        "increment": 0.1,
+        "x": 100,
+        "y": 22,
+        "connector":
+        {
+          "x": 30,
+          "y": 26
+        }
+      },
+      "start":
+      {
+        "description": "Start",
+        "controlType": "knob",
+        "subType": "default",
+        "rangeMin": 0,
+        "rangeMax": 1,
+        "increment": 0.1,
+        "x": 60,
+        "y": 60,
+        "connector":
+        {
+          "x": 15,
+          "y": 41
+        }
+      },
+      "stop":
+      {
+        "description": "Stop",
+        "controlType": "knob",
+        "subType": "default",
+        "rangeMin": 0,
+        "rangeMax": 1,
+        "increment": 0.1,
+        "x": 100,
+        "y": 60,
+        "connector":
+        {
+          "x": 30,
+          "y": 41
+        }
+      }
+    }
+  },
+  "core/envelope": {
+    "description": "Provide an ADSR envelope on trigger/release",
+    "width": 190,
+    "height": 80,
+    "properties":
+    {
+      "attack":
+      {
+        "description": "Attack time",
+        "controlType": "knob",
+        "subType": "default",
+        "rangeMin": 0,
+        "rangeMax": 10,
+        "increment": 0.001,
+        "x": 30,
+        "y": 30
+      },
+      "decay":
+      {
+        "description": "Decay time",
+        "controlType": "knob",
+        "subType": "default",
+        "rangeMin": 0,
+        "rangeMax": 10,
+        "increment": 0.05,
+        "x": 70,
+        "y": 30
+      },
+      "release":
+      {
+        "description": "Release time",
+        "controlType": "knob",
+        "subType": "log",
+        "rangeMin": 0.01,
+        "rangeMax": 30,
+        "increment": 0.1,
+        "x": 150,
+        "y": 30
+      },
+      "reset":
+      {
+        "description": "Reset",
+        "controlType": "knob",
+        "subType": "default",
+        "rangeMin": 0,
+        "rangeMax": 10,
+        "increment": 0.001,
+        "x": 30,
+        "y": 30
+      },
+      "start":
+      {
+        "description": "Start",
+        "controlType": "knob",
+        "subType": "default",
+        "rangeMin": 0,
+        "rangeMax": 10,
+        "increment": 0.001,
+        "x": 30,
+        "y": 30
+      },
+      "stop":
+      {
+        "description": "Stop",
+        "controlType": "knob",
+        "subType": "default",
+        "rangeMin": 0,
+        "rangeMax": 10,
+        "increment": 0.001,
+        "x": 30,
+        "y": 30
+      },
+      "sustain":
+      {
+        "description": "Sustain level",
+        "controlType": "knob",
+        "subType": "default",
+        "rangeMin": 0,
+        "rangeMax": 1,
+        "increment": 0.01,
+        "x": 110,
+        "y": 30
+      }
+    }
+  },
+  "core/multiply":
+  {
+    "width": 50,
+    "height": 110,
+    "properties":
+    {
+      "factor":
+      {
+        "controlType": "knob",
+        "subType": "log",
+        "rangeMin": 0.001,
+        "rangeMax": 1000,
+        "increment": 0.1,
+        "x": 20,
+        "y": 70
+      }
+    }
   }
 }

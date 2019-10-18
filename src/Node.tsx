@@ -206,11 +206,11 @@ export default class Node extends React.Component<IProps, IState>
     this.setState({ dragging: false });
     window.removeEventListener('mouseup', this.handleMouseUp);
     window.removeEventListener('mousemove', this.handleMouseMove);
-    if (this.node.subGraph)
+    if (this.node.subGraph === "graph")
     {
       this.props.showNodeGraph(this.node.path, undefined, "/elements");
     }
-    else if (this.node.cloneGraph)
+    else if (this.node.subGraph === "clone")
     {
       this.props.showNodeGraph(this.node.path, "/graph", "/graph");
     }
@@ -227,8 +227,6 @@ export default class Node extends React.Component<IProps, IState>
 
     const currentPosition = vgUtils.windowToSVGPosition(
       {x: e.pageX, y: e.pageY}, this.props.graphRef);
-
-    const date = new Date();
 
     this.mouseDown = {x: this.state.x, y: this.state.y};
 

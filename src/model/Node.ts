@@ -72,34 +72,14 @@ export class Node
     this.graph.setNodeProp(this.id, "size", size);
   }
 
-  get subGraph(): boolean
+  get subGraph(): string
   {
     return this.graph.getNodeProp(this.id, "subGraph");
   }
 
-  set subGraph(subGraph: boolean)
+  set subGraph(subGraph: string)
   {
     this.graph.setNodeProp(this.id, "subGraph", subGraph);
-  }
-
-  get cloneGraph(): boolean
-  {
-    return this.graph.getNodeProp(this.id, "cloneGraph");
-  }
-
-  set cloneGraph(cloneGraph: boolean)
-  {
-    this.graph.setNodeProp(this.id, "cloneGraph", cloneGraph);
-  }
-
-  get selectorGraphs(): any[]
-  {
-    return this.graph.getNodeProp(this.id, "selectorGraphs");
-  }
-
-  set selectorGraphs(selectorGraphs: any[])
-  {
-    this.graph.setNodeProp(this.id, "selectorGraphs", selectorGraphs);
   }
 
   public addEdge(output: string, dest: Node, destInput: string)
@@ -202,7 +182,7 @@ export class Node
   }
 
   // Get connector position based on size of node and index of connector, if
-  // connector doesn't have a given position already (iprop)
+  // connector doesn't have a given position already
   public getConnectorPosition(connector: Connector): {x: number, y: number}
   {
     let x = 0;
@@ -211,27 +191,27 @@ export class Node
     const allConnectors = this.graph.getNodeConnectors(this.id,
       connector.direction);
 
-    if (connector.prop && connector.position)
+    if (connector.position)
     {
       return connector.position;
     }
     else if (connector.direction === "input")
     {
-      const nonPropConnectors: Array<Connector> = [];
+      const nonPositionedConnectors: Array<Connector> = [];
 
       allConnectors.forEach((value: Connector) =>
       {
-        if (!value.prop || !value.position)
+        if (!value.position)
         {
-          nonPropConnectors.push(value);
+          nonPositionedConnectors.push(value);
         }
       });
 
-      if (nonPropConnectors.length)
+      if (nonPositionedConnectors.length)
       {
         x = 0;
-        y = (this.size.h / (nonPropConnectors.length + 1)) *
-          (nonPropConnectors.findIndex(x => x.id === connector.id) + 1);
+        y = (this.size.h / (nonPositionedConnectors.length + 1)) *
+          (nonPositionedConnectors.findIndex(x => x.id === connector.id) + 1);
       }
     }
     else

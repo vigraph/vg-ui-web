@@ -73,8 +73,8 @@
       "radius": 15,
       "overlayRadius": 10,
       "rangeMin": 0,
-      "rangeMax": 359,
-      "offset": 0,
+      "rangeMax": 270,
+      "offset": 45,
       "turnScale": 1,
       "logControl": true
     }

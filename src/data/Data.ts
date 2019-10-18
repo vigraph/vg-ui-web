@@ -21,14 +21,14 @@ class Data
   private rest: rm.RestClient;
   private generateSuccess?: (json: any) => void;
   private propertiesConfig: vgTypes.IPropertiesConfig;
-  private processedMetadata: vgTypes.IProcessedMetadata;
+  private metadata: vgTypes.IMetadata;
   private layoutData: vgTypes.ILayoutData;
 
   public constructor()
   {
     this.rest = new rm.RestClient('vigraph-rest', restURL);
     this.propertiesConfig = require('../json/PropertiesConfig.json');
-    this.processedMetadata = {};
+    this.metadata = {};
     this.layoutData = {};
   }
 
@@ -38,19 +38,19 @@ class Data
 
   public returnMetadata()
   {
-    return this.processedMetadata;
+    return this.metadata;
   }
 
   // Update property (propID) on node (nodeID) with given value (value)
   public updateProperty(nodeID: string, propID: string,
     value: any, success?: () => void, failure?: () => void)
   {
-    const url = restURL + "/graph/" + nodeID + "/" + propID;
+    const url = restURL + "/graph/" + nodeID + "/@" + propID;
 
     fetch(url,
     {
       method: "POST",
-      body: JSON.stringify(value)
+      body: JSON.stringify({value})
     })
     .then(response =>
       {
@@ -87,7 +87,9 @@ class Data
       });
   }
 
+  // !!! Not yet updated for Engine 2.0
   // Update node (nodeID) with given (non-property) data
+  // e.g. {graphs: ...} in a graph selector
   public updateNode(nodeID: string, data: any, success?: () => void,
     failure?: () => void)
   {
@@ -187,19 +189,19 @@ class Data
     edges: Array<{dest: string, destInput: string}>, success?: ()=>void,
     failure?: () => void)
   {
-    const url = restURL + "/graph/" + outputNodePath + "/" + outputID;
+    const url = restURL + "/graph/" + outputNodePath + "/@" + outputID;
 
-    const data: Array<{"element": string, "prop": string}> = [];
+    const data: Array<{"element": string, "input": string}> = [];
 
     edges.forEach((value: {dest: string, destInput: string}) =>
     {
-      data.push({"element": value.dest, "prop": value.destInput});
+      data.push({"element": value.dest, "input": value.destInput});
     })
 
     fetch(url,
     {
       method: "POST",
-      body: JSON.stringify(data)
+      body: JSON.stringify({connections: data})
     })
     .then(response =>
       {
@@ -237,6 +239,7 @@ class Data
       });
   }
 
+  // !!! Not yet updated for Engine 2.0
   // Delete given path (e.g. Graph in Graph selector)
   // Calls success on DELETE success
   public deletePath(path: string, success?: ()=>void, failure?: () => void)
@@ -283,6 +286,7 @@ class Data
       });
   }
 
+  // !!! Not yet updated for Engine 2.0
   // Add an empty graph with given ID (used by Graph Selector)
   // Calls success function on PUT success with processed empty graph item
   public addEmptyGraph(id: string, path: string,
@@ -306,7 +310,7 @@ class Data
           // Success
           if (success)
           {
-            const item = this.processSingleGraphItem({id, elements: []},
+            const item = this.processSingleGraphItem(id, {type: "core/graph"},
               path+'/graph');
             success(item);
           }
@@ -338,20 +342,24 @@ class Data
   public getRawSelectorGraphs(path: string,
     success?: (graphs: vgTypes.IRawGraphItem[])=>void, failure?: () => void)
   {
-    this.getRawGraphItem(path, (result: vgTypes.IRawGraphItem) =>
+    if (success)
     {
-      if (success)
-      {
-        success(result.graphs?result.graphs:[]);
-      }
-    },
-    () =>
-    {
-      if (failure)
-      {
-        failure();
-      }
-    })
+      success([])
+    }
+    // this.getRawGraphItem(path, (result: vgTypes.IRawGraphItem) =>
+    // {
+    //   if (success)
+    //   {
+    //     success(result.graphs);
+    //   }
+    // },
+    // () =>
+    // {
+    //   if (failure)
+    //   {
+    //     failure();
+    //   }
+    // })
   }
 
   // Get node and calls success with resulting (processed) node allowing it to
@@ -367,9 +375,9 @@ class Data
     this.getRawGraphItem(path, (result) =>
     {
       vgUtils.log("Process raw node");
-      if (this.processedMetadata)
+      if (this.metadata)
       {
-        const item = this.processSingleGraphItem(result, parentPath);
+        const item = this.processSingleGraphItem(nodeID, result, parentPath);
 
         const propConfig = this.propertiesConfig[item.type];
 
@@ -554,14 +562,7 @@ class Data
     {
       if (Object.keys(this.layoutData).length > 0)
       {
-        if (source)
-        {
-          this.getGraphDataFromSource(source);
-        }
-        else
-        {
-          this.getGraphData();
-        }
+        this.getGraphData(source);
       }
       else
       {
@@ -569,7 +570,7 @@ class Data
       }
     }
 
-    if (Object.keys(this.processedMetadata).length > 0)
+    if (Object.keys(this.metadata).length > 0)
     {
       getLayout();
     }
@@ -583,18 +584,19 @@ class Data
   // Metadata
   //============================================================================
 
-  // Get properties metadata, process and then store
+  // Get properties metadata
   private async getMetadata(success: () => void)
   {
     try
     {
-      const res: rm.IRestResponse<vgTypes.IRawMetadataItem[]> =
-        await this.rest.get<vgTypes.IRawMetadataItem[]>('/meta');
+      const res: rm.IRestResponse<vgTypes.IMetadata> =
+        await this.rest.get<vgTypes.IMetadata>('/meta');
 
       if (res.statusCode === 200 && res.result)
       {
         vgUtils.log("Get Metadata Success");
-        this.processMetadata(res.result);
+        this.metadata = res.result
+
         success();
       }
       else
@@ -609,107 +611,6 @@ class Data
       // Error
       vgUtils.log("Get Metadata Failure with error: " + error);
     }
-  }
-
-  // Process metadata from raw metadata into a usable format to create Graph
-  // model (see type definition file)
-  private processMetadata(rawMetadata: vgTypes.IRawMetadataItem[]):
-    vgTypes.IProcessedMetadata
-  {
-    const processedMetadata: vgTypes.IProcessedMetadata = {};
-
-    rawMetadata.forEach((value: vgTypes.IRawMetadataItem, index: number) =>
-    {
-      const pInputs:
-        Array<{ id: string, connectorType: string, multiple?: boolean,
-          prop?: boolean}> = [];
-
-      const pOutputs:
-        Array<{ id: string, connectorType: string, multiple?: boolean}> = [];
-
-      const pProps: Array<{ id: string, type: string, propType: string,
-           description: string}> = [];
-
-      if (value.inputs)
-      {
-        value.inputs.forEach((input: {type: string, multiple?: boolean},
-          iIndex: number) =>
-          {
-            pInputs.push({id: "default", connectorType: input.type,
-              multiple: !!input.multiple});
-          });
-      }
-
-      if (value.iprops)
-      {
-        value.iprops.forEach(
-          (input: {id: string, description: string, type: string,
-            alias?: boolean}) =>
-          {
-            pInputs.push({id: input.id, connectorType: input.type,
-              prop: true});
-
-            if (!input.alias)
-            {
-              pProps.push({id: input.id, type: input.type, propType: "input",
-                description: input.description });
-            }
-          });
-      }
-
-      if (value.props)
-      {
-          value.props.forEach(
-            (prop: {id: string, description: string, type: string,
-              alias?: boolean}) =>
-            {
-              if (!prop.alias)
-              {
-                pProps.push({id: prop.id, type: prop.type, propType: "setting",
-                  description: prop.description });
-              }
-            });
-      }
-
-      if (value.outputs)
-      {
-        value.outputs.forEach((output: {type: string, multiple?: boolean},
-          oIndex: number) =>
-          {
-            pOutputs.push({id: "default", connectorType: output.type});
-          });
-      }
-
-      if (value.oprops)
-      {
-        value.oprops.forEach(
-          (output: {id: string, description: string, type: string,
-            alias?: boolean}) =>
-          {
-            pOutputs.push({id: output.id, connectorType: output.type});
-          });
-      }
-
-      if (!processedMetadata[value.section])
-      {
-        processedMetadata[value.section] = {};
-      }
-
-      processedMetadata[value.section][value.id] =
-        {
-          name: value.name,
-          section: value.section,
-          description: value.description,
-          inputs: pInputs,
-          outputs: pOutputs,
-          properties: pProps
-        }
-    });
-
-    // Store processsed metadata
-    this.processedMetadata = processedMetadata;
-
-    return processedMetadata;
   }
 
   //============================================================================
@@ -921,17 +822,20 @@ class Data
   //============================================================================
 
   // Get data for entire graph and create graph model
-  private async getGraphData()
+  private async getGraphData(source?: {sourcePath: string,
+    parentPath?: string})
   {
     try
     {
-      const res: rm.IRestResponse<vgTypes.IRawGraphItem[]> =
-        await this.rest.get<vgTypes.IRawGraphItem[]>('/graph');
+      const res: rm.IRestResponse<vgTypes.IRawGraphItem> =
+        await this.rest.get<vgTypes.IRawGraphItem>('/graph' + (source ?
+          "/" + source.sourcePath : ""));
 
       if (res.statusCode === 200 && res.result)
       {
         vgUtils.log("Get Graph Data Success");
-        this.createGraphModel(res.result);
+        this.createGraphModel(res.result,
+          source ? source.parentPath : undefined);
       }
       else
       {
@@ -947,45 +851,27 @@ class Data
     }
   }
 
-  // Get data for entire graph and create graph model
-  private async getGraphDataFromSource(source: {sourcePath: string,
-    parentPath?: string})
-  {
-    try
-    {
-      const res: rm.IRestResponse<vgTypes.IRawGraphItem[]> =
-        await this.rest.get<vgTypes.IRawGraphItem[]>('/graph/' +
-          source.sourcePath);
-
-      if (res.statusCode === 200 && res.result)
-      {
-        vgUtils.log("Get Graph Data From Source Success");
-        this.createGraphModel(res.result, source.parentPath);
-      }
-      else
-      {
-        // Error with status code
-        vgUtils.log("Get Graph Data From Source Failure with status code: " +
-          res.statusCode);
-      }
-    }
-    catch (error)
-    {
-      // Error
-      vgUtils.log("Get Graph Data From Source Failure with error: " + error);
-    }
-  }
-
   // Create Graph model from processed raw graph data
-  private createGraphModel(rawGraphData: vgTypes.IRawGraphItem[],
+  private createGraphModel(rawGraphData: vgTypes.IRawGraphItem,
     parentPath?: string)
   {
     const nodes: vgTypes.IProcessedGraphItem[] = [];
 
-    rawGraphData.forEach((value: vgTypes.IRawGraphItem, index: number) =>
+    // !!! Engine 1.0 method, below is (possible) hack for current Engine 2.0 setup
+    // for (const itemID of Object.keys(rawGraphData))
+    // {
+    //   nodes.push(this.processSingleGraphItem(itemID, rawGraphData[itemID],
+    //     parentPath));
+    // }
+
+    if (rawGraphData.elements)
     {
-      nodes.push(this.processSingleGraphItem(value, parentPath));
-    })
+      for (const itemID of Object.keys(rawGraphData.elements))
+      {
+        nodes.push(this.processSingleGraphItem(itemID,
+          rawGraphData["elements"][itemID], parentPath));
+      }
+    }
 
     this.layoutGraph(nodes, (graph: any) =>
       {
@@ -997,113 +883,150 @@ class Data
   // (see type definitions)
   // parentPath is the path to the node (graph item) parent e.g. graph/graph-1
   // in the case of subgraphs
-  private processSingleGraphItem(item: vgTypes.IRawGraphItem,
+  private processSingleGraphItem(itemID: string, item: vgTypes.IRawGraphItem,
     parentPath?: string)
   {
-    const metadata = this.processedMetadata;
+    const splitType = item.type.split("/");
+    const itemSection = splitType[0];
+    const itemType = splitType[1];
+    const metadata = this.metadata[itemSection][itemType];
 
-    // Graph Selector
-    const gSelectorGraphs: Array<{id: string, path: string}> = [];
-    if (item.graphs)
-    {
-      item.graphs.forEach((selectorGraph: vgTypes.IRawGraphItem,
-        index: number) =>
-      {
-        gSelectorGraphs.push({id: selectorGraph.id,
-          path: parentPath ?
-            (parentPath + "/" + item.id + "/graph/" + selectorGraph.id) :
-            (item.id + "/graph/" + selectorGraph.id)});
-      })
-    }
-
+    // Edges
     const gEdges:
       Array<{ output: string, destId: string, input: string}> = [];
 
     if (item.outputs)
     {
-      for (const key of Object.keys(item.outputs))
+      for (const outputID of Object.keys(item.outputs))
       {
-        item.outputs[key].forEach(
-          (vOutput: {element: string, prop: string}) =>
-          {
-            gEdges.push({ output: key, destId: vOutput.element,
-              input: vOutput.prop})
-          });
-      }
-    }
-
-    const gProps: Array<{ id: string, description: string, propType: string,
-      valueType: string, controlType: string, subType: string, value: any,
-      valueFormat?: string, rangeMin?: number, rangeMax?: number,
-      increment?: number, available?: any[], x: number, y:number}> = [];
-
-    let itemSection, itemType;
-
-    let gInputs: Array<{ id: string, connectorType: string,
-      multiple?: boolean, prop?: boolean, x?: number, y?: number}> = [];
-
-    if (item.type)
-    {
-      const splitType = item.type.split(":");
-      itemSection = splitType[0];
-      itemType = splitType[1];
-
-      gInputs = metadata[itemSection][itemType].inputs;
-
-      // Node properties from metadata
-      if (this.propertiesConfig[item.type] && item.props)
-      {
-        for (const key of Object.keys(item.props))
+        const connections = item.outputs[outputID].connections;
+        if (connections)
         {
-          const fProp =  metadata[itemSection][itemType].properties.find(x =>
-              x.id === key);
-          const propType = fProp ? fProp.propType : "";
-          const valueType = fProp ? fProp.type : "";
-          const description = fProp ? fProp.description : "";
-
-          gProps.push({id: key, value: item.props[key],
-            propType, valueType, description,
-            ...this.propertiesConfig[item.type].properties[key]});
-
-          // Iprop connector position
-          const ipropIndex = gInputs.findIndex(x => x.id === key);
-          if (ipropIndex && this.propertiesConfig[item.type].properties[key])
-          {
-            gInputs[ipropIndex] = {...gInputs[ipropIndex],
-              ...this.propertiesConfig[item.type].properties[key].connector};
-          }
-        };
-      }
-
-      // Special case - store selector elements' 'graphs' in the available
-      // section of the value property (id and path)
-      if (gSelectorGraphs.length > 0)
-      {
-        const valueIndex = gProps.findIndex(x => x.id === "value");
-
-        if (valueIndex)
-        {
-          gProps[valueIndex].available = [...gSelectorGraphs];
+          connections.forEach(
+            (connection: {element: string, input: string}) =>
+            {
+              gEdges.push({ output: outputID, destId: connection.element,
+                input: connection.input})
+            });
         }
       }
     }
 
+    // Outputs
+    const gOutputs: Array<{ id: string, type: string }> = [];
+
+    const mOutputs = metadata.outputs;
+    if (mOutputs)
+    {
+      for (const outputID of Object.keys(mOutputs))
+      {
+        gOutputs.push({id: outputID, type: mOutputs[outputID].type});
+      }
+    }
+
+    // Inputs - will add position later
+    const gInputs:
+      Array<{ id: string, type: string, x?: number, y?: number}> = [];
+
+    const mInputs = metadata.inputs;
+    if (mInputs)
+    {
+      for (const inputID of Object.keys(mInputs))
+      {
+        gInputs.push({id: inputID, type: mInputs[inputID].type});
+      }
+    }
+
+    // Properties: inputs and settings
+    const gProps: Array<{ id: string, value: any, valueType: string,
+      propType: string, description?: string, controlType?: string,
+      subType?: string, valueFormat?: string, rangeMin?: number,
+      rangeMax?: number, increment?: number, available?: any[], x?: number,
+      y?: number}> = [];
+
+    const propsConfig = this.propertiesConfig[item.type];
+
+    if (item.inputs)
+    {
+      for (const inputID of Object.keys(item.inputs))
+      {
+        const iPropsConfig = (propsConfig && propsConfig.properties[inputID] ?
+          propsConfig.properties[inputID] : null);
+
+        gProps.push(
+        {
+          id: inputID,
+          value: item.inputs[inputID].value,
+          valueType: item.inputs[inputID].type,
+          propType: "input",
+          ...iPropsConfig
+        });
+
+        // Add connector position to input
+        const propInputIndex = gInputs.findIndex(x => x.id === inputID);
+
+        if (propInputIndex >= 0 && iPropsConfig)
+        {
+          gInputs[propInputIndex] = {...gInputs[propInputIndex],
+            ...iPropsConfig.connector};
+        }
+      }
+    }
+
+    if (item.settings)
+    {
+      for (const settingID of Object.keys(item.settings))
+      {
+        const sPropsConfig = (propsConfig && propsConfig.properties[settingID] ?
+          propsConfig.properties[settingID] : {});
+
+        gProps.push(
+        {
+          id: settingID,
+          value: item.settings[settingID].value,
+          valueType: item.settings[settingID].type,
+          propType: "setting",
+          ...sPropsConfig
+        });
+      }
+    }
+
+    // Special case - store selector elements' 'graphs' in the available
+    // section of the value property (id and path)
+    if (item.graphs)
+    {
+      const valueIndex = gProps.findIndex(x => x.id === "value");
+
+      if (valueIndex)
+      {
+        const selectorGraphs: Array<{id: string, path: string}> = [];
+
+        for (const key of Object.keys(item.graphs))
+        {
+          selectorGraphs.push({id: key,
+            path: parentPath ? (parentPath + "/" + itemID + "/graph/" + key) :
+              (itemID + "/graph/" + key)});
+        }
+
+        gProps[valueIndex].available = [...selectorGraphs];
+      }
+    }
+
+    const gSubGraph = (item.elements ? "graph" :
+      (item.graph ? "clone" : "selector"));
+
     const node: vgTypes.IProcessedGraphItem =
     {
-      id: item.id,
-      name: itemSection && itemType ? metadata[itemSection][itemType].name : "",
-      type: item.type ? item.type : "",
-      path: parentPath ? parentPath + "/" + item.id : item.id,
-      description: itemSection && itemType ?
-        metadata[itemSection][itemType].description : "",
+      id: itemID,
+      name: metadata.name,
+      type: item.type,
+      path: parentPath ? parentPath + "/" + itemID : itemID,
+      description: propsConfig ? propsConfig.description : "",
       inputs: gInputs,
-      outputs: itemSection && itemType ?
-        metadata[itemSection][itemType].outputs : [],
+      outputs: gOutputs,
       edges: gEdges,
       properties: gProps,
-      subGraph: !!item.elements,
-      cloneGraph: !!item.graph,
-      selectorGraphs: item.graphs ? gSelectorGraphs : undefined
+      subGraph: gSubGraph
     };
 
     return node;

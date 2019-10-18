@@ -519,9 +519,11 @@ export default class Graph extends React.Component<IProps, IState>
     this.graph.beginTransaction();
     let flag = false;
 
+    const typeID = type.split("/")[1];
+
     while (!flag)
     {
-      const node = this.graph.getNode(type+"-"+this.idCount);
+      const node = this.graph.getNode(typeID+"-"+this.idCount);
       if (node)
       {
         this.idCount++;
@@ -532,7 +534,7 @@ export default class Graph extends React.Component<IProps, IState>
       }
     }
 
-    const id = type+"-"+this.idCount;
+    const id = typeID+"-"+this.idCount;
 
     const currGraphPathLen = this.currentGraphPath.length;
 
@@ -753,19 +755,17 @@ export default class Graph extends React.Component<IProps, IState>
     if (connector.direction === "input")
     {
       dummyConnector = this.graph.addNodeOutput("dummynode","dummyconnector",
-        connector.connectorType);
+        connector.type);
       this.graph.addEdge(dummyNode.id, dummyConnector.id, node.id,
         connector.id);
     }
     else
     {
       dummyConnector = this.graph.addNodeInput("dummynode","dummyconnector",
-        connector.connectorType);
+        connector.type);
       this.graph.addEdge(node.id, connector.id, dummyNode.id,
         dummyConnector.id);
     }
-
-    dummyConnector.multiple = false;
 
     this.setState({ tempNodes: {dummy: dummyNode, real: node }});
     this.setState({ tempConnectors: {dummy: dummyConnector, real: connector}});
@@ -800,30 +800,17 @@ export default class Graph extends React.Component<IProps, IState>
       this.graph.removeNode(dnode.id);
 
       // If the target connector has the same connector type as the previously
-      // selected connector (or "any"), the same direction as the dummy
-      // connector and can accept multiple connections (input only), then add
-      // a permanent edge between selected connector and target connector.
+      // selected connector (or "any") and the same direction as the dummy
+      // connector, then add a permanent edge between selected connector and
+      // target connector.
       if (tconnector && tconnector.connector && tconnector.parent &&
-        (tconnector.connector.connectorType === rconnector.connectorType ||
-        tconnector.connector.connectorType === "any" ||
-        rconnector.connectorType === "any") &&
+        (tconnector.connector.type === rconnector.type ||
+        tconnector.connector.type === "any" ||
+        rconnector.type === "any") &&
         tconnector.connector.direction === dconnector.direction)
       {
-        if (tconnector.connector.direction === "input")
-        {
-          if (tconnector.connector.multiple ||
-            tconnector.parent.edgesFromConnector(tconnector.connector).length <
-            1)
-          {
-            this.addEdge(rnode.id, rconnector.id, tconnector.parent.id,
-              tconnector.connector.id);
-          }
-        }
-        else
-        {
-          this.addEdge(tconnector.parent.id, tconnector.connector.id,
-            rnode.id, rconnector.id);
-        }
+        this.addEdge(rnode.id, rconnector.id, tconnector.parent.id,
+          tconnector.connector.id);
       }
     }
 

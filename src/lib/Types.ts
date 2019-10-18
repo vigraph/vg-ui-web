@@ -1,40 +1,48 @@
 // ViGraph - Type definitions
 // Copyright (c) Paul Clark 2019
 
-export interface IPropertiesConfig
-{
-  [key: string]: {
-    width: number,
-    height: number,
-    properties: {
-      [key: string]: {
-        controlType: string,
-        subType: string,
-        valueFormat?: string,
-        rangeMin?: number,
-        rangeMax?: number,
-        increment?: number,
-        available?: any[],
-        x: number,
-        y: number,
-        connector?: {
-          x: number,
-          y: number
-        }
-      }
-    }
-  }
-}
-
 export interface IRawGraphItem
 {
-  id: string,
-  outputs?: { [key: string]: Array<{element: string, prop: string}>},
-  props?: { [key: string]: number | string | boolean },
-  type?: string,
-  elements?: Array<IRawGraphItem>, // Subgraphs
-  graph?: Array<IRawGraphItem>,    // Clone
-  graphs?: Array<IRawGraphItem>    // Graph Selector
+  type: string, // section/name
+  inputs?:
+  {
+    [key: string]:
+    {
+      type: string,
+      value: any
+    }
+  },
+  settings?:
+  {
+    [key: string]:
+    {
+      type: string,
+      value: any
+    }
+  },
+  outputs?:
+  {
+    [key: string]:
+    {
+      connections?: Array<{ element: string, input: any }>,
+      type: string
+    }
+  },
+  // Subgraphs
+  elements?:
+  {
+    [key: string]: IRawGraphItem,
+  },
+  // Clone
+  graph?:
+  {
+    [key: string]: IRawGraphItem,
+  },
+  // Selector
+  graphs?:
+  {
+    [key: string]: IRawGraphItem,
+  }
 }
 
 export interface IProcessedGraphItem
@@ -43,47 +51,78 @@ export interface IProcessedGraphItem
   name: string,
   type: string,
   path: string,
-  description: string,
-  inputs: Array<{ id: string, connectorType: string, multiple?: boolean,
-    prop?: boolean, x?: number, y?: number}>,
-  outputs: Array<{ id: string, connectorType: string, multiple?: boolean}>,
+  description?: string,
+  inputs: Array<{ id: string, type: string, x?: number, y?: number}>,
+  outputs: Array<{ id: string, type: string}>,
   edges: Array<{ output: string, destId: string, input: string}>,
   // propType = "input" | "setting"
-  properties?: Array<{ id: string, description: string, propType: string,
-    controlType: string, subType: string, value: any, valueType: string,
-    valueFormat?: string, rangeMin?: number, rangeMax?: number,
-    increment?: number, available?: any[], x: number, y: number,
-    connector?: {x?: number, y?: number}}>,
-  subGraph?: boolean, // Subgraphs
-  cloneGraph?: boolean, // Clone
-  selectorGraphs?: Array<{id: string, path: string}>  // Graph Selector
+  properties?: Array<{ id: string, value: any, valueType: string,
+    propType: string, description?: string, controlType?: string,
+    subType?: string, valueFormat?: string, rangeMin?: number, rangeMax?: number,
+    increment?: number, available?: any[], x?: number, y?: number}>,
+  subGraph?: string // "graph" | "clone" | "selector"
 }
 
-export interface IRawMetadataItem
+export interface IMetadata
 {
-  id: string,
-  description: string,
-  name: string,
-  section: string,
-  inputs?: Array<{ type: string, multiple?: boolean}>,
-  iprops?: Array<{ id: string, description: string, type: string, alias?: boolean }>,
-  props?: Array<{ id: string, description: string, type: string, alias?: boolean }>,
-  oprops?: Array<{ id: string, description: string, type: string, alias?: boolean }>,
-  outputs?: Array<{ type: string, multiple?: boolean}>
+  // Section ID
+  [key: string]:
+  {
+    // Element ID
+    [key: string]:
+    {
+      name: string,
+      settings?:
+      {
+        // Setting ID
+        [key: string]:
+        {
+          type: string
+        }
+      }
+      inputs?:
+      {
+        // Input ID
+        [key: string]:
+        {
+          type: string
+        }
+      }
+      outputs?:
+      {
+        // Output ID
+        [key: string]:
+        {
+          type: string
+        }
+      }
+    }
+  }
 }
 
-export interface IProcessedMetadata
+export interface IPropertiesConfig
 {
   [key: string]: {
-    [key: string]: {
-      name: string,
-      section: string,
-      description: string,
-      inputs: Array<{ id: string, connectorType: string, multiple?: boolean,
-        prop?: boolean}>,
-      outputs: Array<{ id: string, connectorType: string, multiple?: boolean}>,
-      properties: Array<{ id: string, type: string, propType: string,
-        description: string}>,
+    description: string,
+    width: number,
+    height: number,
+    properties: {
+      [key: string]: {
+        description: string,
+        controlType: string,
+        subType: string,
+        x: number,
+        y: number,
+        valueFormat?: string,
+        rangeMin?: number,
+        rangeMax?: number,
+        increment?: number,
+        available?: any[],
+        connector?: {
+          x: number,
+          y: number
+        }
+      }
     }
   }
 }

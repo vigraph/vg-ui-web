@@ -27,10 +27,6 @@ export default class Connector extends React.Component<IProps>
     const position = this.props.position;
     const radius = this.props.radius;
 
-    const disabled = (this.props.connector.direction === "input" &&
-      !this.props.connector.multiple &&
-      this.props.parent.edgesFromConnector(this.props.connector).length > 0);
-
     return (
       <svg id={`connector-${this.props.connector.id}`} className={"connector"}>
         <rect className={"connector-boundary " + this.props.connector.id}
@@ -39,7 +35,7 @@ export default class Connector extends React.Component<IProps>
           onMouseLeave={this.mouseLeave}
           onMouseDown={this.mouseDown} />
         <circle className={`connector-icon ${this.props.connector.id}` +
-          ` ${this.props.connector.direction} ${disabled ? "disabled":""}`}
+          ` ${this.props.connector.direction}`}
           cx={position.x+(2*radius)}
           cy={position.y}
           r={radius} />

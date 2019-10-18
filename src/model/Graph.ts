@@ -13,9 +13,8 @@
 //            type: string
 //            path: string
 //            description: string
-//            inputs: Map<id, { connectorType: string, multiple: boolean,
-//              prop: boolean, position: {x, y} }>
-//            outputs: Map<id, { connectorType: string, multiple: boolean }>
+//            inputs: Map<id, { type: string, position: {x, y} }>
+//            outputs: Map<id, { type: string, position: null }>
 //            forwardEdges: Map<output, List<{ destId: string, destInput: string }>>
 //            reverseEdges: Map<input, List<{ srcId: string, srcOutput: string }>>
 //            position: { x, y },
@@ -33,9 +32,7 @@
 //                                  increment: number,
 //                                  available: any[]
 //                                },
-//             subGraph: boolean
-//             cloneGraph: boolean
-//             selectorGraphs: any[] | null // array of nodes (json - see below)
+//             subGraph: string
 //                  }>
 // }
 
@@ -64,16 +61,14 @@ export class Graph
   // Load a graph from the given JSON:
   // { nodes: [
   //     { id, name, type, path, description, x, y, w, h,
-  //       inputs: [ { id, connectorType, multiple, prop, x, y }],
-  //       outputs: [ { id, connectorType, multiple }],
+  //       inputs: [ { id, type, x, y } ],
+  //       outputs: [ { id, type } ],
   //       edges: [ { output, destId, input } ],
   //       properties: [ { id, description, propType, valueType, valueFormat,
   //                       controlType, subType, x, y, value, rangeMin,
   //                       rangeMax, increment
   //                   } ],
-  //       subGraph: boolean,
-  //       cloneGraph: boolean,
-  //       selectorGraphs: node[]
+  //       subGraph: string
   //     } ] }
   // Baseline set if given json is the baseline graph
   public loadFrom(json: any, baseline: boolean, id: string)
@@ -125,16 +120,12 @@ export class Graph
     node.size = { w: n.w || 50, h: n.h || 50 };
     node.path = n.path || n.id;
     node.description = n.description || "";
-    node.subGraph = n.subGraph || false;
-    node.cloneGraph = n.cloneGraph || false;
-    node.selectorGraphs = n.selectorGraphs || null;
+    node.subGraph = n.subGraph || null;
     if (n.inputs)
     {
       for (const i of n.inputs)
       {
-        const input = this.addNodeInput(n.id, i.id, i.connectorType);
-        input.multiple = i.multiple || false;
-        input.prop = i.prop || false;
+        const input = this.addNodeInput(n.id, i.id, i.type);
         input.position = ((i.x && i.y) ? { x: i.x || 0, y: i.y || 0 } : null);
       }
     }
@@ -143,9 +134,7 @@ export class Graph
     {
       for (const o of n.outputs)
       {
-        const output = this.addNodeOutput(n.id, o.id, o.connectorType);
-        output.multiple = o.multiple || false;
-        output.prop = false;
+        const output = this.addNodeOutput(n.id, o.id, o.type);
         output.position = null;
       }
     }
@@ -155,13 +144,13 @@ export class Graph
       for (const p of n.properties)
       {
         const property = this.addProperty(n.id, p.id, p.propType);
-        property.description = p.description || ""
-        property.valueType = p.valueType || "";
-        property.controlType = p.controlType || "default";
-        property.subType = p.subType || "?";
-        property.valueFormat = p.valueFormat || "";
-        property.position = { x: p.x || 0, y: p.y || 0 };
         property.value = p.value;
+        property.valueType = p.valueType || "";
+        property.description = p.description || ""
+        property.valueFormat = p.valueFormat || "";
+        property.controlType = p.controlType || "none";
+        property.subType = p.subType || "default";
+        property.position = { x: p.x || 0, y: p.y || 0 };
         property.range = { min: p.rangeMin || 0, max: p.rangeMax || 1};
         property.increment = p.increment || 1;
         property.available = p.available || [];
@@ -206,10 +195,10 @@ export class Graph
     this.state = this.state.deleteIn(["nodes", id]);
   }
 
-  public addNodeInput(parentId: string, id: string, connectorType: string)
+  public addNodeInput(parentId: string, id: string, type: string)
   {
     this.state = this.state.setIn(["nodes", parentId, "inputs", id,
-      "connectorType"], connectorType);
+      "type"], type);
 
     // Initialise reverse edge list for this input connector
     if (!this.state.getIn(["nodes", parentId, "reverseEdges", id]))
@@ -221,10 +210,10 @@ export class Graph
     return new Connector(id, parentId, "input", this);
   }
 
-  public addNodeOutput(parentId: string, id: string, connectorType: string)
+  public addNodeOutput(parentId: string, id: string, type: string)
   {
     this.state = this.state.setIn(["nodes", parentId, "outputs", id,
-      "connectorType"], connectorType);
+      "type"], type);
 
     // Initialise forward edge list for this output connector
     if (!this.state.getIn(["nodes", parentId, "forwardEdges", id]))
@@ -286,9 +275,9 @@ export class Graph
     const srcConnector = this.getNodeConnector(srcOutput, srcId, "output");
     const destConnector = this.getNodeConnector(destInput, destId, "input");
 
-    if (srcConnector && destConnector && (srcConnector.connectorType ===
-      destConnector.connectorType || srcConnector.connectorType === "any" ||
-      destConnector.connectorType === "any"))
+    if (srcConnector && destConnector && (srcConnector.type ===
+      destConnector.type || srcConnector.type === "any" ||
+      destConnector.type === "any"))
     {
       this.state = this.state
         .setIn(["nodes", srcId, "forwardEdges", srcOutput],

@@ -76,7 +76,7 @@ export default class InfoPanel extends React.Component<IProps, IState>
 
     if (node && this.state.show)
     {
-      const section = node.type.split(":")[0];
+      const section = node.type.split("/")[0];
       return <div id="info-panel">
         <div id="node-info-wrapper" className="info-section-wrapper">
           <div id="info-node-name" className="info-text node name">

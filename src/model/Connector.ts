@@ -19,34 +19,10 @@ export class Connector
     this.graph = graph;
   }
 
-  get connectorType(): string
+  get type(): string
   {
     return this.graph.getNodeConnectorProp(this.id, this.parent, this.direction,
-      "connectorType");
-  }
-
-  get multiple(): boolean
-  {
-    return this.graph.getNodeConnectorProp(this.id, this.parent, this.direction,
-      "multiple");
-  }
-
-  set multiple(multiple: boolean)
-  {
-    this.graph.setNodeConnectorProp(this.id, this.parent, this.direction,
-      "multiple", multiple);
-  }
-
-  get prop(): boolean
-  {
-    return this.graph.getNodeConnectorProp(this.id, this.parent, this.direction,
-      "prop");
-  }
-
-  set prop(prop: boolean)
-  {
-    this.graph.setNodeConnectorProp(this.id, this.parent, this.direction,
-      "prop", prop);
+      "type");
   }
 
   get position(): {x: number, y: number} | null

@@ -192,7 +192,7 @@ export default class Menu extends React.Component<IProps, IState>
           subMenuData.children[this.state.childSection].map(
             (value: string, index: number) =>
           {
-            const id = this.state.parentID + ":" + value;
+            const id = this.state.parentID + "/" + value;
             return <div key={index} id={"menu-"+id} className="menu-item child"
                 onMouseDown={this.handleChildMouseDown}> {value} </div>
           })
