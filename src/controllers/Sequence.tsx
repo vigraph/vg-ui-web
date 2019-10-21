@@ -1,7 +1,7 @@
 import * as React from 'react';
-import * as Model from './model';
+import * as Model from '../model';
 
-import * as vgTypes from './lib/Types';
+import * as vgTypes from '../lib/Types';
 
 interface IProps
 {
@@ -11,6 +11,7 @@ interface IProps
   endUpdate: () => void;
   position: {x: number, y: number};
   disabled: boolean;
+  settingsType: string;
 }
 
 interface IState
@@ -43,10 +44,10 @@ export default class Sequence extends React.Component<IProps, IState>
     this.property = props.property;
 
     const sequenceSettings =
-      require('./json/ControlSettings.json').sequence;
+      require('../json/ControlSettings.json').sequence;
 
-    this.settings = sequenceSettings[this.property.subType] ?
-      sequenceSettings[this.property.subType] : sequenceSettings.default;
+    this.settings = sequenceSettings[this.props.settingsType] ?
+      sequenceSettings[this.props.settingsType] : sequenceSettings.default;
 
     this.state =
     {
@@ -61,7 +62,7 @@ export default class Sequence extends React.Component<IProps, IState>
   public render()
   {
     return(
-        <svg id="sequence" className={this.property.subType}>
+        <svg id="sequence" className={this.props.settingsType}>
           <svg id="sequence-control-wrapper"
             x={0} y={0}>
             <rect className={`sequence-input-border ${this.state.inputting ?

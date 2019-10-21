@@ -1,8 +1,8 @@
 import * as React from 'react';
-import * as Model from './model';
+import * as Model from '../model';
 
-import * as vgTypes from './lib/Types';
-import { vgUtils } from './lib/Utils';
+import * as vgTypes from '../lib/Types';
+import { vgUtils } from '../lib/Utils';
 
 interface IProps
 {
@@ -12,6 +12,7 @@ interface IProps
   endUpdate: () => void;
   position: {x: number, y: number};
   disabled: boolean;
+  settingsType: string;
 }
 
 interface IState
@@ -45,10 +46,10 @@ export default class Knob extends React.Component<IProps, IState>
 
     this.property = props.property;
 
-    const knobSettings = require('./json/ControlSettings.json').knob;
+    const knobSettings = require('../json/ControlSettings.json').knob;
 
-    this.settings = knobSettings[this.property.subType] ?
-      knobSettings[this.property.subType] : knobSettings.default;
+    this.settings = knobSettings[this.props.settingsType] ?
+      knobSettings[this.props.settingsType] : knobSettings.default;
 
     this.state =
     {
@@ -94,7 +95,7 @@ export default class Knob extends React.Component<IProps, IState>
     const backgroundSweep = settings.rangeMax > 180 ? 1 : 0;
 
     return(
-        <svg id="knob" className={this.property.subType}
+        <svg id="knob" className={this.props.settingsType}
           height={r*2} width={r*2}
           onMouseDown={this.handleMouseDown}>
           <path

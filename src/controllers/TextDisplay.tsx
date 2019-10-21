@@ -1,8 +1,8 @@
 import * as React from 'react';
-import * as Model from './model';
+import * as Model from '../model';
 
-import * as vgTypes from './lib/Types';
-import { vgUtils } from './lib/Utils';
+import * as vgTypes from '../lib/Types';
+import { vgUtils } from '../lib/Utils';
 
 interface IProps
 {
@@ -12,6 +12,7 @@ interface IProps
   endUpdate: () => void;
   position: {x: number, y: number};
   disabled: boolean;
+  settingsType: string;
 }
 
 interface IState
@@ -42,10 +43,10 @@ export default class TextDisplay extends React.Component<IProps, IState>
     this.property = props.property;
 
     const textDisplaySettings =
-      require('./json/ControlSettings.json').textDisplay;
+      require('../json/ControlSettings.json').textDisplay;
 
-    this.settings = textDisplaySettings[this.property.subType] ?
-      textDisplaySettings[this.property.subType] : textDisplaySettings.default;
+    this.settings = textDisplaySettings[this.props.settingsType] ?
+      textDisplaySettings[this.props.settingsType] : textDisplaySettings.default;
 
     this.state =
     {
@@ -73,7 +74,7 @@ export default class TextDisplay extends React.Component<IProps, IState>
       fontSize).height + 2);
 
     return(
-        <svg id="text-display" className={this.property.subType}
+        <svg id="text-display" className={this.props.settingsType}
           onDoubleClick={this.toggleEditing}>
           <svg id="text-display-wrapper"
             x={0} y={0}

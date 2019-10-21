@@ -4,15 +4,15 @@ import * as Model from './model';
 import { vgData } from './data/Data';
 import { vgUtils } from './lib/Utils';
 
-import Button from './Button';
-import ColourPicker from './ColourPicker';
-import Knob from './Knob';
-import Selector from './Selector';
-import Slider from './Slider';
-import GraphSelector from './GraphSelector';
-import TextDisplay from './TextDisplay';
-import Sequence from './Sequence';
-import Curve from './Curve';
+import Button from './controllers/Button';
+import ColourPicker from './controllers/ColourPicker';
+import Knob from './controllers/Knob';
+import Selector from './controllers/Selector';
+import Slider from './controllers/Slider';
+import GraphSelector from './controllers/GraphSelector';
+import TextDisplay from './controllers/TextDisplay';
+import Sequence from './controllers/Sequence';
+import Curve from './controllers/Curve';
 
 const settingsFontSize: number = 10;
 
@@ -56,15 +56,18 @@ export default class Property extends React.Component<IProps, IState>
 
   private property: Model.Property;
 
+  // Main and Sub control types
+  private controlType: string[];
+
   constructor(props: IProps)
   {
     super(props);
 
     this.property = props.property;
+    this.controlType = this.property.controlType.split("/");
 
     // Knobs and sliders are numerical and snap to increments.
-    if (this.property.controlType === "knob" || this.property.controlType ===
-      "slider")
+    if (this.controlType[0] === "knob" || this.controlType[0] === "slider")
     {
       // Ensure value conforms to increment bounds
       const snapValue = vgUtils.snapValueToIncrement(this.property.value,
@@ -81,6 +84,7 @@ export default class Property extends React.Component<IProps, IState>
       updating: false,
       hover: false
     };
+
   }
 
   public render()
@@ -90,7 +94,7 @@ export default class Property extends React.Component<IProps, IState>
 
     return(
       <svg id={this.props.name.toLowerCase()+"-property"}
-        className={`property-wrapper ${this.property.controlType}
+        className={`property-wrapper ${this.controlType[0]}
           ${controlDisabled ? "disabled" : ""}`}
         x={position.x} y={position.y}
         onMouseEnter={this.mouseEnter}
@@ -104,15 +108,17 @@ export default class Property extends React.Component<IProps, IState>
   // Create component to allow for special cases
   private createComponent = (controlDisabled: boolean) =>
   {
-    const Component = controlTypes[this.property.controlType];
+    const Component = controlTypes[this.controlType[0]];
     const position = this.property.position;
+    const settingsType = (this.controlType[1] ?
+      this.controlType[1] : "default");
 
     if (!Component)
     {
       if (this.property.propType === "setting" &&
-        this.property.subType !== "none")
+        this.controlType[1] !== "none")
       {
-        return <text className={"settings label " + this.property.subType}
+        return <text className={"settings label " + this.controlType[1]}
           fontSize={settingsFontSize} x={this.property.position.x}
           y={this.property.position.y}>{this.property.value}</text>
       }
@@ -121,18 +127,18 @@ export default class Property extends React.Component<IProps, IState>
         return "";
       }
     }
-    else if (this.property.controlType === "graphSelector")
+    else if (this.controlType[0] === "graphSelector")
     {
       return <GraphSelector property={this.property}
           position={{x: position.x, y: position.y}}
           startUpdate={this.startPropertyUpdate} update={this.propertyUpdate}
           endUpdate={this.endPropertyUpdate}
-          disabled={controlDisabled}
+          disabled={controlDisabled} settingsType={settingsType}
           showGraph={this.props.showNodeGraph}
           updateGraphs={this.nonPropertyUpdate}
           parentPath={this.props.parent.path}/>
     }
-    else if (this.property.controlType === "curve")
+    else if (this.controlType[0] === "curve")
     {
       const curveSize =
         { w: this.props.parent.size.w - position.x - (2 * this.props.padding),
@@ -142,6 +148,7 @@ export default class Property extends React.Component<IProps, IState>
           position={{x: position.x, y: position.y}}
           startUpdate={this.startPropertyUpdate} update={this.propertyUpdate}
           endUpdate={this.endPropertyUpdate} disabled={controlDisabled}
+          settingsType={settingsType}
           size={curveSize}/>
     }
     else
@@ -149,7 +156,8 @@ export default class Property extends React.Component<IProps, IState>
       return <Component property={this.property}
           position={{x: position.x, y: position.y}}
           startUpdate={this.startPropertyUpdate} update={this.propertyUpdate}
-          endUpdate={this.endPropertyUpdate} disabled={controlDisabled}/>
+          endUpdate={this.endPropertyUpdate} disabled={controlDisabled}
+          settingsType={settingsType}/>
     }
   }
 

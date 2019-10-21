@@ -1,7 +1,7 @@
 import * as React from 'react';
-import * as Model from './model';
+import * as Model from '../model';
 
-import * as vgTypes from './lib/Types';
+import * as vgTypes from '../lib/Types';
 
 interface IProps
 {
@@ -11,6 +11,7 @@ interface IProps
   endUpdate: () => void;
   position: {x: number, y:number};
   disabled: boolean;
+  settingsType: string;
 }
 
 interface IState
@@ -39,10 +40,10 @@ export default class Selector extends React.Component<IProps, IState>
 
     this.property = props.property;
 
-    const selectorSettings = require('./json/ControlSettings.json').selector;
+    const selectorSettings = require('../json/ControlSettings.json').selector;
 
-    this.settings = selectorSettings[this.property.subType] ?
-      selectorSettings[this.property.subType] : selectorSettings.default;
+    this.settings = selectorSettings[this.props.settingsType] ?
+      selectorSettings[this.props.settingsType] : selectorSettings.default;
 
     this.state =
     {
@@ -60,7 +61,7 @@ export default class Selector extends React.Component<IProps, IState>
     const positionSize = settings.length / availablePos.length;
 
     return(
-        <svg id="selector" className={`${this.property.subType}
+        <svg id="selector" className={`${this.props.settingsType}
           ${this.state.selecting ? "selecting" : ""}`}>
 
           <rect className="selector-background" width={settings.length}

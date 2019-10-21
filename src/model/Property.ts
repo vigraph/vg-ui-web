@@ -62,16 +62,6 @@ export class Property
     this.graph.setPropertyProp(this.id, this.parent, "controlType", controlType);
   }
 
-  get subType(): string
-  {
-    return this.graph.getPropertyProp(this.id, this.parent, "subType");
-  }
-
-  set subType(subType: string)
-  {
-    this.graph.setPropertyProp(this.id, this.parent, "subType", subType);
-  }
-
   get position(): { x: number, y: number }
   {
     return this.graph.getPropertyProp(this.id, this.parent, "position");

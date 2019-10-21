@@ -263,8 +263,10 @@ export default class Graph extends React.Component<IProps, IState>
       const y = property.position.y + (node ? node.position.y : 0) -
         ((fSize * 2) + (padding * 2));
 
+      const controlType = property.controlType.split("/");
+
       return <svg className={"property-label-wrapper " + property.id + " " +
-        property.controlType} x={x} y={y}>
+        controlType[0]} x={x} y={y}>
         <rect className="property-label-border"
           x={-width / 2} y={0} width={width}
           height={(fSize * 2) + (padding * 2)}/>

@@ -1,8 +1,8 @@
 import * as React from 'react';
-import * as Model from './model';
+import * as Model from '../model';
 
-import { vgUtils } from './lib/Utils'
-import * as vgTypes from './lib/Types';
+import { vgUtils } from '../lib/Utils'
+import * as vgTypes from '../lib/Types';
 
 interface IProps
 {
@@ -13,6 +13,7 @@ interface IProps
   position: {x: number, y: number};
   disabled: boolean;
   size: {w: number, h: number};
+  settingsType: string;
 }
 
 interface IState
@@ -47,10 +48,10 @@ export default class Curve extends React.Component<IProps, IState>
     this.property = props.property;
 
     const curveSettings =
-      require('./json/ControlSettings.json').curve;
+      require('../json/ControlSettings.json').curve;
 
-    this.settings = curveSettings[this.property.subType] ?
-      curveSettings[this.property.subType] : curveSettings.default;
+    this.settings = curveSettings[this.props.settingsType] ?
+      curveSettings[this.props.settingsType] : curveSettings.default;
 
     this.movingPoint = -1;
     this.curveRef = null;
@@ -85,7 +86,7 @@ export default class Curve extends React.Component<IProps, IState>
       });
 
     return(
-        <svg id="curve-wrapper" className={this.property.subType}>
+        <svg id="curve-wrapper" className={this.props.settingsType}>
           <svg id="curve-control-wrapper"
             x={0} y={0}
             width={width + 20 + thickness}

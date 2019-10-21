@@ -940,9 +940,8 @@ class Data
     // Properties: inputs and settings
     const gProps: Array<{ id: string, value: any, valueType: string,
       propType: string, description?: string, controlType?: string,
-      subType?: string, valueFormat?: string, rangeMin?: number,
-      rangeMax?: number, increment?: number, available?: any[], x?: number,
-      y?: number}> = [];
+      valueFormat?: string, rangeMin?: number, rangeMax?: number,
+      increment?: number, available?: any[], x?: number, y?: number}> = [];
 
     const propsConfig = this.propertiesConfig[item.type];
 

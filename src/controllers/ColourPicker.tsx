@@ -1,8 +1,8 @@
 import * as React from 'react';
-import * as Model from './model';
+import * as Model from '../model';
 
-import { vgUtils } from './lib/Utils'
-import * as vgTypes from './lib/Types';
+import { vgUtils } from '../lib/Utils'
+import * as vgTypes from '../lib/Types';
 
 interface IProps
 {
@@ -12,6 +12,7 @@ interface IProps
   endUpdate: () => void;
   position: {x: number, y:number};
   disabled: boolean;
+  settingsType: string;
 }
 
 interface IState
@@ -49,10 +50,10 @@ export default class ColourPicker extends React.Component<IProps, IState>
     this.allCurrentValues = { hex: "", r: 0, g: 0, b: 0, h: 0, s: 0, l: 0 };
     this.pickerRef = null;
 
-     const pickerSettings = require('./json/ControlSettings.json').colourPicker;
+     const pickerSettings = require('../json/ControlSettings.json').colourPicker;
 
-    this.settings = pickerSettings[this.property.subType] ?
-      pickerSettings[this.property.subType] : pickerSettings.default;
+    this.settings = pickerSettings[this.props.settingsType] ?
+      pickerSettings[this.props.settingsType] : pickerSettings.default;
 
     this.state =
     {
@@ -68,7 +69,7 @@ export default class ColourPicker extends React.Component<IProps, IState>
     this.updateAllFromHex(currentValue);
 
     return(
-        <svg id="colour-picker-wrapper" className={this.property.subType}
+        <svg id="colour-picker-wrapper" className={this.props.settingsType}
           ref={(ref) => { this.pickerRef = ref; }}>
 
           <svg id="colour-display" className="display"

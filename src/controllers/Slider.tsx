@@ -1,8 +1,8 @@
 import * as React from 'react';
-import * as Model from './model';
+import * as Model from '../model';
 
-import { vgUtils } from './lib/Utils'
-import * as vgTypes from './lib/Types';
+import { vgUtils } from '../lib/Utils'
+import * as vgTypes from '../lib/Types';
 
 interface IProps
 {
@@ -12,6 +12,7 @@ interface IProps
   endUpdate: () => void;
   position: {x: number, y:number};
   disabled: boolean;
+  settingsType: string;
 }
 
 interface IState
@@ -44,10 +45,10 @@ export default class Slider extends React.Component<IProps, IState>
 
     this.property = props.property;
 
-    const sliderSettings = require('./json/ControlSettings.json').slider;
+    const sliderSettings = require('../json/ControlSettings.json').slider;
 
-    this.settings = sliderSettings[this.property.subType] ?
-      sliderSettings[this.property.subType] : sliderSettings.default;
+    this.settings = sliderSettings[this.props.settingsType] ?
+      sliderSettings[this.props.settingsType] : sliderSettings.default;
     this.sliderRef = null;
 
     this.state =
@@ -98,7 +99,7 @@ export default class Slider extends React.Component<IProps, IState>
     }
 
     return(
-        <svg id="slider" className={this.property.subType}
+        <svg id="slider" className={this.props.settingsType}
           ref={(ref) => {this.sliderRef = ref}}
           onMouseDown={this.handleMouseDown}>
 

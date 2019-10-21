@@ -58,7 +58,7 @@ export interface IProcessedGraphItem
   // propType = "input" | "setting"
   properties?: Array<{ id: string, value: any, valueType: string,
     propType: string, description?: string, controlType?: string,
-    subType?: string, valueFormat?: string, rangeMin?: number, rangeMax?: number,
+    valueFormat?: string, rangeMin?: number, rangeMax?: number,
     increment?: number, available?: any[], x?: number, y?: number}>,
   subGraph?: string // "graph" | "clone" | "selector"
 }
@@ -110,7 +110,6 @@ export interface IPropertiesConfig
       [key: string]: {
         description: string,
         controlType: string,
-        subType: string,
         x: number,
         y: number,
         valueFormat?: string,

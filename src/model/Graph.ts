@@ -25,7 +25,6 @@
 //                                  valueType: string,
 //                                  valueFormat: string,
 //                                  controlType: string,
-//                                  subType: string,
 //                                  position: {x, y},
 //                                  value: any,
 //                                  range: {min, max},
@@ -65,8 +64,8 @@ export class Graph
   //       outputs: [ { id, type } ],
   //       edges: [ { output, destId, input } ],
   //       properties: [ { id, description, propType, valueType, valueFormat,
-  //                       controlType, subType, x, y, value, rangeMin,
-  //                       rangeMax, increment
+  //                       controlType, x, y, value, rangeMin, rangeMax,
+  //                       increment
   //                   } ],
   //       subGraph: string
   //     } ] }
@@ -148,8 +147,7 @@ export class Graph
         property.valueType = p.valueType || "";
         property.description = p.description || ""
         property.valueFormat = p.valueFormat || "";
-        property.controlType = p.controlType || "none";
-        property.subType = p.subType || "default";
+        property.controlType = p.controlType || "none/default";
         property.position = { x: p.x || 0, y: p.y || 0 };
         property.range = { min: p.rangeMin || 0, max: p.rangeMax || 1};
         property.increment = p.increment || 1;

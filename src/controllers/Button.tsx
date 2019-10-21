@@ -1,7 +1,7 @@
 import * as React from 'react';
-import * as Model from './model';
+import * as Model from '../model';
 
-import * as vgTypes from './lib/Types';
+import * as vgTypes from '../lib/Types';
 
 interface IProps
 {
@@ -11,6 +11,7 @@ interface IProps
   endUpdate: () => void;
   position: {x: number, y:number};
   disabled: boolean;
+  settingsType: string;
 }
 
 interface IState
@@ -39,10 +40,10 @@ export default class Button extends React.Component<IProps, IState>
 
     this.property = props.property;
 
-    const buttonSettings = require('./json/ControlSettings.json').button;
+    const buttonSettings = require('../json/ControlSettings.json').button;
 
-    this.settings = buttonSettings[this.property.subType] ?
-      buttonSettings[this.property.subType] : buttonSettings.default;
+    this.settings = buttonSettings[this.props.settingsType] ?
+      buttonSettings[this.props.settingsType] : buttonSettings.default;
 
     this.state =
     {
@@ -56,7 +57,7 @@ export default class Button extends React.Component<IProps, IState>
      const settings = this.settings;
 
     return(
-        <svg id="button" className={this.property.subType}
+        <svg id="button" className={this.props.settingsType}
           height={settings.height} width={settings.width}
           onMouseDown={this.handleMouseDown}>
 

@@ -1,9 +1,9 @@
 import * as React from 'react';
-import * as Model from './model';
+import * as Model from '../model';
 
-import * as vgTypes from './lib/Types';
+import * as vgTypes from '../lib/Types';
 
-import { vgData } from './data/Data';
+import { vgData } from '../data/Data';
 
 interface IProps
 {
@@ -17,6 +17,7 @@ interface IProps
     sourceSpecific?: string) => void;
   parentPath: string;
   disabled: boolean;
+  settingsType: string;
 }
 
 interface IState
@@ -55,10 +56,10 @@ export default class GraphSelector extends React.Component<IProps, IState>
     this.pickerRef = null;
     this.lastMouseTime = 0;
 
-    const gSelectorSettings = require('./json/ControlSettings.json').graphSelector;
+    const gSelectorSettings = require('../json/ControlSettings.json').graphSelector;
 
-    this.settings = gSelectorSettings[this.property.subType] ?
-      gSelectorSettings[this.property.subType] : gSelectorSettings.default;
+    this.settings = gSelectorSettings[this.props.settingsType] ?
+      gSelectorSettings[this.props.settingsType] : gSelectorSettings.default;
 
     this.state =
     {
@@ -85,7 +86,7 @@ export default class GraphSelector extends React.Component<IProps, IState>
      }
 
     return(
-        <svg id="graph-selector-wrapper" className={this.property.subType}
+        <svg id="graph-selector-wrapper" className={this.props.settingsType}
           ref={(ref) => { this.pickerRef = ref; }}>
 
           <svg id="selection-display" className="display"
