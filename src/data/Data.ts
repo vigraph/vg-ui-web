@@ -1012,8 +1012,13 @@ class Data
       }
     }
 
-    const gSubGraph = (item.elements ? "graph" :
-      (item.graph ? "clone" : "selector"));
+    // Subgraph type (graph, clone, selector)
+    let gSubGraph;
+
+    if (itemType === "graph")
+    {
+      gSubGraph = "graph";
+    }
 
     const node: vgTypes.IProcessedGraphItem =
     {

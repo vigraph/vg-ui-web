@@ -208,7 +208,7 @@ export default class Node extends React.Component<IProps, IState>
     window.removeEventListener('mousemove', this.handleMouseMove);
     if (this.node.subGraph === "graph")
     {
-      this.props.showNodeGraph(this.node.path, undefined, "/elements");
+      this.props.showNodeGraph(this.node.path);
     }
     else if (this.node.subGraph === "clone")
     {
