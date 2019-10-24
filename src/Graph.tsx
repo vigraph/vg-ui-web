@@ -335,7 +335,7 @@ export default class Graph extends React.Component<IProps, IState>
       this.clearTargetNode();
     }
 
-    this.resetView();
+    this.forceUpdate();
   }
 
   public redo = () =>
@@ -348,7 +348,7 @@ export default class Graph extends React.Component<IProps, IState>
       this.clearTargetNode();
     }
 
-    this.resetView();
+    this.forceUpdate();
   }
 
   public goBack = () =>

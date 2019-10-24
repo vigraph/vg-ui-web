@@ -14,8 +14,7 @@ import * as vgTypes from '../lib/Types';
 import { vgUtils } from '../lib/Utils';
 
 const restURL = 'http://localhost:33381';
-const marginPadding = { x: 40, y: 40 };
-const layoutPadding = { x: 100, y: 40 };
+const layoutPadding = { x: 30, y: 30 };
 
 class Data
 {
@@ -535,7 +534,7 @@ class Data
   }
 
   // Generate Graph layout without node position data. Nodes ranked by number of
-  // parents and laid out without overlapping
+  // parents and laid out without overlapping. Nodes with no edges have rank 0.
   private generateLayout(nodes: vgTypes.IProcessedGraphItem[],
     success: (json: any) => void)
   {
@@ -557,9 +556,8 @@ class Data
       })
     })
 
-    const layoutNodes: any[] = [];
-
-    const leaves: string[] = [];
+    // Rank nodes based on 'level' in the graph. No edges = 0, output and no
+    // input = 1 and so on.
     const ranks: { [key: string] : number } = {};
 
     const rankNodes = (rank: number, rNodes: string[]) =>
@@ -582,16 +580,51 @@ class Data
     {
       if (!inputEdgeMap[key])
       {
-        leaves.push(key);
-        ranks[key] = 0;
-        rankNodes(1, outputEdgeMap[key]);
+        ranks[key] = 1;
+        rankNodes(2, outputEdgeMap[key]);
       }
     }
 
-    const ranksCount: number[] = [];
+    // Add nodes that don't have a rank (no edges)
+    nodes.forEach((node: vgTypes.IProcessedGraphItem) =>
+    {
+      if (!ranks[node.id])
+      {
+        ranks[node.id] = 0
+      }
+    });
+
+    // Reorder nodes based on rank
+    const nodesByRank2D: string[][] = [];
+
+    for (const nodeID of Object.keys(ranks))
+    {
+      const rank = ranks[nodeID];
+      if (!nodesByRank2D[rank])
+      {
+        nodesByRank2D[rank] = [];
+      }
+
+      nodesByRank2D[rank].push(nodeID);
+    }
+
+    const nodesByRank: vgTypes.IProcessedGraphItem[] = [];
+
+    nodesByRank2D.flat().forEach((nodeID: string) =>
+      {
+        const node = nodes.find(x => x.id === nodeID);
+        if (node)
+        {
+          nodesByRank.push(node);
+        }
+      });
+
+    // Calculate layout
     const rankNextPos: [{x: number, y: number}] = [{x: 0, y: 0}];
 
-    nodes.forEach((value: vgTypes.IProcessedGraphItem) =>
+    const layoutNodes: any[] = [];
+
+    nodesByRank.forEach((value: vgTypes.IProcessedGraphItem) =>
     {
       const layout = {x: 0, y: 0, h: 50, w: 50};
 
@@ -603,25 +636,14 @@ class Data
 
       const nRank = ranks[value.id] ? ranks[value.id] : 0;
 
-      if (typeof ranksCount[nRank] === "undefined")
-      {
-        ranksCount[nRank] = 0;
-      }
-      else
-      {
-        ranksCount[nRank] = ranksCount[nRank] + 1;
-      }
-
       // Position nodes in this rank based on the previous nodes height and
       // the nodes in the next rank based on the largest (width) node so far
-
       if (!rankNextPos[nRank])
       {
         rankNextPos[nRank] = {x: 0, y: 0};
       }
 
-      layout.x = (rankNextPos[nRank].x) + (nRank === 0 ? marginPadding.x :
-        layoutPadding.x);
+      layout.x = (rankNextPos[nRank].x) + layoutPadding.x;
       layout.y = (rankNextPos[nRank].y) + layoutPadding.y;
 
       rankNextPos[nRank] = {x: rankNextPos[nRank].x,
