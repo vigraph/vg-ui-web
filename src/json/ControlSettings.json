@@ -7,6 +7,15 @@
       "rx": 0,
       "ry": 0,
       "offset": 2,
+      "latch": false
+    },
+    "toggle":
+    {
+      "height": 15,
+      "width": 15,
+      "rx": 0,
+      "ry": 0,
+      "offset": 2,
       "latch": true
     },
     "square":
@@ -139,15 +148,6 @@
       "dialThickness": 1,
       "clickMove": true,
       "logControl": true
-    }
-  },
-  "graphSelector": {
-    "default":
-    {
-      "height": 20,
-      "width": 62,
-      "rows": 6,
-      "padding": 5
     }
   },
   "textDisplay": {

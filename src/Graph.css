@@ -436,6 +436,11 @@
   display: none;
 }
 
+#selector .selector-label
+{
+  font-size: x-small;
+}
+
 #colour-picker .picker-label
 {
   font-size: small;
@@ -454,67 +459,6 @@
   stroke: #ccc;
   stroke-width: 0.5;
   overflow: visible;
-}
-
-.property-wrapper.graphSelector.disabled
-{
-  pointer-events: auto;
-  opacity: 1;
-}
-
-#graph-selector-wrapper,
-#selection-display,
-#graph-selector,
-#graph-selector .graph-selector-item
-{
-  overflow: visible;
-}
-
-#graph-selector-wrapper .selection-display-border,
-#graph-selector .selector-border,
-#graph-selector .selector-item-border
-{
-  stroke: #ccc;
-  stroke-width: 0.5;
-  overflow: visible;
-}
-
-#graph-selector .selector-item-border.selected
-{
-  stroke: white;
-  stroke-width: 1;
-}
-
-#graph-selector-wrapper .label
-{
-  text-anchor: middle;
-  font-size: small;
-}
-
-#graph-selector .selected
-{
-  fill: #00ff00;
-}
-
-#graph-selector .choice
-{
-  fill: #444;
-}
-
-#graph-selector-add
-{
-  fill: green;
-}
-
-#graph-selector-delete
-{
-  fill: red;
-}
-
-#graph-selector-up,
-#graph-selector-down
-{
-  fill: blue;
 }
 
 #text-display-text
@@ -656,7 +600,6 @@ foreignObject
   text-anchor: middle;
 }
 
-.property-label-wrapper.graphSelector,
 .property-label-wrapper.colourPicker,
 .property-label-wrapper.textDisplay,
 .property-label-wrapper.sequence,

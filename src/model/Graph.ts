@@ -31,7 +31,7 @@
 //                                  increment: number,
 //                                  available: any[]
 //                                },
-//             subGraph: string
+//             subGraph: boolean
 //                  }>
 // }
 
@@ -67,7 +67,7 @@ export class Graph
   //                       controlType, x, y, value, rangeMin, rangeMax,
   //                       increment
   //                   } ],
-  //       subGraph: string
+  //       subGraph
   //     } ] }
   // Baseline set if given json is the baseline graph
   public loadFrom(json: any, baseline: boolean, id: string)
@@ -119,7 +119,7 @@ export class Graph
     node.size = { w: n.w || 50, h: n.h || 50 };
     node.path = n.path || n.id;
     node.description = n.description || "";
-    node.subGraph = n.subGraph || null;
+    node.subGraph = n.subGraph || false;
     if (n.inputs)
     {
       for (const i of n.inputs)
@@ -147,7 +147,7 @@ export class Graph
         property.valueType = p.valueType || "";
         property.description = p.description || ""
         property.valueFormat = p.valueFormat || "";
-        property.controlType = p.controlType || "none/default";
+        property.controlType = p.controlType || "none/none";
         property.position = { x: p.x || 0, y: p.y || 0 };
         property.range = { min: p.rangeMin || 0, max: p.rangeMax || 1};
         property.increment = p.increment || 1;

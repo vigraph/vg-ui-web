@@ -5,7 +5,8 @@
 // as well as getting property Metadata, using REST protocol API.
 // State is read/sent in JSON.  The URL format identifies a hierarchy of
 // elements (nodes) by ID.
-// Processes and combines graph, metadata and layout data to create graph model.
+// Processes and combines graph, metadata, config data and layout data to create
+// the graph model.
 
 import * as rm from 'typed-rest-client/RestClient';
 
@@ -79,54 +80,6 @@ class Data
       {
         // Error
         vgUtils.log("Update Property Failure with error: " + error);
-
-        if (failure)
-        {
-          failure();
-        }
-      });
-  }
-
-  // !!! Not yet updated for Engine 2.0
-  // Update node (nodeID) with given (non-property) data
-  // e.g. {graphs: ...} in a graph selector
-  public updateNode(nodeID: string, data: any, success?: () => void,
-    failure?: () => void)
-  {
-    const url = restURL + "/graph/" + nodeID;
-
-    fetch(url,
-    {
-      method: "POST",
-      body: JSON.stringify(data)
-    })
-    .then(response =>
-      {
-        if (response.status === 200)
-        {
-          // Success
-          // vgUtils.log("Update Node Data Success");
-          if (success)
-          {
-            success();
-          }
-        }
-        else
-        {
-          // Error
-          vgUtils.log("Update Node Data Failure with response status: " +
-            response.status)
-
-          if (failure)
-          {
-            failure();
-          }
-        }
-      })
-    .catch(error =>
-      {
-        // Error
-        vgUtils.log("Update Node Data Failure with error: " + error);
 
         if (failure)
         {
@@ -237,129 +190,6 @@ class Data
           failure();
         }
       });
-  }
-
-  // !!! Not yet updated for Engine 2.0
-  // Delete given path (e.g. Graph in Graph selector)
-  // Calls success on DELETE success
-  public deletePath(path: string, success?: ()=>void, failure?: () => void)
-  {
-    const url = restURL + "/graph/" + path;
-
-    fetch(url,
-    {
-      method: "DELETE"
-    })
-    .then(response =>
-      {
-        if (response.status === 200)
-        {
-          vgUtils.log("Delete Path Success");
-
-          // Success
-          if (success)
-          {
-            success();
-          }
-        }
-        else
-        {
-          // Error
-          vgUtils.log("Delete Path Failure with response" +
-            " status: " + response.status);
-
-          if (failure)
-          {
-            failure();
-          }
-        }
-      })
-    .catch(error =>
-      {
-        // Error
-        vgUtils.log("Delete Path Failure with error: " + error);
-
-        if (failure)
-        {
-          failure();
-        }
-      });
-  }
-
-  // !!! Not yet updated for Engine 2.0
-  // Add an empty graph with given ID (used by Graph Selector)
-  // Calls success function on PUT success with processed empty graph item
-  public addEmptyGraph(id: string, path: string,
-    success?: (graph: vgTypes.IProcessedGraphItem)=>void, failure?: () => void)
-  {
-    const url = restURL + "/graph/" + path + "/graph/" + id;
-
-    const data: [] = [];
-
-    fetch(url,
-    {
-      method: "PUT",
-      body: JSON.stringify(data)
-    })
-    .then(response =>
-      {
-        if (response.status === 200)
-        {
-          vgUtils.log("Add Graph Success");
-
-          // Success
-          if (success)
-          {
-            const item = this.processSingleGraphItem(id, {type: "core/graph"},
-              path+'/graph');
-            success(item);
-          }
-        }
-        else
-        {
-          // Error
-          vgUtils.log("Add Graph Failure with response status: " +
-            response.status);
-
-          if (failure)
-          {
-            failure();
-          }
-        }
-      })
-    .catch(error =>
-      {
-        // Error
-        vgUtils.log("Add Graph Failure with error: " + error);
-
-        if (failure)
-        {
-          failure();
-        }
-      });
-  }
-
-  public getRawSelectorGraphs(path: string,
-    success?: (graphs: vgTypes.IRawGraphItem[])=>void, failure?: () => void)
-  {
-    if (success)
-    {
-      success([])
-    }
-    // this.getRawGraphItem(path, (result: vgTypes.IRawGraphItem) =>
-    // {
-    //   if (success)
-    //   {
-    //     success(result.graphs);
-    //   }
-    // },
-    // () =>
-    // {
-    //   if (failure)
-    //   {
-    //     failure();
-    //   }
-    // })
   }
 
   // Get node and calls success with resulting (processed) node allowing it to
@@ -553,8 +383,7 @@ class Data
 
   // Generate Graph by getting metadata, layout data and graph data and then
   // processing and combining
-  public generateGraph(success: (json: any) => void, source?:
-    {sourcePath: string, parentPath?: string})
+  public generateGraph(success: (json: any) => void, path?: string)
   {
     this.generateSuccess = success;
 
@@ -562,7 +391,7 @@ class Data
     {
       if (Object.keys(this.layoutData).length > 0)
       {
-        this.getGraphData(source);
+        this.getGraphData(path);
       }
       else
       {
@@ -822,20 +651,19 @@ class Data
   //============================================================================
 
   // Get data for entire graph and create graph model
-  private async getGraphData(source?: {sourcePath: string,
-    parentPath?: string})
+  private async getGraphData(path?: string)
   {
     try
     {
       const res: rm.IRestResponse<vgTypes.IRawGraphItem> =
-        await this.rest.get<vgTypes.IRawGraphItem>('/graph' + (source ?
-          "/" + source.sourcePath : ""));
+        await this.rest.get<vgTypes.IRawGraphItem>('/graph' + (path ?
+          "/" + path : ""));
 
       if (res.statusCode === 200 && res.result)
       {
         vgUtils.log("Get Graph Data Success");
         this.createGraphModel(res.result,
-          source ? source.parentPath : undefined);
+          path ? path : undefined);
       }
       else
       {
@@ -856,13 +684,6 @@ class Data
     parentPath?: string)
   {
     const nodes: vgTypes.IProcessedGraphItem[] = [];
-
-    // !!! Engine 1.0 method, below is (possible) hack for current Engine 2.0 setup
-    // for (const itemID of Object.keys(rawGraphData))
-    // {
-    //   nodes.push(this.processSingleGraphItem(itemID, rawGraphData[itemID],
-    //     parentPath));
-    // }
 
     if (rawGraphData.elements)
     {
@@ -924,7 +745,7 @@ class Data
       }
     }
 
-    // Inputs - will add position later
+    // Inputs - position added later
     const gInputs:
       Array<{ id: string, type: string, x?: number, y?: number}> = [];
 
@@ -990,34 +811,8 @@ class Data
       }
     }
 
-    // Special case - store selector elements' 'graphs' in the available
-    // section of the value property (id and path)
-    if (item.graphs)
-    {
-      const valueIndex = gProps.findIndex(x => x.id === "value");
-
-      if (valueIndex)
-      {
-        const selectorGraphs: Array<{id: string, path: string}> = [];
-
-        for (const key of Object.keys(item.graphs))
-        {
-          selectorGraphs.push({id: key,
-            path: parentPath ? (parentPath + "/" + itemID + "/graph/" + key) :
-              (itemID + "/graph/" + key)});
-        }
-
-        gProps[valueIndex].available = [...selectorGraphs];
-      }
-    }
-
-    // Subgraph type (graph, clone, selector)
-    let gSubGraph;
-
-    if (itemType === "graph")
-    {
-      gSubGraph = "graph";
-    }
+    // Subgraph (graph, clone)
+    const gSubGraph = (itemType === "graph" || itemType === "clone");
 
     const node: vgTypes.IProcessedGraphItem =
     {

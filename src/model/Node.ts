@@ -72,12 +72,12 @@ export class Node
     this.graph.setNodeProp(this.id, "size", size);
   }
 
-  get subGraph(): string
+  get subGraph(): boolean
   {
     return this.graph.getNodeProp(this.id, "subGraph");
   }
 
-  set subGraph(subGraph: string)
+  set subGraph(subGraph: boolean)
   {
     this.graph.setNodeProp(this.id, "subGraph", subGraph);
   }

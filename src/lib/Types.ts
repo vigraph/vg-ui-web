@@ -60,7 +60,7 @@ export interface IProcessedGraphItem
     propType: string, description?: string, controlType?: string,
     valueFormat?: string, rangeMin?: number, rangeMax?: number,
     increment?: number, available?: any[], x?: number, y?: number}>,
-  subGraph?: string // "graph" | "clone" | "selector"
+  subGraph?: boolean
 }
 
 export interface IMetadata
@@ -189,14 +189,6 @@ export interface IColourPickerSettings
   barThickness: number,
   padding: number,
   indicatorThickness: number
-}
-
-export interface IGraphSelectorSettings
-{
-  padding: number,
-  height: number,
-  width: number,
-  rows: number
 }
 
 export interface ITextDisplaySettings

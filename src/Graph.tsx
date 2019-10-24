@@ -43,7 +43,7 @@ export default class Graph extends React.Component<IProps, IState>
   private mouseClick: {x: number, y: number};
   private idCount: number;
   private graphRef: SVGSVGElement | null;
-  private currentGraphPath: Array<{path: string, pathSpecific?: string}>;
+  private currentGraphPath: string[];
   private firstLoad: boolean;
 
   constructor(props: IProps)
@@ -496,15 +496,11 @@ export default class Graph extends React.Component<IProps, IState>
     }
   }
 
-  private showNodeGraph = (path: string, pathSpecific?: string,
-    sourceSpecific?: string) =>
+  private showNodeGraph = (path: string) =>
   {
-    this.currentGraphPath.push({path, pathSpecific});
+    this.currentGraphPath.push(path);
     this.setState({targetProperty: {property: null, updating: false}});
     this.clearTargetNode();
-
-    const sourcePath = path + (sourceSpecific ? sourceSpecific : "");
-    const parentPath = path + (pathSpecific ? pathSpecific : "");
 
     vgData.generateGraph((json:any) =>
       {
@@ -512,8 +508,7 @@ export default class Graph extends React.Component<IProps, IState>
         this.graph.forward(json, "graph/" + path);
         this.resetView();
         this.props.notifyGraphRoot(false);
-      },
-      {sourcePath, parentPath});
+      }, path);
   }
 
   private createNewNode = (type: string) =>
@@ -548,9 +543,7 @@ export default class Graph extends React.Component<IProps, IState>
     }
     else
     {
-      const currentPath = this.currentGraphPath[currGraphPathLen-1];
-      path = currentPath.pathSpecific ? (currentPath.path +
-        currentPath.pathSpecific) : currentPath.path;
+      path = this.currentGraphPath[currGraphPathLen-1];
     }
 
     // Create new node, get with properties etc, add layout data and add to

@@ -9,7 +9,6 @@ import ColourPicker from './controllers/ColourPicker';
 import Knob from './controllers/Knob';
 import Selector from './controllers/Selector';
 import Slider from './controllers/Slider';
-import GraphSelector from './controllers/GraphSelector';
 import TextDisplay from './controllers/TextDisplay';
 import Sequence from './controllers/Sequence';
 import Curve from './controllers/Curve';
@@ -19,8 +18,7 @@ const settingsFontSize: number = 10;
 const controlTypes: {[key: string]: any} =
   { "none": null, "knob": Knob, "button": Button,
   "slider": Slider, "colourPicker": ColourPicker, "selector": Selector,
-  "graphSelector": GraphSelector, "textDisplay": TextDisplay,
-  "sequence": Sequence, "curve": Curve};
+  "textDisplay": TextDisplay, "sequence": Sequence, "curve": Curve};
 
 interface IProps
 {
@@ -127,17 +125,6 @@ export default class Property extends React.Component<IProps, IState>
         return "";
       }
     }
-    else if (this.controlType[0] === "graphSelector")
-    {
-      return <GraphSelector property={this.property}
-          position={{x: position.x, y: position.y}}
-          startUpdate={this.startPropertyUpdate} update={this.propertyUpdate}
-          endUpdate={this.endPropertyUpdate}
-          disabled={controlDisabled} settingsType={settingsType}
-          showGraph={this.props.showNodeGraph}
-          updateGraphs={this.nonPropertyUpdate}
-          parentPath={this.props.parent.path}/>
-    }
     else if (this.controlType[0] === "curve")
     {
       const curveSize =
@@ -205,24 +192,6 @@ export default class Property extends React.Component<IProps, IState>
       {
         // Reset UI to actual property value on failure
         this.setState({value: this.property.value});
-      });
-  }
-
-  // Update a non-property value in parent node
-  private nonPropertyUpdate = (data: any, success?: () => void) =>
-  {
-    vgData.updateNode(this.props.parent.path, data,
-      () =>
-      {
-        if (this.props.update)
-        {
-          this.props.update();
-        }
-
-        if (success)
-        {
-          success();
-        }
       });
   }
 
