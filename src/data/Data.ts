@@ -786,18 +786,20 @@ class Data
 
     const propsConfig = vgConfig.Properties[item.type];
 
-    if (item.inputs)
+    if (metadata.inputs)
     {
-      for (const inputID of Object.keys(item.inputs))
+      for (const inputID of Object.keys(metadata.inputs))
       {
         const iPropsConfig = (propsConfig && propsConfig.properties[inputID] ?
           propsConfig.properties[inputID] : null);
 
+        const itemInput = item.inputs ? item.inputs[inputID] : null;
+
         gProps.push(
         {
           id: inputID,
-          value: item.inputs[inputID].value,
-          valueType: item.inputs[inputID].type,
+          value: (itemInput ? itemInput.value : 0),
+          valueType: (itemInput ? itemInput.type : "number"),
           propType: "input",
           ...iPropsConfig
         });
@@ -813,18 +815,20 @@ class Data
       }
     }
 
-    if (item.settings)
+    if (metadata.settings)
     {
-      for (const settingID of Object.keys(item.settings))
+      for (const settingID of Object.keys(metadata.settings))
       {
         const sPropsConfig = (propsConfig && propsConfig.properties[settingID] ?
           propsConfig.properties[settingID] : {});
 
+        const itemSetting = item.settings ? item.settings[settingID] : null;
+
         gProps.push(
         {
           id: settingID,
-          value: item.settings[settingID].value,
-          valueType: item.settings[settingID].type,
+          value: (itemSetting ? itemSetting.value : 0),
+          valueType: (itemSetting ? itemSetting.type : "number"),
           propType: "setting",
           ...sPropsConfig
         });
