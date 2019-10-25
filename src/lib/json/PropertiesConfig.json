@@ -189,13 +189,15 @@
   },
   "vector/websocket-display":
   {
+    "description": "WebSocket server for vector display clients",
     "width": 200,
     "height": 200,
     "properties":
     {
       "port":
       {
-        "controlType": "none/default",
+        "description": "Listening port",
+        "controlType": "none/none",
         "rangeMin": 0,
         "rangeMax": 65535,
         "x": 0,

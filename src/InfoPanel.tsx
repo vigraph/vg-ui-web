@@ -164,7 +164,7 @@ export default class InfoPanel extends React.Component<IProps, IState>
     // Text box input for number, text and file types. Value checking and
     // validation done in onBlur
     if (property.valueType === "number" || property.valueType === "text" ||
-      property.valueType === "file")
+      property.valueType === "file" || property.valueType === "integer")
     {
       return <input id={property.id} type="text" disabled={disabled}
         className={"value-input " + property.propType}
@@ -527,9 +527,13 @@ export default class InfoPanel extends React.Component<IProps, IState>
     }
     // Number value must be a number (float), within the properties range and
     // follow the set increment (and level of accuracy - see Utils.js)
-    else if (property.valueType === "number")
+    // Similarly for integer
+    else if (property.valueType === "number" ||
+      property.valueType === "integer")
     {
-      newValue = parseFloat(newValue);
+      newValue = (property.valueType === "number" ? parseFloat(newValue) :
+        parseInt(newValue));
+
       if (isNaN(newValue))
       {
         newValue = property.value;
