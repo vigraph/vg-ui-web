@@ -4,6 +4,7 @@ import * as Model from './model';
 
 import { vgData } from './data/Data';
 import { vgUtils } from './lib/Utils';
+import { vgConfig } from './lib/Config';
 
 import './Graph.css';
 
@@ -12,13 +13,6 @@ import Edge from './Edge';
 import Node from './Node';
 import Menu from './Menu';
 import InfoPanel from './InfoPanel';
-
-const csize: number = 5;
-const connectorLabelFontSize: number = 10;
-const propertyLabelFontSize: number = 10;
-const zoomFactor: number = 1.1;
-const viewDefault: {x: number, y: number, w: number, h: number} =
-  {x: 0, y: 0, w: 5000, h: 5000};
 
 interface IProps
 {
@@ -45,6 +39,7 @@ export default class Graph extends React.Component<IProps, IState>
   private graphRef: SVGSVGElement | null;
   private currentGraphPath: string[];
   private firstLoad: boolean;
+  private csize: number;
 
   constructor(props: IProps)
   {
@@ -74,7 +69,7 @@ export default class Graph extends React.Component<IProps, IState>
       targetConnector: null,
       targetProperty: {property: null, updating: false},
       showMenu: false,
-      view: viewDefault
+      view: vgConfig.Graph.viewDefault
     };
 
     this.mouseClick = {x: 0, y: 0};
@@ -82,6 +77,7 @@ export default class Graph extends React.Component<IProps, IState>
     this.graphRef = null;
     this.firstLoad = true;
     this.currentGraphPath = [];
+    this.csize = vgConfig.Graph.connectorSize;
   }
 
   public render()
@@ -141,7 +137,7 @@ export default class Graph extends React.Component<IProps, IState>
   {
     return <Node key={node.path+":"+i} node={node}
       startUpdate={this.startUpdate} update={this.update}
-      endUpdate={this.endUpdate} padding={csize*2} graphRef={this.graphRef}
+      endUpdate={this.endUpdate} padding={this.csize*2} graphRef={this.graphRef}
       removeNode={this.removeNode} showNodeGraph={this.showNodeGraph}
       targetNode={this.targetNode}
       updateTargetProperty={this.updateTargetProperty}>
@@ -153,7 +149,7 @@ export default class Graph extends React.Component<IProps, IState>
             inputConnectorSelected={this.moveEdgeFromInput}
             outputConnectorSelected={this.newMovingConnectorEdge}
             updateTargetConnector={this.updateTargetConnector}
-            radius={csize} position={node.getConnectorPosition(connector)}/>
+            radius={this.csize} position={node.getConnectorPosition(connector)}/>
         })}
       {
         this.graph.getNodeConnectors(node.id, "output").map(
@@ -163,7 +159,7 @@ export default class Graph extends React.Component<IProps, IState>
             inputConnectorSelected={this.moveEdgeFromInput}
             outputConnectorSelected={this.newMovingConnectorEdge}
             updateTargetConnector={this.updateTargetConnector}
-            radius={csize} position={node.getConnectorPosition(connector)}/>
+            radius={this.csize} position={node.getConnectorPosition(connector)}/>
         })}
     </Node>
   }
@@ -174,7 +170,7 @@ export default class Graph extends React.Component<IProps, IState>
     if (edge)
     {
       return <Edge key={key} src={node} srcOutput={edge.outputId}
-        dest={edge.dest} destInput={edge.destInput} offset={csize}
+        dest={edge.dest} destInput={edge.destInput} offset={this.csize}
         graphRef={this.graphRef} removeEdge={this.removeEdge}
         moveEdge={this.moveEdge}/>
     }
@@ -213,17 +209,18 @@ export default class Graph extends React.Component<IProps, IState>
       const x = node.position.x + position.x;
       const y = node.position.y + position.y;
 
-      const textBox = vgUtils.textBoundingSize(connector.id,
-        connectorLabelFontSize);
+      const fontSize = vgConfig.Graph.fontSize.connectorLabel;
+
+      const textBox = vgUtils.textBoundingSize(connector.id, fontSize);
 
       if (connector.direction === "input")
       {
         return <svg className="connector-label-wrapper input"
-          x={x - textBox.width - csize} y={y - ((textBox.height + 8) / 2)}>
+          x={x - textBox.width - this.csize} y={y - ((textBox.height + 8) / 2)}>
           <rect className="connector-label-border" height={textBox.height+8}
             width={textBox.width+8} x={0} y={0}/>
           <text className="label connector-label input"
-            fontSize={connectorLabelFontSize} x={4} y={textBox.height+2}>
+            fontSize={fontSize} x={4} y={textBox.height+2}>
             {connector.id}
           </text>
           </svg>
@@ -231,11 +228,11 @@ export default class Graph extends React.Component<IProps, IState>
       else
       {
         return <svg className="connector-label-wrapper output"
-          x={x + (3 * csize) + 1} y={y - ((textBox.height + 8) / 2)}>
+          x={x + (3 * this.csize) + 1} y={y - ((textBox.height + 8) / 2)}>
           <rect className="connector-label-border" height={textBox.height+8}
             width={textBox.width+8} x={0} y={0}/>
           <text className="label connector-label output"
-            fontSize={connectorLabelFontSize} x={4} y={textBox.height+2}>
+            fontSize={fontSize} x={4} y={textBox.height+2}>
             {connector.id}
           </text>
           </svg>
@@ -248,7 +245,7 @@ export default class Graph extends React.Component<IProps, IState>
     if (this.state.targetProperty.property)
     {
       const property = this.state.targetProperty.property;
-      const fSize = propertyLabelFontSize;
+      const fSize = vgConfig.Graph.fontSize.propertyLabel;
       const padding = 3;
       const value = property.value.toString();
 
@@ -364,7 +361,7 @@ export default class Graph extends React.Component<IProps, IState>
   private resetView = () =>
   {
     this.firstLoad = true;
-    this.setState({view: viewDefault});
+    this.setState({view: vgConfig.Graph.viewDefault});
   }
 
   private startUpdate = () =>
@@ -397,6 +394,7 @@ export default class Graph extends React.Component<IProps, IState>
   {
     e.preventDefault();
 
+    const zoomFactor = vgConfig.Graph.zoomFactor;
     const scale = -1 * Math.sign(e.deltaY) > 0 ? 1 / zoomFactor : zoomFactor;
 
     const startPoint = vgUtils.windowToSVGPosition({x: e.pageX, y: e.pageY},
@@ -742,7 +740,7 @@ export default class Graph extends React.Component<IProps, IState>
     const currentPosition = vgUtils.windowToSVGPosition(
       {x: e.pageX, y: e.pageY}, this.graphRef);
 
-    dummyNode.position = {x: currentPosition.x - (2*csize),
+    dummyNode.position = {x: currentPosition.x - (2 * this.csize),
       y: currentPosition.y}
 
     let dummyConnector;
@@ -826,7 +824,7 @@ export default class Graph extends React.Component<IProps, IState>
       const currentPosition = vgUtils.windowToSVGPosition(
         {x: e.pageX, y: e.pageY}, this.graphRef);
 
-      dnode.position = {x: currentPosition.x - (2*csize),
+      dnode.position = {x: currentPosition.x - (2 * this.csize),
         y: currentPosition.y};
 
       this.setState({tempNodes: {dummy: dnode,

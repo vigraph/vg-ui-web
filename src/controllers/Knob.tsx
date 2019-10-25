@@ -1,8 +1,9 @@
 import * as React from 'react';
 import * as Model from '../model';
 
-import * as vgTypes from '../lib/Types';
+import { vgConfig } from '../lib/Config';
 import { vgUtils } from '../lib/Utils';
+import * as vgTypes from '../lib/Types';
 
 interface IProps
 {
@@ -46,7 +47,7 @@ export default class Knob extends React.Component<IProps, IState>
 
     this.property = props.property;
 
-    const knobSettings = require('../json/ControlSettings.json').knob;
+    const knobSettings = vgConfig.Controls.knob;
 
     this.settings = knobSettings[this.props.settingsType] ?
       knobSettings[this.props.settingsType] : knobSettings.default;

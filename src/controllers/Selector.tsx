@@ -1,6 +1,7 @@
 import * as React from 'react';
 import * as Model from '../model';
 
+import { vgConfig } from '../lib/Config';
 import * as vgTypes from '../lib/Types';
 
 interface IProps
@@ -40,7 +41,7 @@ export default class Selector extends React.Component<IProps, IState>
 
     this.property = props.property;
 
-    const selectorSettings = require('../json/ControlSettings.json').selector;
+    const selectorSettings = vgConfig.Controls.selector;
 
     this.settings = selectorSettings[this.props.settingsType] ?
       selectorSettings[this.props.settingsType] : selectorSettings.default;

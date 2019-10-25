@@ -1,5 +1,7 @@
 import * as React from 'react';
 
+import { vgConfig } from './lib/Config';
+
 interface IProps
 {
   size: { x: number, y: number };
@@ -7,19 +9,13 @@ interface IProps
   projection: boolean;
   beam_multiplier: number;
   points: boolean;
+  ip: string;
   port: number;
 }
 
 export default class WebsocketCanvas extends React.Component<IProps>
 {
-  public static defaultProps = {
-    size: { x: 400, y: 400 },
-    beams: false,
-    projection: true,
-    beam_multiplier: 10,
-    points: false,
-    port: 33382
-  }
+  public static defaultProps = vgConfig.Graph.websocket.defaultProps;
 
   private canvasRef = React.createRef<HTMLCanvasElement>()
   private previousSize: {x: number, y: number};
@@ -42,7 +38,7 @@ export default class WebsocketCanvas extends React.Component<IProps>
 
   public componentDidMount()
   {
-    const rxSocket = new WebSocket('ws://localhost:'+this.props.port+'/');
+    const rxSocket = new WebSocket(this.props.ip+':'+this.props.port+'/');
     rxSocket.binaryType = 'arraybuffer';
     rxSocket.onmessage = (e: MessageEvent) => { this.handleFrame(e.data); };
 

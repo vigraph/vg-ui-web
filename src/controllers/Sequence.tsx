@@ -1,6 +1,7 @@
 import * as React from 'react';
 import * as Model from '../model';
 
+import { vgConfig } from '../lib/Config';
 import * as vgTypes from '../lib/Types';
 
 interface IProps
@@ -43,8 +44,7 @@ export default class Sequence extends React.Component<IProps, IState>
 
     this.property = props.property;
 
-    const sequenceSettings =
-      require('../json/ControlSettings.json').sequence;
+    const sequenceSettings = vgConfig.Controls.sequence;
 
     this.settings = sequenceSettings[this.props.settingsType] ?
       sequenceSettings[this.props.settingsType] : sequenceSettings.default;

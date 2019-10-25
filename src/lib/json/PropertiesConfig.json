@@ -186,5 +186,21 @@
         "y": 60
       }
     }
+  },
+  "vector/websocket-display":
+  {
+    "width": 200,
+    "height": 200,
+    "properties":
+    {
+      "port":
+      {
+        "controlType": "none/default",
+        "rangeMin": 0,
+        "rangeMax": 65535,
+        "x": 0,
+        "y": 0
+      }
+    }
   }
 }

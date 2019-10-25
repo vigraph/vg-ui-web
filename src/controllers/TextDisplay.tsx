@@ -2,6 +2,7 @@ import * as React from 'react';
 import * as Model from '../model';
 
 import * as vgTypes from '../lib/Types';
+import { vgConfig } from '../lib/Config';
 import { vgUtils } from '../lib/Utils';
 
 interface IProps
@@ -42,8 +43,7 @@ export default class TextDisplay extends React.Component<IProps, IState>
 
     this.property = props.property;
 
-    const textDisplaySettings =
-      require('../json/ControlSettings.json').textDisplay;
+    const textDisplaySettings = vgConfig.Controls.textDisplay;
 
     this.settings = textDisplaySettings[this.props.settingsType] ?
       textDisplaySettings[this.props.settingsType] : textDisplaySettings.default;

@@ -6,8 +6,7 @@ import WebsocketCanvas from './WebsocketCanvas';
 
 import { vgData } from './data/Data';
 import { vgUtils } from './lib/Utils';
-
-const fontSize = 12;
+import { vgConfig } from './lib/Config';
 
 interface IProps
 {
@@ -52,7 +51,7 @@ export default class Node extends React.Component<IProps, IState>
   private offsetY: number;
   private mouseDown: {x: number, y: number};
   private resizeMouseDown: {x: number, y: number};
-  private titleHeight: number;
+  private titleSize: number;
   private updateStarted: boolean;
 
   constructor(props: IProps)
@@ -74,7 +73,7 @@ export default class Node extends React.Component<IProps, IState>
     this.offsetY = 0;
     this.mouseDown = {x: 0, y: 0};
     this.resizeMouseDown = {x: 0, y: 0};
-    this.titleHeight = fontSize;
+    this.titleSize = vgConfig.Graph.fontSize.nodeTitle;
     this.updateStarted = false;
   }
 
@@ -143,16 +142,16 @@ export default class Node extends React.Component<IProps, IState>
     else
     {
       const linesArray = vgUtils.wrapText(this.node.name,
-        width - this.props.padding, fontSize);
+        width - this.props.padding, this.titleSize);
 
-      this.titleHeight = linesArray.length * fontSize;
+      this.titleSize = linesArray.length * this.titleSize;
 
       return <text className={"node-label " + this.props.node.id}
-        fontSize={fontSize} x={(width/2)+padding} y={15}>
+        fontSize={this.titleSize} x={(width/2)+padding} y={15}>
           {linesArray.map((word: string, index: number) =>
             {
               return <tspan key={index} x={(width/2)+padding}
-                dy={index*fontSize}>{word}</tspan>
+                dy={index*this.titleSize}>{word}</tspan>
             })}
         </text>
     }
@@ -165,15 +164,15 @@ export default class Node extends React.Component<IProps, IState>
     const portProperty = this.props.node.getProperties().find(
       x => x.id === "port");
 
-    if (this.node.type === "vector:websocket-display" && portProperty)
+    if (this.node.type === "vector/websocket-display" && portProperty)
     {
       const width = this.state.w - (2 * padding);
-      const height = this.state.h - (2 * padding) - this.titleHeight;
+      const height = this.state.h - (2 * padding) - this.titleSize;
 
       return <foreignObject id="ws-canvas-wrapper"
         className={"ws-canvas " + this.props.node.id}
         width={width} height={height} x={2 * padding}
-        y={this.titleHeight + (1 * padding)}>
+        y={this.titleSize + (1 * padding)}>
         <WebsocketCanvas size={{ x: width, y: height }}
           port={portProperty.value}/>
       </foreignObject>
@@ -182,7 +181,7 @@ export default class Node extends React.Component<IProps, IState>
 
   private generateResizeIcon = () =>
   {
-    if (this.node.type === "vector:websocket-display" || this.node.type ===
+    if (this.node.type === "vector/websocket-display" || this.node.type ===
       "core:interpolate")
     {
       return <svg id={"node-resize-wrapper"}

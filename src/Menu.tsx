@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import { vgData } from './data/Data';
+import { vgConfig } from './lib/Config';
 
 interface IProps
 {
@@ -16,8 +17,6 @@ interface IState
   position: {x: number, y: number},
   subMenuPosition: {x: number, y: number, alignTop: boolean}
 }
-
-const maxSize = 10;
 
 export default class Menu extends React.Component<IProps, IState>
 {
@@ -54,7 +53,7 @@ export default class Menu extends React.Component<IProps, IState>
 
       for (const ckey of Object.keys(metadata[key]))
       {
-        if (count + 1 > maxSize)
+        if (count + 1 > vgConfig.Graph.menuSize)
         {
           section++;
           count = 0;

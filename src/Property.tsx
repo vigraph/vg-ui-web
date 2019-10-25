@@ -3,6 +3,7 @@ import * as Model from './model';
 
 import { vgData } from './data/Data';
 import { vgUtils } from './lib/Utils';
+import { vgConfig } from './lib/Config';
 
 import Button from './controllers/Button';
 import ColourPicker from './controllers/ColourPicker';
@@ -12,8 +13,6 @@ import Slider from './controllers/Slider';
 import TextDisplay from './controllers/TextDisplay';
 import Sequence from './controllers/Sequence';
 import Curve from './controllers/Curve';
-
-const settingsFontSize: number = 10;
 
 const controlTypes: {[key: string]: any} =
   { "none": null, "knob": Knob, "button": Button,
@@ -117,8 +116,10 @@ export default class Property extends React.Component<IProps, IState>
         this.controlType[1] !== "none")
       {
         return <text className={"settings label " + this.controlType[1]}
-          fontSize={settingsFontSize} x={this.property.position.x}
-          y={this.property.position.y}>{this.property.value}</text>
+          fontSize={vgConfig.Graph.fontSize.propertySettings}
+          x={this.property.position.x} y={this.property.position.y}>
+            {this.property.value}
+          </text>
       }
       else
       {

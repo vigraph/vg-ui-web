@@ -2,6 +2,7 @@ import * as React from 'react';
 import * as Model from '../model';
 
 import * as vgTypes from '../lib/Types';
+import { vgConfig } from '../lib/Config';
 
 interface IProps
 {
@@ -40,7 +41,7 @@ export default class Button extends React.Component<IProps, IState>
 
     this.property = props.property;
 
-    const buttonSettings = require('../json/ControlSettings.json').button;
+    const buttonSettings = vgConfig.Controls.button;
 
     this.settings = buttonSettings[this.props.settingsType] ?
       buttonSettings[this.props.settingsType] : buttonSettings.default;

@@ -1,0 +1,33 @@
+{
+  "restURL": "http://localhost:33381",
+  "layoutPadding":
+  {
+    "x": 30,
+    "y": 30
+  },
+  "viewDefault": {"x": 0, "y": 0, "w": 5000, "h": 5000},
+  "zoomFactor": 1.1,
+  "connectorSize": 5,
+  "websocket":
+  {
+    "aspectRatio": 1,
+    "defaultProps":
+    {
+      "size": { "x": 400, "y": 400 },
+      "beams": false,
+      "projection": true,
+      "beam_multiplier": 10,
+      "points": false,
+      "ip": "ws://localhost",
+      "port": 33382
+    }
+  },
+  "fontSize":
+  {
+    "connectorLabel": 10,
+    "propertyLabel": 10,
+    "nodeTitle": 12,
+    "propertySettings": 10
+  },
+  "menuSize": 10
+}

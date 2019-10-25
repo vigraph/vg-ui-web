@@ -1,7 +1,8 @@
 import * as React from 'react';
 import * as Model from '../model';
 
-import { vgUtils } from '../lib/Utils'
+import { vgConfig } from '../lib/Config';
+import { vgUtils } from '../lib/Utils';
 import * as vgTypes from '../lib/Types';
 
 interface IProps
@@ -50,7 +51,7 @@ export default class ColourPicker extends React.Component<IProps, IState>
     this.allCurrentValues = { hex: "", r: 0, g: 0, b: 0, h: 0, s: 0, l: 0 };
     this.pickerRef = null;
 
-     const pickerSettings = require('../json/ControlSettings.json').colourPicker;
+     const pickerSettings = vgConfig.Controls.colourPicker;
 
     this.settings = pickerSettings[this.props.settingsType] ?
       pickerSettings[this.props.settingsType] : pickerSettings.default;

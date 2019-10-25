@@ -1,7 +1,8 @@
 import * as React from 'react';
 import * as Model from '../model';
 
-import { vgUtils } from '../lib/Utils'
+import { vgConfig } from '../lib/Config';
+import { vgUtils } from '../lib/Utils';
 import * as vgTypes from '../lib/Types';
 
 interface IProps
@@ -45,7 +46,7 @@ export default class Slider extends React.Component<IProps, IState>
 
     this.property = props.property;
 
-    const sliderSettings = require('../json/ControlSettings.json').slider;
+    const sliderSettings = vgConfig.Controls.slider;
 
     this.settings = sliderSettings[this.props.settingsType] ?
       sliderSettings[this.props.settingsType] : sliderSettings.default;

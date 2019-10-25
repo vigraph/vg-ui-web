@@ -12,22 +12,20 @@ import * as rm from 'typed-rest-client/RestClient';
 
 import * as vgTypes from '../lib/Types';
 import { vgUtils } from '../lib/Utils';
-
-const restURL = 'http://localhost:33381';
-const layoutPadding = { x: 30, y: 30 };
+import { vgConfig } from '../lib/Config';
 
 class Data
 {
   private rest: rm.RestClient;
+  private restURL: string;
   private generateSuccess?: (json: any) => void;
-  private propertiesConfig: vgTypes.IPropertiesConfig;
   private metadata: vgTypes.IMetadata;
   private layoutData: vgTypes.ILayoutData;
 
   public constructor()
   {
-    this.rest = new rm.RestClient('vigraph-rest', restURL);
-    this.propertiesConfig = require('../json/PropertiesConfig.json');
+    this.restURL = vgConfig.Graph.restURL;
+    this.rest = new rm.RestClient('vigraph-rest', this.restURL);
     this.metadata = {};
     this.layoutData = {};
   }
@@ -45,7 +43,7 @@ class Data
   public updateProperty(nodeID: string, propID: string,
     value: any, success?: () => void, failure?: () => void)
   {
-    const url = restURL + "/graph/" + nodeID + "/@" + propID;
+    const url = this.restURL + "/graph/" + nodeID + "/@" + propID;
 
     fetch(url,
     {
@@ -94,7 +92,7 @@ class Data
   public updateLayout(id?: string, position?: {x: number, y: number},
     size?: {w: number, h: number})
   {
-    const url = restURL + "/layout";
+    const url = this.restURL + "/layout";
 
     if (id)
     {
@@ -141,7 +139,7 @@ class Data
     edges: Array<{dest: string, destInput: string}>, success?: ()=>void,
     failure?: () => void)
   {
-    const url = restURL + "/graph/" + outputNodePath + "/@" + outputID;
+    const url = this.restURL + "/graph/" + outputNodePath + "/@" + outputID;
 
     const data: Array<{"element": string, "input": string}> = [];
 
@@ -208,7 +206,7 @@ class Data
       {
         const item = this.processSingleGraphItem(nodeID, result, parentPath);
 
-        const propConfig = this.propertiesConfig[item.type];
+        const propConfig = vgConfig.Properties[item.type];
 
         // Node properties layout (height and width)
         const h = this.layoutData[item.path] && this.layoutData[item.path].h ?
@@ -282,7 +280,7 @@ class Data
   public createNode(nodeID: string, nodeType: string, parentPath?: string,
     success?: ()=>void, failure?: () => void)
   {
-    const url = restURL + "/graph/" +
+    const url = this.restURL + "/graph/" +
       (typeof parentPath !== "undefined" ? parentPath + "/" : "") + nodeID;
 
     const data = {type: nodeType}
@@ -332,7 +330,7 @@ class Data
   // Calls success on DELETE success
   public deleteNode(nodePath: string, success?: ()=>void, failure?: () => void)
   {
-    const url = restURL + "/graph/" + nodePath;
+    const url = this.restURL + "/graph/" + nodePath;
 
     fetch(url,
     {
@@ -499,7 +497,7 @@ class Data
 
     nodes.forEach((value: vgTypes.IProcessedGraphItem) =>
     {
-      const propConfig = this.propertiesConfig[value.type];
+      const propConfig = vgConfig.Properties[value.type];
 
       if (layout[value.path])
       {
@@ -628,10 +626,10 @@ class Data
     {
       const layout = {x: 0, y: 0, h: 50, w: 50};
 
-      if (this.propertiesConfig[value.type])
+      if (vgConfig.Properties[value.type])
       {
-        layout.h = this.propertiesConfig[value.type].height;
-        layout.w = this.propertiesConfig[value.type].width;
+        layout.h = vgConfig.Properties[value.type].height;
+        layout.w = vgConfig.Properties[value.type].width;
       }
 
       const nRank = ranks[value.id] ? ranks[value.id] : 0;
@@ -643,8 +641,8 @@ class Data
         rankNextPos[nRank] = {x: 0, y: 0};
       }
 
-      layout.x = (rankNextPos[nRank].x) + layoutPadding.x;
-      layout.y = (rankNextPos[nRank].y) + layoutPadding.y;
+      layout.x = (rankNextPos[nRank].x) + vgConfig.Graph.layoutPadding.x;
+      layout.y = (rankNextPos[nRank].y) + vgConfig.Graph.layoutPadding.y;
 
       rankNextPos[nRank] = {x: rankNextPos[nRank].x,
         y: layout.y + layout.h};
@@ -786,7 +784,7 @@ class Data
       valueFormat?: string, rangeMin?: number, rangeMax?: number,
       increment?: number, available?: any[], x?: number, y?: number}> = [];
 
-    const propsConfig = this.propertiesConfig[item.type];
+    const propsConfig = vgConfig.Properties[item.type];
 
     if (item.inputs)
     {
