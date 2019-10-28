@@ -29,5 +29,9 @@
     "nodeTitle": 12,
     "propertySettings": 10
   },
-  "menuSize": 10
+  "menuSize": 10,
+  "interpolate":
+  {
+    "aspectRatio": 0
+  }
 }

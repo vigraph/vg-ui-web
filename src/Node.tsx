@@ -51,7 +51,7 @@ export default class Node extends React.Component<IProps, IState>
   private offsetY: number;
   private mouseDown: {x: number, y: number};
   private resizeMouseDown: {x: number, y: number};
-  private titleSize: number;
+  private titleFontSize: number;
   private updateStarted: boolean;
 
   constructor(props: IProps)
@@ -73,7 +73,7 @@ export default class Node extends React.Component<IProps, IState>
     this.offsetY = 0;
     this.mouseDown = {x: 0, y: 0};
     this.resizeMouseDown = {x: 0, y: 0};
-    this.titleSize = vgConfig.Graph.fontSize.nodeTitle;
+    this.titleFontSize = vgConfig.Graph.fontSize.nodeTitle;
     this.updateStarted = false;
   }
 
@@ -142,16 +142,14 @@ export default class Node extends React.Component<IProps, IState>
     else
     {
       const linesArray = vgUtils.wrapText(this.node.name,
-        width - this.props.padding, this.titleSize);
-
-      this.titleSize = linesArray.length * this.titleSize;
+        width - this.props.padding, this.titleFontSize);
 
       return <text className={"node-label " + this.props.node.id}
-        fontSize={this.titleSize} x={(width/2)+padding} y={15}>
+        fontSize={this.titleFontSize} x={(width/2)+padding} y={15}>
           {linesArray.map((word: string, index: number) =>
             {
               return <tspan key={index} x={(width/2)+padding}
-                dy={index*this.titleSize}>{word}</tspan>
+                dy={index*this.titleFontSize}>{word}</tspan>
             })}
         </text>
     }
@@ -167,12 +165,12 @@ export default class Node extends React.Component<IProps, IState>
     if (this.node.type === "vector/websocket-display" && portProperty)
     {
       const width = this.state.w - (2 * padding);
-      const height = this.state.h - (2 * padding) - this.titleSize;
+      const height = this.state.h - (2 * padding) - this.titleFontSize;
 
       return <foreignObject id="ws-canvas-wrapper"
         className={"ws-canvas " + this.props.node.id}
         width={width} height={height} x={2 * padding}
-        y={this.titleSize + (1 * padding)}>
+        y={this.titleFontSize + (1 * padding)}>
         <WebsocketCanvas size={{ x: width, y: height }}
           port={portProperty.value}/>
       </foreignObject>
@@ -181,8 +179,7 @@ export default class Node extends React.Component<IProps, IState>
 
   private generateResizeIcon = () =>
   {
-    if (this.node.type === "vector/websocket-display" || this.node.type ===
-      "core:interpolate")
+    if (this.resizeNodeAspectRatio() !== null)
     {
       return <svg id={"node-resize-wrapper"}
         x={this.state.w+this.props.padding-3} y={this.state.h-3}>
@@ -190,6 +187,24 @@ export default class Node extends React.Component<IProps, IState>
           height={15} onMouseDown={this.handleResizeMouseDown}/>
         <rect className={"node-resize-icon"} x={0} y={0} width={6} height={6}/>
       </svg>
+    }
+  }
+
+  // Returns nodes resize aspect ratio from config or null if node doesn't
+  // support resizing
+  private resizeNodeAspectRatio = () =>
+  {
+    if (this.node.type === "vector/websocket-display")
+    {
+      return vgConfig.Graph.websocket.aspectRatio;
+    }
+    else if (this.node.type === "core/interpolate")
+    {
+      return vgConfig.Graph.interpolate.aspectRatio;
+    }
+    else
+    {
+      return null;
     }
   }
 
@@ -311,15 +326,17 @@ export default class Node extends React.Component<IProps, IState>
     const currentPosition = vgUtils.windowToSVGPosition(
       {x: e.pageX, y: e.pageY}, this.props.graphRef);
 
-    const diffX = currentPosition.x - this.resizeMouseDown.x
+    const diffX = currentPosition.x - this.resizeMouseDown.x;
+    const diffY = currentPosition.y - this.resizeMouseDown.y;
 
     const newState = {...this.state};
     newState.w += diffX;
 
-    const aspectRatio = this.state.h / this.state.w;
-    newState.h = newState.w * aspectRatio;
+    const aspectRatio = this.resizeNodeAspectRatio();
 
-    if (newState.h >= 100 && newState.w >= 100)
+    newState.h = (aspectRatio ? newState.w * aspectRatio : newState.h + diffY);
+
+    if (newState.h >= 120 && newState.w >= 120)
     {
       this.setState(newState);
 
