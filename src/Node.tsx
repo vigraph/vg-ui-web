@@ -90,7 +90,8 @@ export default class Node extends React.Component<IProps, IState>
     const deleteY = 0;
 
     return (
-      <svg id={`node-${this.node.id}`} className={"node"}
+      <svg id={`node-${this.node.id}`}
+        className={"node " + this.node.type.replace("/","-")}
         x={this.state.x} y={this.state.y}
         onMouseEnter={this.handleMouseEnter}
         onMouseLeave={this.handleMouseLeave}>
@@ -197,7 +198,8 @@ export default class Node extends React.Component<IProps, IState>
   // support resizing
   private resizeNodeAspectRatio = () =>
   {
-    if (this.node.type === "vector/websocket-display")
+    if (this.node.type === "vector/websocket-display" ||
+      this.node.type === "bitmap/websocket-display")
     {
       return vgConfig.Graph.websocket.aspectRatio;
     }

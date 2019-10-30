@@ -714,3 +714,8 @@ foreignObject
 {
   color: #000000FE;
 }
+
+.node.audio-sdl-out
+{
+  text-anchor: middle;
+}

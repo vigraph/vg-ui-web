@@ -8,7 +8,10 @@
     {
       "buffer-size":
       {
-        "description": "Buffer size in samples (must be a power of 2)"
+        "description": "Buffer size in samples (must be a power of 2)",
+        "rangeMin": 0,
+        "rangeMax": 65536,
+        "valueFormat": "power2"
       },
       "channels":
       {
@@ -19,15 +22,46 @@
       },
       "device":
       {
-        "description": "Device output to"
+        "description": "Device output to",
+        "controlType": "none/default",
+        "x": 30,
+        "y": 22
       },
       "max-delay":
       {
-        "description": "Maximum delay (in samples) before dropping data"
+        "description": "Maximum delay (in samples) before dropping data",
+        "rangeMin": 0,
+        "rangeMax": 5000
       },
       "max-recovery":
       {
-        "description": "Maximum samples to drop to recover delay"
+        "description": "Maximum samples to drop to recover delay",
+        "rangeMin": 0,
+        "rangeMax": 5000
+      }
+    }
+  },
+  "core/add":
+  {
+    "description": "Add an offset to a control value",
+    "width": 70,
+    "height": 70,
+    "properties":
+    {
+      "offset":
+      {
+        "description": "Offset amount",
+        "controlType": "knob",
+        "subType": "log",
+        "rangeMin": 0.01,
+        "rangeMax": 1000,
+        "increment": 0.1,
+        "x": 30,
+        "y": 30
+      },
+      "input":
+      {
+        "description": "Base value"
       }
     }
   },

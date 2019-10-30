@@ -546,6 +546,12 @@ export default class InfoPanel extends React.Component<IProps, IState>
         newValue = vgUtils.snapValueToIncrement(value, property.increment);
         newValue = Math.min(newValue, property.range.max);
         newValue = Math.max(newValue, property.range.min);
+
+        // Number must be a power of 2
+        if (property.valueFormat === "power2" && Math.log2(newValue) % 1 !== 0)
+        {
+          newValue = property.value;
+        }
       }
     }
 
