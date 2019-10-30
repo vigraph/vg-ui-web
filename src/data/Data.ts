@@ -208,12 +208,18 @@ class Data
 
         const propConfig = vgConfig.Properties[item.type];
 
-        // Node properties layout (height and width)
+        // Node properties layout (height, width, x, y)
         const h = this.layoutData[item.path] && this.layoutData[item.path].h ?
           this.layoutData[item.path].h : (propConfig ? propConfig.height : 0);
         const w = this.layoutData[item.path] && this.layoutData[item.path].w ?
           this.layoutData[item.path].w : (propConfig ? propConfig.width : 0);
-        const layout = {h, w}
+
+        const x = this.layoutData[item.path] && this.layoutData[item.path].x ?
+          this.layoutData[item.path].x : 0;
+        const y = this.layoutData[item.path] && this.layoutData[item.path].y ?
+          this.layoutData[item.path].y : 0;
+
+        const layout = {h, w, x, y};
 
         if (success) success({...item, ...layout});
       }
@@ -753,6 +759,19 @@ class Data
       }
     }
 
+    // Inputs - position added later
+    const gInputs:
+      Array<{ id: string, type: string, x?: number, y?: number}> = [];
+
+    const mInputs = metadata.inputs;
+    if (mInputs)
+    {
+      for (const inputID of Object.keys(mInputs))
+      {
+        gInputs.push({id: inputID, type: mInputs[inputID].type});
+      }
+    }
+
     // Outputs
     const gOutputs: Array<{ id: string, type: string }> = [];
 
@@ -765,16 +784,23 @@ class Data
       }
     }
 
-    // Inputs - position added later
-    const gInputs:
-      Array<{ id: string, type: string, x?: number, y?: number}> = [];
-
-    const mInputs = metadata.inputs;
-    if (mInputs)
+    // Dynamic element so add inputs/outputs from graph data
+    if (item.dynamic)
     {
-      for (const inputID of Object.keys(mInputs))
+      if (item.inputs)
       {
-        gInputs.push({id: inputID, type: mInputs[inputID].type});
+        for (const iID of Object.keys(item.inputs))
+        {
+          gInputs.push({id: iID, type: item.inputs[iID].type});
+        }
+      }
+
+      if (item.outputs)
+      {
+        for (const oID of Object.keys(item.outputs))
+        {
+          gOutputs.push({id: oID, type: item.outputs[oID].type});
+        }
       }
     }
 
@@ -844,6 +870,7 @@ class Data
       name: metadata.name,
       type: item.type,
       path: parentPath ? parentPath + "/" + itemID : itemID,
+      dynamic: metadata.dynamic,
       description: propsConfig ? propsConfig.description : "",
       inputs: gInputs,
       outputs: gOutputs,

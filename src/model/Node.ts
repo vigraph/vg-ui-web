@@ -42,6 +42,16 @@ export class Node
     this.graph.setNodeProp(this.id, "path", path);
   }
 
+  get dynamic(): boolean
+  {
+    return this.graph.getNodeProp(this.id, "dynamic");
+  }
+
+  set dynamic(dynamic: boolean)
+  {
+    this.graph.setNodeProp(this.id, "dynamic", dynamic);
+  }
+
   get description(): string
   {
     return this.graph.getNodeProp(this.id, "description");

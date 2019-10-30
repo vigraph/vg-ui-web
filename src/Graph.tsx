@@ -91,7 +91,9 @@ export default class Graph extends React.Component<IProps, IState>
           menuItemSelected={this.menuItemSelected}/>}
 
         <InfoPanel graph={this.graph} node={this.state.targetNode}
-          update={this.update}/>
+          startUpdate={this.startUpdate} update={this.update}
+          endUpdate={this.endUpdate}
+          dynamicNodeUpdate={this.dynamicNodeUpdate}/>
 
         <svg id="graph"
           viewBox={`${view.x} ${view.y} ${view.w} ${view.h}`}
@@ -139,7 +141,7 @@ export default class Graph extends React.Component<IProps, IState>
       startUpdate={this.startUpdate} update={this.update}
       endUpdate={this.endUpdate} padding={this.csize*2} graphRef={this.graphRef}
       removeNode={this.removeNode} showNodeGraph={this.showNodeGraph}
-      targetNode={this.targetNode}
+      targetNode={this.targetNode} dynamicNodeUpdate={this.dynamicNodeUpdate}
       updateTargetProperty={this.updateTargetProperty}>
       {
         this.graph.getNodeConnectors(node.id, "input").map(
@@ -586,25 +588,7 @@ export default class Graph extends React.Component<IProps, IState>
     vgData.deleteNode(node.path,
       () =>
       {
-        // Delete node and all of its edges from the model
-        const reverseEdges = node.getReverseEdges();
-        const forwardEdges = node.getForwardEdges();
-
-        reverseEdges.forEach((value: { inputId: string, src: Model.Node,
-          srcOutput: string}) =>
-        {
-          this.graph.removeEdge(value.src.id, value.srcOutput, node.id,
-            value.inputId);
-        });
-
-        forwardEdges.forEach((value: { outputId: string, dest: Model.Node,
-          destInput: string}) =>
-        {
-          this.graph.removeEdge(node.id, value.outputId, value.dest.id,
-            value.destInput);
-        });
-
-        this.graph.removeNode(node.id);
+        this.removeNodeFromModel(node);
 
         this.graph.commitTransaction();
         this.forceUpdate();
@@ -613,6 +597,58 @@ export default class Graph extends React.Component<IProps, IState>
       {
         this.graph.commitTransaction();
       });
+  }
+
+  private removeNodeFromModel = (node: Model.Node) =>
+  {
+    // Delete node and all of its edges from the model
+    const reverseEdges = node.getReverseEdges();
+    const forwardEdges = node.getForwardEdges();
+
+    reverseEdges.forEach((value: { inputId: string, src: Model.Node,
+      srcOutput: string}) =>
+    {
+      this.graph.removeEdge(value.src.id, value.srcOutput, node.id,
+        value.inputId);
+    });
+
+    forwardEdges.forEach((value: { outputId: string, dest: Model.Node,
+      destInput: string}) =>
+    {
+      this.graph.removeEdge(node.id, value.outputId, value.dest.id,
+        value.destInput);
+    });
+
+    this.graph.removeNode(node.id);
+  }
+
+  // Update dynamic node by removing the node from the model and recreating
+  private dynamicNodeUpdate = (node: Model.Node, finished?: () => void) =>
+  {
+    const currGraphPathLen = this.currentGraphPath.length;
+    let path: string | undefined;
+
+    if (currGraphPathLen === 0)
+    {
+      path = undefined;
+    }
+    else
+    {
+      path = this.currentGraphPath[currGraphPathLen-1];
+    }
+
+    this.removeNodeFromModel(node);
+
+    vgData.getNode(node.id, path,
+      (node: any) =>
+      {
+        this.graph.addNodeFromJSON(node);
+        this.forceUpdate();
+        if (finished)
+        {
+          finished();
+        }
+      }, finished);
   }
 
   private addEdge = (srcID: string, srcOutput: string, destID: string,

@@ -8,7 +8,10 @@ interface IProps
 {
   graph: Model.Graph;
   node: Model.Node | null;
+  startUpdate: () => void;
   update: () => void;
+  endUpdate: () => void;
+  dynamicNodeUpdate: (node: Model.Node, finished: () => void) => void;
 }
 
 interface IState
@@ -552,18 +555,32 @@ export default class InfoPanel extends React.Component<IProps, IState>
   // Update property value (engine and model)
   private updateValue = (property: Model.Property, value: any) =>
   {
+    const update = () =>
+    {
+      if (this.props.node && this.props.node.dynamic)
+      {
+        this.props.dynamicNodeUpdate(this.props.node, this.props.endUpdate);
+      }
+      else
+      {
+        this.props.update();
+        this.props.endUpdate();
+      }
+    }
+
     if (this.props.node)
     {
+      this.props.startUpdate();
       vgData.updateProperty(this.props.node.path, property.id, value,
         () =>
         {
           property.value = value;
-          this.props.update();
+          update();
         },
         () =>
         {
           // Update on failure to draw infoPanel and reset values
-          this.props.update();
+          update();
         });
     }
   }

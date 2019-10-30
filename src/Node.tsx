@@ -14,6 +14,7 @@ interface IProps
   startUpdate: () => void;
   update: () => void;
   endUpdate: () => void;
+  dynamicNodeUpdate: (node: Model.Node, finished: () => void) => void;
   padding: number;
   graphRef: SVGSVGElement | null;
   removeNode: (node: Model.Node) => void;
@@ -119,7 +120,7 @@ export default class Node extends React.Component<IProps, IState>
               parent={this.node}
               startUpdate={this.props.startUpdate}
               update={this.props.update}
-              endUpdate={this.props.endUpdate}
+              endUpdate={this.endPropertyUpdate}
               showNodeGraph={this.props.showNodeGraph}
               padding={this.props.padding}
               updateTargetProperty={this.props.updateTargetProperty}/>
@@ -375,6 +376,18 @@ export default class Node extends React.Component<IProps, IState>
   {
     e.stopPropagation();
     this.props.removeNode(this.node);
+  }
+
+  private endPropertyUpdate = () =>
+  {
+    if (this.node.dynamic)
+    {
+      this.props.dynamicNodeUpdate(this.node, this.props.endUpdate);
+    }
+    else
+    {
+      this.props.endUpdate();
+    }
   }
 }
 

@@ -4,6 +4,7 @@
 export interface IRawGraphItem
 {
   type: string, // section/name
+  dynamic: boolean,
   inputs?:
   {
     [key: string]:
@@ -51,6 +52,7 @@ export interface IProcessedGraphItem
   name: string,
   type: string,
   path: string,
+  dynamic: boolean,
   description?: string,
   inputs: Array<{ id: string, type: string, x?: number, y?: number}>,
   outputs: Array<{ id: string, type: string}>,
@@ -72,6 +74,7 @@ export interface IMetadata
     [key: string]:
     {
       name: string,
+      dynamic: boolean,
       settings?:
       {
         // Setting ID

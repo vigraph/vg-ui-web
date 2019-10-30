@@ -1,4 +1,36 @@
 {
+  "audio/sdl-out":
+  {
+    "description": "Audio output for SDL",
+    "width": 100,
+    "height": 50,
+    "properties":
+    {
+      "buffer-size":
+      {
+        "description": "Buffer size in samples (must be a power of 2)"
+      },
+      "channels":
+      {
+        "description": "Number of channels",
+        "controlType": "none/none",
+        "rangeMin": 0,
+        "rangeMax": 2
+      },
+      "device":
+      {
+        "description": "Device output to"
+      },
+      "max-delay":
+      {
+        "description": "Maximum delay (in samples) before dropping data"
+      },
+      "max-recovery":
+      {
+        "description": "Maximum samples to drop to recover delay"
+      }
+    }
+  },
   "core/beat":
   {
     "description": "Regular beat pulse",
