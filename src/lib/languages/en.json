@@ -1,0 +1,181 @@
+{
+  "audio/sdl-out":
+  {
+    "description": "Audio output for SDL",
+    "properties":
+    {
+      "buffer-size":
+      {
+        "description": "Buffer size in samples (must be a power of 2)"
+      },
+      "channels":
+      {
+        "description": "Number of channels"
+      },
+      "device":
+      {
+        "description": "Device to output to"
+      },
+      "max-delay":
+      {
+        "description": "Maximum delay (in samples) before dropping data"
+      },
+      "max-recovery":
+      {
+        "description": "Maximum samples to drop to recover delay"
+      }
+    }
+  },
+  "core/add":
+  {
+    "description": "Add an offset to a control value",
+    "properties":
+    {
+      "offset":
+      {
+        "description": "Offset amount"
+      },
+      "input":
+      {
+        "description": "Base value"
+      }
+    }
+  },
+  "core/beat":
+  {
+    "description": "Regular beat pulse",
+    "properties":
+    {
+      "interval":
+      {
+        "description": "Interval in seconds"
+      },
+      "offset":
+      {
+        "description": "Offset"
+      },
+      "start":
+      {
+        "description": "Start"
+      },
+      "stop":
+      {
+        "description": "Stop"
+      }
+    }
+  },
+  "core/envelope":
+  {
+    "description": "Provide an ADSR envelope on trigger/release",
+    "properties":
+    {
+      "attack":
+      {
+        "description": "Attack time"
+      },
+      "decay":
+      {
+        "description": "Decay time"
+      },
+      "release":
+      {
+        "description": "Release time"
+      },
+      "reset":
+      {
+        "description": "Reset"
+      },
+      "start":
+      {
+        "description": "Start"
+      },
+      "stop":
+      {
+        "description": "Stop"
+      },
+      "sustain":
+      {
+        "description": "Sustain level"
+      }
+    }
+  },
+  "core/multiply":
+  {
+    "description": "Multiply a control value",
+    "properties":
+    {
+      "factor":
+      {
+        "description": "Factor to multiply with"
+      },
+      "input":
+      {
+        "description": "Base value"
+      }
+    }
+  },
+  "core/oscillator":
+  {
+    "description": "Oscillator",
+    "properties":
+    {
+      "freq":
+      {
+        "description": "Frequency"
+      },
+      "pulse-width":
+      {
+        "description": "Pulse Width"
+      },
+      "wave":
+      {
+        "description": "Waveform"
+      },
+      "start":
+      {
+        "description": "Start"
+      },
+      "stop":
+      {
+        "description": "Stop"
+      }
+    }
+  },
+  "vector/websocket-display":
+  {
+    "description": "WebSocket server for vector display clients",
+    "properties":
+    {
+      "port":
+      {
+        "description": "Listening port"
+      }
+    }
+  },
+  "bitmap/websocket-display":
+  {
+    "description": "WebSocket server for bitmap display clients",
+    "properties":
+    {
+      "port":
+      {
+        "description": "Listening port"
+      }
+    }
+  },
+  "bitmap/rectangle":
+  {
+    "description": "Bitmap rectangle",
+    "properties":
+    {
+      "width":
+      {
+        "description": "Width of bitmap"
+      },
+      "height":
+      {
+        "description": "Height of bitmap"
+      }
+    }
+  }
+}

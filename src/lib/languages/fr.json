@@ -1,0 +1,181 @@
+{
+  "audio/sdl-out":
+  {
+    "description": "Sortie audio pour SDL",
+    "properties":
+    {
+      "buffer-size":
+      {
+        "description": "Taille de la mémoire tampon en échantillons (doit être une puissance de 2)"
+      },
+      "channels":
+      {
+        "description": "Nombre de canaux"
+      },
+      "device":
+      {
+        "description": "Périphérique de sortie"
+      },
+      "max-delay":
+      {
+        "description": "Délai maximum (en échantillons) avant de perdre des données"
+      },
+      "max-recovery":
+      {
+        "description": "Nombre maximal d'échantillons à supprimer pour récupérer le délai"
+      }
+    }
+  },
+  "core/add":
+  {
+    "description": "Ajouter un décalage à une valeur de contrôle",
+    "properties":
+    {
+      "offset":
+      {
+        "description": "Montant compensé"
+      },
+      "input":
+      {
+        "description": "Valeur de base"
+      }
+    }
+  },
+  "core/beat":
+  {
+    "description": "Pouls régulier",
+    "properties":
+    {
+      "interval":
+      {
+        "description": "Intervalle en secondes"
+      },
+      "offset":
+      {
+        "description": "Décalage"
+      },
+      "start":
+      {
+        "description": "Début"
+      },
+      "stop":
+      {
+        "description": "Arrêtez"
+      }
+    }
+  },
+  "core/envelope":
+  {
+    "description": "Fournir une enveloppe ADSR sur le déclencheur/relâchement",
+    "properties":
+    {
+      "attack":
+      {
+        "description": "Temps d'attaque"
+      },
+      "decay":
+      {
+        "description": "Temps de décroissance"
+      },
+      "release":
+      {
+        "description": "Temps de libération"
+      },
+      "reset":
+      {
+        "description": "Réinitialiser"
+      },
+      "start":
+      {
+        "description": "Début"
+      },
+      "stop":
+      {
+        "description": "Arrêtez"
+      },
+      "sustain":
+      {
+        "description": "Maintenir le niveau"
+      }
+    }
+  },
+  "core/multiply":
+  {
+    "description": "Multiplier une valeur de contrôle",
+    "properties":
+    {
+      "factor":
+      {
+        "description": "Facteur à multiplier avec"
+      },
+      "input":
+      {
+        "description": "Valeur de base"
+      }
+    }
+  },
+  "core/oscillator":
+  {
+    "description": "Oscillateur",
+    "properties":
+    {
+      "freq":
+      {
+        "description": "La fréquence"
+      },
+      "pulse-width":
+      {
+        "description": "Largeur d'impulsion"
+      },
+      "wave":
+      {
+        "description": "Forme d'onde"
+      },
+      "start":
+      {
+        "description": "Début"
+      },
+      "stop":
+      {
+        "description": "Arrêtez"
+      }
+    }
+  },
+  "vector/websocket-display":
+  {
+    "description": "Serveur WebSocket pour les clients à affichage vectoriel",
+    "properties":
+    {
+      "port":
+      {
+        "description": "Port d'écoute"
+      }
+    }
+  },
+  "bitmap/websocket-display":
+  {
+    "description": "Serveur WebSocket pour les clients d'affichage bitmap",
+    "properties":
+    {
+      "port":
+      {
+        "description": "Port d'écoute"
+      }
+    }
+  },
+  "bitmap/rectangle":
+  {
+    "description": "Bitmap rectangle",
+    "properties":
+    {
+      "width":
+      {
+        "description": "Largeur du bitmap"
+      },
+      "height":
+      {
+        "description": "Hauteur de bitmap"
+      }
+    }
+  }
+}

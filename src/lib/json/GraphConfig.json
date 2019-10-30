@@ -1,5 +1,6 @@
 {
   "restURL": "http://localhost:33381",
+  "language": "en",
   "layoutPadding":
   {
     "x": 30,

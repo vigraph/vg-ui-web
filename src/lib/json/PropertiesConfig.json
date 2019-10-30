@@ -1,41 +1,35 @@
 {
   "audio/sdl-out":
   {
-    "description": "Audio output for SDL",
     "width": 100,
     "height": 50,
     "properties":
     {
       "buffer-size":
       {
-        "description": "Buffer size in samples (must be a power of 2)",
         "rangeMin": 0,
         "rangeMax": 65536,
         "valueFormat": "power2"
       },
       "channels":
       {
-        "description": "Number of channels",
         "controlType": "none/none",
         "rangeMin": 0,
         "rangeMax": 2
       },
       "device":
       {
-        "description": "Device output to",
         "controlType": "none/default",
         "x": 30,
         "y": 22
       },
       "max-delay":
       {
-        "description": "Maximum delay (in samples) before dropping data",
         "rangeMin": 0,
         "rangeMax": 5000
       },
       "max-recovery":
       {
-        "description": "Maximum samples to drop to recover delay",
         "rangeMin": 0,
         "rangeMax": 5000
       }
@@ -43,14 +37,12 @@
   },
   "core/add":
   {
-    "description": "Add an offset to a control value",
     "width": 70,
     "height": 70,
     "properties":
     {
       "offset":
       {
-        "description": "Offset amount",
         "controlType": "knob",
         "subType": "log",
         "rangeMin": 0.01,
@@ -61,20 +53,17 @@
       },
       "input":
       {
-        "description": "Base value"
       }
     }
   },
   "core/beat":
   {
-    "description": "Regular beat pulse",
     "width": 100,
     "height": 90,
     "properties":
     {
       "interval":
       {
-        "description": "Interval in seconds",
         "controlType": "knob/log",
         "rangeMin": 0.001,
         "rangeMax": 1000,
@@ -84,7 +73,6 @@
       },
       "offset":
       {
-        "description": "Offset",
         "controlType": "knob/default",
         "rangeMin": 0,
         "rangeMax": 1,
@@ -94,14 +82,12 @@
       },
       "start":
       {
-        "description": "Start",
         "controlType": "button/default",
         "x": 32,
         "y": 60
       },
       "stop":
       {
-        "description": "Stop",
         "controlType": "button/default",
         "x": 72,
         "y": 60
@@ -110,14 +96,12 @@
   },
   "core/envelope":
   {
-    "description": "Provide an ADSR envelope on trigger/release",
     "width": 190,
     "height": 90,
     "properties":
     {
       "attack":
       {
-        "description": "Attack time",
         "controlType": "knob/default",
         "rangeMin": 0,
         "rangeMax": 10,
@@ -127,7 +111,6 @@
       },
       "decay":
       {
-        "description": "Decay time",
         "controlType": "knob/default",
         "rangeMin": 0,
         "rangeMax": 10,
@@ -137,7 +120,6 @@
       },
       "release":
       {
-        "description": "Release time",
         "controlType": "knob/log",
         "rangeMin": 0.01,
         "rangeMax": 30,
@@ -147,28 +129,24 @@
       },
       "reset":
       {
-        "description": "Reset",
         "controlType": "button/default",
         "x": 82,
         "y": 65
       },
       "start":
       {
-        "description": "Start",
         "controlType": "button/default",
         "x": 32,
         "y": 65
       },
       "stop":
       {
-        "description": "Stop",
         "controlType": "button/default",
         "x": 57,
         "y": 65
       },
       "sustain":
       {
-        "description": "Sustain level",
         "controlType": "knob/default",
         "rangeMin": 0,
         "rangeMax": 1,
@@ -180,14 +158,12 @@
   },
   "core/multiply":
   {
-    "description": "Multiply a control value",
     "width": 70,
     "height": 70,
     "properties":
     {
       "factor":
       {
-        "description": "Factor to multiply with",
         "controlType": "knob/log",
         "rangeMin": 0.001,
         "rangeMax": 1000,
@@ -197,21 +173,18 @@
       },
       "input":
       {
-        "description": "Base value",
         "controlType": "none/none"
       }
     }
   },
   "core/oscillator":
   {
-    "description": "Oscillator",
     "width": 170,
     "height": 95,
     "properties":
     {
       "freq":
       {
-        "description": "Frequency",
         "controlType": "knob/default",
         "rangeMin": 0,
         "rangeMax": 10,
@@ -221,7 +194,6 @@
       },
       "pulse-width":
       {
-        "description": "Pulse Width",
         "controlType": "knob/default",
         "rangeMin": 0,
         "rangeMax": 10,
@@ -231,7 +203,6 @@
       },
       "wave":
       {
-        "description": "Waveform",
         "controlType": "selector/vert",
         "available": ["sin","square","triangle","saw","random"],
         "x": 110,
@@ -239,14 +210,12 @@
       },
       "start":
       {
-        "description": "Start",
         "controlType": "button/default",
         "x": 32,
         "y": 60
       },
       "stop":
       {
-        "description": "Stop",
         "controlType": "button/default",
         "x": 72,
         "y": 60
@@ -255,14 +224,12 @@
   },
   "vector/websocket-display":
   {
-    "description": "WebSocket server for vector display clients",
     "width": 200,
     "height": 200,
     "properties":
     {
       "port":
       {
-        "description": "Listening port",
         "controlType": "none/none",
         "rangeMin": 0,
         "rangeMax": 65535,
@@ -273,14 +240,12 @@
   },
   "bitmap/websocket-display":
   {
-    "description": "WebSocket server for bitmap display clients",
     "width": 200,
     "height": 200,
     "properties":
     {
       "port":
       {
-        "description": "Listening port",
         "controlType": "none/none",
         "rangeMin": 0,
         "rangeMax": 65535,
@@ -291,14 +256,12 @@
   },
   "bitmap/rectangle":
   {
-    "description": "Bitmap rectangle",
     "width": 110,
     "height": 70,
     "properties":
     {
       "width":
       {
-        "description": "Width of bitmap",
         "controlType": "knob/default",
         "rangeMin": 1,
         "rangeMax": 1000,
@@ -308,7 +271,6 @@
       },
       "height":
       {
-        "description": "Height of bitmap",
         "controlType": "knob/default",
         "rangeMin": 1,
         "rangeMax": 1000,

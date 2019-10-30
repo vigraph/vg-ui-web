@@ -106,12 +106,10 @@ export interface IMetadata
 export interface IPropertiesConfig
 {
   [key: string]: {
-    description: string,
     width: number,
     height: number,
     properties: {
       [key: string]: {
-        description: string,
         controlType: string,
         x: number,
         y: number,
@@ -124,6 +122,21 @@ export interface IPropertiesConfig
           x: number,
           y: number
         }
+      }
+    }
+  }
+}
+
+export interface ILanguageStrings
+{
+  [key: string]:
+  {
+    description: string,
+    properties:
+    {
+      [key: string]:
+      {
+        description: string
       }
     }
   }

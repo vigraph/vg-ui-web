@@ -811,6 +811,7 @@ class Data
       increment?: number, available?: any[], x?: number, y?: number}> = [];
 
     const propsConfig = vgConfig.Properties[item.type];
+    const itemStrings = vgConfig.Strings[item.type];
 
     if (metadata.inputs)
     {
@@ -818,6 +819,10 @@ class Data
       {
         const iPropsConfig = (propsConfig && propsConfig.properties[inputID] ?
           propsConfig.properties[inputID] : null);
+
+        const iPropsStrings = (itemStrings &&
+          itemStrings.properties[inputID] ? itemStrings.properties[inputID] :
+          null);
 
         const itemInput = item.inputs ? item.inputs[inputID] : null;
 
@@ -827,7 +832,7 @@ class Data
           value: (itemInput ? itemInput.value : 0),
           valueType: (itemInput ? itemInput.type : "number"),
           propType: "input",
-          ...iPropsConfig
+          ...iPropsConfig, ...iPropsStrings
         });
 
         // Add connector position to input
@@ -848,6 +853,10 @@ class Data
         const sPropsConfig = (propsConfig && propsConfig.properties[settingID] ?
           propsConfig.properties[settingID] : {});
 
+        const sPropsStrings = (itemStrings &&
+          itemStrings.properties[settingID] ?
+          itemStrings.properties[settingID] : null);
+
         const itemSetting = item.settings ? item.settings[settingID] : null;
 
         gProps.push(
@@ -856,7 +865,7 @@ class Data
           value: (itemSetting ? itemSetting.value : 0),
           valueType: (itemSetting ? itemSetting.type : "number"),
           propType: "setting",
-          ...sPropsConfig
+          ...sPropsConfig, ...sPropsStrings
         });
       }
     }
@@ -871,7 +880,7 @@ class Data
       type: item.type,
       path: parentPath ? parentPath + "/" + itemID : itemID,
       dynamic: metadata.dynamic,
-      description: propsConfig ? propsConfig.description : "",
+      description: itemStrings ? itemStrings.description : "",
       inputs: gInputs,
       outputs: gOutputs,
       edges: gEdges,
