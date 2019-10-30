@@ -75,17 +75,138 @@ export default class WebsocketCanvas extends React.Component<IProps>
     }
   }
 
-  private handleFrame(data: ArrayBuffer)
+  private handleVectorFrame(view: DataView, ctx: CanvasRenderingContext2D)
   {
-    if (data.byteLength < 6) { return; }
-    const view = new DataView(data);
-    const version = view.getInt8(0);
-    if (version !== 0x01) { return; }
-    const type = view.getInt8(1);
-    if (type !== 0x01) { return; }
-
+    if (view.byteLength < 10) return;
     view.getUint32(2);  // ts high
     view.getUint32(6);  // ts low
+
+    // Beam scatter effect - fill triangle from origin
+    if (this.props.beams)
+      {
+        let lastX = 0;
+        let lastY = 0;
+        for (let i = 10; i < view.byteLength; i += 10)
+          {
+            if (view.byteLength < i + 10) { break; }
+            const x = (view.getUint16(i) - 32768) / 65535.0;   // (-0.5 .. 0.5)
+            const y = (view.getUint16(i + 2) - 32768) / 65535.0; // (-0.5 .. 0.5)
+            const r = view.getUint16(i + 4) / 256;           // (0..255)
+            const g = view.getUint16(i + 6) / 256;           // (0..255)
+            const b = view.getUint16(i + 8) / 256;           // (0..255)
+
+            if (i > 10)
+              {
+                // Calculate fill-in brightness based on beam velocity
+                const dist = Math.sqrt((x - lastX) * (x - lastX) + (y - lastY) * (y - lastY));
+                const brightness = (1.0 - dist) / 10;
+                ctx.strokeStyle = ctx.fillStyle =
+                  'rgba(' + Math.floor(r)
+                  + ',' + Math.floor(g)
+                  + ',' + Math.floor(b)
+                  + ',' + brightness + ')';
+
+                ctx.beginPath();
+                ctx.moveTo(0, 0);
+                ctx.lineTo(this.props.beam_multiplier * lastX,
+                           this.props.beam_multiplier * lastY);
+                ctx.lineTo(this.props.beam_multiplier * x,
+                           this.props.beam_multiplier * y);
+                ctx.lineTo(0, 0);
+                ctx.fill();
+                ctx.stroke();
+                ctx.closePath();
+              }
+
+            lastX = x;
+            lastY = y;
+          }
+      }
+
+    // Projection lines
+    if (this.props.projection)
+      {
+        let lastX = 0;
+        let lastY = 0;
+        for (let i = 10; i < view.byteLength; i += 10)
+          {
+            if (view.byteLength < i + 10) { break; }
+            const x = (view.getUint16(i) - 32768) / 65535.0;   // (-0.5 .. 0.5)
+            const y = (view.getUint16(i + 2) - 32768) / 65535.0; // (-0.5 .. 0.5)
+            const r = view.getUint16(i + 4) / 256;           // (0..255)
+            const g = view.getUint16(i + 6) / 256;           // (0..255)
+            const b = view.getUint16(i + 8) / 256;           // (0..255)
+
+            if (i > 10 && (r || g || b))  // don't draw blanked
+              {
+                if (this.props.points)
+                  {
+                    ctx.fillStyle = 'rgba(' + Math.floor(r) + ',' + Math.floor(g)
+                                  + ',' + Math.floor(b) + ',0.5)';
+                    ctx.fillRect(x, y, 0.005, 0.005);
+                  }
+                else
+                  {
+                    ctx.strokeStyle = 'rgb(' + Math.floor(r) + ',' + Math.floor(g)
+                                    + ',' + Math.floor(b) + ')';
+                    ctx.beginPath();
+
+                    ctx.moveTo(lastX, lastY);
+                    // Check for pure point, spread it if so
+                    if (x === lastX && y === lastY)
+                      {
+                        ctx.lineTo(x + 0.001, y + 0.001);
+                      }
+                    else
+                      {
+                        ctx.lineTo(x, y);
+                      }
+                    ctx.stroke();
+                    ctx.closePath();
+                  }
+              }
+
+            lastX = x;
+            lastY = y;
+          }
+      }
+  }
+
+  private handleBitmapFrame(view: DataView, ctx: CanvasRenderingContext2D)
+  {
+    if (view.byteLength < 18) return;
+    view.getUint32(2);  // ts high
+    view.getUint32(6);  // ts low
+
+    const width = view.getUint32(10);
+    const height = view.getUint32(14);
+
+    // Beam scatter effect - fill triangle from origin
+    let i=18;
+    for (let y=0; y<height; y++)
+    {
+      for(let x=0; x<width; x++)
+      {
+        if (view.byteLength < i + 3) { break; }
+        const r = view.getUint8(i++);
+        const g = view.getUint8(i++);
+        const b = view.getUint8(i++);
+
+        if (r || g || b)  // don't draw black
+        {
+          ctx.fillStyle = 'rgb(' + r + ',' + g + ',' + b + ')';
+          ctx.fillRect(x/width-0.5, y/height-0.5, 0.99/width, 0.99/height);
+        }
+      }
+    }
+  }
+
+  private handleFrame(data: ArrayBuffer)
+  {
+    if (data.byteLength < 2) { return; }
+    const view = new DataView(data);
+    view.getInt8(0); // version
+    const type = view.getInt8(1);
 
     const canvas = this.canvasRef.current;
     if (!canvas) { return; }
@@ -96,94 +217,15 @@ export default class WebsocketCanvas extends React.Component<IProps>
     ctx.fillStyle = 'black';
     ctx.fillRect(-0.5, -0.5, 1, 1);
 
-    // Beam scatter effect - fill triangle from origin
-    if (this.props.beams)
+    switch (type)
     {
-      let lastX = 0;
-      let lastY = 0;
-      for (let i = 10; i < data.byteLength; i += 10)
-      {
-        if (data.byteLength < i + 10) { break; }
-        const x = (view.getUint16(i) - 32768) / 65535.0;   // (-0.5 .. 0.5)
-        const y = (view.getUint16(i + 2) - 32768) / 65535.0; // (-0.5 .. 0.5)
-        const r = view.getUint16(i + 4) / 256;           // (0..255)
-        const g = view.getUint16(i + 6) / 256;           // (0..255)
-        const b = view.getUint16(i + 8) / 256;           // (0..255)
+      case 0x01:
+        this.handleVectorFrame(view, ctx);
+      break;
 
-        if (i > 10)
-        {
-          // Calculate fill-in brightness based on beam velocity
-          const dist = Math.sqrt((x - lastX) * (x - lastX) + (y - lastY) * (y - lastY));
-          const brightness = (1.0 - dist) / 10;
-          ctx.strokeStyle = ctx.fillStyle =
-            'rgba(' + Math.floor(r)
-            + ',' + Math.floor(g)
-            + ',' + Math.floor(b)
-            + ',' + brightness + ')';
-
-          ctx.beginPath();
-          ctx.moveTo(0, 0);
-          ctx.lineTo(this.props.beam_multiplier * lastX,
-            this.props.beam_multiplier * lastY);
-          ctx.lineTo(this.props.beam_multiplier * x,
-            this.props.beam_multiplier * y);
-          ctx.lineTo(0, 0);
-          ctx.fill();
-          ctx.stroke();
-          ctx.closePath();
-        }
-
-        lastX = x;
-        lastY = y;
-      }
-    }
-
-    // Projection lines
-    if (this.props.projection)
-    {
-      let lastX = 0;
-      let lastY = 0;
-      for (let i = 10; i < data.byteLength; i += 10)
-      {
-        if (data.byteLength < i + 10) { break; }
-        const x = (view.getUint16(i) - 32768) / 65535.0;   // (-0.5 .. 0.5)
-        const y = (view.getUint16(i + 2) - 32768) / 65535.0; // (-0.5 .. 0.5)
-        const r = view.getUint16(i + 4) / 256;           // (0..255)
-        const g = view.getUint16(i + 6) / 256;           // (0..255)
-        const b = view.getUint16(i + 8) / 256;           // (0..255)
-
-        if (i > 10 && (r || g || b))  // don't draw blanked
-        {
-          if (this.props.points)
-          {
-            ctx.fillStyle = 'rgba(' + Math.floor(r) + ',' + Math.floor(g)
-              + ',' + Math.floor(b) + ',0.5)';
-            ctx.fillRect(x, y, 0.005, 0.005);
-          }
-          else
-          {
-            ctx.strokeStyle = 'rgb(' + Math.floor(r) + ',' + Math.floor(g)
-              + ',' + Math.floor(b) + ')';
-            ctx.beginPath();
-
-            ctx.moveTo(lastX, lastY);
-            // Check for pure point, spread it if so
-            if (x === lastX && y === lastY)
-            {
-              ctx.lineTo(x + 0.001, y + 0.001);
-            }
-            else
-            {
-              ctx.lineTo(x, y);
-            }
-            ctx.stroke();
-            ctx.closePath();
-          }
-        }
-
-        lastX = x;
-        lastY = y;
-      }
+      case 0x04:
+        this.handleBitmapFrame(view, ctx);
+      break;
     }
   }
 }

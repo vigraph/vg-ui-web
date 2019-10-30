@@ -204,5 +204,52 @@
         "y": 0
       }
     }
+  },
+  "bitmap/websocket-display":
+  {
+    "description": "WebSocket server for bitmap display clients",
+    "width": 200,
+    "height": 200,
+    "properties":
+    {
+      "port":
+      {
+        "description": "Listening port",
+        "controlType": "none/none",
+        "rangeMin": 0,
+        "rangeMax": 65535,
+        "x": 0,
+        "y": 0
+      }
+    }
+  },
+  "bitmap/rectangle":
+  {
+    "description": "Bitmap rectangle",
+    "width": 110,
+    "height": 70,
+    "properties":
+    {
+      "width":
+      {
+        "description": "Width of bitmap",
+        "controlType": "knob/default",
+        "rangeMin": 1,
+        "rangeMax": 1000,
+        "increment": 1,
+        "x": 30,
+        "y": 30
+      },
+      "height":
+      {
+        "description": "Height of bitmap",
+        "controlType": "knob/default",
+        "rangeMin": 1,
+        "rangeMax": 1000,
+        "increment": 1,
+        "x": 70,
+        "y": 30
+      }
+    }
   }
 }
