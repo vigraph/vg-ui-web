@@ -466,17 +466,9 @@
   text-anchor: middle;
 }
 
-#text-display,
-#text-display .text-display-editing-wrapper
+#text-display
 {
   overflow: visible;
-}
-
-#text-display .text-display-editing-border
-{
-  stroke: white;
-  stroke-width: 1;
-  fill-opacity: 0;
 }
 
 #sequence .sequence-input-border,
@@ -573,6 +565,7 @@ foreignObject
 .settings.label
 {
   pointer-events: none;
+  white-space: pre;
 }
 
 .settings.label.centre
@@ -718,4 +711,9 @@ foreignObject
 .node.audio-sdl-out
 {
   text-anchor: middle;
+}
+
+#text-display-wrapper
+{
+  overflow: visible;
 }

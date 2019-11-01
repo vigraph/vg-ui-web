@@ -172,7 +172,7 @@ export default class InfoPanel extends React.Component<IProps, IState>
       return <input id={property.id} type="text" disabled={disabled}
         className={"value-input " + property.propType}
         defaultValue={property.value.toString()}
-        onBlur={this.textBoxOnBlur}
+        onBlur={this.textBoxOnBlur} onChange={this.textBoxOnChange}
         onKeyDown={this.textBoxKeyDown}/>
     }
     // Simple boolean check box
@@ -277,6 +277,27 @@ export default class InfoPanel extends React.Component<IProps, IState>
     }
   }
 
+  // If the property has a max range set limit text to that number of characters
+  private textBoxOnChange = (e: React.ChangeEvent) =>
+  {
+    const textBox =
+      document.getElementById(e.currentTarget.id) as HTMLInputElement;
+
+    if (textBox)
+    {
+      // Get property object associated with text box
+      const property = this.getProperty(e.currentTarget.id);
+
+      if (property && property.valueType === "text" && property.range.max > 1)
+      {
+        if (textBox.value.toString().length > property.range.max)
+        {
+          textBox.value = textBox.value.toString().slice(0, property.range.max);
+        }
+      }
+    }
+  }
+
   // Validate text box current value and update associated property value
   private textBoxOnBlur = (e: React.FocusEvent<HTMLInputElement>) =>
   {
@@ -285,26 +306,22 @@ export default class InfoPanel extends React.Component<IProps, IState>
 
     if (textBox)
     {
-      if (this.props.node)
+      // Get property object associated with text box
+      const property = this.getProperty(e.currentTarget.id);
+
+      if (property)
       {
-        // Get property object associated with text box
-        const property = this.props.node.getProperties().find(x => x.id ===
-        e.currentTarget.id);
+        // Validate entered value
+        const newValue = this.validateValue(textBox.value, property);
 
-        if (property)
+        // Show user validated value
+        textBox.value = newValue.toString();
+
+        // If new value is different to the previous value (text boxes current
+        // default value) then update (model and engine)
+        if (textBox.value !== textBox.defaultValue)
         {
-          // Validate entered value
-          const newValue = this.validateValue(textBox.value, property);
-
-          // Show user validated value
-          textBox.value = newValue.toString();
-
-          // If new value is different to the previous value (text boxes current
-          // default value) then update (model and engine)
-          if (textBox.value !== textBox.defaultValue)
-          {
-            this.updateValue(property, newValue);
-          }
+          this.updateValue(property, newValue);
         }
       }
     }
@@ -318,15 +335,11 @@ export default class InfoPanel extends React.Component<IProps, IState>
 
     if (checkBox)
     {
-      if (this.props.node)
-      {
-        const property = this.props.node.getProperties().find(x => x.id ===
-        e.currentTarget.id);
+      const property = this.getProperty(e.currentTarget.id);
 
-        if (property)
-        {
-          this.updateValue(property, checkBox.checked);
-        }
+      if (property)
+      {
+        this.updateValue(property, checkBox.checked);
       }
     }
   }
@@ -340,18 +353,14 @@ export default class InfoPanel extends React.Component<IProps, IState>
 
     if (textBox && textBox.value !== "0,0")
     {
-      if (this.props.node)
+      const property = this.getProperty(e.currentTarget.id);
+
+      if (property)
       {
-        const property = this.props.node.getProperties().find(x => x.id ===
-        e.currentTarget.id);
+        const newValue = this.validateValue(textBox.value, property) ||
+          textBox.defaultValue;
 
-        if (property)
-        {
-          const newValue = this.validateValue(textBox.value, property) ||
-            textBox.defaultValue;
-
-          textBox.value = newValue;
-        }
+        textBox.value = newValue;
       }
     }
   }
@@ -361,53 +370,45 @@ export default class InfoPanel extends React.Component<IProps, IState>
   {
     const propID = e.currentTarget.id.substring(0, e.currentTarget.id.length-4);
 
-    if (this.props.node)
+    const curveInputBox = document.getElementById(propID) as HTMLInputElement;
+
+    const property = this.getProperty(propID);
+
+    if (curveInputBox && property && !property.hasConnection())
     {
-      const property = this.props.node.getProperties().find(x => x.id ===
-       propID);
-
-      if (property && !property.hasConnection())
+      const inputPoint = this.validateValue(curveInputBox.value, property);
+      if (inputPoint)
       {
-        const curveInputBox =
-          document.getElementById(propID) as HTMLInputElement;
+        const splitInput = inputPoint.split(",");
+        const newCurve: Array<{t: number, value: number}> = property.value;
 
-        if (curveInputBox)
+        const newPoint = {t: parseFloat(splitInput[0]),
+          value: parseFloat(splitInput[1])}
+
+        // Point values rounded to 5 decimal places
+        newPoint.t = Math.round(newPoint.t * 100000) / 100000;
+        newPoint.value = Math.round(newPoint.value * 100000) / 100000;
+
+        // Cannot add a point to the curve if a point with the same t value
+        // is already in the curve
+        const check = newCurve.find(x => x.t === newPoint.t);
+
+        // Point valid so add to curve and resort before updating
+        if (!check)
         {
-          const inputPoint = this.validateValue(curveInputBox.value, property);
-          if (inputPoint)
-          {
-            const splitInput = inputPoint.split(",");
-            const newCurve: Array<{t: number, value: number}> = property.value;
+          newCurve.push(newPoint);
 
-            const newPoint = {t: parseFloat(splitInput[0]),
-              value: parseFloat(splitInput[1])}
+          newCurve.sort((a: {t: number, value: number},
+              b: {t: number, value: number}) =>
+              {
+                return a.t - b.t;
+              });
 
-            // Point values rounded to 5 decimal places
-            newPoint.t = Math.round(newPoint.t * 100000) / 100000;
-            newPoint.value = Math.round(newPoint.value * 100000) / 100000;
-
-            // Cannot add a point to the curve if a point with the same t value
-            // is already in the curve
-            const check = newCurve.find(x => x.t === newPoint.t);
-
-            // Point valid so add to curve and resort before updating
-            if (!check)
-            {
-              newCurve.push(newPoint);
-
-              newCurve.sort((a: {t: number, value: number},
-                  b: {t: number, value: number}) =>
-                  {
-                    return a.t - b.t;
-                  });
-
-              this.updateValue(property, newCurve);
-            }
-          }
-
-          curveInputBox.value = "0,0";
+          this.updateValue(property, newCurve);
         }
       }
+
+      curveInputBox.value = "0,0";
     }
   }
 
@@ -416,35 +417,28 @@ export default class InfoPanel extends React.Component<IProps, IState>
   {
     const propID = e.currentTarget.id.substring(0, e.currentTarget.id.length-7);
 
-    if (this.props.node)
+    const curveDisplay =
+      document.getElementById(propID+"-display") as HTMLSelectElement;
+
+    const property = this.getProperty(propID);
+
+    if (property && !property.hasConnection())
     {
-      const property = this.props.node.getProperties().find(x => x.id ===
-       propID);
+      const selectedIndex = curveDisplay.selectedIndex;
 
-      if (property && !property.hasConnection())
+      // Cannot remove first (t=0) or last (t=1) points
+      if (selectedIndex !== 0 && selectedIndex !== property.value.length-1)
       {
-        const curveDisplay =
-          document.getElementById(propID+"-display") as HTMLSelectElement;
+        const selection = property.value[selectedIndex];
 
-        if (curveDisplay)
-        {
-          const selectedIndex = curveDisplay.selectedIndex;
-
-          // Cannot remove first (t=0) or last (t=1) points
-          if (selectedIndex !== 0 && selectedIndex !== property.value.length-1)
+        const newCurve = property.value.filter(
+          (point: {t: number, value: number}) =>
           {
-            const selection = property.value[selectedIndex];
+            return !(point.t === selection.t && point.value ===
+              selection.value);
+          });
 
-            const newCurve = property.value.filter(
-              (point: {t: number, value: number}) =>
-              {
-                return !(point.t === selection.t && point.value ===
-                  selection.value);
-              });
-
-            this.updateValue(property, newCurve);
-          }
-        }
+        this.updateValue(property, newCurve);
       }
     }
   }
@@ -457,16 +451,11 @@ export default class InfoPanel extends React.Component<IProps, IState>
 
     if (selector)
     {
-      if (this.props.node)
-      {
-        const property = this.props.node.getProperties().find(x => x.id ===
-        e.currentTarget.id);
+      const property = this.getProperty(e.currentTarget.id);
 
-        if (property)
-        {
-          this.updateValue(property,
-            property.available[selector.selectedIndex]);
-        }
+      if (property)
+      {
+        this.updateValue(property, property.available[selector.selectedIndex]);
       }
     }
   }
@@ -588,6 +577,19 @@ export default class InfoPanel extends React.Component<IProps, IState>
           // Update on failure to draw infoPanel and reset values
           update();
         });
+    }
+  }
+
+  // Return property from Node
+  private getProperty = (id: string) =>
+  {
+    if (this.props.node)
+    {
+      return this.props.node.getProperties().find(x => x.id === id);
+    }
+    else
+    {
+      return null;
     }
   }
 }

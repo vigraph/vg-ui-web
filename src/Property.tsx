@@ -116,8 +116,7 @@ export default class Property extends React.Component<IProps, IState>
         this.controlType[1] !== "none")
       {
         return <text className={"settings label " + this.controlType[1]}
-          fontSize={vgConfig.Graph.fontSize.propertySettings}
-          x={this.property.position.x} y={this.property.position.y}>
+          fontSize={vgConfig.Graph.fontSize.propertySettings} x={0} y={0}>
             {this.property.value}
           </text>
       }

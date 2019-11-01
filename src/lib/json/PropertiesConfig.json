@@ -20,8 +20,8 @@
       "device":
       {
         "controlType": "none/default",
-        "x": 30,
-        "y": 22
+        "x": 60,
+        "y": 44
       },
       "max-delay":
       {
@@ -153,6 +153,30 @@
         "increment": 0.01,
         "x": 110,
         "y": 30
+      }
+    }
+  },
+  "core/log":
+  {
+    "description": "Log a message on enabling",
+    "width": 150,
+    "height": 50,
+    "properties":
+    {
+      "input":
+      {
+        "description": "Input",
+        "x": 142,
+        "y": 35,
+        "controlType": "textDisplay/default"
+      },
+      "prefix":
+      {
+        "description": "Log Prefix",
+        "x": 25,
+        "y": 35,
+        "controlType": "none/default",
+        "rangeMax": 20
       }
     }
   },
