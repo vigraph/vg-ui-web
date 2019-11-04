@@ -727,6 +727,26 @@
       }
     }
   },
+  "time-series/last":
+  {
+    "width": 70,
+    "height": 70,
+    "properties":
+    {
+      "samples":
+      {
+        "controlType": "knob/default",
+        "rangeMin": 0,
+        "rangeMax": 1000,
+        "increment": 1,
+        "x": 30,
+        "y": 30
+      },
+      "input":
+      {
+      }
+    }
+  },
   "vector/rotate":
   {
     "width": 150,
