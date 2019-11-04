@@ -708,9 +708,19 @@ foreignObject
   color: #000000FE;
 }
 
-.node.audio-sdl-out
+#info-panel .value-button
+{
+  font-size: 10px;
+}
+
+.node .settings.label
 {
   text-anchor: middle;
+}
+
+#prefix-property .settings.label
+{
+  text-anchor: start;
 }
 
 #text-display-wrapper

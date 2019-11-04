@@ -35,6 +35,177 @@
       }
     }
   },
+  "audio/pitch-shift":
+  {
+    "width": 70,
+    "height": 70,
+    "properties":
+    {
+     "pitch":
+      {
+        "controlType": "knob/default",
+        "rangeMin": -60,
+        "rangeMax": 60,
+        "increment": 0.1,
+        "x": 30,
+        "y": 30
+      }
+    }
+  },
+  "audio/wav-in":
+  {
+    "width": 100,
+    "height": 25,
+    "properties":
+    {
+      "file":
+      {
+        "controlType": "none/none"
+      },
+      "loop":
+      {
+        "controlType": "none/none"
+      }
+    }
+  },
+  "bitmap/fade":
+  {
+    "width": 70,
+    "height": 70,
+    "properties":
+    {
+     "alpha":
+      {
+        "controlType": "knob/default",
+        "rangeMin": 0,
+        "rangeMax": 1,
+        "increment": 0.1,
+        "x": 30,
+        "y": 35
+      }
+    }
+  },
+  "bitmap/rectangle":
+  {
+    "width": 110,
+    "height": 70,
+    "properties":
+    {
+      "width":
+      {
+        "controlType": "knob/default",
+        "rangeMin": 1,
+        "rangeMax": 1000,
+        "increment": 1,
+        "x": 30,
+        "y": 35
+      },
+      "height":
+      {
+        "controlType": "knob/default",
+        "rangeMin": 1,
+        "rangeMax": 1000,
+        "increment": 1,
+        "x": 70,
+        "y": 35
+      }
+    }
+  },
+  "bitmap/translate":
+  {
+    "width": 150,
+    "height": 70,
+    "properties":
+    {
+      "x":
+      {
+        "controlType": "knob/default",
+        "rangeMin": -1,
+        "rangeMax": 1,
+        "increment": 0.01,
+        "x": 30,
+        "y": 30
+      },
+      "y":
+      {
+        "controlType": "knob/default",
+        "rangeMin": -1,
+        "rangeMax": 1,
+        "increment": 0.01,
+        "x": 70,
+        "y": 30
+      },
+      "z":
+      {
+        "controlType": "knob/default",
+        "rangeMin": -1,
+        "rangeMax": 1,
+        "increment": 0.01,
+        "x": 110,
+        "y": 30
+      }
+    }
+  },
+  "bitmap/vector-fill":
+  {
+    "width": 110,
+    "height": 70,
+    "properties":
+    {
+      "width":
+      {
+        "controlType": "knob/default",
+        "rangeMin": 1,
+        "rangeMax": 1000,
+        "increment": 1,
+        "x": 30,
+        "y": 30
+      },
+      "height":
+      {
+        "controlType": "knob/default",
+        "rangeMin": 1,
+        "rangeMax": 1000,
+        "increment": 1,
+        "x": 70,
+        "y": 30
+      }
+    }
+  },
+  "bitmap/websocket-display":
+  {
+    "width": 200,
+    "height": 200,
+    "properties":
+    {
+      "port":
+      {
+        "controlType": "none/none",
+        "rangeMin": 0,
+        "rangeMax": 65535,
+        "x": 0,
+        "y": 0
+      },
+      "frame-rate":
+      {
+        "controlType": "none/none"
+      },
+      "height":
+      {
+        "controlType": "none/none",
+        "rangeMin": 1,
+        "rangeMax": 1000,
+        "increment": 1
+      },
+      "width":
+      {
+        "controlType": "none/none",
+        "rangeMin": 1,
+        "rangeMax": 1000,
+        "increment": 1
+      }
+    }
+  },
   "core/add":
   {
     "width": 70,
@@ -43,16 +214,12 @@
     {
       "offset":
       {
-        "controlType": "knob",
-        "subType": "log",
-        "rangeMin": 0.01,
+        "controlType": "knob/log",
+        "rangeMin": 0.1,
         "rangeMax": 1000,
         "increment": 0.1,
         "x": 30,
         "y": 30
-      },
-      "input":
-      {
       }
     }
   },
@@ -84,13 +251,99 @@
       {
         "controlType": "button/default",
         "x": 32,
-        "y": 60
+        "y": 60,
+        "valueFormat": "button"
       },
       "stop":
       {
         "controlType": "button/default",
         "x": 72,
-        "y": 60
+        "y": 60,
+        "valueFormat": "button"
+      }
+    }
+  },
+  "core/clone":
+  {
+    "width": 90,
+    "height": 35,
+    "properties":
+    {
+      "copies":
+      {
+        "controlType": "none/default",
+        "x": 55,
+        "y": 30
+      }
+    }
+  },
+  "core/clone-info":
+  {
+    "width": 100,
+    "height": 50,
+    "properties":
+    {
+    }
+  },
+  "core/compare":
+  {
+    "width": 70,
+    "height": 70,
+    "properties":
+    {
+     "value":
+      {
+        "controlType": "knob/default",
+        "rangeMin": 0,
+        "rangeMax": 1000,
+        "increment": 0.1,
+        "x": 30,
+        "y": 30
+      },
+      "on-change":
+      {
+        "controlType": "none/none"
+      }
+    }
+  },
+  "core/count":
+  {
+    "width": 90,
+    "height": 30,
+    "properties":
+    {
+      "delta":
+      {
+        "controlType": "none/none"
+      },
+      "up":
+      {
+        "controlType": "none/none"
+      },
+      "down":
+      {
+        "controlType": "none/none"
+      },
+      "reset":
+      {
+        "controlType": "none/none"
+      }
+    }
+  },
+  "core/divide":
+  {
+    "width": 70,
+    "height": 70,
+    "properties":
+    {
+      "factor":
+      {
+        "controlType": "knob/log",
+        "rangeMin": 0.001,
+        "rangeMax": 1000,
+        "increment": 0.001,
+        "x": 30,
+        "y": 30
       }
     }
   },
@@ -123,7 +376,7 @@
         "controlType": "knob/log",
         "rangeMin": 0.01,
         "rangeMax": 30,
-        "increment": 0.1,
+        "increment": 0.01,
         "x": 150,
         "y": 30
       },
@@ -156,23 +409,96 @@
       }
     }
   },
+  "core/filter":
+  {
+    "width": 145,
+    "height": 100,
+    "properties":
+    {
+      "mode":
+      {
+        "controlType": "selector/default",
+        "available": ["low-pass","high-pass","band-pass"],
+        "x": 40,
+        "y": 30
+      },
+      "cutoff":
+      {
+        "controlType": "knob/default",
+        "rangeMin": 0,
+        "rangeMax": 1,
+        "increment": 0.01,
+        "x": 30,
+        "y": 60
+      },
+      "resonance":
+      {
+        "controlType": "knob/default",
+        "rangeMin": 0,
+        "rangeMax": 1,
+        "increment": 0.01,
+        "x": 70,
+        "y": 60
+      },
+      "steepness":
+      {
+        "controlType": "knob/default",
+        "rangeMin": 0,
+        "rangeMax": 5,
+        "increment": 0.1,
+        "x": 110,
+        "y": 60
+      }
+    }
+  },
+  "core/graph":
+  {
+    "width": 60,
+    "height": 40,
+    "properties":
+    {
+    }
+  },
+  "core/limit":
+  {
+    "width": 110,
+    "height": 70,
+    "properties":
+    {
+      "max":
+      {
+        "controlType": "knob/log",
+        "rangeMin": 0.1,
+        "rangeMax": 1000,
+        "increment": 0.1,
+        "x": 30,
+        "y": 30
+      },
+      "min":
+      {
+        "controlType": "knob/log",
+        "rangeMin": 0.1,
+        "rangeMax": 1000,
+        "increment": 0.1,
+        "x": 70,
+        "y": 30
+      }
+    }
+  },
   "core/log":
   {
-    "description": "Log a message on enabling",
     "width": 150,
     "height": 50,
     "properties":
     {
       "input":
       {
-        "description": "Input",
         "x": 142,
         "y": 35,
         "controlType": "textDisplay/default"
       },
       "prefix":
       {
-        "description": "Log Prefix",
         "x": 25,
         "y": 35,
         "controlType": "none/default",
@@ -191,13 +517,9 @@
         "controlType": "knob/log",
         "rangeMin": 0.001,
         "rangeMax": 1000,
-        "increment": 0.1,
+        "increment": 0.001,
         "x": 30,
         "y": 30
-      },
-      "input":
-      {
-        "controlType": "none/none"
       }
     }
   },
@@ -246,6 +568,211 @@
       }
     }
   },
+  "core/random":
+  {
+    "width": 110,
+    "height": 90,
+    "properties":
+    {
+      "max":
+      {
+        "controlType": "knob/log",
+        "rangeMin": 0.1,
+        "rangeMax": 1000,
+        "increment": 0.1,
+        "x": 30,
+        "y": 28
+      },
+      "min":
+      {
+        "controlType": "knob/log",
+        "rangeMin": 0.1,
+        "rangeMax": 1000,
+        "increment": 0.1,
+        "x": 70,
+        "y": 28
+      },
+      "trigger":
+      {
+        "controlType": "button/default",
+        "x": 58,
+        "y": 65,
+        "valueFormat": "triggerButton"
+      }
+    }
+  },
+  "core/subtract":
+  {
+    "width": 70,
+    "height": 70,
+    "properties":
+    {
+      "offset":
+      {
+        "controlType": "knob/log",
+        "rangeMin": 0.1,
+        "rangeMax": 1000,
+        "increment": 0.1,
+        "x": 30,
+        "y": 30
+      }
+    }
+  },
+  "core/wrap":
+  {
+    "width": 110,
+    "height": 70,
+    "properties":
+    {
+      "max":
+      {
+        "controlType": "knob/log",
+        "rangeMin": 0.1,
+        "rangeMax": 1000,
+        "increment": 0.1,
+        "x": 30,
+        "y": 30
+      },
+      "min":
+      {
+        "controlType": "knob/log",
+        "rangeMin": 0.1,
+        "rangeMax": 1000,
+        "increment": 0.1,
+        "x": 70,
+        "y": 30
+      }
+    }
+  },
+  "vector/rotate":
+  {
+    "width": 150,
+    "height": 70,
+    "properties":
+    {
+      "x":
+      {
+        "controlType": "knob/default",
+        "rangeMin": -1,
+        "rangeMax": 1,
+        "increment": 0.01,
+        "x": 30,
+        "y": 30
+      },
+      "y":
+      {
+        "controlType": "knob/default",
+        "rangeMin": -1,
+        "rangeMax": 1,
+        "increment": 0.01,
+        "x": 70,
+        "y": 30
+      },
+      "z":
+      {
+        "controlType": "knob/default",
+        "rangeMin": -1,
+        "rangeMax": 1,
+        "increment": 0.01,
+        "x": 110,
+        "y": 30
+      }
+    }
+  },
+  "vector/scale":
+  {
+    "width": 150,
+    "height": 70,
+    "properties":
+    {
+      "x":
+      {
+        "controlType": "knob/default",
+        "rangeMin": -100,
+        "rangeMax": 100,
+        "increment": 0.01,
+        "x": 30,
+        "y": 30
+      },
+      "y":
+      {
+        "controlType": "knob/default",
+        "rangeMin": -100,
+        "rangeMax": 100,
+        "increment": 0.01,
+        "x": 70,
+        "y": 30
+      },
+      "z":
+      {
+        "controlType": "knob/default",
+        "rangeMin": -100,
+        "rangeMax": 100,
+        "increment": 0.01,
+        "x": 110,
+        "y": 30
+      }
+    }
+  },
+  "vector/svg":
+  {
+    "width": 100,
+    "height": 25,
+    "properties":
+    {
+      "file":
+      {
+        "controlType": "none/none"
+      },
+      "normalise":
+      {
+        "controlType": "none/none"
+      },
+      "path":
+      {
+        "controlType": "none/none"
+      },
+      "precision":
+      {
+        "controlType": "none/none"
+      }
+    }
+  },
+  "vector/translate":
+  {
+    "width": 150,
+    "height": 70,
+    "properties":
+    {
+      "x":
+      {
+        "controlType": "knob/default",
+        "rangeMin": -1,
+        "rangeMax": 1,
+        "increment": 0.01,
+        "x": 30,
+        "y": 30
+      },
+      "y":
+      {
+        "controlType": "knob/default",
+        "rangeMin": -1,
+        "rangeMax": 1,
+        "increment": 0.01,
+        "x": 70,
+        "y": 30
+      },
+      "z":
+      {
+        "controlType": "knob/default",
+        "rangeMin": -1,
+        "rangeMax": 1,
+        "increment": 0.01,
+        "x": 110,
+        "y": 30
+      }
+    }
+  },
   "vector/websocket-display":
   {
     "width": 200,
@@ -259,48 +786,10 @@
         "rangeMax": 65535,
         "x": 0,
         "y": 0
-      }
-    }
-  },
-  "bitmap/websocket-display":
-  {
-    "width": 200,
-    "height": 200,
-    "properties":
-    {
-      "port":
-      {
-        "controlType": "none/none",
-        "rangeMin": 0,
-        "rangeMax": 65535,
-        "x": 0,
-        "y": 0
-      }
-    }
-  },
-  "bitmap/rectangle":
-  {
-    "width": 110,
-    "height": 70,
-    "properties":
-    {
-      "width":
-      {
-        "controlType": "knob/default",
-        "rangeMin": 1,
-        "rangeMax": 1000,
-        "increment": 1,
-        "x": 30,
-        "y": 30
       },
-      "height":
+      "frame-rate":
       {
-        "controlType": "knob/default",
-        "rangeMin": 1,
-        "rangeMax": 1000,
-        "increment": 1,
-        "x": 70,
-        "y": 30
+        "controlType": "none/none"
       }
     }
   }

@@ -112,7 +112,7 @@ export default class InfoPanel extends React.Component<IProps, IState>
     // Get all input properties
     const inputs = node.getProperties().filter((property: Model.Property) =>
       {
-        return property.propType === "input";
+        return property.propType === "input" && property.id !== "input";
       });
 
     if (inputs.length)
@@ -123,7 +123,7 @@ export default class InfoPanel extends React.Component<IProps, IState>
             return <div id={input.id+"-wrapper"} className="input-wrapper"
               key={"input-"+index+"-"+input.value.toString()}>
               <div id={input.id+"-desc"} className="info-text input desc">
-                {input.description}
+                {input.description ? input.description : input.id}
               </div>
               {this.createValueControl(input, input.hasConnection())}
             </div>
@@ -150,7 +150,7 @@ export default class InfoPanel extends React.Component<IProps, IState>
             return <div id={setting.id+"-wrapper"} className="setting-wrapper"
               key={"setting-"+index+"-"+setting.value.toString()}>
               <div id={setting.id+"-desc"} className="info-text setting desc">
-                {setting.description}
+                {setting.description ? setting.description : setting.id}
               </div>
               {this.createValueControl(setting, false)}
             </div>
@@ -164,9 +164,15 @@ export default class InfoPanel extends React.Component<IProps, IState>
   // object can be found and matched from the component event
   private createValueControl = (property: Model.Property, disabled: boolean) =>
   {
+    if (property.valueFormat === "triggerButton")
+    {
+      return <input id={property.id} type="button" disabled={disabled}
+        className={"value-button " + property.propType}
+        value={property.id} onMouseUp={this.buttonTrigger}/>
+    }
     // Text box input for number, text and file types. Value checking and
     // validation done in onBlur
-    if (property.valueType === "number" || property.valueType === "text" ||
+    else if (property.valueType === "number" || property.valueType === "text" ||
       property.valueType === "file" || property.valueType === "integer")
     {
       return <input id={property.id} type="text" disabled={disabled}
@@ -183,7 +189,8 @@ export default class InfoPanel extends React.Component<IProps, IState>
         onChange={this.checkBoxValueChange} />
     }
     // List of available choice values, choice made on value selection change
-    else if (property.valueType === "choice")
+    else if (property.valueType === "choice" ||
+      property.valueType === "filter-mode")
     {
       return <select id={property.id} disabled={disabled}
         className={"value-select " + property.propType}
@@ -260,6 +267,24 @@ export default class InfoPanel extends React.Component<IProps, IState>
   {
     const show = !this.state.show;
     this.setState({show});
+  }
+
+  // Momentary button trigger
+  private buttonTrigger = (e: React.MouseEvent) =>
+  {
+    const button =
+      document.getElementById(e.currentTarget.id) as HTMLInputElement;
+
+    if (button)
+    {
+      const property = this.getProperty(e.currentTarget.id);
+
+      if (property)
+      {
+        this.updateValue(property, 1,
+          () => { this.updateValue(property, 0); });
+      }
+    }
   }
 
   // Pressing enter in a text box removes focus from that text box
@@ -548,7 +573,8 @@ export default class InfoPanel extends React.Component<IProps, IState>
   }
 
   // Update property value (engine and model)
-  private updateValue = (property: Model.Property, value: any) =>
+  private updateValue = (property: Model.Property, value: any,
+    success?: () => void) =>
   {
     const update = () =>
     {
@@ -571,6 +597,10 @@ export default class InfoPanel extends React.Component<IProps, IState>
         {
           property.value = value;
           update();
+          if (success)
+          {
+            success();
+          }
         },
         () =>
         {
