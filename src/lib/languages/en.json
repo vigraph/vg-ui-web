@@ -1,4 +1,35 @@
 {
+  "audio/alsa-out":
+  {
+    "description": "ALSA Audio out",
+    "properties":
+    {
+      "channels":
+      {
+        "description": "Channels"
+      },
+      "device":
+      {
+        "description": "Device"
+      },
+      "max-delay":
+      {
+        "description": "Max delay"
+      },
+      "max-recovery":
+      {
+        "max-recovery": "Max recovery"
+      },
+      "sample-rate":
+      {
+        "description": "Sample rate"
+      },
+      "start-threshold":
+      {
+        "description": "Start threshold"
+      }
+    }
+  },
   "audio/pitch-shift":
   {
     "description": "Audio Pitch Shift",
@@ -407,6 +438,58 @@
       "min":
       {
         "description": "Minimum value"
+      }
+    }
+  },
+  "midi/alsa-in":
+  {
+    "description": "ALSA MIDI input",
+    "properties":
+    {
+      "device":
+      {
+        "description": "Device"
+      }
+    }
+  },
+  "midi/control-in":
+  {
+    "description": "Generic MIDI Control Input",
+    "properties":
+    {
+      "channel":
+      {
+        "description": "Channel"
+      },
+      "control":
+      {
+        "description": "Control number"
+      }
+    }
+  },
+  "midi/key-in":
+  {
+    "description": "Generic MIDI Key Input",
+    "properties":
+    {
+      "channel":
+      {
+        "description": "Channel"
+      },
+      "key":
+      {
+        "description": "Key"
+      }
+    }
+  },
+  "midi/keyboard-in":
+  {
+    "description": "MIDI Keyboard In",
+    "properties":
+    {
+      "channel":
+      {
+        "description": "Channel"
       }
     }
   },

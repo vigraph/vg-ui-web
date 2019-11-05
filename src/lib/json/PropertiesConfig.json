@@ -1,4 +1,43 @@
 {
+  "audio/alsa-out":
+  {
+    "width": 100,
+    "height": 50,
+    "properties":
+    {
+      "channels":
+      {
+        "rangeMin": 0,
+        "rangeMax": 2
+      },
+      "device":
+      {
+        "controlType": "none/default",
+        "x": 60,
+        "y": 44
+      },
+      "max-delay":
+      {
+        "rangeMin": 0,
+        "rangeMax": 5000
+      },
+      "max-recovery":
+      {
+        "rangeMin": 0,
+        "rangeMax": 5000
+      },
+      "sample-rate":
+      {
+        "rangeMin": 0,
+        "rangeMax": 100000
+      },
+      "start-threshold":
+      {
+        "rangeMin": 0,
+        "rangeMax": 5000
+      }
+    }
+  },
   "audio/sdl-out":
   {
     "width": 100,
@@ -13,7 +52,6 @@
       },
       "channels":
       {
-        "controlType": "none/none",
         "rangeMin": 0,
         "rangeMax": 2
       },
@@ -60,11 +98,9 @@
     {
       "file":
       {
-        "controlType": "none/none"
       },
       "loop":
       {
-        "controlType": "none/none"
       }
     }
   },
@@ -180,7 +216,6 @@
     {
       "port":
       {
-        "controlType": "none/none",
         "rangeMin": 0,
         "rangeMax": 65535,
         "x": 0,
@@ -188,18 +223,15 @@
       },
       "frame-rate":
       {
-        "controlType": "none/none"
       },
       "height":
       {
-        "controlType": "none/none",
         "rangeMin": 1,
         "rangeMax": 1000,
         "increment": 1
       },
       "width":
       {
-        "controlType": "none/none",
         "rangeMin": 1,
         "rangeMax": 1000,
         "increment": 1
@@ -252,14 +284,14 @@
         "controlType": "button/default",
         "x": 32,
         "y": 60,
-        "valueFormat": "button"
+        "valueFormat": "triggerButton"
       },
       "stop":
       {
         "controlType": "button/default",
         "x": 72,
         "y": 60,
-        "valueFormat": "button"
+        "valueFormat": "triggerButton"
       }
     }
   },
@@ -302,7 +334,6 @@
       },
       "on-change":
       {
-        "controlType": "none/none"
       }
     }
   },
@@ -314,19 +345,15 @@
     {
       "delta":
       {
-        "controlType": "none/none"
       },
       "up":
       {
-        "controlType": "none/none"
       },
       "down":
       {
-        "controlType": "none/none"
       },
       "reset":
       {
-        "controlType": "none/none"
       }
     }
   },
@@ -384,19 +411,22 @@
       {
         "controlType": "button/default",
         "x": 82,
-        "y": 65
+        "y": 65,
+        "valueFormat": "triggerButton"
       },
       "start":
       {
         "controlType": "button/default",
         "x": 32,
-        "y": 65
+        "y": 65,
+        "valueFormat": "triggerButton"
       },
       "stop":
       {
         "controlType": "button/default",
         "x": 57,
-        "y": 65
+        "y": 65,
+        "valueFormat": "triggerButton"
       },
       "sustain":
       {
@@ -558,13 +588,15 @@
       {
         "controlType": "button/default",
         "x": 32,
-        "y": 60
+        "y": 60,
+        "valueFormat": "triggerButton"
       },
       "stop":
       {
         "controlType": "button/default",
         "x": 72,
-        "y": 60
+        "y": 60,
+        "valueFormat": "triggerButton"
       }
     }
   },
@@ -747,6 +779,66 @@
       }
     }
   },
+  "midi/alsa-in":
+  {
+    "width": 100,
+    "height": 50,
+    "properties":
+    {
+      "device":
+      {
+        "controlType": "none/default",
+        "x": 60,
+        "y": 44
+      }
+    }
+  },
+  "midi/control-in":
+  {
+    "width": 100,
+    "height": 50,
+    "properties":
+    {
+      "channel":
+      {
+        "rangeMin": -1,
+        "rangeMax": 2
+      },
+      "control":
+      {
+      }
+    }
+  },
+  "midi/key-in":
+  {
+    "width": 100,
+    "height": 50,
+    "properties":
+    {
+      "channel":
+      {
+        "rangeMin": 0,
+        "rangeMax": 2
+      },
+      "key":
+      {
+        "rangeMin": -1
+      }
+    }
+  },
+  "midi/keyboard-in":
+  {
+    "width": 100,
+    "height": 60,
+    "properties":
+    {
+      "channel":
+      {
+        "rangeMin": 0,
+        "rangeMax": 2
+      }
+    }
+  },
   "vector/rotate":
   {
     "width": 150,
@@ -825,19 +917,15 @@
     {
       "file":
       {
-        "controlType": "none/none"
       },
       "normalise":
       {
-        "controlType": "none/none"
       },
       "path":
       {
-        "controlType": "none/none"
       },
       "precision":
       {
-        "controlType": "none/none"
       }
     }
   },
@@ -884,7 +972,6 @@
     {
       "port":
       {
-        "controlType": "none/none",
         "rangeMin": 0,
         "rangeMax": 65535,
         "x": 0,
@@ -892,7 +979,6 @@
       },
       "frame-rate":
       {
-        "controlType": "none/none"
       }
     }
   }

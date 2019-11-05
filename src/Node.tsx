@@ -144,7 +144,7 @@ export default class Node extends React.Component<IProps, IState>
     else
     {
       const linesArray = vgUtils.wrapText(this.node.name,
-        width - this.props.padding, this.titleFontSize);
+        width - (this.props.padding * 2), this.titleFontSize);
 
       return <text className={"node-label " + this.props.node.id}
         fontSize={this.titleFontSize} x={(width/2)+padding} y={15}>
