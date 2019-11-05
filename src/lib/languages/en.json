@@ -493,6 +493,95 @@
       }
     }
   },
+  "sensor/load-dscusb":
+  {
+    "description": "DSCUSB Load",
+    "properties":
+    {
+      "device":
+      {
+        "description": "Device"
+      },
+      "interval":
+      {
+        "description": "Interval"
+      }
+    }
+  },
+  "time-series/average":
+  {
+    "description": "Average",
+    "properties":
+    {
+      "samples":
+      {
+        "description": "Samples"
+      }
+    }
+  },
+  "time-series/last":
+  {
+    "description": "Last",
+    "properties":
+    {
+      "samples":
+      {
+        "description": "Samples"
+      }
+    }
+  },
+  "time-series/offset":
+  {
+    "description": "Offset",
+    "properties":
+    {
+      "amount":
+      {
+        "description": "Amount"
+      }
+    }
+  },
+  "time-series/plot":
+  {
+    "description": "Plot",
+    "properties":
+    {
+      "points":
+      {
+        "description": "Points"
+      },
+      "auto":
+      {
+        "description": "Auto"
+      }
+    }
+  },
+  "time-series/scale":
+  {
+    "description": "Scale",
+    "properties":
+    {
+      "factor":
+      {
+        "description": "Factor"
+      }
+    }
+  },
+  "time-series/web-fetch":
+  {
+    "description": "Web Fetch",
+    "properties":
+    {
+      "name":
+      {
+        "description": "Name"
+      },
+      "url":
+      {
+        "description": "URL"
+      }
+    }
+  },
   "vector/rotate":
   {
     "description": "3D Rotation",

@@ -676,109 +676,6 @@
       }
     }
   },
-  "time-series/plot":
-  {
-    "width": 70,
-    "height": 70,
-    "properties":
-    {
-      "points":
-      {
-        "controlType": "knob",
-        "subType": "log",
-        "rangeMin": 10,
-        "rangeMax": 1000,
-        "increment": 1,
-        "x": 30,
-        "y": 30
-      },
-      "input":
-      {
-      }
-    }
-  },
-  "time-series/offset":
-  {
-    "width": 70,
-    "height": 70,
-    "properties":
-    {
-      "amount":
-      {
-        "controlType": "knob",
-        "subType": "log",
-        "rangeMin": 0.01,
-        "rangeMax": 1000,
-        "increment": 0.01,
-        "x": 30,
-        "y": 30
-      },
-      "input":
-      {
-      }
-    }
-  },
-  "time-series/scale":
-  {
-    "width": 70,
-    "height": 70,
-    "properties":
-    {
-      "factor":
-      {
-        "controlType": "knob",
-        "subType": "log",
-        "rangeMin": 0.001,
-        "rangeMax": 1000,
-        "increment": 0.001,
-        "x": 30,
-        "y": 30
-      },
-      "input":
-      {
-      }
-    }
-  },
-  "time-series/average":
-  {
-    "width": 70,
-    "height": 70,
-    "properties":
-    {
-      "samples":
-      {
-        "controlType": "knob/default",
-        "rangeMin": 0,
-        "rangeMax": 60,
-        "increment": 1,
-        "x": 30,
-        "y": 30
-      },
-      "input":
-      {
-      }
-    }
-  },
-  "time-series/last":
-  {
-    "width": 70,
-    "height": 70,
-    "properties":
-    {
-      "samples":
-      {
-        "controlType": "knob/default",
-        "rangeMin": 0,
-        "rangeMax": 1000,
-        "increment": 1,
-        "x": 30,
-        "y": 30
-      },
-      "input":
-      {
-      }
-    }
-  },
   "midi/alsa-in":
   {
     "width": 100,
@@ -836,6 +733,146 @@
       {
         "rangeMin": 0,
         "rangeMax": 2
+      }
+    }
+  },
+  "sensor/load-dscusb":
+  {
+    "width": 100,
+    "height": 50,
+    "properties":
+    {
+      "device":
+      {
+        "controlType": "none/default",
+        "x": 60,
+        "y": 44
+      },
+      "interval":
+      {
+      }
+    }
+  },
+  "time-series/average":
+  {
+    "width": 70,
+    "height": 70,
+    "properties":
+    {
+      "samples":
+      {
+        "controlType": "knob/default",
+        "rangeMin": 0,
+        "rangeMax": 60,
+        "increment": 1,
+        "x": 30,
+        "y": 30
+      },
+      "input":
+      {
+      }
+    }
+  },
+  "time-series/last":
+  {
+    "width": 70,
+    "height": 70,
+    "properties":
+    {
+      "samples":
+      {
+        "controlType": "knob/default",
+        "rangeMin": 0,
+        "rangeMax": 1000,
+        "increment": 1,
+        "x": 30,
+        "y": 30
+      },
+      "input":
+      {
+      }
+    }
+  },
+  "time-series/offset":
+  {
+    "width": 70,
+    "height": 70,
+    "properties":
+    {
+      "amount":
+      {
+        "controlType": "knob",
+        "subType": "log",
+        "rangeMin": 0.01,
+        "rangeMax": 1000,
+        "increment": 0.01,
+        "x": 30,
+        "y": 30
+      },
+      "input":
+      {
+      }
+    }
+  },
+  "time-series/plot":
+  {
+    "width": 70,
+    "height": 70,
+    "properties":
+    {
+      "points":
+      {
+        "controlType": "knob",
+        "subType": "log",
+        "rangeMin": 10,
+        "rangeMax": 1000,
+        "increment": 1,
+        "x": 30,
+        "y": 30
+      },
+      "input":
+      {
+      },
+      "auto":
+      {
+      }
+    }
+  },
+  "time-series/scale":
+  {
+    "width": 70,
+    "height": 70,
+    "properties":
+    {
+      "factor":
+      {
+        "controlType": "knob",
+        "subType": "log",
+        "rangeMin": 0.001,
+        "rangeMax": 1000,
+        "increment": 0.001,
+        "x": 30,
+        "y": 30
+      },
+      "input":
+      {
+      }
+    }
+  },
+  "time-series/web-fetch":
+  {
+    "width": 100,
+    "height": 40,
+    "properties":
+    {
+      "name":
+      {
+        "controlType": "none/default",
+        "x": 60,
+        "y": 34
+      },
+      "url":
+      {
       }
     }
   },
