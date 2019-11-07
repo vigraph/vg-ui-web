@@ -12,7 +12,7 @@
       },
       "device":
       {
-        "controlType": "none/default",
+        "controlType": "none/label",
         "x": 60,
         "y": 44
       },
@@ -57,7 +57,7 @@
       },
       "device":
       {
-        "controlType": "none/default",
+        "controlType": "none/label",
         "x": 60,
         "y": 44
       },
@@ -118,6 +118,35 @@
         "increment": 0.1,
         "x": 30,
         "y": 35
+      }
+    }
+  },
+  "bitmap/hsl":
+  {
+    "width": 170,
+    "height": 100,
+    "properties":
+    {
+      "h":
+      {
+        "controlType": "colourPicker/main",
+        "increment": 0.01,
+        "x": 30,
+        "y": 30
+      },
+      "s":
+      {
+        "controlType": "colourPicker/default",
+        "increment": 0.01,
+        "x": 50,
+        "y": 50
+      },
+      "l":
+      {
+        "controlType": "colourPicker/default",
+        "increment": 0.01,
+        "x": 50,
+        "y": 70
       }
     }
   },
@@ -212,6 +241,7 @@
   {
     "width": 200,
     "height": 200,
+    "category": "websocket-display",
     "properties":
     {
       "port":
@@ -303,7 +333,7 @@
     {
       "copies":
       {
-        "controlType": "none/default",
+        "controlType": "none/label",
         "x": 55,
         "y": 30
       }
@@ -531,7 +561,7 @@
       {
         "x": 25,
         "y": 35,
-        "controlType": "none/default",
+        "controlType": "none/label",
         "rangeMax": 20
       }
     }
@@ -684,7 +714,7 @@
     {
       "device":
       {
-        "controlType": "none/default",
+        "controlType": "none/label",
         "x": 60,
         "y": 44
       }
@@ -744,7 +774,7 @@
     {
       "device":
       {
-        "controlType": "none/default",
+        "controlType": "none/label",
         "x": 60,
         "y": 44
       },
@@ -867,7 +897,7 @@
     {
       "name":
       {
-        "controlType": "none/default",
+        "controlType": "none/label",
         "x": 60,
         "y": 34
       },
@@ -1005,6 +1035,7 @@
   {
     "width": 200,
     "height": 200,
+    "category": "websocket-display",
     "properties":
     {
       "port":

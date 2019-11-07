@@ -53,6 +53,7 @@ export interface IProcessedGraphItem
   type: string,
   path: string,
   dynamic: boolean,
+  category?: string,
   description?: string,
   inputs: Array<{ id: string, type: string, x?: number, y?: number}>,
   outputs: Array<{ id: string, type: string}>,
@@ -75,6 +76,7 @@ export interface IMetadata
     {
       name: string,
       dynamic: boolean,
+      category?: string,
       settings?:
       {
         // Setting ID
@@ -108,6 +110,7 @@ export interface IPropertiesConfig
   [key: string]: {
     width: number,
     height: number,
+    category?: string,
     properties: {
       [key: string]: {
         controlType: string,
@@ -204,7 +207,8 @@ export interface IColourPickerSettings
   barLength: number,
   barThickness: number,
   padding: number,
-  indicatorThickness: number
+  indicatorThickness: number,
+  displaySize: number
 }
 
 export interface ITextDisplaySettings

@@ -43,7 +43,16 @@
       "barLength": 100,
       "barThickness": 15,
       "padding": 5,
-      "indicatorThickness": 6
+      "indicatorThickness": 6,
+      "displaySize": 0
+    },
+    "main":
+    {
+      "barLength": 100,
+      "barThickness": 15,
+      "padding": 5,
+      "indicatorThickness": 6,
+      "displaySize": 20
     }
   },
   "knob": {

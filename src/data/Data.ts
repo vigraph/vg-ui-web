@@ -880,6 +880,7 @@ class Data
       type: item.type,
       path: parentPath ? parentPath + "/" + itemID : itemID,
       dynamic: metadata.dynamic,
+      category: propsConfig ? propsConfig.category : undefined,
       description: itemStrings ? itemStrings.description : "",
       inputs: gInputs,
       outputs: gOutputs,

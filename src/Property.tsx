@@ -56,6 +56,8 @@ export default class Property extends React.Component<IProps, IState>
   // Main and Sub control types
   private controlType: string[];
 
+  private relatedProperties?: { [key: string]: Model.Property};
+
   constructor(props: IProps)
   {
     super(props);
@@ -63,7 +65,6 @@ export default class Property extends React.Component<IProps, IState>
     this.property = props.property;
     this.controlType = this.property.controlType.split("/");
 
-    // Knobs and sliders are numerical and snap to increments.
     if (this.controlType[0] === "knob" || this.controlType[0] === "slider")
     {
       // Ensure value conforms to increment bounds
@@ -74,6 +75,8 @@ export default class Property extends React.Component<IProps, IState>
         this.property.value = snapValue;
       }
     }
+
+    this.relatedProperties = this.getRelatedProperties();
 
     this.state =
     {
@@ -113,7 +116,7 @@ export default class Property extends React.Component<IProps, IState>
     if (!Component)
     {
       if (this.property.propType === "setting" &&
-        this.controlType[1] !== "none")
+        this.controlType[1] === "label")
       {
         return <text className={"settings label " + this.controlType[1]}
           fontSize={vgConfig.Graph.fontSize.propertySettings} x={0} y={0}>
@@ -137,6 +140,30 @@ export default class Property extends React.Component<IProps, IState>
           endUpdate={this.endPropertyUpdate} disabled={controlDisabled}
           settingsType={settingsType}
           size={curveSize}/>
+    }
+    else if (this.controlType[0] === "colourPicker")
+    {
+      const colourValues: {hex?: string, h?: number, s?: number, l?: number,
+        r?: number, g?: number, b?: number} = {};
+
+      if (this.relatedProperties)
+      {
+        const rProps = this.relatedProperties;
+
+        colourValues.hex = (rProps.hex ? rProps.hex.value : undefined);
+        colourValues.h = (rProps.h ? rProps.h.value : undefined);
+        colourValues.s = (rProps.s ? rProps.s.value : undefined);
+        colourValues.l = (rProps.l ? rProps.l.value : undefined);
+        colourValues.r = (rProps.r ? rProps.r.value : undefined);
+        colourValues.g = (rProps.g ? rProps.g.value : undefined);
+        colourValues.b = (rProps.b ? rProps.b.value : undefined);
+      }
+
+      return <ColourPicker property={this.property}
+          position={{x: position.x, y: position.y}}
+          startUpdate={this.startPropertyUpdate} update={this.propertyUpdate}
+          endUpdate={this.endPropertyUpdate} disabled={controlDisabled}
+          settingsType={settingsType} colourValues={colourValues}/>
     }
     else
     {
@@ -211,6 +238,33 @@ export default class Property extends React.Component<IProps, IState>
     {
       this.props.updateTargetProperty(this.property.id, null, false);
     }
+  }
+
+  // Return current property and any related properties e.g. all individual
+  // colour properties for colourPicker
+  private getRelatedProperties = () =>
+  {
+    let relatedProperties = {};
+
+    if (this.controlType[0] === "colourPicker")
+    {
+      const properties = this.props.parent.getProperties();
+
+      const hex = properties.find(x => x.id === "hex");
+
+      relatedProperties =
+      {
+        hex: properties.find(x => x.id === "hex"),
+        h: properties.find(x => x.id === "h"),
+        s: properties.find(x => x.id === "s"),
+        l: properties.find(x => x.id === "l"),
+        r: properties.find(x => x.id === "r"),
+        g: properties.find(x => x.id === "g"),
+        b: properties.find(x => x.id === "b")
+      };
+    }
+
+    return relatedProperties;
   }
 
 }

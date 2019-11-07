@@ -164,9 +164,7 @@ export default class Node extends React.Component<IProps, IState>
     const portProperty = this.props.node.getProperties().find(
       x => x.id === "port");
 
-    if ((this.node.type === "vector/websocket-display"
-      || this.node.type === "bitmap/websocket-display")
-        && portProperty)
+    if (this.node.category === "websocket-display" && portProperty)
     {
       const width = this.state.w - (2 * padding);
       const height = this.state.h - (2 * padding) - this.titleFontSize;
@@ -198,8 +196,7 @@ export default class Node extends React.Component<IProps, IState>
   // support resizing
   private resizeNodeAspectRatio = () =>
   {
-    if (this.node.type === "vector/websocket-display" ||
-      this.node.type === "bitmap/websocket-display")
+    if (this.node.category === "websocket-display")
     {
       return vgConfig.Graph.websocket.aspectRatio;
     }

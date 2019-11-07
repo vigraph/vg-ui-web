@@ -394,11 +394,9 @@
   fill: white;
 }
 
-.picker-wrapper-background
+.picker-indicator.disabled
 {
-  stroke: white;
-  stroke-width: 1px;
-  fill: #383838;
+  fill: grey;
 }
 
 #selector
@@ -459,6 +457,12 @@
   stroke: #ccc;
   stroke-width: 0.5;
   overflow: visible;
+}
+
+.colourPicker.property-wrapper.disabled
+{
+  pointer-events: default;
+  opacity: 1;
 }
 
 #text-display-text

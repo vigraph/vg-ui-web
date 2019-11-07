@@ -132,6 +132,167 @@ class Utils
 
     return newValue;
   }
+
+  // Colour Functions (all input/output values [0..1] or hex #rrggbb)
+
+  public hslToRGB = (input: {h: number, s: number, l: number}) =>
+  {
+    const hueToRGB = (t1: number, t2: number, hue: number) =>
+    {
+      if (hue < 0)
+      {
+        hue += 6;
+      }
+
+      if (hue >= 6)
+      {
+        hue -= 6;
+      }
+
+      if (hue < 1)
+      {
+        return (t2 - t1) * hue + t1;
+      }
+      else if(hue < 3)
+      {
+        return t2;
+      }
+      else if(hue < 4)
+      {
+        return (t2 - t1) * (4 - hue) + t1;
+      }
+      else
+      {
+        return t1;
+      }
+    }
+
+    let test2;
+    let h = input.h * 360;
+    const s = input.s;
+    const l = input.l;
+
+    h = h / 60;
+
+    if ( l <= 0.5 )
+    {
+      test2 = l * (s + 1);
+    }
+    else
+    {
+      test2 = l + s - (l * s);
+    }
+
+    const test1 = l * 2 - test2;
+
+    return {r : hueToRGB(test1, test2, h + 2), g : hueToRGB(test1, test2, h),
+      b : hueToRGB(test1, test2, h - 2)};
+  }
+
+  public rgbToHSL = (input: {r: number, g: number, b: number}) =>
+  {
+    const rgb = [input.r, input.g, input.b];
+
+    let min = rgb[0];
+    let max = rgb[0];
+    let maxColour = 0;
+
+    let h;
+    let l;
+    let s;
+
+    for (let i = 0; i < rgb.length - 1; i++)
+    {
+      if (rgb[i + 1] <= min)
+      {
+        min = rgb[i + 1];
+      }
+
+      if (rgb[i + 1] >= max)
+      {
+        max = rgb[i + 1];
+        maxColour = i + 1;
+      }
+    }
+
+    switch (maxColour)
+    {
+      case (0):
+        h = (rgb[1] - rgb[2]) / (max - min);
+        break;
+      case (1):
+        h = 2 + (rgb[2] - rgb[0]) / (max - min);
+        break;
+      case (2):
+        h = 4 + (rgb[0] - rgb[1]) / (max - min);
+        break;
+    }
+
+    if (typeof h === "undefined" || isNaN(h))
+    {
+      h = 0;
+    }
+
+    h = h * 60;
+    if (h < 0)
+    {
+      h = h + 360;
+    }
+
+    l = (min + max) / 2;
+
+    if (min === max)
+    {
+      s = 0;
+    }
+    else
+    {
+      if (l < 0.5)
+      {
+        s = (max - min) / (max + min);
+      }
+      else
+      {
+        s = (max - min) / (2 - max - min);
+      }
+    }
+
+    h = h / 360;
+    return {h, s, l};
+  }
+
+  public rgbToHex = (rgb: {r: number, g: number, b: number}) =>
+  {
+    const toHex = (colour: number) =>
+    {
+      let hex = Math.round(colour * 255).toString(16);
+      if (hex.length < 2)
+      {
+        hex = "0" + hex;
+      }
+      return hex;
+    }
+
+    return "#" + toHex(rgb.r) + toHex(rgb.g) + toHex(rgb.b);
+  }
+
+  public hexToRGB = (hex: string) =>
+  {
+    hex = hex.replace('#','');
+
+    // Convert [#]rgb to [#]rrggbb
+    if (hex.length === 3)
+    {
+      hex = hex.substring(0,1) + hex.substring(0,1) + hex.substring(1,2) +
+        hex.substring(1,2) + hex.substring(2,3) + hex.substring(2,3);
+    }
+
+    const r = parseInt(hex.substring(0,2), 16) / 255;
+    const g = parseInt(hex.substring(2,4), 16) / 255;
+    const b = parseInt(hex.substring(4,6), 16) / 255;
+
+    return {r, g, b};
+  }
 }
 
 export const vgUtils = new Utils();

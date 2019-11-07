@@ -94,6 +94,25 @@
       }
     }
   },
+  "bitmap/hsl":
+  {
+    "description": "Bitmap HSL",
+    "properties":
+    {
+      "h":
+      {
+        "description": "Hue"
+      },
+      "s":
+      {
+        "description": "Saturation"
+      },
+      "l":
+      {
+        "description": "Lightness"
+      }
+    }
+  },
   "bitmap/rectangle":
   {
     "description": "Bitmap rectangle",

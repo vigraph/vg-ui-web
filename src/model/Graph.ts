@@ -13,6 +13,7 @@
 //            type: string
 //            path: string
 //            dynamic: boolean
+//            category: string
 //            description: string
 //            inputs: Map<id, { type: string, position: {x, y} }>
 //            outputs: Map<id, { type: string, position: null }>
@@ -60,7 +61,7 @@ export class Graph
   //
   // Load a graph from the given JSON:
   // { nodes: [
-  //     { id, name, type, path, dynamic, description, x, y, w, h,
+  //     { id, name, type, path, dynamic, category, description, x, y, w, h,
   //       inputs: [ { id, type, x, y } ],
   //       outputs: [ { id, type } ],
   //       edges: [ { output, destId, input } ],
@@ -120,6 +121,7 @@ export class Graph
     node.size = { w: n.w || 50, h: n.h || 50 };
     node.path = n.path || n.id;
     node.dynamic = n.dynamic || false;
+    node.category = n.category || null;
     node.description = n.description || "";
     node.subGraph = n.subGraph || false;
     if (n.inputs)

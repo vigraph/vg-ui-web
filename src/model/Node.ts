@@ -52,6 +52,16 @@ export class Node
     this.graph.setNodeProp(this.id, "dynamic", dynamic);
   }
 
+  get category(): string | null
+  {
+    return this.graph.getNodeProp(this.id, "category");
+  }
+
+  set category(category: string | null)
+  {
+    this.graph.setNodeProp(this.id, "category", category);
+  }
+
   get description(): string
   {
     return this.graph.getNodeProp(this.id, "description");
