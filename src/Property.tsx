@@ -250,8 +250,6 @@ export default class Property extends React.Component<IProps, IState>
     {
       const properties = this.props.parent.getProperties();
 
-      const hex = properties.find(x => x.id === "hex");
-
       relatedProperties =
       {
         hex: properties.find(x => x.id === "hex"),
@@ -266,5 +264,4 @@ export default class Property extends React.Component<IProps, IState>
 
     return relatedProperties;
   }
-
 }

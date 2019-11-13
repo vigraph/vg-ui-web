@@ -50,6 +50,7 @@ export class Graph
   private history: Array<Map<string, any>> = [];
   private historyIndex: number = 0;  // Index of current state
   private inTransaction: boolean = false;
+  private inOverride: boolean = false;
   private lastUndoIndex: number = 0;
 
   public constructor()
@@ -113,6 +114,11 @@ export class Graph
     return this.state.get("id");
   }
 
+  public graphIsRoot(): boolean
+  {
+    return (this.getGraphID().split("/").length <= 1);
+  }
+
   public addNodeFromJSON(n: any)
   {
     const node = this.addNode(n.id, n.type || "?");
@@ -159,6 +165,8 @@ export class Graph
         property.available = p.available || [];
       }
     }
+
+    return node;
   }
 
   public getNodes(): Node[]
@@ -418,6 +426,22 @@ export class Graph
     }
   }
 
+  // Begin override - used to overide current state without adding to the history
+  private beginOverride()
+  {
+    this.rollbackTransaction();
+
+    this.inOverride = true;
+  }
+
+  private commitOverride()
+  {
+    if (this.inOverride)
+    {
+      this.inOverride = false;
+    }
+  }
+
   // Undo / redo state
   public resetBaseline()
   {
@@ -646,7 +670,7 @@ export class Graph
 
   // Go back in graph navigation - set current state (history) to the last
   // occurance of the graph (by ID) in state history.
-  public back()
+  public back(finished: () => void)
   {
     const currentID = this.getGraphID();
     const newID = currentID.slice(0,currentID.lastIndexOf("/"));
@@ -657,7 +681,7 @@ export class Graph
     {
       this.historyIndex--;
 
-      if (this.historyIndex < 1)
+      if (this.historyIndex < 0)
       {
         flag = true;
       }
@@ -670,8 +694,19 @@ export class Graph
       }
     }
 
-    // Return graph navigation depth (1 = root graph)
-    return this.getGraphID().split("/").length;
+    // Regenerate current graph to ensure it is up to date
+    this.beginOverride();
+
+    const newCurrentID = this.getGraphID();
+    this.state = Map<string, any>();
+    vgData.generateGraph((json:any) =>
+      {
+        this.loadFrom(json, false, newCurrentID);
+        this.commitOverride();
+        finished();
+      },
+      (newCurrentID === "graph" ? undefined : newCurrentID.slice(6,
+        newCurrentID.length)));
   }
 
   private get state(): Map<string, any>
@@ -681,7 +716,12 @@ export class Graph
 
   private set state(state: Map<string, any>)
   {
-    if (this.inTransaction)
+    // Override current state
+    if (this.inOverride)
+    {
+      this.history[this.historyIndex] = state;
+    }
+    else if (this.inTransaction)
     {
       // Just replace top one
       this.history.pop();

@@ -583,6 +583,15 @@
       }
     }
   },
+  "core/number-pin":
+  {
+    "width": 70,
+    "height": 50,
+    "category": "pin",
+    "properties":
+    {
+    }
+  },
   "core/oscillator":
   {
     "width": 170,

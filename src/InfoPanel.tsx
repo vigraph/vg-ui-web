@@ -94,6 +94,9 @@ export default class InfoPanel extends React.Component<IProps, IState>
           <div id="info-node-section" className="info-text node section">
             {section}
           </div>
+          <div id="info-node-category" className="info-text node category">
+            {node.category}
+          </div>
         </div>
         {this.createInputsInfo(node)}
         {this.createSettingsInfo(node)}
@@ -190,7 +193,7 @@ export default class InfoPanel extends React.Component<IProps, IState>
     }
     // List of available choice values, choice made on value selection change
     else if (property.valueType === "choice" ||
-      property.valueType === "filter-mode")
+      property.valueType === "filter-mode" || property.valueType === "waveform")
     {
       return <select id={property.id} disabled={disabled}
         className={"value-select " + property.propType}

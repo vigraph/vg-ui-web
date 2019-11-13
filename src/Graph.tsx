@@ -147,21 +147,39 @@ export default class Graph extends React.Component<IProps, IState>
         this.graph.getNodeConnectors(node.id, "input").map(
         (connector: Model.Connector, j) =>
         {
-          return <Connector key={j} parent={node} connector={connector}
-            inputConnectorSelected={this.moveEdgeFromInput}
-            outputConnectorSelected={this.newMovingConnectorEdge}
-            updateTargetConnector={this.updateTargetConnector}
-            radius={this.csize} position={node.getConnectorPosition(connector)}/>
+          // Don't create input connector for pin with output connected
+          if (node.category !== "pin" || !node.getForwardEdges().length)
+          {
+            return <Connector key={j} parent={node} connector={connector}
+              inputConnectorSelected={this.moveEdgeFromInput}
+              outputConnectorSelected={this.newMovingConnectorEdge}
+              updateTargetConnector={this.updateTargetConnector}
+              radius={this.csize}
+              position={node.getConnectorPosition(connector)}/>
+          }
+          else
+          {
+            return "";
+          }
         })}
       {
         this.graph.getNodeConnectors(node.id, "output").map(
         (connector: Model.Connector, j) =>
         {
-          return <Connector key={j} parent={node} connector={connector}
-            inputConnectorSelected={this.moveEdgeFromInput}
-            outputConnectorSelected={this.newMovingConnectorEdge}
-            updateTargetConnector={this.updateTargetConnector}
-            radius={this.csize} position={node.getConnectorPosition(connector)}/>
+          // Don't create output conntor for pin with input connected
+          if (node.category !== "pin" || !node.getReverseEdges().length)
+          {
+            return <Connector key={j} parent={node} connector={connector}
+              inputConnectorSelected={this.moveEdgeFromInput}
+              outputConnectorSelected={this.newMovingConnectorEdge}
+              updateTargetConnector={this.updateTargetConnector}
+              radius={this.csize}
+              position={node.getConnectorPosition(connector)}/>
+          }
+          else
+          {
+            return "";
+          }
         })}
     </Node>
   }
@@ -334,6 +352,7 @@ export default class Graph extends React.Component<IProps, IState>
       this.clearTargetNode();
     }
 
+    this.props.notifyGraphRoot(this.graph.graphIsRoot());
     this.forceUpdate();
   }
 
@@ -347,17 +366,18 @@ export default class Graph extends React.Component<IProps, IState>
       this.clearTargetNode();
     }
 
+    this.props.notifyGraphRoot(this.graph.graphIsRoot());
     this.forceUpdate();
   }
 
   public goBack = () =>
   {
-    if (this.graph.back() <= 1)
-    {
-      this.props.notifyGraphRoot(true);
-    }
     this.clearTargetNode();
-    this.resetView();
+    this.graph.back(() =>
+      {
+        this.props.notifyGraphRoot(this.graph.graphIsRoot());
+        this.resetView();
+      });
   }
 
   private resetView = () =>
@@ -498,6 +518,7 @@ export default class Graph extends React.Component<IProps, IState>
 
   private showNodeGraph = (path: string) =>
   {
+    this.startUpdate();
     this.currentGraphPath.push(path);
     this.setState({targetProperty: {property: null, updating: false}});
     this.clearTargetNode();
@@ -508,6 +529,7 @@ export default class Graph extends React.Component<IProps, IState>
         this.graph.forward(json, "graph/" + path);
         this.resetView();
         this.props.notifyGraphRoot(false);
+        this.endUpdate();
       }, path);
   }
 
@@ -535,13 +557,9 @@ export default class Graph extends React.Component<IProps, IState>
 
     const currGraphPathLen = this.currentGraphPath.length;
 
-    let path: string | undefined;
+    let path: string | undefined = undefined;
 
-    if (currGraphPathLen === 0)
-    {
-      path = undefined;
-    }
-    else
+    if (currGraphPathLen !== 0)
     {
       path = this.currentGraphPath[currGraphPathLen-1];
     }
@@ -561,7 +579,6 @@ export default class Graph extends React.Component<IProps, IState>
           vgData.updateLayout(node.path,
             {x: svgMouseClick.x, y: svgMouseClick.y});
 
-          this.graph.addNodeFromJSON(node);
           this.forceUpdate();
 
           this.graph.commitTransaction();
@@ -651,13 +668,43 @@ export default class Graph extends React.Component<IProps, IState>
       }, finished);
   }
 
+  // Update graph pin direction based on connected edges
+  private updateGraphPin = (node: Model.Node, direction: string) =>
+  {
+    const currGraphPathLen = this.currentGraphPath.length;
+
+    let path: string | undefined = undefined;
+    if (currGraphPathLen !== 0)
+    {
+      path = this.currentGraphPath[currGraphPathLen-1];
+    }
+
+    const num = (direction === "input" ? node.getReverseEdges().length :
+      node.getForwardEdges().length);
+
+    // Pin has no edges so must have had its input/output edge removed
+    // Reset pin direction
+    if (num === 0)
+    {
+      vgData.nonPropertyDelete(node.id, path);
+    }
+    // Pin now has a single edge connected so set pin direction based on
+    // connection
+    else if (num === 1)
+    {
+      const pinDirection = (direction === "input" ? "out" : "in");
+      vgData.nonPropertyPost(node.id, {direction: pinDirection}, path);
+    }
+  }
+
   private addEdge = (srcID: string, srcOutput: string, destID: string,
     destInput: string) =>
   {
     const src = this.graph.getNode(srcID);
+    const dest = this.graph.getNode(destID);
     const output = src ? src.getOutputConnector(srcOutput) : null;
 
-    if (src && output)
+    if (src && dest && output)
     {
       // Only add edge if there are no other connections between the same
       // connectors on the same nodes
@@ -681,6 +728,16 @@ export default class Graph extends React.Component<IProps, IState>
         vgData.updateEdges(src.path, srcOutput, edges, () =>
           {
             this.graph.addEdge(srcID, srcOutput, destID, destInput);
+
+            if (src.category === "pin")
+            {
+              this.updateGraphPin(src, "output");
+            }
+            else if (dest.category === "pin")
+            {
+              this.updateGraphPin(dest, "input");
+            }
+
             this.forceUpdate();
           });
       }
@@ -691,9 +748,10 @@ export default class Graph extends React.Component<IProps, IState>
     destInput: string, success?: ()=>void) =>
   {
     const src = this.graph.getNode(srcID);
+    const dest = this.graph.getNode(destID);
     const output = src ? src.getOutputConnector(srcOutput) : null;
 
-    if (src && output)
+    if (src && dest && output)
     {
       const edges = src.edgesFromConnector(output);
       const newEdges = edges.filter((value: {dest: string, destInput: string}) =>
@@ -704,6 +762,16 @@ export default class Graph extends React.Component<IProps, IState>
       vgData.updateEdges(src.path, srcOutput, newEdges, () =>
         {
           this.graph.removeEdge(srcID, srcOutput, destID, destInput);
+
+          if (src.category === "pin")
+          {
+            this.updateGraphPin(src, "output");
+          }
+          else if (dest.category === "pin")
+          {
+            this.updateGraphPin(dest, "input");
+          }
+
           if (success)
           {
             success();

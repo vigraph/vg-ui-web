@@ -232,10 +232,7 @@
   },
   "core/clone-info":
   {
-    "description": "Clone Information",
-    "properties":
-    {
-    }
+    "description": "Clone Information"
   },
   "core/compare":
   {
@@ -346,10 +343,7 @@
   },
   "core/graph":
   {
-    "description": "Creates a single sub-graph",
-    "properties":
-    {
-    }
+    "description": "Creates a single sub-graph"
   },
   "core/limit":
   {
@@ -387,6 +381,10 @@
         "description": "Factor to multiply with"
       }
     }
+  },
+  "core/number-pin":
+  {
+    "description": "Number Pin"
   },
   "core/oscillator":
   {

@@ -91,7 +91,8 @@ export default class Node extends React.Component<IProps, IState>
 
     return (
       <svg id={`node-${this.node.id}`}
-        className={"node " + this.node.type.replace("/","-")}
+        className={"node " + this.node.type.replace("/","-") + " " +
+          (this.node.category ? this.node.category : "")}
         x={this.state.x} y={this.state.y}
         onMouseEnter={this.handleMouseEnter}
         onMouseLeave={this.handleMouseLeave}>

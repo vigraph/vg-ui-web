@@ -135,7 +135,7 @@ export interface ILanguageStrings
   [key: string]:
   {
     description: string,
-    properties:
+    properties?:
     {
       [key: string]:
       {

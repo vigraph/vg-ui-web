@@ -12,8 +12,8 @@ interface IProps
 
 interface IState
 {
-  parentID: string | null,
-  childSection: number,
+  menuItem?: {id: string, children: Array<string[]>},
+  subMenuBlock: number,
   position: {x: number, y: number},
   subMenuPosition: {x: number, y: number, alignTop: boolean}
 }
@@ -31,8 +31,8 @@ export default class Menu extends React.Component<IProps, IState>
 
     this.state =
     {
-      parentID: null,
-      childSection: 0,
+      menuItem: undefined,
+      subMenuBlock: 0,
       position: this.props.position,
       subMenuPosition: {x: 0, y: 0, alignTop: true}
     }
@@ -78,14 +78,15 @@ export default class Menu extends React.Component<IProps, IState>
           index: number) =>
         {
           return <div key={index} id={"menu-"+value.id}
-            className={`menu-item parent ${value.id === this.state.parentID ?
-            "selected" : "" }`}
+            className={`menu-item parent` +
+              ` ${(this.state.menuItem && value.id === this.state.menuItem.id) ?
+              "selected" : "" }`}
             onMouseDown={this.handleParentMouseDown}> {value.id} </div>
         })
       }
       </div>
       {
-        this.state.parentID && this.createSubMenu()
+        this.state.menuItem && this.createSubMenu()
       }
     </div>
   }
@@ -128,13 +129,14 @@ export default class Menu extends React.Component<IProps, IState>
   {
     // Only update when updateSubMenu is set to stop an infinite of
     // componentDidUpdate calls
-    if (this.state.parentID && this.menuRef && this.subMenuRef &&
+    if (this.state.menuItem && this.menuRef && this.subMenuRef &&
       this.updateSubMenu)
     {
       const windowWidth = window.innerWidth;
       const windowHeight = window.innerHeight;
 
-      let index = this.menuData.findIndex(x => x.id === this.state.parentID);
+      const itemID = this.state.menuItem.id;
+      let index = this.menuData.findIndex(x => x.id === itemID);
       const itemHeight = this.menuRef.offsetHeight / this.menuData.length;
 
       if (!this.state.subMenuPosition.alignTop)
@@ -177,7 +179,8 @@ export default class Menu extends React.Component<IProps, IState>
 
   private createSubMenu = () =>
   {
-    const subMenuData = this.menuData.find(x => x.id === this.state.parentID);
+    const menuID = (this.state.menuItem ? this.state.menuItem.id : "");
+    const subMenuData = this.menuData.find(x => x.id === menuID);
 
     if (subMenuData)
     {
@@ -188,10 +191,10 @@ export default class Menu extends React.Component<IProps, IState>
         ref={(ref) => { this.subMenuRef = ref; }}>
         <div className={"sub-menu"}>
         {
-          subMenuData.children[this.state.childSection].map(
+          subMenuData.children[this.state.subMenuBlock].map(
             (value: string, index: number) =>
           {
-            const id = this.state.parentID + "/" + value;
+            const id = menuID + "/" + value;
             return <div key={index} id={"menu-"+id} className="menu-item child"
                 onMouseDown={this.handleChildMouseDown}> {value} </div>
           })
@@ -209,8 +212,8 @@ export default class Menu extends React.Component<IProps, IState>
     let nextButton;
     let result = false;
 
-    if (this.state.childSection !== 0 ||
-      subMenuData.children[this.state.childSection-1])
+    if (this.state.subMenuBlock !== 0 ||
+      subMenuData.children[this.state.subMenuBlock-1])
     {
       result = true;
       prevButton = <div id={"menu-prev"} className="menu-nav child"
@@ -221,7 +224,7 @@ export default class Menu extends React.Component<IProps, IState>
       </div>
     }
 
-    if (subMenuData.children[this.state.childSection+1])
+    if (subMenuData.children[this.state.subMenuBlock+1])
     {
       result = true;
       nextButton = <div id={"menu-next"} className="menu-nav child"
@@ -244,9 +247,10 @@ export default class Menu extends React.Component<IProps, IState>
   private handleParentMouseDown = (e: React.MouseEvent<HTMLDivElement>) =>
   {
     const target = e.currentTarget.id;
+    const targetItemID = target.substring(5, target.length)
     this.updateSubMenu = true;
-    this.setState({parentID: target.substring(5, target.length),
-      childSection: 0, subMenuPosition: {x: 0, y: 0, alignTop: true}});
+    this.setState({menuItem: this.menuData.find(x => x.id === targetItemID),
+      subMenuBlock: 0, subMenuPosition: {x: 0, y: 0, alignTop: true}});
   }
 
   private handleChildMouseDown = (e: React.MouseEvent<HTMLDivElement>) =>
@@ -265,12 +269,12 @@ export default class Menu extends React.Component<IProps, IState>
   private handleSubMenuPrev = () =>
   {
     this.updateSubMenu = true;
-    this.setState({childSection: this.state.childSection - 1});
+    this.setState({subMenuBlock: this.state.subMenuBlock - 1});
   }
 
   private handleSubMenuNext = () =>
   {
     this.updateSubMenu = true;
-    this.setState({childSection: this.state.childSection + 1});
+    this.setState({subMenuBlock: this.state.subMenuBlock + 1});
   }
 }

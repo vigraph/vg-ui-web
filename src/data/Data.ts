@@ -380,6 +380,97 @@ class Data
       });
   }
 
+  // Post non-property data
+  public nonPropertyPost(id: string, data: any, path?: string,
+    success?: () => void, failure?: () => void)
+  {
+    const url = this.restURL + "/graph/" + (path ? path + "/" : "") + "@" + id;
+
+    fetch(url,
+    {
+      method: "POST",
+      body: JSON.stringify(data)
+    })
+    .then(response =>
+      {
+        if (response.status === 200)
+        {
+          // Success
+          vgUtils.log("Non Property Post Success");
+          if (success)
+          {
+            success();
+          }
+        }
+        else
+        {
+          // Error
+          vgUtils.log("Non Property Post Failure with response status: " +
+            response.status)
+
+          if (failure)
+          {
+            failure();
+          }
+        }
+      })
+    .catch(error =>
+      {
+        // Error
+        vgUtils.log("Non Property Post Failure with error: " + error);
+
+        if (failure)
+        {
+          failure();
+        }
+      });
+  }
+
+  // Delete non-property id
+  public nonPropertyDelete(id: string, path?: string, success?: () => void,
+    failure?: () => void)
+  {
+    const url = this.restURL + "/graph/" + (path ? path + "/" : "") + "@" + id;
+
+    fetch(url,
+    {
+      method: "DELETE"
+    })
+    .then(response =>
+      {
+        if (response.status === 200)
+        {
+          // Success
+          vgUtils.log("Non Property Delete Success");
+          if (success)
+          {
+            success();
+          }
+        }
+        else
+        {
+          // Error
+          vgUtils.log("Non Property Delete Failure with response status: " +
+            response.status)
+
+          if (failure)
+          {
+            failure();
+          }
+        }
+      })
+    .catch(error =>
+      {
+        // Error
+        vgUtils.log("Non Property Delete Failure with error: " + error);
+
+        if (failure)
+        {
+          failure();
+        }
+      });
+  }
+
   //============================================================================
   // Generate Graph from Graph data, Metadata and Layout data
   //============================================================================
@@ -820,7 +911,7 @@ class Data
         const iPropsConfig = (propsConfig && propsConfig.properties[inputID] ?
           propsConfig.properties[inputID] : null);
 
-        const iPropsStrings = (itemStrings &&
+        const iPropsStrings = (itemStrings && itemStrings.properties &&
           itemStrings.properties[inputID] ? itemStrings.properties[inputID] :
           null);
 
@@ -853,7 +944,7 @@ class Data
         const sPropsConfig = (propsConfig && propsConfig.properties[settingID] ?
           propsConfig.properties[settingID] : {});
 
-        const sPropsStrings = (itemStrings &&
+        const sPropsStrings = (itemStrings && itemStrings.properties &&
           itemStrings.properties[settingID] ?
           itemStrings.properties[settingID] : null);
 
