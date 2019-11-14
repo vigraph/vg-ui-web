@@ -335,7 +335,10 @@
       {
         "controlType": "none/label",
         "x": 55,
-        "y": 30
+        "y": 30,
+        "rangeMin": 1,
+        "rangeMax": 100,
+        "increment": 1
       }
     }
   },
