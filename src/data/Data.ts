@@ -39,11 +39,11 @@ class Data
     return this.metadata;
   }
 
-  // Update property (propID) on node (nodeID) with given value (value)
-  public updateProperty(nodeID: string, propID: string,
+  // Update property (propID) on node (nodePath) with given value (value)
+  public updateProperty(nodePath: string, propID: string,
     value: any, success?: () => void, failure?: () => void)
   {
-    const url = this.restURL + "/graph/" + nodeID + "/@" + propID;
+    const url = this.restURL + "/" + nodePath + "/@" + propID;
 
     fetch(url,
     {
@@ -139,7 +139,7 @@ class Data
     edges: Array<{dest: string, destInput: string}>, success?: ()=>void,
     failure?: () => void)
   {
-    const url = this.restURL + "/graph/" + outputNodePath + "/@" + outputID;
+    const url = this.restURL + "/" + outputNodePath + "/@" + outputID;
 
     const data: Array<{"element": string, "input": string}> = [];
 
@@ -191,13 +191,12 @@ class Data
 
   // Get node and calls success with resulting (processed) node allowing it to
   // be added to the Graph model
-  public getNode(nodeID: string, parentPath?: string,
+  public getNode(nodeID: string, parentPath: string,
     success?: (result: any) => void, failure?: () => void)
   {
     vgUtils.log("Get Node: " + nodeID);
 
-    const path = (typeof parentPath !== "undefined" ? parentPath + '/' : '') +
-      nodeID;
+    const path = parentPath + '/' + nodeID;
 
     this.getRawGraphItem(path, (result) =>
     {
@@ -250,7 +249,7 @@ class Data
     try
     {
       const res: rm.IRestResponse<vgTypes.IRawGraphItem> =
-        await this.rest.get<vgTypes.IRawGraphItem>('/graph/' + path);
+        await this.rest.get<vgTypes.IRawGraphItem>('/' + path);
 
       if (res.statusCode === 200 && res.result && success)
       {
@@ -283,11 +282,10 @@ class Data
 
   // Create/add node with ID nodeID and type nodeType to Graph
   // Calls success function on PUT success
-  public createNode(nodeID: string, nodeType: string, parentPath?: string,
+  public createNode(nodeID: string, nodeType: string, parentPath: string,
     success?: ()=>void, failure?: () => void)
   {
-    const url = this.restURL + "/graph/" +
-      (typeof parentPath !== "undefined" ? parentPath + "/" : "") + nodeID;
+    const url = this.restURL + "/" + parentPath + "/" + nodeID;
 
     const data = {type: nodeType}
 
@@ -336,7 +334,7 @@ class Data
   // Calls success on DELETE success
   public deleteNode(nodePath: string, success?: ()=>void, failure?: () => void)
   {
-    const url = this.restURL + "/graph/" + nodePath;
+    const url = this.restURL + "/" + nodePath;
 
     fetch(url,
     {
@@ -381,10 +379,10 @@ class Data
   }
 
   // Post non-property data
-  public nonPropertyPost(id: string, data: any, path?: string,
+  public nonPropertyPost(id: string, data: any, path: string,
     success?: () => void, failure?: () => void)
   {
-    const url = this.restURL + "/graph/" + (path ? path + "/" : "") + "@" + id;
+    const url = this.restURL + "/" + path + "/@" + id;
 
     fetch(url,
     {
@@ -427,10 +425,10 @@ class Data
   }
 
   // Delete non-property id
-  public nonPropertyDelete(id: string, path?: string, success?: () => void,
+  public nonPropertyDelete(id: string, path: string, success?: () => void,
     failure?: () => void)
   {
-    const url = this.restURL + "/graph/" + (path ? path + "/" : "") + "@" + id;
+    const url = this.restURL + "/" + path + "/@" + id;
 
     fetch(url,
     {
@@ -477,7 +475,7 @@ class Data
 
   // Generate Graph by getting metadata, layout data and graph data and then
   // processing and combining
-  public generateGraph(success: (json: any) => void, path?: string)
+  public generateGraph(path: string, success: (json: any) => void)
   {
     this.generateSuccess = success;
 
@@ -489,7 +487,7 @@ class Data
       }
       else
       {
-        this.getLayoutData(() => { this.getGraphData(); });
+        this.getLayoutData(() => { this.getGraphData(path); });
       }
     }
 
@@ -768,19 +766,17 @@ class Data
   //============================================================================
 
   // Get data for entire graph and create graph model
-  private async getGraphData(path?: string)
+  private async getGraphData(path: string)
   {
     try
     {
       const res: rm.IRestResponse<vgTypes.IRawGraphItem> =
-        await this.rest.get<vgTypes.IRawGraphItem>('/graph' + (path ?
-          "/" + path : ""));
+        await this.rest.get<vgTypes.IRawGraphItem>("/" + path);
 
       if (res.statusCode === 200 && res.result)
       {
         vgUtils.log("Get Graph Data Success");
-        this.createGraphModel(res.result,
-          path ? path : undefined);
+        this.createGraphModel(res.result, path);
       }
       else
       {
@@ -798,7 +794,7 @@ class Data
 
   // Create Graph model from processed raw graph data
   private createGraphModel(rawGraphData: vgTypes.IRawGraphItem,
-    parentPath?: string)
+    parentPath: string)
   {
     const nodes: vgTypes.IProcessedGraphItem[] = [];
 
@@ -822,7 +818,7 @@ class Data
   // parentPath is the path to the node (graph item) parent e.g. graph/graph-1
   // in the case of subgraphs
   private processSingleGraphItem(itemID: string, item: vgTypes.IRawGraphItem,
-    parentPath?: string)
+    parentPath: string)
   {
     const splitType = item.type.split("/");
     const itemSection = splitType[0];
@@ -969,7 +965,7 @@ class Data
       id: itemID,
       name: metadata.name,
       type: item.type,
-      path: parentPath ? parentPath + "/" + itemID : itemID,
+      path: parentPath + "/" + itemID,
       dynamic: metadata.dynamic,
       category: propsConfig ? propsConfig.category : undefined,
       description: itemStrings ? itemStrings.description : "",

@@ -37,7 +37,6 @@ export default class Graph extends React.Component<IProps, IState>
   private mouseClick: {x: number, y: number};
   private idCount: number;
   private graphRef: SVGSVGElement | null;
-  private currentGraphPath: string[];
   private firstLoad: boolean;
   private csize: number;
 
@@ -54,7 +53,7 @@ export default class Graph extends React.Component<IProps, IState>
     }
     else
     {
-      vgData.generateGraph((json:any) =>
+      vgData.generateGraph("graph", (json:any) =>
         {
           this.graph.loadFrom(json, true, "graph");
           this.forceUpdate();
@@ -76,7 +75,6 @@ export default class Graph extends React.Component<IProps, IState>
     this.idCount = 0;
     this.graphRef = null;
     this.firstLoad = true;
-    this.currentGraphPath = [];
     this.csize = vgConfig.Graph.connectorSize;
   }
 
@@ -518,19 +516,16 @@ export default class Graph extends React.Component<IProps, IState>
 
   private showNodeGraph = (path: string) =>
   {
-    this.startUpdate();
-    this.currentGraphPath.push(path);
     this.setState({targetProperty: {property: null, updating: false}});
     this.clearTargetNode();
 
-    vgData.generateGraph((json:any) =>
+    vgData.generateGraph(path, (json:any) =>
       {
         // Reset View
-        this.graph.forward(json, "graph/" + path);
+        this.graph.forward(json, path);
         this.resetView();
         this.props.notifyGraphRoot(false);
-        this.endUpdate();
-      }, path);
+      });
   }
 
   private createNewNode = (type: string) =>
@@ -555,21 +550,12 @@ export default class Graph extends React.Component<IProps, IState>
 
     const id = typeID+"-"+this.idCount;
 
-    const currGraphPathLen = this.currentGraphPath.length;
-
-    let path: string | undefined = undefined;
-
-    if (currGraphPathLen !== 0)
-    {
-      path = this.currentGraphPath[currGraphPathLen-1];
-    }
-
     // Create new node, get with properties etc, add layout data and add to
     // graph model
-    vgData.createNode(id, type, path,
+    vgData.createNode(id, type, this.graph.getGraphID(),
       () =>
       {
-        vgData.getNode(id, path, (node: any) =>
+        vgData.getNode(id, this.graph.getGraphID(), (node: any) =>
         {
           const svgMouseClick = vgUtils.windowToSVGPosition(
             {x: this.mouseClick.x, y: this.mouseClick.y}, this.graphRef);
@@ -579,6 +565,7 @@ export default class Graph extends React.Component<IProps, IState>
           vgData.updateLayout(node.path,
             {x: svgMouseClick.x, y: svgMouseClick.y});
 
+          this.graph.addNodeFromJSON(node);
           this.forceUpdate();
 
           this.graph.commitTransaction();
@@ -642,21 +629,9 @@ export default class Graph extends React.Component<IProps, IState>
   // Update dynamic node by removing the node from the model and recreating
   private dynamicNodeUpdate = (node: Model.Node, finished?: () => void) =>
   {
-    const currGraphPathLen = this.currentGraphPath.length;
-    let path: string | undefined;
-
-    if (currGraphPathLen === 0)
-    {
-      path = undefined;
-    }
-    else
-    {
-      path = this.currentGraphPath[currGraphPathLen-1];
-    }
-
     this.removeNodeFromModel(node);
 
-    vgData.getNode(node.id, path,
+    vgData.getNode(node.id, this.graph.getGraphID(),
       (node: any) =>
       {
         this.graph.addNodeFromJSON(node);
@@ -671,14 +646,6 @@ export default class Graph extends React.Component<IProps, IState>
   // Update graph pin direction based on connected edges
   private updateGraphPin = (node: Model.Node, direction: string) =>
   {
-    const currGraphPathLen = this.currentGraphPath.length;
-
-    let path: string | undefined = undefined;
-    if (currGraphPathLen !== 0)
-    {
-      path = this.currentGraphPath[currGraphPathLen-1];
-    }
-
     const num = (direction === "input" ? node.getReverseEdges().length :
       node.getForwardEdges().length);
 
@@ -686,14 +653,15 @@ export default class Graph extends React.Component<IProps, IState>
     // Reset pin direction
     if (num === 0)
     {
-      vgData.nonPropertyDelete(node.id, path);
+      vgData.nonPropertyDelete(node.id, this.graph.getGraphID());
     }
     // Pin now has a single edge connected so set pin direction based on
     // connection
     else if (num === 1)
     {
       const pinDirection = (direction === "input" ? "out" : "in");
-      vgData.nonPropertyPost(node.id, {direction: pinDirection}, path);
+      vgData.nonPropertyPost(node.id, {direction: pinDirection},
+        this.graph.getGraphID());
     }
   }
 

@@ -673,7 +673,7 @@ export class Graph
   public back(finished: () => void)
   {
     const currentID = this.getGraphID();
-    const newID = currentID.slice(0,currentID.lastIndexOf("/"));
+    const newID = currentID.slice(0, currentID.lastIndexOf("/"));
 
     let flag = false;
 
@@ -694,19 +694,19 @@ export class Graph
       }
     }
 
+    const newCurrentID = this.getGraphID();
+
     // Regenerate current graph to ensure it is up to date
     this.beginOverride();
 
-    const newCurrentID = this.getGraphID();
     this.state = Map<string, any>();
-    vgData.generateGraph((json:any) =>
+
+    vgData.generateGraph(newCurrentID, (json:any) =>
       {
         this.loadFrom(json, false, newCurrentID);
         this.commitOverride();
         finished();
-      },
-      (newCurrentID === "graph" ? undefined : newCurrentID.slice(6,
-        newCurrentID.length)));
+      });
   }
 
   private get state(): Map<string, any>
