@@ -30,6 +30,41 @@
       }
     }
   },
+  "audio/envelope":
+  {
+    "description": "Provide an ADSR envelope on trigger/release",
+    "properties":
+    {
+      "attack":
+      {
+        "description": "Attack time"
+      },
+      "decay":
+      {
+        "description": "Decay time"
+      },
+      "release":
+      {
+        "description": "Release time"
+      },
+      "reset":
+      {
+        "description": "Reset"
+      },
+      "start":
+      {
+        "description": "Start"
+      },
+      "stop":
+      {
+        "description": "Stop"
+      },
+      "sustain":
+      {
+        "description": "Sustain level"
+      }
+    }
+  },
   "audio/pitch-shift":
   {
     "description": "Audio Pitch Shift",
@@ -38,6 +73,17 @@
       "pitch":
       {
         "description": "Pitch Shift"
+      }
+    }
+  },
+  "audio/position":
+  {
+    "description": "Audio Position",
+    "properties":
+    {
+      "x":
+      {
+        "description": "x"
       }
     }
   },
@@ -113,6 +159,10 @@
       }
     }
   },
+  "bitmap/pin":
+  {
+    "description": "Bitmap Pin"
+  },
   "bitmap/rectangle":
   {
     "description": "Bitmap rectangle",
@@ -125,6 +175,25 @@
       "height":
       {
         "description": "Height of bitmap"
+      }
+    }
+  },
+  "bitmap/rgb":
+  {
+    "description": "Bitmap RGB",
+    "properties":
+    {
+      "r":
+      {
+        "description": "Red"
+      },
+      "g":
+      {
+        "description": "Green"
+      },
+      "b":
+      {
+        "description": "Blue"
       }
     }
   },
@@ -283,41 +352,6 @@
       }
     }
   },
-  "core/envelope":
-  {
-    "description": "Provide an ADSR envelope on trigger/release",
-    "properties":
-    {
-      "attack":
-      {
-        "description": "Attack time"
-      },
-      "decay":
-      {
-        "description": "Decay time"
-      },
-      "release":
-      {
-        "description": "Release time"
-      },
-      "reset":
-      {
-        "description": "Reset"
-      },
-      "start":
-      {
-        "description": "Start"
-      },
-      "stop":
-      {
-        "description": "Stop"
-      },
-      "sustain":
-      {
-        "description": "Sustain level"
-      }
-    }
-  },
   "core/filter":
   {
     "description": "Filter (low-, high- or band-pass)",
@@ -382,7 +416,7 @@
       }
     }
   },
-  "core/number-pin":
+  "core/pin":
   {
     "description": "Number Pin"
   },
@@ -596,6 +630,59 @@
       "url":
       {
         "description": "URL"
+      }
+    }
+  },
+  "vector/fade":
+  {
+    "description": "Vector Fade",
+    "properties":
+    {
+      "alpha":
+      {
+        "description": "Alpha"
+      }
+    }
+  },
+  "vector/hsl":
+  {
+    "description": "Vector HSL",
+    "properties":
+    {
+      "h":
+      {
+        "description": "Hue"
+      },
+      "s":
+      {
+        "description": "Saturation"
+      },
+      "l":
+      {
+        "description": "Lightness"
+      }
+    }
+  },
+  "vector/pin":
+  {
+    "description": "Number Pin"
+  },
+  "vector/rgb":
+  {
+    "description": "Vector RGB",
+    "properties":
+    {
+      "r":
+      {
+        "description": "Red"
+      },
+      "g":
+      {
+        "description": "Green"
+      },
+      "b":
+      {
+        "description": "Blue"
       }
     }
   },

@@ -38,6 +38,102 @@
       }
     }
   },
+  "audio/envelope":
+  {
+    "width": 190,
+    "height": 90,
+    "properties":
+    {
+      "attack":
+      {
+        "controlType": "knob/default",
+        "rangeMin": 0,
+        "rangeMax": 10,
+        "increment": 0.001,
+        "x": 30,
+        "y": 30
+      },
+      "decay":
+      {
+        "controlType": "knob/default",
+        "rangeMin": 0,
+        "rangeMax": 10,
+        "increment": 0.05,
+        "x": 70,
+        "y": 30
+      },
+      "release":
+      {
+        "controlType": "knob/log",
+        "rangeMin": 0.01,
+        "rangeMax": 30,
+        "increment": 0.01,
+        "x": 150,
+        "y": 30
+      },
+      "reset":
+      {
+        "controlType": "button/default",
+        "x": 82,
+        "y": 65,
+        "valueFormat": "triggerButton"
+      },
+      "start":
+      {
+        "controlType": "button/default",
+        "x": 32,
+        "y": 65,
+        "valueFormat": "triggerButton"
+      },
+      "stop":
+      {
+        "controlType": "button/default",
+        "x": 57,
+        "y": 65,
+        "valueFormat": "triggerButton"
+      },
+      "sustain":
+      {
+        "controlType": "knob/default",
+        "rangeMin": 0,
+        "rangeMax": 1,
+        "increment": 0.01,
+        "x": 110,
+        "y": 30
+      }
+    }
+  },
+  "audio/pitch-shift":
+  {
+    "width": 70,
+    "height": 70,
+    "properties":
+    {
+     "pitch":
+      {
+        "controlType": "knob/default",
+        "rangeMin": -60,
+        "rangeMax": 60,
+        "increment": 0.1,
+        "x": 30,
+        "y": 30
+      }
+    }
+  },
+  "audio/position":
+  {
+    "width": 70,
+    "height": 70,
+    "properties":
+    {
+     "x":
+      {
+        "controlType": "knob/default",
+        "x": 30,
+        "y": 30
+      }
+    }
+  },
   "audio/sdl-out":
   {
     "width": 100,
@@ -70,23 +166,6 @@
       {
         "rangeMin": 0,
         "rangeMax": 5000
-      }
-    }
-  },
-  "audio/pitch-shift":
-  {
-    "width": 70,
-    "height": 70,
-    "properties":
-    {
-     "pitch":
-      {
-        "controlType": "knob/default",
-        "rangeMin": -60,
-        "rangeMax": 60,
-        "increment": 0.1,
-        "x": 30,
-        "y": 30
       }
     }
   },
@@ -150,6 +229,15 @@
       }
     }
   },
+  "bitmap/pin":
+  {
+    "width": 70,
+    "height": 50,
+    "category": "pin",
+    "properties":
+    {
+    }
+  },
   "bitmap/rectangle":
   {
     "width": 110,
@@ -173,6 +261,35 @@
         "increment": 1,
         "x": 70,
         "y": 35
+      }
+    }
+  },
+  "bitmap/rgb":
+  {
+    "width": 170,
+    "height": 100,
+    "properties":
+    {
+      "r":
+      {
+        "controlType": "colourPicker/main",
+        "increment": 0.01,
+        "x": 30,
+        "y": 30
+      },
+      "g":
+      {
+        "controlType": "colourPicker/default",
+        "increment": 0.01,
+        "x": 50,
+        "y": 50
+      },
+      "b":
+      {
+        "controlType": "colourPicker/default",
+        "increment": 0.01,
+        "x": 50,
+        "y": 70
       }
     }
   },
@@ -407,71 +524,6 @@
       }
     }
   },
-  "core/envelope":
-  {
-    "width": 190,
-    "height": 90,
-    "properties":
-    {
-      "attack":
-      {
-        "controlType": "knob/default",
-        "rangeMin": 0,
-        "rangeMax": 10,
-        "increment": 0.001,
-        "x": 30,
-        "y": 30
-      },
-      "decay":
-      {
-        "controlType": "knob/default",
-        "rangeMin": 0,
-        "rangeMax": 10,
-        "increment": 0.05,
-        "x": 70,
-        "y": 30
-      },
-      "release":
-      {
-        "controlType": "knob/log",
-        "rangeMin": 0.01,
-        "rangeMax": 30,
-        "increment": 0.01,
-        "x": 150,
-        "y": 30
-      },
-      "reset":
-      {
-        "controlType": "button/default",
-        "x": 82,
-        "y": 65,
-        "valueFormat": "triggerButton"
-      },
-      "start":
-      {
-        "controlType": "button/default",
-        "x": 32,
-        "y": 65,
-        "valueFormat": "triggerButton"
-      },
-      "stop":
-      {
-        "controlType": "button/default",
-        "x": 57,
-        "y": 65,
-        "valueFormat": "triggerButton"
-      },
-      "sustain":
-      {
-        "controlType": "knob/default",
-        "rangeMin": 0,
-        "rangeMax": 1,
-        "increment": 0.01,
-        "x": 110,
-        "y": 30
-      }
-    }
-  },
   "core/filter":
   {
     "width": 145,
@@ -586,7 +638,7 @@
       }
     }
   },
-  "core/number-pin":
+  "core/pin":
   {
     "width": 70,
     "height": 50,
@@ -915,6 +967,88 @@
       },
       "url":
       {
+      }
+    }
+  },
+  "vector/fade":
+  {
+    "width": 70,
+    "height": 70,
+    "properties":
+    {
+     "alpha":
+      {
+        "controlType": "knob/default",
+        "increment": 0.1,
+        "x": 30,
+        "y": 35
+      }
+    }
+  },
+  "vector/hsl":
+  {
+    "width": 170,
+    "height": 100,
+    "properties":
+    {
+      "h":
+      {
+        "controlType": "colourPicker/main",
+        "increment": 0.01,
+        "x": 30,
+        "y": 30
+      },
+      "s":
+      {
+        "controlType": "colourPicker/default",
+        "increment": 0.01,
+        "x": 50,
+        "y": 50
+      },
+      "l":
+      {
+        "controlType": "colourPicker/default",
+        "increment": 0.01,
+        "x": 50,
+        "y": 70
+      }
+    }
+  },
+  "vector/pin":
+  {
+    "width": 70,
+    "height": 50,
+    "category": "pin",
+    "properties":
+    {
+    }
+  },
+  "vector/rgb":
+  {
+    "width": 170,
+    "height": 100,
+    "properties":
+    {
+      "r":
+      {
+        "controlType": "colourPicker/main",
+        "increment": 0.01,
+        "x": 30,
+        "y": 30
+      },
+      "g":
+      {
+        "controlType": "colourPicker/default",
+        "increment": 0.01,
+        "x": 50,
+        "y": 50
+      },
+      "b":
+      {
+        "controlType": "colourPicker/default",
+        "increment": 0.01,
+        "x": 50,
+        "y": 70
       }
     }
   },

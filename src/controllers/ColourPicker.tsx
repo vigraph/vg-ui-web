@@ -37,6 +37,8 @@ export default class ColourPicker extends React.Component<IProps, IState>
 
   private pickerRef: SVGSVGElement | null;
 
+  private gradKey: string;
+
   constructor(props: IProps)
   {
     super(props);
@@ -53,10 +55,15 @@ export default class ColourPicker extends React.Component<IProps, IState>
       currentValue: props.property.value,
       picking: false
     };
+
+    this.gradKey = "";
   }
 
   public render()
   {
+    this.gradKey =
+      JSON.stringify(this.props.colourValues).replace(/:|,|"/g,'');
+
     return(
       <svg id="colour-picker-wrapper" className={this.props.settingsType}
         ref={(ref) => { this.pickerRef = ref; }}>
@@ -80,12 +87,14 @@ export default class ColourPicker extends React.Component<IProps, IState>
       {
         hex = colours.hex;
       }
-      else if (colours.h && colours.s && colours.l)
+      else if (colours.h !== undefined && colours.s !== undefined &&
+        colours.l !== undefined)
       {
         hex = vgUtils.rgbToHex(vgUtils.hslToRGB({h: colours.h, s: colours.s,
           l: colours.l}));
       }
-      else if (colours.r && colours.g && colours.b)
+      else if (colours.r !== undefined && colours.g !== undefined &&
+        colours.b !== undefined)
       {
         hex = vgUtils.rgbToHex({r: colours.r, g: colours.g, b: colours.b});
       }
@@ -102,7 +111,8 @@ export default class ColourPicker extends React.Component<IProps, IState>
   {
     const colours = this.props.colourValues;
 
-    if (this.props.property.id === "h" && colours.s && colours.l)
+    if (this.props.property.id === "h" && colours.s !== undefined &&
+      colours.l !== undefined)
     {
       const s = colours.s;
       const l = colours.l;
@@ -113,7 +123,8 @@ export default class ColourPicker extends React.Component<IProps, IState>
             stopColor={"hsl("+(36*i)+", "+s*100+"%, "+l*100+"%)"} />
         });
     }
-    else if (this.props.property.id === "s" && colours.h && colours.l)
+    else if (this.props.property.id === "s" && colours.h !== undefined &&
+      colours.l !== undefined)
     {
       const h = colours.h;
       const l = colours.l;
@@ -124,7 +135,8 @@ export default class ColourPicker extends React.Component<IProps, IState>
             stopColor={"hsl("+(h*360)+", "+i*10+"%, "+(l*100)+"%)"} />
         });
     }
-    else if (this.props.property.id === "l" && colours.h && colours.s)
+    else if (this.props.property.id === "l" && colours.h !== undefined &&
+      colours.s !== undefined)
     {
       const h = colours.h;
       const s = colours.s;
@@ -135,7 +147,8 @@ export default class ColourPicker extends React.Component<IProps, IState>
             stopColor={"hsl("+(h*360)+", "+(s*100)+"%, "+i*10+"%)"} />
         });
     }
-    else if (this.props.property.id === "r" && colours.g && colours.b)
+    else if (this.props.property.id === "r" && colours.g !== undefined &&
+      colours.b !== undefined)
     {
       const g = colours.g;
       const b = colours.b;
@@ -146,7 +159,8 @@ export default class ColourPicker extends React.Component<IProps, IState>
             stopColor={"rgb("+(i*25.5)+", "+(g*255)+", "+(b*255)+")"} />
         });
     }
-    else if (this.props.property.id === "g" && colours.r && colours.b)
+    else if (this.props.property.id === "g" && colours.r !== undefined &&
+      colours.b !== undefined)
     {
       const r = colours.r;
       const b = colours.b;
@@ -157,7 +171,8 @@ export default class ColourPicker extends React.Component<IProps, IState>
             stopColor={"rgb("+(r*255)+", "+(i*25.5)+", "+(b*255)+")"} />
         });
     }
-    else if (this.props.property.id === "b" && colours.r && colours.g)
+    else if (this.props.property.id === "b" && colours.r !== undefined &&
+      colours.g !== undefined)
     {
       const r = colours.r;
       const g = colours.g;
@@ -180,7 +195,8 @@ export default class ColourPicker extends React.Component<IProps, IState>
 
     return <svg id="colour-picker" className={name} x={x} y={0}>
 
-      <linearGradient id={name+"-gradient"} x1="0%" y1="0%" x2="100%" y2="0%">
+      <linearGradient id={name+"-gradient-"+this.gradKey} x1="0%" y1="0%"
+        x2="100%" y2="0%">
       {
         gradientArray.map(gradientFunction)
       }
@@ -190,7 +206,7 @@ export default class ColourPicker extends React.Component<IProps, IState>
 
         <rect id={name} className={"picker-background " + name}
         width={settings.barLength} height={settings.barThickness}
-        fill={"url(#"+name+"-gradient)"}
+        fill={"url(#"+name+"-gradient-"+this.gradKey+")"}
         onMouseDown={this.handleMouseDown}
         onMouseMove={this.handleMouseMove} />
 

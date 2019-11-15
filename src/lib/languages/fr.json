@@ -26,41 +26,7 @@
       }
     }
   },
-  "core/add":
-  {
-    "description": "Ajouter un décalage à une valeur de contrôle",
-    "properties":
-    {
-      "offset":
-      {
-        "description": "Montant compensé"
-      }
-    }
-  },
-  "core/beat":
-  {
-    "description": "Pouls régulier",
-    "properties":
-    {
-      "interval":
-      {
-        "description": "Intervalle en secondes"
-      },
-      "offset":
-      {
-        "description": "Décalage"
-      },
-      "start":
-      {
-        "description": "Début"
-      },
-      "stop":
-      {
-        "description": "Arrêtez"
-      }
-    }
-  },
-  "core/envelope":
+  "audio/envelope":
   {
     "description": "Fournir une enveloppe ADSR sur le déclencheur/relâchement",
     "properties":
@@ -92,6 +58,40 @@
       "sustain":
       {
         "description": "Maintenir le niveau"
+      }
+    }
+  },
+  "core/add":
+  {
+    "description": "Ajouter un décalage à une valeur de contrôle",
+    "properties":
+    {
+      "offset":
+      {
+        "description": "Montant compensé"
+      }
+    }
+  },
+  "core/beat":
+  {
+    "description": "Pouls régulier",
+    "properties":
+    {
+      "interval":
+      {
+        "description": "Intervalle en secondes"
+      },
+      "offset":
+      {
+        "description": "Décalage"
+      },
+      "start":
+      {
+        "description": "Début"
+      },
+      "stop":
+      {
+        "description": "Arrêtez"
       }
     }
   },
