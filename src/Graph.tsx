@@ -265,11 +265,22 @@ export default class Graph extends React.Component<IProps, IState>
       const property = this.state.targetProperty.property;
       const fSize = vgConfig.Graph.fontSize.propertyLabel;
       const padding = 3;
-      const value = property.value.toString();
+      const value = (typeof property.value !== "undefined" ?
+        property.value.toString() : null);
 
       const nameSize = vgUtils.textBoundingSize(property.id, fSize);
-      const valueSize = vgUtils.textBoundingSize(value, fSize);
-      const textWidth = Math.max(nameSize.width, valueSize.width);
+      let textWidth: number;
+
+      if (value)
+      {
+        const valueSize = vgUtils.textBoundingSize(value, fSize);
+        textWidth = Math.max(nameSize.width, valueSize.width);
+      }
+      else
+      {
+        textWidth = nameSize.width;
+      }
+
       const width = textWidth + (2 * padding);
 
       const node = this.graph.getNode(property.parent);
@@ -288,7 +299,7 @@ export default class Graph extends React.Component<IProps, IState>
         <text className="label property-label" x={padding} y={8 + (padding)}
           fontSize={fSize}>
           <tspan x={0} dy={0}>{property.id}</tspan>
-          <tspan x={0} dy={fSize+1}>{value}</tspan>
+          <tspan x={0} dy={fSize+1}>{value ? value : ""}</tspan>
         </text>
       </svg>
     }
@@ -621,9 +632,32 @@ export default class Graph extends React.Component<IProps, IState>
     {
       this.graph.removeEdge(node.id, value.outputId, value.dest.id,
         value.destInput);
+
+      // Input no longer has connection so update its value
+      this.updatePropertyValue(value.dest, value.destInput);
     });
 
     this.graph.removeNode(node.id);
+  }
+
+  // Get property value from the engine and update model property value
+  private updatePropertyValue(node: Model.Node, propID: string,
+    success?: () => void)
+  {
+    vgData.getPropertyValue(node.path, propID,
+        (propValue: any) =>
+        {
+          const prop = node.getProperties().find(x => x.id === propID);
+          if (prop)
+          {
+            prop.value = propValue;
+          }
+
+          if (success)
+          {
+            success();
+          }
+        });
   }
 
   // Update dynamic node by removing the node from the model and recreating
@@ -740,11 +774,16 @@ export default class Graph extends React.Component<IProps, IState>
             this.updateGraphPin(dest, "input");
           }
 
-          if (success)
+          // Edge connection to input removed so update property value
+          this.updatePropertyValue(dest, destInput, () =>
           {
-            success();
-          }
-          this.forceUpdate();
+            if (success)
+            {
+              success();
+            }
+            this.forceUpdate();
+          })
+
         });
     }
   }

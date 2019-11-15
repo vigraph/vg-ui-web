@@ -123,8 +123,11 @@ export default class InfoPanel extends React.Component<IProps, IState>
       return <div id="inputs-info-wrapper" className="info-section-wrapper">
         {inputs.map((input: Model.Property, index: number) =>
           {
+            const key = "input-" + index + "-" + (typeof input.value !==
+              "undefined" ? input.value.toString() : "undefined");
+
             return <div id={input.id+"-wrapper"} className="input-wrapper"
-              key={"input-"+index+"-"+input.value.toString()}>
+              key={key}>
               <div id={input.id+"-desc"} className="info-text input desc">
                 {input.description ? input.description : input.id}
               </div>
@@ -150,8 +153,11 @@ export default class InfoPanel extends React.Component<IProps, IState>
       return <div id="settings-info-wrapper" className="info-section-wrapper">
         {settings.map((setting: Model.Property, index: number) =>
           {
+            const key = "setting-" + index + "-" + (typeof setting.value !==
+              "undefined" ? setting.value.toString() : "undefined");
+
             return <div id={setting.id+"-wrapper"} className="setting-wrapper"
-              key={"setting-"+index+"-"+setting.value.toString()}>
+              key={key}>
               <div id={setting.id+"-desc"} className="info-text setting desc">
                 {setting.description ? setting.description : setting.id}
               </div>
@@ -167,7 +173,12 @@ export default class InfoPanel extends React.Component<IProps, IState>
   // object can be found and matched from the component event
   private createValueControl = (property: Model.Property, disabled: boolean) =>
   {
-    if (property.valueFormat === "triggerButton")
+    if (typeof property.value === "undefined")
+    {
+      return <div id={property.id}
+        className={"undefined-value-label info-text"}>{"--"}</div>
+    }
+    else if (property.valueFormat === "triggerButton")
     {
       return <input id={property.id} type="button" disabled={disabled}
         className={"value-button " + property.propType}

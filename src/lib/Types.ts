@@ -7,19 +7,11 @@ export interface IRawGraphItem
   dynamic: boolean,
   inputs?:
   {
-    [key: string]:
-    {
-      type: string,
-      value: any
-    }
+    [key: string]: IRawProperty
   },
   settings?:
   {
-    [key: string]:
-    {
-      type: string,
-      value: any
-    }
+    [key: string]: IRawProperty
   },
   outputs?:
   {
@@ -44,6 +36,12 @@ export interface IRawGraphItem
   {
     [key: string]: IRawGraphItem,
   }
+}
+
+export interface IRawProperty
+{
+  type: string,
+  value: any
 }
 
 export interface IProcessedGraphItem

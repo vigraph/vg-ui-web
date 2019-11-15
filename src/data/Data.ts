@@ -85,6 +85,57 @@ class Data
       });
   }
 
+  // Get and return property value
+  public getPropertyValue(nodePath: string, propID: string,
+    success?: (value: any) => void, failure?: () => void)
+  {
+    this.getProperty(nodePath + "/@" + propID,
+      (property: vgTypes.IRawProperty) =>
+      {
+        if (success)
+        {
+          success(property.value);
+        }
+      });
+  }
+
+  private async getProperty(path: string,
+    success?: (result: vgTypes.IRawProperty)=>void, failure?: () => void)
+  {
+    try
+    {
+      const res: rm.IRestResponse<vgTypes.IRawProperty> =
+        await this.rest.get<vgTypes.IRawProperty>('/' + path);
+
+      if (res.statusCode === 200 && res.result && success)
+      {
+        vgUtils.log("Get Raw Property Success");
+        success(res.result);
+      }
+      else
+      {
+        // Error with status code
+        vgUtils.log("Get Raw Property Failure with status code: " +
+          res.statusCode);
+
+        if (failure)
+        {
+          failure();
+        }
+      }
+    }
+    catch (error)
+    {
+      // Error
+      vgUtils.log("Get Raw Property Failure with error: " + error);
+
+      if (failure)
+      {
+        failure();
+      }
+    }
+  }
+
   // Update layout data. If no position or size given then layout data for
   // given id is removed. If no id given then this.layoutData is sent with
   // no updates.
@@ -916,7 +967,7 @@ class Data
         gProps.push(
         {
           id: inputID,
-          value: (itemInput ? itemInput.value : 0),
+          value: (itemInput ? itemInput.value : undefined),
           valueType: (itemInput ? itemInput.type : "number"),
           propType: "input",
           ...iPropsConfig, ...iPropsStrings
@@ -949,7 +1000,7 @@ class Data
         gProps.push(
         {
           id: settingID,
-          value: (itemSetting ? itemSetting.value : 0),
+          value: (itemSetting ? itemSetting.value : undefined),
           valueType: (itemSetting ? itemSetting.type : "number"),
           propType: "setting",
           ...sPropsConfig, ...sPropsStrings

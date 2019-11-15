@@ -51,8 +51,6 @@ export default class Property extends React.Component<IProps, IState>
       { value: props.property.value };
   }
 
-  private property: Model.Property;
-
   // Main and Sub control types
   private controlType: string[];
 
@@ -62,17 +60,18 @@ export default class Property extends React.Component<IProps, IState>
   {
     super(props);
 
-    this.property = props.property;
-    this.controlType = this.property.controlType.split("/");
+    const property = props.property;
+    this.controlType = property.controlType.split("/");
 
-    if (this.controlType[0] === "knob" || this.controlType[0] === "slider")
+    if ((this.controlType[0] === "knob" || this.controlType[0] === "slider") &&
+      typeof property.value !== "undefined")
     {
       // Ensure value conforms to increment bounds
-      const snapValue = vgUtils.snapValueToIncrement(this.property.value,
-        this.property.increment);
-      if (this.property.value !== snapValue)
+      const snapValue = vgUtils.snapValueToIncrement(property.value,
+        property.increment);
+      if (property.value !== snapValue)
       {
-        this.property.value = snapValue;
+        property.value = snapValue;
       }
     }
 
@@ -80,7 +79,7 @@ export default class Property extends React.Component<IProps, IState>
 
     this.state =
     {
-      value: this.property.value,
+      value: property.value,
       updating: false,
       hover: false
     };
@@ -89,8 +88,8 @@ export default class Property extends React.Component<IProps, IState>
 
   public render()
   {
-    const position = this.property.position;
-    const controlDisabled = this.property.hasConnection();
+    const position = this.props.property.position;
+    const controlDisabled = this.props.property.hasConnection();
 
     return(
       <svg id={this.props.name.toLowerCase()+"-property"}
@@ -109,18 +108,19 @@ export default class Property extends React.Component<IProps, IState>
   private createComponent = (controlDisabled: boolean) =>
   {
     const Component = controlTypes[this.controlType[0]];
-    const position = this.property.position;
+    const property = this.props.property;
+    const position = property.position;
     const settingsType = (this.controlType[1] ?
       this.controlType[1] : "default");
 
     if (!Component)
     {
-      if (this.property.propType === "setting" &&
+      if (property.propType === "setting" &&
         this.controlType[1] === "label")
       {
         return <text className={"settings label " + this.controlType[1]}
           fontSize={vgConfig.Graph.fontSize.propertySettings} x={0} y={0}>
-            {this.property.value}
+            {property.value}
           </text>
       }
       else
@@ -134,7 +134,7 @@ export default class Property extends React.Component<IProps, IState>
         { w: this.props.parent.size.w - position.x - (2 * this.props.padding),
           h: this.props.parent.size.h - position.y - (2 * this.props.padding) };
 
-      return <Curve property={this.property}
+      return <Curve property={property}
           position={{x: position.x, y: position.y}}
           startUpdate={this.startPropertyUpdate} update={this.propertyUpdate}
           endUpdate={this.endPropertyUpdate} disabled={controlDisabled}
@@ -159,7 +159,7 @@ export default class Property extends React.Component<IProps, IState>
         colourValues.b = (rProps.b ? rProps.b.value : undefined);
       }
 
-      return <ColourPicker property={this.property}
+      return <ColourPicker property={property}
           position={{x: position.x, y: position.y}}
           startUpdate={this.startPropertyUpdate} update={this.propertyUpdate}
           endUpdate={this.endPropertyUpdate} disabled={controlDisabled}
@@ -167,7 +167,7 @@ export default class Property extends React.Component<IProps, IState>
     }
     else
     {
-      return <Component property={this.property}
+      return <Component property={property}
           position={{x: position.x, y: position.y}}
           startUpdate={this.startPropertyUpdate} update={this.propertyUpdate}
           endUpdate={this.endPropertyUpdate} disabled={controlDisabled}
@@ -178,7 +178,8 @@ export default class Property extends React.Component<IProps, IState>
   private startPropertyUpdate = () =>
   {
     this.setState({updating: true});
-    this.props.updateTargetProperty(this.property.id, this.property, true);
+    this.props.updateTargetProperty(this.props.property.id, this.props.property,
+      true);
 
     if (this.props.startUpdate)
     {
@@ -189,8 +190,8 @@ export default class Property extends React.Component<IProps, IState>
   private endPropertyUpdate = () =>
   {
     this.setState({updating: false});
-    this.props.updateTargetProperty(this.property.id, this.state.hover ?
-      this.property : null, false);
+    this.props.updateTargetProperty(this.props.property.id, this.state.hover ?
+      this.props.property : null, false);
 
     if (this.props.endUpdate)
     {
@@ -200,15 +201,16 @@ export default class Property extends React.Component<IProps, IState>
 
   private propertyUpdate = (value: any) =>
   {
-    const newValue = this.property.valueType === "number" ?
-      vgUtils.snapValueToIncrement(value, this.property.increment) : value;
+    const property = this.props.property;
+    const newValue = property.valueType === "number" ?
+      vgUtils.snapValueToIncrement(value, property.increment) : value;
 
     this.setState({value: newValue});
 
-    vgData.updateProperty(this.props.parent.path, this.property.id, value,
+    vgData.updateProperty(this.props.parent.path, property.id, value,
       () =>
       {
-        this.property.value = newValue;
+        property.value = newValue;
 
         if (this.props.update)
         {
@@ -218,7 +220,7 @@ export default class Property extends React.Component<IProps, IState>
       () =>
       {
         // Reset UI to actual property value on failure
-        this.setState({value: this.property.value});
+        this.setState({value: property.value});
       });
   }
 
@@ -227,7 +229,8 @@ export default class Property extends React.Component<IProps, IState>
     this.setState({hover: true});
     if (!this.state.updating)
     {
-      this.props.updateTargetProperty(this.property.id, this.property, false);
+      this.props.updateTargetProperty(this.props.property.id,
+        this.props.property, false);
     }
   }
 
@@ -236,7 +239,7 @@ export default class Property extends React.Component<IProps, IState>
     this.setState({hover: false});
     if (!this.state.updating)
     {
-      this.props.updateTargetProperty(this.property.id, null, false);
+      this.props.updateTargetProperty(this.props.property.id, null, false);
     }
   }
 
