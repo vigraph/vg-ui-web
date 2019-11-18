@@ -41,38 +41,6 @@ export default class WebsocketCanvas extends React.Component<IProps>
     const rxSocket = new WebSocket(this.props.ip+':'+this.props.port+'/');
     rxSocket.binaryType = 'arraybuffer';
     rxSocket.onmessage = (e: MessageEvent) => { this.handleFrame(e.data); };
-
-    this.updateCanvas();
-  }
-
-  public componentDidUpdate()
-  {
-    this.updateCanvas();
-  }
-
-  private updateCanvas()
-  {
-    // No change in size so don't update canvas
-    if (this.previousSize.x === this.props.size.x && this.previousSize.y ===
-      this.props.size.y)
-    {
-      return;
-    }
-
-    this.previousSize = this.props.size;
-
-    const canvas = this.canvasRef.current;
-    if (canvas)
-    {
-      const ctx = canvas.getContext('2d');
-      if (ctx)
-      {
-        // Scale to float coordinates, flipped, origin at centre, -0.5 .. 0.5
-        ctx.translate(this.props.size.x / 2, this.props.size.y / 2);
-        ctx.scale(this.props.size.x, -this.props.size.y);
-        ctx.lineWidth = 1 / this.props.size.x;
-      }
-    }
   }
 
   private handleVectorFrame(view: DataView, ctx: CanvasRenderingContext2D)
@@ -80,6 +48,12 @@ export default class WebsocketCanvas extends React.Component<IProps>
     if (view.byteLength < 10) return;
     view.getUint32(2);  // ts high
     view.getUint32(6);  // ts low
+
+    // Scale from vector co-ordinates
+    ctx.resetTransform();
+    ctx.translate(this.props.size.x / 2, this.props.size.y / 2);
+    ctx.scale(this.props.size.x, -this.props.size.y);
+    ctx.lineWidth = 1 / this.props.size.x;
 
     // Beam scatter effect - fill triangle from origin
     if (this.props.beams)
@@ -180,6 +154,7 @@ export default class WebsocketCanvas extends React.Component<IProps>
 
     const width = view.getUint32(10);
     const height = view.getUint32(14);
+    const image:ImageData = ctx.createImageData(width, height);
 
     let i=18;
     for (let y=0; y<height; y++)
@@ -193,12 +168,25 @@ export default class WebsocketCanvas extends React.Component<IProps>
 
         if (r || g || b)  // don't draw black
         {
-          ctx.fillStyle = 'rgb(' + r + ',' + g + ',' + b + ')';
-          // Note flip back
-          ctx.fillRect(x/width-0.5, 0.5-y/height, 0.99/width, 0.99/height);
+          let index=(x+y*width)*4;
+          image.data[index] = r;
+          image.data[index+1] = g;
+          image.data[index+2] = b;
+          image.data[index+3] = 255;  // alpha
         }
       }
     }
+
+    // Create a new temporary canvas to scale into
+    let tc = document.createElement("canvas");
+    tc.setAttribute("width", ""+width);
+    tc.setAttribute("height", ""+height);
+    tc.getContext("2d")!.putImageData(image, 0, 0);
+
+    // Reset the transform and scale the image
+    ctx.resetTransform();
+    ctx.scale(this.props.size.x / width, this.props.size.y / height);
+    ctx.drawImage(tc, 0, 0);
   }
 
   private handleFrame(data: ArrayBuffer)
