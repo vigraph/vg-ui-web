@@ -649,7 +649,7 @@
   },
   "core/oscillator":
   {
-    "width": 170,
+    "width": 210,
     "height": 95,
     "properties":
     {
@@ -671,11 +671,20 @@
         "x": 65,
         "y": 22
       },
+      "phase":
+      {
+        "controlType": "knob/default",
+        "rangeMin": 0,
+        "rangeMax": 1,
+        "increment": 0.01,
+        "x": 105,
+        "y": 22
+      },
       "wave":
       {
         "controlType": "selector/vert",
         "available": ["sin","square","triangle","saw","random"],
-        "x": 110,
+        "x": 150,
         "y": 20
       },
       "start":
