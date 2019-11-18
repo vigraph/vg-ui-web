@@ -157,6 +157,7 @@ export default class WebsocketCanvas extends React.Component<IProps>
     const image:ImageData = ctx.createImageData(width, height);
 
     let i=18;
+    let di=0;
     for (let y=0; y<height; y++)
     {
       for(let x=0; x<width; x++)
@@ -166,14 +167,10 @@ export default class WebsocketCanvas extends React.Component<IProps>
         const g = view.getUint8(i++);
         const b = view.getUint8(i++);
 
-        if (r || g || b)  // don't draw black
-        {
-          let index=(x+y*width)*4;
-          image.data[index] = r;
-          image.data[index+1] = g;
-          image.data[index+2] = b;
-          image.data[index+3] = 255;  // alpha
-        }
+        image.data[di++] = r;
+        image.data[di++] = g;
+        image.data[di++] = b;
+        image.data[di++] = 255;  // alpha
       }
     }
 
