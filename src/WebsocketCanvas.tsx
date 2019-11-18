@@ -181,7 +181,6 @@ export default class WebsocketCanvas extends React.Component<IProps>
     const width = view.getUint32(10);
     const height = view.getUint32(14);
 
-    // Beam scatter effect - fill triangle from origin
     let i=18;
     for (let y=0; y<height; y++)
     {
@@ -195,7 +194,8 @@ export default class WebsocketCanvas extends React.Component<IProps>
         if (r || g || b)  // don't draw black
         {
           ctx.fillStyle = 'rgb(' + r + ',' + g + ',' + b + ')';
-          ctx.fillRect(x/width-0.5, y/height-0.5, 0.99/width, 0.99/height);
+          // Note flip back
+          ctx.fillRect(x/width-0.5, 0.5-y/height, 0.99/width, 0.99/height);
         }
       }
     }
