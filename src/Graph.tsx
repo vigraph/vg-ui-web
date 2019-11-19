@@ -603,10 +603,11 @@ export default class Graph extends React.Component<IProps, IState>
     vgData.deleteNode(node.path,
       () =>
       {
-        this.removeNodeFromModel(node);
-
-        this.graph.commitTransaction();
-        this.forceUpdate();
+        this.removeNodeFromModel(node, () =>
+        {
+          this.graph.commitTransaction();
+          this.forceUpdate();
+        });
       },
       () =>
       {
@@ -614,7 +615,7 @@ export default class Graph extends React.Component<IProps, IState>
       });
   }
 
-  private removeNodeFromModel = (node: Model.Node) =>
+  private removeNodeFromModel = (node: Model.Node, success: () => void) =>
   {
     // Delete node and all of its edges from the model
     const reverseEdges = node.getReverseEdges();
@@ -623,21 +624,79 @@ export default class Graph extends React.Component<IProps, IState>
     reverseEdges.forEach((value: { inputId: string, src: Model.Node,
       srcOutput: string}) =>
     {
-      this.graph.removeEdge(value.src.id, value.srcOutput, node.id,
-        value.inputId);
+      this.removeEdgefromModel(value.src.id, value.srcOutput, node.id,
+        value.inputId, false);
     });
 
-    forwardEdges.forEach((value: { outputId: string, dest: Model.Node,
-      destInput: string}) =>
+    const fEdges = forwardEdges.length;
+    let updateCount = 0;
+
+    const finished = () =>
     {
-      this.graph.removeEdge(node.id, value.outputId, value.dest.id,
-        value.destInput);
+      this.graph.removeNode(node.id);
 
-      // Input no longer has connection so update its value
-      this.updatePropertyValue(value.dest, value.destInput);
-    });
+      success();
+    }
 
-    this.graph.removeNode(node.id);
+    if (fEdges)
+    {
+      forwardEdges.forEach((value: { outputId: string, dest: Model.Node,
+        destInput: string}) =>
+      {
+        this.removeEdgefromModel(node.id, value.outputId, value.dest.id,
+          value.destInput, false);
+
+        // Input no longer has connection so update its value
+        this.updatePropertyValue(value.dest, value.destInput, () =>
+          {
+            updateCount++;
+            if (updateCount === fEdges)
+            {
+              finished();
+            }
+          });
+      });
+    }
+    else
+    {
+      finished();
+    }
+  }
+
+  private removeEdgefromModel = (srcID: string, srcOutput: string,
+    destID: string, destInput: string, updateProp: boolean,
+    success?: () => void) =>
+  {
+    const src = this.graph.getNode(srcID);
+    const dest = this.graph.getNode(destID);
+
+    this.graph.removeEdge(srcID, srcOutput, destID, destInput);
+
+    if (src && src.category === "pin")
+    {
+      this.updateGraphPin(src, "output");
+    }
+
+    if (dest)
+    {
+      if (dest.category === "pin")
+      {
+        this.updateGraphPin(dest, "input");
+      }
+
+      if (updateProp)
+      {
+        // Edge connection to input removed so update property value
+        this.updatePropertyValue(dest, destInput, () =>
+        {
+          if (success)
+          {
+            success();
+          }
+          this.forceUpdate();
+        })
+      }
+    }
   }
 
   // Get property value from the engine and update model property value
@@ -663,18 +722,19 @@ export default class Graph extends React.Component<IProps, IState>
   // Update dynamic node by removing the node from the model and recreating
   private dynamicNodeUpdate = (node: Model.Node, finished?: () => void) =>
   {
-    this.removeNodeFromModel(node);
-
-    vgData.getNode(node.id, this.graph.getGraphID(),
-      (node: any) =>
-      {
-        this.graph.addNodeFromJSON(node);
-        this.forceUpdate();
-        if (finished)
+    this.removeNodeFromModel(node, () =>
+    {
+      vgData.getNode(node.id, this.graph.getGraphID(),
+        (node: any) =>
         {
-          finished();
-        }
-      }, finished);
+          this.graph.addNodeFromJSON(node);
+          this.forceUpdate();
+          if (finished)
+          {
+            finished();
+          }
+        }, finished);
+    });
   }
 
   // Update graph pin direction based on connected edges
@@ -763,27 +823,8 @@ export default class Graph extends React.Component<IProps, IState>
 
       vgData.updateEdges(src.path, srcOutput, newEdges, () =>
         {
-          this.graph.removeEdge(srcID, srcOutput, destID, destInput);
-
-          if (src.category === "pin")
-          {
-            this.updateGraphPin(src, "output");
-          }
-          else if (dest.category === "pin")
-          {
-            this.updateGraphPin(dest, "input");
-          }
-
-          // Edge connection to input removed so update property value
-          this.updatePropertyValue(dest, destInput, () =>
-          {
-            if (success)
-            {
-              success();
-            }
-            this.forceUpdate();
-          })
-
+          this.removeEdgefromModel(srcID, srcOutput, destID, destInput, true,
+            success);
         });
     }
   }

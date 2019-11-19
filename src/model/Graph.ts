@@ -466,7 +466,18 @@ export class Graph
         if (typeof nNode === "undefined")
         {
           // Node not found in new state so should be deleted
-          vgData.deleteNode(cNode.get("path"), cNode.path);
+          vgData.deleteNode(cNode.get("path"));
+
+          // If node is a pin and it has a connection in the current state
+          // then remove the pin from the graph input/output
+          if (cNode.get("category") === "pin")
+          {
+            if (typeof cNode.get("forwardEdges") !== "undefined" ||
+              typeof cNode.get("reverseEdges") !== "undefined")
+            {
+              vgData.nonPropertyDelete(nodeID, currentState.get("id"));
+            }
+          }
         }
         else
         {
@@ -536,24 +547,32 @@ export class Graph
     // Compare nodes in new state to current state
     newState.get("nodes").forEach((value: any, nodeID: string) =>
     {
+      const newStateID = newState.get("id");
+
       if (typeof currentState.getIn(["nodes", nodeID]) === "undefined")
       {
         currentToNewFlag = true;
         // Node not found in current state so should be added
 
-        const path = value.get("path");
-        let parentPath;
-
-        if (path.indexOf("/") > -1)
-        {
-          parentPath = path.slice(0, path.lastIndexOf("/"));
-        }
-
-        vgData.createNode(nodeID, value.get("type"), parentPath, () =>
+        vgData.createNode(nodeID, value.get("type"), newStateID, () =>
           {
-            // Check forward edges
             const nNode = newState.getIn(["nodes", nodeID]);
 
+            // If node is a pin and it has a connection in the new state
+            // add the pin to the graph input/output
+            if (nNode.get("category") === "pin")
+            {
+              if (typeof nNode.get("forwardEdges") !== "undefined")
+              {
+                vgData.nonPropertyPost(nodeID, {direction: "in"}, newStateID);
+              }
+              if (typeof nNode.get("reverseEdges") !== "undefined")
+              {
+                vgData.nonPropertyPost(nodeID, {direction: "out"}, newStateID);
+              }
+            }
+
+            // Check forward edges
             if (typeof nNode.get("forwardEdges") !== "undefined")
             {
               nNode.get("forwardEdges").forEach((destList: any, outputID: string) =>
@@ -582,6 +601,37 @@ export class Graph
         vgData.updateLayout(value.get("path"), {x: value.get("position").x,
           y: value.get("position").y}, {w: value.get("size").w,
           h: value.get("size").h});
+      }
+      else
+      {
+        const nNode = newState.getIn(["nodes", nodeID]);
+        const cNode = currentState.getIn(["nodes", nodeID]);
+        if (nNode.get("category") === "pin")
+        {
+          const nfEdge = nNode.get("forwardEdges").get("output").size;
+          const nrEdge = nNode.get("reverseEdges").get("input").size;
+          const cfEdge = cNode.get("forwardEdges").get("output").size;
+          const crEdge = cNode.get("reverseEdges").get("input").size;
+
+          // Pin node has forward edges in new state but doesn't in old state,
+          // set it as an input pin
+          if (nfEdge && !cfEdge)
+          {
+            vgData.nonPropertyPost(nodeID, {direction: "in"}, newStateID);
+          }
+          // Pin node has reverse edges in new state but doesn't in old state,
+          // set it as an output pin
+          else if  (nrEdge && !crEdge)
+          {
+            vgData.nonPropertyPost(nodeID, {direction: "out"}, newStateID);
+          }
+          // Pin node has no connected edges but does in current state,
+          // remove pin input/output from graph
+          else if (!nfEdge && !nrEdge && (cfEdge || crEdge))
+          {
+            vgData.nonPropertyDelete(nodeID, newStateID);
+          }
+        }
       }
     });
 
