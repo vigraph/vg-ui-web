@@ -102,16 +102,6 @@ export class Property
     this.graph.setPropertyProp(this.id, this.parent, "increment", increment);
   }
 
-  get available(): any[]
-  {
-    return this.graph.getPropertyProp(this.id, this.parent, "available");
-  }
-
-  set available(available: any[])
-  {
-    this.graph.setPropertyProp(this.id, this.parent, "available", available);
-  }
-
   // Return if the property has a connection
   public hasConnection(): boolean
   {

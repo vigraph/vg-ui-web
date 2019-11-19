@@ -946,7 +946,7 @@ class Data
     const gProps: Array<{ id: string, value: any, valueType: string,
       propType: string, description?: string, controlType?: string,
       valueFormat?: string, rangeMin?: number, rangeMax?: number,
-      increment?: number, available?: any[], x?: number, y?: number}> = [];
+      increment?: number, x?: number, y?: number}> = [];
 
     const propsConfig = vgConfig.Properties[item.type];
     const itemStrings = vgConfig.Strings[item.type];

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import * as Model from './model';
 
+import { vgConfig } from './lib/Config';
 import { vgUtils } from './lib/Utils';
 import { vgData } from './data/Data';
 
@@ -203,14 +204,15 @@ export default class InfoPanel extends React.Component<IProps, IState>
         onChange={this.checkBoxValueChange} />
     }
     // List of available choice values, choice made on value selection change
-    else if (property.valueType === "choice" ||
-      property.valueType === "filter-mode" || property.valueType === "waveform")
+    else if (vgConfig.Controls.choice_data[property.valueType])
     {
+      const choices = vgConfig.Controls.choice_data[property.valueType];
+
       return <select id={property.id} disabled={disabled}
         className={"value-select " + property.propType}
-        value={property.available.indexOf(property.value)}
+        value={choices.indexOf(property.value)}
         onChange={this.choiceValueChange}>
-        {property.available.map((option: string, index: number) =>
+        {choices.map((option: string, index: number) =>
         {
           return <option key={property.id+"-"+index} value={index}>
               {option}
@@ -494,7 +496,8 @@ export default class InfoPanel extends React.Component<IProps, IState>
 
       if (property)
       {
-        this.updateValue(property, property.available[selector.selectedIndex]);
+        const choices = vgConfig.Controls.choice_data[property.valueType];
+        this.updateValue(property, choices[selector.selectedIndex]);
       }
     }
   }

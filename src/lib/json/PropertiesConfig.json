@@ -533,7 +533,6 @@
       "mode":
       {
         "controlType": "selector/default",
-        "available": ["low-pass","high-pass","band-pass"],
         "x": 40,
         "y": 30
       },
@@ -683,7 +682,6 @@
       "wave":
       {
         "controlType": "selector/vert",
-        "available": ["sin","square","triangle","saw","random"],
         "x": 150,
         "y": 20
       },

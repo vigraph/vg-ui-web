@@ -17,7 +17,7 @@ interface IProps
 
 interface IState
 {
-  currentValue: number;
+  currentValue: string;
   selecting: boolean;
 }
 
@@ -35,6 +35,8 @@ export default class Selector extends React.Component<IProps, IState>
 
   private settings: vgTypes.ISelectorSettings;
 
+  private choices: string[];
+
   constructor(props: IProps)
   {
     super(props);
@@ -46,6 +48,11 @@ export default class Selector extends React.Component<IProps, IState>
     this.settings = selectorSettings[this.props.settingsType] ?
       selectorSettings[this.props.settingsType] : selectorSettings.default;
 
+    const choiceData = vgConfig.Controls.choice_data;
+
+    this.choices = choiceData[this.property.valueType] ?
+      choiceData[this.property.valueType] : [];
+
     this.state =
     {
       currentValue: this.property.value,
@@ -56,10 +63,9 @@ export default class Selector extends React.Component<IProps, IState>
   public render()
   {
     const settings = this.settings;
-    const availablePos = this.props.property.available
-    const currentPos = availablePos.indexOf(this.state.currentValue);
+    const currentPos = this.choices.indexOf(this.state.currentValue);
 
-    const positionSize = settings.length / availablePos.length;
+    const positionSize = settings.length / this.choices.length;
 
     return(
         <svg id="selector" className={`${this.props.settingsType}
@@ -71,7 +77,7 @@ export default class Selector extends React.Component<IProps, IState>
               ${0}) translate(5, ${settings.horizontal ? "0" :
                -settings.thickness})`}/>
 
-          {this.props.property.available.map((value: any, index: number) =>
+          {this.choices.map((value: any, index: number) =>
             {
               return <svg id={value} key={index}
                   onMouseDown={this.handleMouseDown}
@@ -130,8 +136,7 @@ export default class Selector extends React.Component<IProps, IState>
 
   private selectValue = (value: any) =>
   {
-    if (this.state.currentValue !== value &&
-      this.props.property.available.indexOf(value) > -1)
+    if (this.state.currentValue !== value && this.choices.indexOf(value) > -1)
     {
       this.setState({currentValue: value});
       if (this.props.update)
