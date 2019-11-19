@@ -63,7 +63,7 @@ export default class Property extends React.Component<IProps, IState>
     const property = props.property;
     this.controlType = property.controlType.split("/");
 
-    if ((this.controlType[0] === "knob" || this.controlType[0] === "slider") &&
+    if ((property.valueType === "number" || property.valueType === "integer") &&
       typeof property.value !== "undefined")
     {
       // Ensure value conforms to increment bounds
@@ -202,7 +202,8 @@ export default class Property extends React.Component<IProps, IState>
   private propertyUpdate = (value: any) =>
   {
     const property = this.props.property;
-    const newValue = property.valueType === "number" ?
+    const newValue = (property.valueType === "number" ||
+      property.valueType === "integer") ?
       vgUtils.snapValueToIncrement(value, property.increment) : value;
 
     this.setState({value: newValue});
