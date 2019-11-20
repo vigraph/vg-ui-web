@@ -200,35 +200,6 @@
       }
     }
   },
-  "bitmap/hsl":
-  {
-    "width": 170,
-    "height": 100,
-    "properties":
-    {
-      "h":
-      {
-        "controlType": "colourPicker/main",
-        "increment": 0.01,
-        "x": 30,
-        "y": 30
-      },
-      "s":
-      {
-        "controlType": "colourPicker/default",
-        "increment": 0.01,
-        "x": 50,
-        "y": 50
-      },
-      "l":
-      {
-        "controlType": "colourPicker/default",
-        "increment": 0.01,
-        "x": 50,
-        "y": 70
-      }
-    }
-  },
   "bitmap/pin":
   {
     "width": 70,
@@ -261,35 +232,6 @@
         "increment": 1,
         "x": 70,
         "y": 35
-      }
-    }
-  },
-  "bitmap/rgb":
-  {
-    "width": 170,
-    "height": 100,
-    "properties":
-    {
-      "r":
-      {
-        "controlType": "colourPicker/main",
-        "increment": 0.01,
-        "x": 30,
-        "y": 30
-      },
-      "g":
-      {
-        "controlType": "colourPicker/default",
-        "increment": 0.01,
-        "x": 50,
-        "y": 50
-      },
-      "b":
-      {
-        "controlType": "colourPicker/default",
-        "increment": 0.01,
-        "x": 50,
-        "y": 70
       }
     }
   },
@@ -992,35 +934,6 @@
       }
     }
   },
-  "vector/hsl":
-  {
-    "width": 170,
-    "height": 100,
-    "properties":
-    {
-      "h":
-      {
-        "controlType": "colourPicker/main",
-        "increment": 0.01,
-        "x": 30,
-        "y": 30
-      },
-      "s":
-      {
-        "controlType": "colourPicker/default",
-        "increment": 0.01,
-        "x": 50,
-        "y": 50
-      },
-      "l":
-      {
-        "controlType": "colourPicker/default",
-        "increment": 0.01,
-        "x": 50,
-        "y": 70
-      }
-    }
-  },
   "vector/pin":
   {
     "width": 70,
@@ -1028,35 +941,6 @@
     "category": "pin",
     "properties":
     {
-    }
-  },
-  "vector/rgb":
-  {
-    "width": 170,
-    "height": 100,
-    "properties":
-    {
-      "r":
-      {
-        "controlType": "colourPicker/main",
-        "increment": 0.01,
-        "x": 30,
-        "y": 30
-      },
-      "g":
-      {
-        "controlType": "colourPicker/default",
-        "increment": 0.01,
-        "x": 50,
-        "y": 50
-      },
-      "b":
-      {
-        "controlType": "colourPicker/default",
-        "increment": 0.01,
-        "x": 50,
-        "y": 70
-      }
     }
   },
   "vector/rotate":
@@ -1201,6 +1085,73 @@
       "frame-rate":
       {
       }
+    }
+  },
+  "colour/hsl":
+  {
+    "width": 170,
+    "height": 100,
+    "properties":
+    {
+      "h":
+      {
+        "controlType": "colourPicker/main",
+        "increment": 0.01,
+        "x": 30,
+        "y": 30
+      },
+      "s":
+      {
+        "controlType": "colourPicker/default",
+        "increment": 0.01,
+        "x": 50,
+        "y": 50
+      },
+      "l":
+      {
+        "controlType": "colourPicker/default",
+        "increment": 0.01,
+        "x": 50,
+        "y": 70
+      }
+    }
+  },
+  "colour/rgb":
+  {
+    "width": 170,
+    "height": 100,
+    "properties":
+    {
+      "r":
+      {
+        "controlType": "colourPicker/main",
+        "increment": 0.01,
+        "x": 30,
+        "y": 30
+      },
+      "g":
+      {
+        "controlType": "colourPicker/default",
+        "increment": 0.01,
+        "x": 50,
+        "y": 50
+      },
+      "b":
+      {
+        "controlType": "colourPicker/default",
+        "increment": 0.01,
+        "x": 50,
+        "y": 70
+      }
+    }
+  },
+  "colour/pin":
+  {
+    "width": 70,
+    "height": 50,
+    "category": "pin",
+    "properties":
+    {
     }
   }
 }
