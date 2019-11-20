@@ -670,6 +670,7 @@ foreignObject
 #info-panel .node.id
 {
   font-size: 12px;
+  pointer-events: auto;
 }
 
 #info-panel .node.desc
@@ -746,4 +747,9 @@ foreignObject
 #text-display-wrapper
 {
   overflow: visible;
+}
+
+#ws-canvas-wrapper
+{
+  pointer-events: none;
 }

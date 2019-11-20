@@ -11,7 +11,12 @@
   "connectorSize": 5,
   "websocket":
   {
-    "aspectRatio": 1,
+    "resizeProps":
+    {
+      "aspectRatio": 1,
+      "minWidth": 150,
+      "minHeight": 150
+    },
     "defaultProps":
     {
       "size": { "x": 400, "y": 400 },
@@ -33,6 +38,11 @@
   "menuSize": 10,
   "interpolate":
   {
-    "aspectRatio": 0
+    "resizeProps":
+    {
+      "aspectRatio": 0,
+      "minWidth": 120,
+      "minHeight": 120
+    }
   }
 }

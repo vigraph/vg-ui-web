@@ -182,7 +182,7 @@ export default class Node extends React.Component<IProps, IState>
 
   private generateResizeIcon = () =>
   {
-    if (this.resizeNodeAspectRatio() !== null)
+    if (this.resizeNodeProps() !== null)
     {
       return <svg id={"node-resize-wrapper"}
         x={this.state.w+this.props.padding-3} y={this.state.h-3}>
@@ -193,17 +193,17 @@ export default class Node extends React.Component<IProps, IState>
     }
   }
 
-  // Returns nodes resize aspect ratio from config or null if node doesn't
-  // support resizing
-  private resizeNodeAspectRatio = () =>
+  // Returns nodes resize props (aspect ratio, minimum width and height) from
+  // config or null if node doesn't support resizing
+  private resizeNodeProps = () =>
   {
     if (this.node.category === "websocket-display")
     {
-      return vgConfig.Graph.websocket.aspectRatio;
+      return vgConfig.Graph.websocket.resizeProps;
     }
     else if (this.node.type === "core/interpolate")
     {
-      return vgConfig.Graph.interpolate.aspectRatio;
+      return vgConfig.Graph.interpolate.resizeProps;
     }
     else
     {
@@ -335,11 +335,13 @@ export default class Node extends React.Component<IProps, IState>
     const newState = {...this.state};
     newState.w += diffX;
 
-    const aspectRatio = this.resizeNodeAspectRatio();
+    const resizeProps = this.resizeNodeProps();
+    const aspectRatio = resizeProps.aspectRatio;
 
     newState.h = (aspectRatio ? newState.w * aspectRatio : newState.h + diffY);
 
-    if (newState.h >= 120 && newState.w >= 120)
+    if (newState.h >= resizeProps.minHeight &&
+      newState.w >= resizeProps.minWidth)
     {
       this.setState(newState);
 
