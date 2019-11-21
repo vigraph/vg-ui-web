@@ -180,9 +180,11 @@ export default class WebsocketCanvas extends React.Component<IProps>
     tc.setAttribute("height", ""+height);
     tc.getContext("2d")!.putImageData(image, 0, 0);
 
-    // Reset the transform and scale the image
+    // Reset the transform and scale the image, retaining aspect ratio
     ctx.resetTransform();
-    ctx.scale(this.props.size.x / width, this.props.size.y / height);
+    let scale = Math.min(this.props.size.x / width,
+                         this.props.size.y / height);
+    ctx.scale(scale, scale);
     ctx.drawImage(tc, 0, 0);
   }
 
