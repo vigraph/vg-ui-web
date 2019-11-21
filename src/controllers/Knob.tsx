@@ -72,18 +72,27 @@ export default class Knob extends React.Component<IProps, IState>
 
     const settings = this.settings;
 
-    if (settings.logControl && this.property.range.min === 0)
+    if (settings.logControl && (this.property.range.min === undefined ||
+      this.property.range.min <= 0))
     {
-      vgUtils.log("Knob Error - Logarithmic control with minimum range set " +
-        "to 0");
+      vgUtils.log("Knob Error - Logarithmic control minimum range");
     }
 
-    const rangeMin = settings.logControl ? Math.log10(this.property.range.min) :
-      this.property.range.min;
-    const rangeMax = settings.logControl ? Math.log10(this.property.range.max) :
-      this.property.range.max;
-    const currentValue = settings.logControl ?
+    const propRange = Object.assign({}, this.property.range);
+    propRange.min = (propRange.min !== undefined ? propRange.min : 0);
+    propRange.max = (propRange.max !== undefined ? propRange.max : 1);
+
+    const rangeMin = settings.logControl ? Math.log10(propRange.min) :
+      propRange.min;
+    const rangeMax = settings.logControl ? Math.log10(propRange.max) :
+      propRange.max;
+    let currentValue = settings.logControl ?
       Math.log10(this.state.currentValue) : this.state.currentValue;
+
+    if (currentValue > propRange.max)
+    {
+      currentValue = propRange.max;
+    }
 
     // Current position in degrees from 0
     const currentPos = ((currentValue - rangeMin) /
@@ -178,10 +187,15 @@ export default class Knob extends React.Component<IProps, IState>
     const currentY = e.pageY - this.circleCentre.y;
 
     const settings = this.settings;
-    const rangeMin = settings.logControl ? Math.log10(this.property.range.min) :
-      this.property.range.min;
-    const rangeMax = settings.logControl ? Math.log10(this.property.range.max) :
-      this.property.range.max;
+
+    const propRange = Object.assign({}, this.property.range);
+    propRange.min = (propRange.min !== undefined ? propRange.min : 0);
+    propRange.max = (propRange.max !== undefined ? propRange.max : 1);
+
+    const rangeMin = settings.logControl ? Math.log10(propRange.min) :
+      propRange.min;
+    const rangeMax = settings.logControl ? Math.log10(propRange.max) :
+      propRange.max;
     const currentValue = settings.logControl ?
       Math.log10(this.state.currentValue) : this.state.currentValue;
 

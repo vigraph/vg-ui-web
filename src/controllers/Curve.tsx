@@ -76,12 +76,13 @@ export default class Curve extends React.Component<IProps, IState>
     const width = this.props.size.w;
     const height = this.props.size.h;
     const thickness = this.settings.barThickness;
+    const maxV = this.valueMaximum();
     const points: Array<{id: string, x: number, y: number}> =
       this.state.currentCurve.map((point: {t: number, value: number}) =>
       {
         const id = point.t + "," + point.value;
         const x = point.t * width;
-        const y = height - ((point.value / this.property.range.max) *  height);
+        const y = height - ((point.value / maxV) *  height);
         return {id, x, y};
       });
 
@@ -183,7 +184,7 @@ export default class Curve extends React.Component<IProps, IState>
 
       const newCurve = [...this.state.currentCurve];
 
-      if (updatedPoint.value < 0 || updatedPoint.value > this.property.range.max)
+      if (updatedPoint.value < 0 || updatedPoint.value > this.valueMaximum())
       {
         return;
       }
@@ -248,7 +249,7 @@ export default class Curve extends React.Component<IProps, IState>
 
     const newPoint = {
       t: position.x / width,
-      value: (((height - position.y ) / width ) * this.property.range.max)
+      value: (((height - position.y ) / width ) * this.valueMaximum())
     }
 
     newPoint.t = Math.round(newPoint.t * 100000) / 100000;
@@ -273,5 +274,13 @@ export default class Curve extends React.Component<IProps, IState>
 
     this.setState({updating: false});
     this.props.endUpdate();
+  }
+
+  private valueMaximum = () =>
+  {
+    const curve = this.state.currentCurve;
+    const maxValue = (this.property.range.max !== undefined ?
+      this.property.range.max : curve[curve.length-1].value);
+    return maxValue;
   }
 }

@@ -67,10 +67,9 @@ export default class Slider extends React.Component<IProps, IState>
 
     if (settings.logControl)
     {
-      if (this.property.range.min === 0)
+      if (this.property.range.min === undefined || this.property.range.min <= 0)
       {
-        vgUtils.log("Slider Error - Logarithmic control with minimum range set " +
-          "to 0");
+        vgUtils.log("Knob Error - Logarithmic control minimum range");
       }
 
       if (this.state.currentValue === 0)
@@ -79,19 +78,28 @@ export default class Slider extends React.Component<IProps, IState>
       }
     }
 
-    const rangeMin = settings.logControl ? Math.log10(this.property.range.min) :
-      this.property.range.min;
-    const rangeMax = settings.logControl ? Math.log10(this.property.range.max) :
-      this.property.range.max;
+    const propRange = Object.assign({}, this.property.range);
+    propRange.min = (propRange.min !== undefined ? propRange.min : 0);
+    propRange.max = (propRange.max !== undefined ? propRange.max : 1);
+
+    const rangeMin = settings.logControl ? Math.log10(propRange.min) :
+      propRange.min;
+    const rangeMax = settings.logControl ? Math.log10(propRange.max) :
+      propRange.max;
     const currentValue = settings.logControl ?
       Math.log10(this.state.currentValue) : this.state.currentValue;
 
     let currentPos;
 
+
     if (rangeMin === -Infinity || rangeMax === -Infinity ||
       currentValue === -Infinity)
     {
       currentPos = 0;
+    }
+    else if (currentValue > propRange.max)
+    {
+      currentPos = settings.length;
     }
     else
     {
@@ -150,10 +158,14 @@ export default class Slider extends React.Component<IProps, IState>
     // Move current value to click position
     if (settings.slideScale === 1 && settings.clickMove)
     {
-      const rangeMin = settings.logControl ?
-        Math.log10(this.property.range.min) : this.property.range.min;
-      const rangeMax = settings.logControl ?
-        Math.log10(this.property.range.max) : this.property.range.max;
+      const propRange = Object.assign({}, this.property.range);
+      propRange.min = (propRange.min !== undefined ? propRange.min : 0);
+      propRange.max = (propRange.max !== undefined ? propRange.max : 1);
+
+      const rangeMin = settings.logControl ? Math.log10(propRange.min) :
+        propRange.min;
+      const rangeMax = settings.logControl ? Math.log10(propRange.max) :
+        propRange.max;
 
       const newDistance = settings.horizontal ? currentPosition.x :
         settings.length - currentPosition.y;
@@ -197,10 +209,15 @@ export default class Slider extends React.Component<IProps, IState>
       this.mouseStart.x : this.mouseStart.y - currentPosition.y;
 
     const settings = this.settings;
-    const rangeMin = settings.logControl ?
-      Math.log10(this.property.range.min) : this.property.range.min;
-    const rangeMax = settings.logControl ?
-      Math.log10(this.property.range.max) : this.property.range.max;
+
+    const propRange = Object.assign({}, this.property.range);
+    propRange.min = (propRange.min !== undefined ? propRange.min : 0);
+    propRange.max = (propRange.max !== undefined ? propRange.max : 1);
+
+    const rangeMin = settings.logControl ? Math.log10(propRange.min) :
+      propRange.min;
+    const rangeMax = settings.logControl ? Math.log10(propRange.max) :
+      propRange.max;
     const currentValue = settings.logControl ?
       Math.log10(this.state.currentValue) : this.state.currentValue;
 

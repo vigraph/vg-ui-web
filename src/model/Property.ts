@@ -82,12 +82,12 @@ export class Property
     this.graph.setPropertyProp(this.id, this.parent, "value", value);
   }
 
-  get range(): { min: number, max: number }
+  get range(): { min?: number, max?: number }
   {
     return this.graph.getPropertyProp(this.id, this.parent, "range");
   }
 
-  set range(range: { min: number, max: number })
+  set range(range: { min?: number, max?: number })
   {
     this.graph.setPropertyProp(this.id, this.parent, "range", range);
   }

@@ -159,7 +159,8 @@ export class Graph
         property.valueFormat = p.valueFormat || "";
         property.controlType = p.controlType || "none/none";
         property.position = { x: p.x || 0, y: p.y || 0 };
-        property.range = { min: p.rangeMin || 0, max: p.rangeMax || 1};
+        property.range = { min: p.rangeMin || undefined,
+          max: p.rangeMax || undefined};
         property.increment = p.increment || 1;
       }
     }

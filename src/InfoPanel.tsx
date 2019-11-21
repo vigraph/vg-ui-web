@@ -329,7 +329,8 @@ export default class InfoPanel extends React.Component<IProps, IState>
       // Get property object associated with text box
       const property = this.getProperty(e.currentTarget.id);
 
-      if (property && property.valueType === "text" && property.range.max > 1)
+      if (property && property.valueType === "text" &&
+        property.range.max !== undefined)
       {
         if (textBox.value.toString().length > property.range.max)
         {
@@ -553,8 +554,11 @@ export default class InfoPanel extends React.Component<IProps, IState>
         }
         else
         {
+
           t = (t > 1 ? 1 : (t < 0 ? 0 : t));
-          v = (v > property.range.max ? property.range.max : (v < 0 ? 0 : v));
+          v = ((property.range.max !== undefined && v > property.range.max) ?
+            property.range.max : (v < 0 ? 0 : v));
+
           newValue = t + "," + v;
         }
       }
@@ -575,8 +579,12 @@ export default class InfoPanel extends React.Component<IProps, IState>
       else
       {
         newValue = vgUtils.snapValueToIncrement(value, property.increment);
-        newValue = Math.min(newValue, property.range.max);
-        newValue = Math.max(newValue, property.range.min);
+
+        newValue = (property.range.max !== undefined ?
+          Math.min(newValue, property.range.max) : newValue);
+
+        newValue = (property.range.min !== undefined ?
+          Math.max(newValue, property.range.min) : newValue);
 
         // Number must be a power of 2
         if (property.valueFormat === "power2" && Math.log2(newValue) % 1 !== 0)
