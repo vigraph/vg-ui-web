@@ -719,6 +719,72 @@
       }
     }
   },
+  "core/timer":
+  {
+    "width": 80,
+    "height": 90,
+    "properties":
+    {
+      "period":
+      {
+        "controlType": "knob/log",
+        "rangeMin": 0.01,
+        "rangeMax": 100,
+        "increment": 0.1,
+        "x": 36,
+        "y": 28
+      },
+      "start":
+      {
+        "controlType": "button/default",
+        "x": 58,
+        "y": 65,
+        "valueFormat": "triggerButton"
+      },
+      "reset":
+      {
+        "controlType": "button/default",
+        "x": 30,
+        "y": 65,
+        "valueFormat": "triggerButton"
+      }
+    }
+  },
+  "core/switch":
+  {
+    "width": 70,
+    "height": 150,
+    "properties":
+    {
+      "fade-in-time":
+      {
+        "controlType": "knob/log",
+        "rangeMin": 0.1,
+        "rangeMax": 10,
+        "increment": 0.1,
+        "x": 30,
+        "y": 28
+      },
+      "fade-out-time":
+      {
+        "controlType": "knob/log",
+        "rangeMin": 0.1,
+        "rangeMax": 10,
+        "increment": 0.1,
+        "x": 30,
+        "y": 68
+      },
+      "fraction":
+      {
+        "controlType": "knob/default",
+        "rangeMin": 0,
+        "rangeMax": 1,
+        "increment": 0.01,
+        "x": 30,
+        "y": 108
+      }
+    }
+  },
   "midi/alsa-in":
   {
     "width": 100,
