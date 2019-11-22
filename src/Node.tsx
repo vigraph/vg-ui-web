@@ -187,25 +187,21 @@ export default class Node extends React.Component<IProps, IState>
   {
     const width = this.state.w;
     const padding = this.props.padding;
+    const node = this.props.node;
+    const title = (node.id.charAt(0) === vgConfig.Graph.idPrefix ? node.name :
+      node.id);
 
-    if (typeof this.props.node.name === "undefined")
-    {
-      return "";
-    }
-    else
-    {
-      const linesArray = vgUtils.wrapText(this.props.node.name,
-        width - (this.props.padding * 2), this.titleFontSize);
+    const linesArray = vgUtils.wrapText(title,
+      width - (this.props.padding * 2), this.titleFontSize);
 
-      return <text className={"node-label " + this.props.node.id}
-        fontSize={this.titleFontSize} x={(width/2)+padding} y={15}>
-          {linesArray.map((word: string, index: number) =>
-            {
-              return <tspan key={index} x={(width/2)+padding}
-                dy={index*this.titleFontSize}>{word}</tspan>
-            })}
-        </text>
-    }
+    return <text className={"node-label " + this.props.node.id}
+      fontSize={this.titleFontSize} x={(width/2)+padding} y={15}>
+        {linesArray.map((word: string, index: number) =>
+          {
+            return <tspan key={index} x={(width/2)+padding}
+              dy={index*this.titleFontSize}>{word}</tspan>
+          })}
+      </text>
   }
 
   private generateSpecialCases = () =>

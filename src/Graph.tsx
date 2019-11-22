@@ -561,7 +561,9 @@ export default class Graph extends React.Component<IProps, IState>
 
     while (!flag)
     {
-      const node = this.graph.getNode(typeID+"-"+this.idCount);
+      const node = this.graph.getNode(vgConfig.Graph.idPrefix + typeID + "-" +
+        this.idCount);
+
       if (node)
       {
         this.idCount++;
@@ -572,7 +574,7 @@ export default class Graph extends React.Component<IProps, IState>
       }
     }
 
-    const id = typeID+"-"+this.idCount;
+    const id = vgConfig.Graph.idPrefix + typeID + "-" + this.idCount;
 
     // Create new node, get with properties etc, add layout data and add to
     // graph model
