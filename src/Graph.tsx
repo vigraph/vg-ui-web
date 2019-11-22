@@ -118,9 +118,7 @@ export default class Graph extends React.Component<IProps, IState>
             {
               this.graph.getNodes().map((node: Model.Node, i) =>
               {
-                return (node.id !== "dummynode" || (this.state.targetNode &&
-                  node.id !== this.state.targetNode.id)) ?
-                  this.createNodeComponent(node, i) : "";
+                return this.preNodeCreateCheck(node, i);
               })
             }
           </svg>
@@ -131,6 +129,21 @@ export default class Graph extends React.Component<IProps, IState>
         </svg>
       </div>
     );
+  }
+
+  // Before creating the node check it isn't a dummy node or the target node
+  // (both created later)
+  private preNodeCreateCheck = (node: Model.Node, i: number) =>
+  {
+    if (node.id === "dummynode" || (this.state.targetNode && node.id ===
+      this.state.targetNode.id))
+    {
+      return "";
+    }
+    else
+    {
+      return this.createNodeComponent(node, i);
+    }
   }
 
   private createNodeComponent = (node: Model.Node, i: number) =>

@@ -210,16 +210,18 @@ export default class ColourPicker extends React.Component<IProps, IState>
         onMouseDown={this.handleMouseDown}
         onMouseMove={this.handleMouseMove} />
 
-        {this.createIndicators(this.props.property.value * settings.barLength)}
+        {this.createIndicators()}
 
       </svg>
     </svg>
   }
 
-  private createIndicators = (position: number) =>
+  private createIndicators = () =>
   {
     const disabled = this.props.disabled;
-    position = position + this.settings.indicatorThickness;
+    const position = (this.props.property.value ? ((this.props.property.value *
+      this.settings.barLength) + this.settings.indicatorThickness) : 0);
+
     return <svg className="indicator-wrapper"
       x={-this.settings.indicatorThickness}>
 

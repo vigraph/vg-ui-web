@@ -34,6 +34,7 @@ interface IState
   h: number;
   w: number;
   hover: boolean;
+  relatedProperties?: {[key: string]: Model.Property};
 }
 
 export default class Node extends React.Component<IProps, IState>
@@ -47,7 +48,6 @@ export default class Node extends React.Component<IProps, IState>
         h: props.node.size.h, w: props.node.size.w };
   }
 
-  private node: Model.Node;
   private offsetX: number;
   private offsetY: number;
   private mouseDown: {x: number, y: number};
@@ -66,10 +66,10 @@ export default class Node extends React.Component<IProps, IState>
         y: props.node.position.y,
         h: props.node.size.h,
         w: props.node.size.w,
-        hover: false
+        hover: false,
+        relatedProperties: undefined
       };
 
-    this.node = props.node;
     this.offsetX = 0;
     this.offsetY = 0;
     this.mouseDown = {x: 0, y: 0};
@@ -84,15 +84,15 @@ export default class Node extends React.Component<IProps, IState>
     const width = this.state.w;
     const padding = this.props.padding;
 
-    const properties = this.node.getProperties();
+    const properties = this.props.node.getProperties();
 
     const deleteX = padding + width;
     const deleteY = 0;
 
     return (
-      <svg id={`node-${this.node.id}`}
-        className={"node " + this.node.type.replace("/","-") + " " +
-          (this.node.category ? this.node.category : "")}
+      <svg id={`node-${this.props.node.id}`}
+        className={"node " + this.props.node.type.replace("/","-") + " " +
+          (this.props.node.category ? this.props.node.category : "")}
         x={this.state.x} y={this.state.y}
         onMouseEnter={this.handleMouseEnter}
         onMouseLeave={this.handleMouseLeave}>
@@ -119,13 +119,14 @@ export default class Node extends React.Component<IProps, IState>
           {
             return <Property key={j} property={property}
               name={property.id}
-              parent={this.node}
+              parent={this.props.node}
               startUpdate={this.props.startUpdate}
               update={this.props.update}
               endUpdate={this.endPropertyUpdate}
               showNodeGraph={this.props.showNodeGraph}
               padding={this.props.padding}
-              updateTargetProperty={this.props.updateTargetProperty}/>
+              updateTargetProperty={this.props.updateTargetProperty}
+              relatedProperties={this.state.relatedProperties}/>
           })}
         {this.props.children}
         />
@@ -133,18 +134,67 @@ export default class Node extends React.Component<IProps, IState>
     );
   }
 
+  // Component has been created - collect together related properties in this
+  // node and fill in any missing values (properties that have connections)
+  public componentDidMount()
+  {
+    if (this.state.relatedProperties === undefined)
+    {
+      let relatedProps: {[key: string]: Model.Property} =
+        this.getRelatedProperties();
+
+      const updateProps: Array<Model.Property> = [];
+
+      if (Object.keys(relatedProps).length > 0)
+      {
+        for (const key of Object.keys(relatedProps))
+        {
+          if (relatedProps[key] && relatedProps[key].value === undefined)
+          {
+            updateProps.push(relatedProps[key]);
+          }
+        }
+      }
+
+      const updatePropsLength = updateProps.length;
+      let updatePropsCount = 0;
+
+      if (updatePropsLength > 0)
+      {
+        updateProps.forEach((prop: Model.Property) =>
+        {
+          vgData.getPropertyValue(this.props.node.path, prop.id, (value: any) =>
+          {
+            relatedProps[prop.id].value = value;
+            updatePropsCount++;
+
+            if (updatePropsCount === updatePropsLength)
+            {
+              this.setState({relatedProperties: relatedProps});
+            }
+          });
+        });
+      }
+      else
+      {
+        this.setState({relatedProperties: relatedProps});
+      }
+
+    }
+  }
+
   private generateTitle = () =>
   {
     const width = this.state.w;
     const padding = this.props.padding;
 
-    if (typeof this.node.name === "undefined")
+    if (typeof this.props.node.name === "undefined")
     {
       return "";
     }
     else
     {
-      const linesArray = vgUtils.wrapText(this.node.name,
+      const linesArray = vgUtils.wrapText(this.props.node.name,
         width - (this.props.padding * 2), this.titleFontSize);
 
       return <text className={"node-label " + this.props.node.id}
@@ -165,7 +215,7 @@ export default class Node extends React.Component<IProps, IState>
     const portProperty = this.props.node.getProperties().find(
       x => x.id === "port");
 
-    if (this.node.category === "websocket-display" && portProperty)
+    if (this.props.node.category === "websocket-display" && portProperty)
     {
       const width = this.state.w - (2 * padding);
       const height = this.state.h - (2 * padding) - this.titleFontSize;
@@ -197,11 +247,11 @@ export default class Node extends React.Component<IProps, IState>
   // config or null if node doesn't support resizing
   private resizeNodeProps = () =>
   {
-    if (this.node.category === "websocket-display")
+    if (this.props.node.category === "websocket-display")
     {
       return vgConfig.Graph.websocket.resizeProps;
     }
-    else if (this.node.type === "core/interpolate")
+    else if (this.props.node.type === "core/interpolate")
     {
       return vgConfig.Graph.interpolate.resizeProps;
     }
@@ -223,9 +273,9 @@ export default class Node extends React.Component<IProps, IState>
     this.setState({ dragging: false });
     window.removeEventListener('mouseup', this.handleMouseUp);
     window.removeEventListener('mousemove', this.handleMouseMove);
-    if (this.node.subGraph)
+    if (this.props.node.subGraph)
     {
-      this.props.showNodeGraph(this.node.path);
+      this.props.showNodeGraph(this.props.node.path);
     }
   }
 
@@ -236,7 +286,7 @@ export default class Node extends React.Component<IProps, IState>
     window.addEventListener('mousemove', this.handleMouseMove);
     this.setState({ dragging: true });
 
-    this.props.targetNode(this.node);
+    this.props.targetNode(this.props.node);
 
     const currentPosition = vgUtils.windowToSVGPosition(
       {x: e.pageX, y: e.pageY}, this.props.graphRef);
@@ -249,7 +299,11 @@ export default class Node extends React.Component<IProps, IState>
 
   private handleMouseUp = (e: MouseEvent) =>
   {
-    this.setState({ dragging: false });
+    if (this.state.dragging)
+    {
+      this.setState({ dragging: false });
+    }
+
     window.removeEventListener('mouseup', this.handleMouseUp);
     window.removeEventListener('mousemove', this.handleMouseMove);
 
@@ -257,7 +311,8 @@ export default class Node extends React.Component<IProps, IState>
       this.state.y)
     {
       // Update graph layout data
-      vgData.updateLayout(this.node.path, {x: this.state.x, y: this.state.y});
+      vgData.updateLayout(this.props.node.path, {x: this.state.x,
+        y: this.state.y});
     }
 
     if (this.props.endUpdate)
@@ -287,7 +342,7 @@ export default class Node extends React.Component<IProps, IState>
       });
     }
 
-    this.node.position = { x: this.state.x, y: this.state.y };
+    this.props.node.position = { x: this.state.x, y: this.state.y };
     if (this.props.update)
     {
       this.props.update();
@@ -345,7 +400,7 @@ export default class Node extends React.Component<IProps, IState>
     {
       this.setState(newState);
 
-      this.node.size = {h: newState.h, w: newState.w};
+      this.props.node.size = {h: newState.h, w: newState.w};
 
       if (this.props.update)
       {
@@ -365,7 +420,7 @@ export default class Node extends React.Component<IProps, IState>
 
     this.resizeMouseDown = {x: 0, y: 0};
 
-    vgData.updateLayout(this.node.path, undefined, {w: this.state.w,
+    vgData.updateLayout(this.props.node.path, undefined, {w: this.state.w,
       h: this.state.h});
 
     if (this.props.endUpdate)
@@ -377,19 +432,44 @@ export default class Node extends React.Component<IProps, IState>
   private removeNode = (e: React.MouseEvent<SVGCircleElement>) =>
   {
     e.stopPropagation();
-    this.props.removeNode(this.node);
+    this.props.removeNode(this.props.node);
   }
 
   private endPropertyUpdate = () =>
   {
-    if (this.node.dynamic)
+    if (this.props.node.dynamic)
     {
-      this.props.dynamicNodeUpdate(this.node, this.props.endUpdate);
+      this.props.dynamicNodeUpdate(this.props.node, this.props.endUpdate);
     }
     else
     {
       this.props.endUpdate();
     }
+  }
+
+  // Return current property and any related properties e.g. all individual
+  // colour properties for colourPicker
+  private getRelatedProperties = () =>
+  {
+    let relatedProperties = {};
+
+    if (this.props.node.category === "colourPicker")
+    {
+      const properties = this.props.node.getProperties();
+
+      relatedProperties =
+      {
+        hex: properties.find(x => x.id === "hex"),
+        h: properties.find(x => x.id === "h"),
+        s: properties.find(x => x.id === "s"),
+        l: properties.find(x => x.id === "l"),
+        r: properties.find(x => x.id === "r"),
+        g: properties.find(x => x.id === "g"),
+        b: properties.find(x => x.id === "b")
+      };
+    }
+
+    return relatedProperties;
   }
 }
 

@@ -32,6 +32,7 @@ interface IProps
   padding: number;
   updateTargetProperty: (updateID: string, property: Model.Property | null,
     updating: boolean) => void;
+  relatedProperties?: {[key: string]: Model.Property};
 }
 
 interface IState
@@ -54,8 +55,6 @@ export default class Property extends React.Component<IProps, IState>
   // Main and Sub control types
   private controlType: string[];
 
-  private relatedProperties?: { [key: string]: Model.Property};
-
   constructor(props: IProps)
   {
     super(props);
@@ -74,8 +73,6 @@ export default class Property extends React.Component<IProps, IState>
         property.value = snapValue;
       }
     }
-
-    this.relatedProperties = this.getRelatedProperties();
 
     this.state =
     {
@@ -146,9 +143,9 @@ export default class Property extends React.Component<IProps, IState>
       const colourValues: {hex?: string, h?: number, s?: number, l?: number,
         r?: number, g?: number, b?: number} = {};
 
-      if (this.relatedProperties)
+      if (this.props.relatedProperties !== undefined)
       {
-        const rProps = this.relatedProperties;
+        const rProps = this.props.relatedProperties;
 
         colourValues.hex = (rProps.hex ? rProps.hex.value : undefined);
         colourValues.h = (rProps.h ? rProps.h.value : undefined);
@@ -242,30 +239,5 @@ export default class Property extends React.Component<IProps, IState>
     {
       this.props.updateTargetProperty(this.props.property.id, null, false);
     }
-  }
-
-  // Return current property and any related properties e.g. all individual
-  // colour properties for colourPicker
-  private getRelatedProperties = () =>
-  {
-    let relatedProperties = {};
-
-    if (this.controlType[0] === "colourPicker")
-    {
-      const properties = this.props.parent.getProperties();
-
-      relatedProperties =
-      {
-        hex: properties.find(x => x.id === "hex"),
-        h: properties.find(x => x.id === "h"),
-        s: properties.find(x => x.id === "s"),
-        l: properties.find(x => x.id === "l"),
-        r: properties.find(x => x.id === "r"),
-        g: properties.find(x => x.id === "g"),
-        b: properties.find(x => x.id === "b")
-      };
-    }
-
-    return relatedProperties;
   }
 }

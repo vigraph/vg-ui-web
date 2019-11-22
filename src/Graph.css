@@ -467,7 +467,7 @@
 
 .colourPicker.property-wrapper.disabled
 {
-  pointer-events: default;
+  pointer-events: auto;
   opacity: 1;
 }
 

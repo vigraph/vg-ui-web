@@ -89,7 +89,7 @@ class Data
   public getPropertyValue(nodePath: string, propID: string,
     success?: (value: any) => void, failure?: () => void)
   {
-    this.getProperty(nodePath + "/@" + propID,
+    this.getProperty(nodePath + "/@" + propID + "?transient=1",
       (property: vgTypes.IRawProperty) =>
       {
         if (success)
