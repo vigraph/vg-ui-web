@@ -63,7 +63,8 @@ export default class Curve extends React.Component<IProps, IState>
       moving: false
     };
 
-    if (this.state.currentCurve.length === 0)
+    if (this.state.currentCurve.length === 0 &&
+      this.state.currentCurve !== undefined)
     {
       vgUtils.log("Curve Component: Setting to default curve " +
         JSON.stringify(this.settings.defaultCurve));
@@ -78,13 +79,14 @@ export default class Curve extends React.Component<IProps, IState>
     const thickness = this.settings.barThickness;
     const maxV = this.valueMaximum();
     const points: Array<{id: string, x: number, y: number}> =
+      (this.state.currentCurve !== undefined ?
       this.state.currentCurve.map((point: {t: number, value: number}) =>
       {
         const id = point.t + "," + point.value;
         const x = point.t * width;
         const y = height - ((point.value / maxV) *  height);
         return {id, x, y};
-      });
+      }) : []);
 
     return(
         <svg id="curve-wrapper" className={this.props.settingsType}>

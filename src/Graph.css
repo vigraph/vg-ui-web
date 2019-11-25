@@ -164,6 +164,11 @@
   pointer-events: none;
 }
 
+#node-dummynode .node-label
+{
+  display: none;
+}
+
 #node-dummyconnector
 {
   pointer-events: none;

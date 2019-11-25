@@ -4,6 +4,7 @@ import * as Model from '../model';
 import * as vgTypes from '../lib/Types';
 import { vgConfig } from '../lib/Config';
 import { vgUtils } from '../lib/Utils';
+import { vgData } from '../data/Data';
 
 interface IProps
 {
@@ -40,7 +41,7 @@ export default class TextDisplay extends React.Component<IProps, IState>
 
     this.state =
     {
-      currentText: this.property.value.toString()
+      currentText: this.property.value
     };
 
     if (this.state.currentText === "")
@@ -51,12 +52,26 @@ export default class TextDisplay extends React.Component<IProps, IState>
     }
   }
 
+  public componentDidMount()
+  {
+    if (this.props.property.value === undefined)
+    {
+      this.updateTextValue();
+      setInterval(() =>
+      {
+        this.updateTextValue();
+      }, vgConfig.Graph.logUpdateTime*1000)
+    }
+  }
+
   public render()
   {
     const fontSize = this.settings.fontSize;
 
-    const linesArray = vgUtils.wrapText(this.state.currentText,
-        this.settings.width, fontSize);
+    const text = (this.state.currentText !== undefined ?
+      this.state.currentText.toString() : "");
+
+    const linesArray = vgUtils.wrapText(text, this.settings.width, fontSize);
 
     const height = linesArray.length * (vgUtils.textBoundingSize(linesArray[0],
       fontSize).height + 2);
@@ -77,5 +92,18 @@ export default class TextDisplay extends React.Component<IProps, IState>
           </svg>
         </svg>
     );
+  }
+
+  private updateTextValue = () =>
+  {
+    if (this.props.property.value === undefined)
+    {
+      const node = this.props.property.getParentNode();
+      if (node)
+      {
+        vgData.getPropertyValue(node.path, this.props.property.id,
+          (value: any) => {this.setState({currentText: value})});
+      }
+    }
   }
 }

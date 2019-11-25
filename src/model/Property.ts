@@ -3,6 +3,7 @@
 
 // Proxy class representing a property in the graph
 import { Graph } from './Graph';
+import { Node } from './Node';
 
 export class Property
 {
@@ -124,6 +125,12 @@ export class Property
         return false;
       }
     }
+  }
+
+  // Return parent node
+  public getParentNode(): Node | null
+  {
+    return this.graph.getNode(this.parent);
   }
 
 }
