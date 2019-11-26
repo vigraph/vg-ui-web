@@ -24,15 +24,15 @@ interface IState
 
 export default class TextDisplay extends React.Component<IProps, IState>
 {
-  private property: Model.Property;
-
   private settings: vgTypes.ITextDisplaySettings;
+
+  private updateInterval: number | null;
 
   constructor(props: IProps)
   {
     super(props);
 
-    this.property = props.property;
+    this.updateInterval = null;
 
     const textDisplaySettings = vgConfig.Controls.textDisplay;
 
@@ -41,7 +41,7 @@ export default class TextDisplay extends React.Component<IProps, IState>
 
     this.state =
     {
-      currentText: this.property.value
+      currentText: this.props.property.value
     };
 
     if (this.state.currentText === "")
@@ -57,10 +57,19 @@ export default class TextDisplay extends React.Component<IProps, IState>
     if (this.props.property.value === undefined)
     {
       this.updateTextValue();
-      setInterval(() =>
+      this.updateInterval = window.setInterval(() =>
       {
         this.updateTextValue();
       }, vgConfig.Graph.logUpdateTime*1000)
+    }
+  }
+
+  public componentWillUnmount()
+  {
+    if (this.updateInterval)
+    {
+      window.clearInterval(this.updateInterval);
+      this.updateInterval = null;
     }
   }
 
