@@ -129,6 +129,9 @@ export class Graph
     node.category = n.category || null;
     node.description = n.description || "";
     node.subGraph = n.subGraph || false;
+
+    this.clearNodeInputs(n.id);
+
     if (n.inputs)
     {
       for (const i of n.inputs)
@@ -138,6 +141,8 @@ export class Graph
           { x: i.x || 0, y: i.y || 0 } : null);
       }
     }
+
+    this.clearNodeOutputs(n.id);
 
     if (n.outputs)
     {
@@ -233,6 +238,18 @@ export class Graph
     }
 
     return new Connector(id, parentId, "output", this);
+  }
+
+  // Clear all inputs from node
+  public clearNodeInputs(parentId: string)
+  {
+    this.state = this.state.deleteIn(["nodes", parentId, "inputs"]);
+  }
+
+  // Clear all outputs from node
+  public clearNodeOutputs(parentId: string)
+  {
+    this.state = this.state.deleteIn(["nodes", parentId, "outputs"]);
   }
 
   public getNodeConnectorProp(id: string, parentId: string, type: string,

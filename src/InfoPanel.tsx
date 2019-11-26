@@ -207,7 +207,7 @@ export default class InfoPanel extends React.Component<IProps, IState>
     {
       return <input id={property.id} type="button" disabled={disabled}
         className={"value-button " + property.propType}
-        value={property.id} onMouseUp={this.buttonTrigger}/>
+        defaultValue={property.id} onMouseUp={this.buttonTrigger}/>
     }
     // Text box input for number, text and file types. Value checking and
     // validation done in onBlur

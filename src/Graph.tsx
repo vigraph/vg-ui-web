@@ -414,8 +414,6 @@ export default class Graph extends React.Component<IProps, IState>
   // Mouse wheel to zoom in/out
   private handleMouseWheel = (e: React.WheelEvent<SVGSVGElement>) =>
   {
-    e.preventDefault();
-
     const zoomFactor = vgConfig.Graph.zoomFactor;
     const scale = -1 * Math.sign(e.deltaY) > 0 ? 1 / zoomFactor : zoomFactor;
 
@@ -695,21 +693,46 @@ export default class Graph extends React.Component<IProps, IState>
   }
 
   // Update dynamic node by removing the node from the model and recreating
-  private dynamicNodeUpdate = (node: Model.Node, finished?: () => void) =>
+  private dynamicNodeUpdate = (updateNode: Model.Node, finished?: () => void) =>
   {
-    this.removeNodeFromModel(node, () =>
-    {
-      vgData.getNode(node.id, this.graph.getGraphID(),
-        (node: any) =>
+    vgData.getNode(updateNode.id, this.graph.getGraphID(),
+      (node: any) =>
+      {
+        this.graph.addNodeFromJSON(node);
+
+        const newNode = this.graph.getNode(node.id);
+
+        // Remove any edges that have connectors that no longer exist
+        if (newNode)
         {
-          this.graph.addNodeFromJSON(node);
-          this.forceUpdate();
-          if (finished)
+          newNode.getReverseEdges().forEach((rEdge: {inputId: string,
+            src: Model.Node, srcOutput: string}) =>
           {
-            finished();
-          }
-        }, finished);
-    });
+            if (!newNode.getInputConnector(rEdge.inputId))
+            {
+              this.removeEdgefromModel(rEdge.src.id, rEdge.srcOutput,
+                newNode.id, rEdge.inputId, false);
+            }
+          })
+
+          newNode.getForwardEdges().forEach((fEdge: {outputId: string,
+            dest: Model.Node, destInput: string}) =>
+          {
+            if (!newNode.getOutputConnector(fEdge.outputId))
+            {
+              this.removeEdgefromModel(newNode.id, fEdge.outputId,
+                fEdge.dest.id, fEdge.destInput, true,
+                () => { this.forceUpdate(); });
+            }
+          });
+        }
+
+        this.forceUpdate();
+        if (finished)
+        {
+          finished();
+        }
+      }, finished);
   }
 
   // Update graph pin direction based on connected edges

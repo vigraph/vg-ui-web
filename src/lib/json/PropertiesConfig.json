@@ -782,6 +782,10 @@
         "increment": 0.01,
         "x": 30,
         "y": 108
+      },
+      "inputs":
+      {
+        "rangeMin": 2
       }
     }
   },
