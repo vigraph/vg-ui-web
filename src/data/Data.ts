@@ -708,14 +708,13 @@ class Data
     {
       rNodes.forEach((name: string) =>
       {
-        if (!ranks[name] || ranks[name] < rank)
+        if (!ranks[name])
         {
           ranks[name] = rank;
-        }
-
-        if (outputEdgeMap[name])
-        {
-          rankNodes(rank+1, outputEdgeMap[name]);
+          if (outputEdgeMap[name])
+          {
+            rankNodes(rank+1, outputEdgeMap[name]);
+          }
         }
       });
     }
