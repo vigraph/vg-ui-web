@@ -213,7 +213,7 @@
 .node-delete,
 .edge-delete
 {
-  fill: red;
+  fill: #c10000;
 }
 
 .delete-line
@@ -646,6 +646,15 @@ foreignObject
 {
   width: 20px;
   height: 20px;
+}
+
+#info-delete-icon
+{
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  right: 5px;
+  top: 5px;
 }
 
 #info .info-text

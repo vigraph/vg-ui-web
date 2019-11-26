@@ -17,10 +17,9 @@ interface IProps
   dynamicNodeUpdate: (node: Model.Node, finished: () => void) => void;
   padding: number;
   graphRef: SVGSVGElement | null;
-  removeNode: (node: Model.Node) => void;
   showNodeGraph: (path: string, pathSpecific?: string,
     sourceSpecific?: string) => void;
-  targetNode: (node: Model.Node) => void;
+  updateTargetNode: (node: Model.Node) => void;
   updateTargetProperty: (updateID: string, property: Model.Property | null,
     updating: boolean) => void;
 }
@@ -33,7 +32,6 @@ interface IState
   y: number;
   h: number;
   w: number;
-  hover: boolean;
   relatedProperties?: {[key: string]: Model.Property};
 }
 
@@ -66,7 +64,6 @@ export default class Node extends React.Component<IProps, IState>
         y: props.node.position.y,
         h: props.node.size.h,
         w: props.node.size.w,
-        hover: false,
         relatedProperties: undefined
       };
 
@@ -86,16 +83,11 @@ export default class Node extends React.Component<IProps, IState>
 
     const properties = this.props.node.getProperties();
 
-    const deleteX = padding + width;
-    const deleteY = 0;
-
     return (
       <svg id={`node-${this.props.node.id}`}
         className={"node " + this.props.node.type.replace("/","-") + " " +
           (this.props.node.category ? this.props.node.category : "")}
-        x={this.state.x} y={this.state.y}
-        onMouseEnter={this.handleMouseEnter}
-        onMouseLeave={this.handleMouseLeave}>
+        x={this.state.x} y={this.state.y}>
         <rect x={padding} width={width} height={height}
           className={`node-border ${this.state.dragging ? "dragging" : ""} ` +
             `${this.state.resizing ? "resizing" : ""}`}
@@ -103,15 +95,6 @@ export default class Node extends React.Component<IProps, IState>
           onDoubleClick={this.handleDoubleClick}
           onContextMenu={this.handleContextMenu}
         />
-        {this.state.hover && <svg className="delete-wrapper">
-            <circle className="node-delete"
-              cx={deleteX} cy={deleteY} r={8}
-              onMouseDown={this.removeNode}/>
-            <path className="delete-line" d={`M ${deleteX-5} ${deleteY-5} L` +
-              `${deleteX+5} ${deleteY+5}`}/>
-            <path className="delete-line" d={`M ${deleteX-5} ${deleteY+5} L` +
-              `${deleteX+5} ${deleteY-5}`}/>
-        </svg>}
         {this.generateTitle()}
         {this.generateSpecialCases()}
         {this.generateResizeIcon()}
@@ -282,7 +265,7 @@ export default class Node extends React.Component<IProps, IState>
     window.addEventListener('mousemove', this.handleMouseMove);
     this.setState({ dragging: true });
 
-    this.props.targetNode(this.props.node);
+    this.props.updateTargetNode(this.props.node);
 
     const currentPosition = vgUtils.windowToSVGPosition(
       {x: e.pageX, y: e.pageY}, this.props.graphRef);
@@ -343,16 +326,6 @@ export default class Node extends React.Component<IProps, IState>
     {
       this.props.update();
     }
-  }
-
-  private handleMouseEnter = () =>
-  {
-    this.setState({hover: true});
-  }
-
-  private handleMouseLeave = () =>
-  {
-    this.setState({hover: false});
   }
 
   private handleResizeMouseDown = (e: React.MouseEvent<SVGElement>) =>
@@ -423,12 +396,6 @@ export default class Node extends React.Component<IProps, IState>
     {
       this.props.endUpdate();
     }
-  }
-
-  private removeNode = (e: React.MouseEvent<SVGCircleElement>) =>
-  {
-    e.stopPropagation();
-    this.props.removeNode(this.props.node);
   }
 
   private endPropertyUpdate = () =>

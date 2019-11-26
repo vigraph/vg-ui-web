@@ -90,7 +90,7 @@ export default class Graph extends React.Component<IProps, IState>
 
         <InfoPanel graph={this.graph} node={this.state.targetNode}
           startUpdate={this.startUpdate} update={this.update}
-          endUpdate={this.endUpdate}
+          endUpdate={this.endUpdate} removeNode={this.removeNode}
           dynamicNodeUpdate={this.dynamicNodeUpdate}/>
 
         <svg id="graph"
@@ -118,11 +118,11 @@ export default class Graph extends React.Component<IProps, IState>
             {
               this.graph.getNodes().map((node: Model.Node, i) =>
               {
-                return this.preNodeCreateCheck(node, i);
+                return node.id !== "dummynode" ?
+                  this.createNodeComponent(node, i) : "";
               })
             }
           </svg>
-          {this.createTargetNode()}
           {this.createDummyNode()}
           {this.createConnectorLabel()}
           {this.createPropertyLabel()}
@@ -131,28 +131,14 @@ export default class Graph extends React.Component<IProps, IState>
     );
   }
 
-  // Before creating the node check it isn't a dummy node or the target node
-  // (both created later)
-  private preNodeCreateCheck = (node: Model.Node, i: number) =>
-  {
-    if (node.id === "dummynode" || (this.state.targetNode && node.id ===
-      this.state.targetNode.id))
-    {
-      return "";
-    }
-    else
-    {
-      return this.createNodeComponent(node, i);
-    }
-  }
-
   private createNodeComponent = (node: Model.Node, i: number) =>
   {
     return <Node key={node.path+":"+i} node={node}
       startUpdate={this.startUpdate} update={this.update}
       endUpdate={this.endUpdate} padding={this.csize*2} graphRef={this.graphRef}
-      removeNode={this.removeNode} showNodeGraph={this.showNodeGraph}
-      targetNode={this.targetNode} dynamicNodeUpdate={this.dynamicNodeUpdate}
+      showNodeGraph={this.showNodeGraph}
+      updateTargetNode={this.updateTargetNode}
+      dynamicNodeUpdate={this.dynamicNodeUpdate}
       updateTargetProperty={this.updateTargetProperty}>
       {
         this.graph.getNodeConnectors(node.id, "input").map(
@@ -204,14 +190,6 @@ export default class Graph extends React.Component<IProps, IState>
         dest={edge.dest} destInput={edge.destInput} offset={this.csize}
         graphRef={this.graphRef} removeEdge={this.removeEdge}
         moveEdge={this.moveEdge}/>
-    }
-  }
-
-  private createTargetNode = () =>
-  {
-    if (this.state.targetNode)
-    {
-      return this.createNodeComponent(this.state.targetNode, 0);
     }
   }
 
@@ -371,7 +349,7 @@ export default class Graph extends React.Component<IProps, IState>
     // Clear the target node if the node shown no longer exists after undo
     if (this.state.targetNode && !this.graph.getNode(this.state.targetNode.id))
     {
-      this.clearTargetNode();
+      this.updateTargetNode();
     }
 
     this.props.notifyGraphRoot(this.graph.graphIsRoot());
@@ -385,7 +363,7 @@ export default class Graph extends React.Component<IProps, IState>
     // Clear the target node if the node shown no longer exists after redo
     if (this.state.targetNode && !this.graph.getNode(this.state.targetNode.id))
     {
-      this.clearTargetNode();
+      this.updateTargetNode();
     }
 
     this.props.notifyGraphRoot(this.graph.graphIsRoot());
@@ -394,7 +372,7 @@ export default class Graph extends React.Component<IProps, IState>
 
   public goBack = () =>
   {
-    this.clearTargetNode();
+    this.updateTargetNode();
     this.graph.back(() =>
       {
         this.props.notifyGraphRoot(this.graph.graphIsRoot());
@@ -520,28 +498,10 @@ export default class Graph extends React.Component<IProps, IState>
   // Node/Edge functions
   //============================================================================
 
-  private targetNode = (node: Model.Node) =>
-  {
-    // Note: target node will be shown in info panel and be created at the top
-    // of the graph z index
-    if (!this.state.targetNode || node.id !== this.state.targetNode.id)
-    {
-      this.setState({targetNode: node});
-    }
-  }
-
-  private clearTargetNode = () =>
-  {
-    if (this.state.targetNode)
-    {
-      this.setState({targetNode: null});
-    }
-  }
-
   private showNodeGraph = (path: string) =>
   {
     this.setState({targetProperty: {property: null, updating: false}});
-    this.clearTargetNode();
+    this.updateTargetNode();
 
     vgData.generateGraph(path, (json:any) =>
       {
@@ -612,7 +572,7 @@ export default class Graph extends React.Component<IProps, IState>
 
     if (this.state.targetNode && node.id === this.state.targetNode.id)
     {
-      this.clearTargetNode();
+      this.updateTargetNode();
     }
 
     vgData.deleteNode(node.path,
@@ -1017,6 +977,19 @@ export default class Graph extends React.Component<IProps, IState>
       updateID === this.state.targetProperty.property.id)
     {
       this.setState({targetProperty: {property, updating}});
+    }
+  }
+
+  // Target (click) node - will be shown in info panel
+  private updateTargetNode = (node?: Model.Node) =>
+  {
+    if (!node)
+    {
+      this.setState({targetNode: null});
+    }
+    else if (!this.state.targetNode || node.id !== this.state.targetNode.id)
+    {
+      this.setState({targetNode: node});
     }
   }
 }

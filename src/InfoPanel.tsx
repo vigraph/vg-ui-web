@@ -12,6 +12,7 @@ interface IProps
   startUpdate: () => void;
   update: () => void;
   endUpdate: () => void;
+  removeNode: (node: Model.Node) => void;
   dynamicNodeUpdate: (node: Model.Node, finished: () => void) => void;
 }
 
@@ -38,6 +39,7 @@ export default class InfoPanel extends React.Component<IProps, IState>
       <div id="info" className={`${this.state.show ?
         "shown" : "hidden"} ${!this.props.node ? "empty" : ""}`}>
         {this.createVisibilityIcon()}
+        {this.createDeleteIcon()}
         {this.createInfoPanel()}
       </div>
     );
@@ -68,6 +70,28 @@ export default class InfoPanel extends React.Component<IProps, IState>
           <rect className="info-panel-icon hide arrowbody" x={10} y={7}
             width={10} height={6}/>
         </svg>
+      </div>
+    }
+  }
+
+  // Create node delete icon if info panel shown
+  private createDeleteIcon = () =>
+  {
+    const deleteX = 10;
+    const deleteY = 10;
+
+    if (this.state.show)
+    {
+      return <div id="info-delete-icon" className="info-delete-icon">
+        <svg className="delete-wrapper" height={20} width={20} x={0} y={0}>
+        <circle className="node-delete"
+          cx={deleteX} cy={deleteY} r={10}
+          onMouseDown={this.removeNode}/>
+        <path className="delete-line" d={`M ${deleteX-7} ${deleteY-7} L` +
+          `${deleteX+7} ${deleteY+7}`}/>
+        <path className="delete-line" d={`M ${deleteX-7} ${deleteY+7} L` +
+          `${deleteX+7} ${deleteY-7}`}/>
+      </svg>
       </div>
     }
   }
@@ -645,6 +669,15 @@ export default class InfoPanel extends React.Component<IProps, IState>
     else
     {
       return null;
+    }
+  }
+
+  // Delete node
+  private removeNode = () =>
+  {
+    if (this.props.node)
+    {
+      this.props.removeNode(this.props.node);
     }
   }
 }
