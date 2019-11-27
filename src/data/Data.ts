@@ -136,24 +136,25 @@ class Data
     }
   }
 
-  // Update layout data. If no position or size given then layout data for
+  // Update layout data. If no name, position or size given then layout data for
   // given id is removed. If no id given then this.layoutData is sent with
   // no updates.
   // Note: ID is node path
   public updateLayout(id?: string, position?: {x: number, y: number},
-    size?: {w: number, h: number})
+    size?: {w: number, h: number}, name?: {n: string}, success?: () => void)
   {
     const url = this.restURL + "/layout";
 
     if (id)
     {
-      if (!position && !size)
+      if (!position && !size && !name)
       {
         delete this.layoutData[id];
       }
       else
       {
-        this.layoutData[id] = {...this.layoutData[id], ...position, ...size};
+        this.layoutData[id] = {...this.layoutData[id], ...position, ...size,
+          ...name};
       }
     }
 
@@ -168,6 +169,11 @@ class Data
         {
           // Success
           vgUtils.log("Update Layout Success");
+
+          if (success)
+          {
+            success();
+          }
         }
         else
         {
@@ -269,7 +275,11 @@ class Data
         const y = this.layoutData[item.path] && this.layoutData[item.path].y ?
           this.layoutData[item.path].y : 0;
 
-        const layout = {h, w, x, y};
+        const displayName = this.layoutData[item.path] &&
+          this.layoutData[item.path].n ? this.layoutData[item.path].n :
+          undefined;
+
+        const layout = {h, w, x, y, displayName};
 
         if (success) success({...item, ...layout});
       }
@@ -655,12 +665,16 @@ class Data
       const width = layout[value.path] && layout[value.path].w ?
         layout[value.path].w : (propConfig ? propConfig.width : 50);
 
+      const name = layout[value.path] && layout[value.path].n ?
+        layout[value.path].n : undefined;
+
       const nodeLayout =
       {
         x: layout[value.path] ? layout[value.path].x : 0,
         y: layout[value.path] ? layout[value.path].y : 0,
         h: height,
-        w: width
+        w: width,
+        displayName: name
       }
 
       layoutNodes.push({...value, ...nodeLayout});
@@ -948,7 +962,7 @@ class Data
       increment?: number, x?: number, y?: number}> = [];
 
     const propsConfig = vgConfig.Properties[item.type];
-    const itemStrings = vgConfig.Strings[item.type];
+    const itemStrings = vgConfig.Strings.descriptions[item.type];
 
     if (metadata.inputs)
     {

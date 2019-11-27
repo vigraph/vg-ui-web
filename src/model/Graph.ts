@@ -10,6 +10,7 @@
 //   id: string,
 //   nodes: Map<id, {
 //            name: string
+//            displayName: string
 //            type: string
 //            path: string
 //            dynamic: boolean
@@ -61,7 +62,8 @@ export class Graph
   //
   // Load a graph from the given JSON:
   // { nodes: [
-  //     { id, name, type, path, dynamic, category, description, x, y, w, h,
+  //     { id, name, displayName, type, path, dynamic, category, description,
+  //       x, y, w, h,
   //       inputs: [ { id, type, x, y } ],
   //       outputs: [ { id, type } ],
   //       edges: [ { output, destId, input } ],
@@ -122,6 +124,7 @@ export class Graph
   {
     const node = this.addNode(n.id, n.type || "?");
     node.name = n.name || n.id;
+    node.displayName = n.displayName || "";
     node.position = { x: n.x || 0, y: n.y || 0 };
     node.size = { w: n.w || 50, h: n.h || 50 };
     node.path = n.path || n.id;
@@ -519,6 +522,17 @@ export class Graph
               {w: nNodeSize.w, h: nNodeSize.h});
           }
 
+          const cNodeDisplayName = cNode.get("displayName");
+          const nNodeDisplayName = nNode.get("displayName");
+
+          // Check display name
+          if (cNodeDisplayName !== nNodeDisplayName)
+          {
+            // Node display name has changed between states
+            vgData.updateLayout(nNode.get("path"), undefined, undefined,
+              {n: nNodeDisplayName});
+          }
+
           // Check node property values
           if (typeof cNode.get("properties") !== "undefined")
           {
@@ -616,7 +630,7 @@ export class Graph
 
         vgData.updateLayout(value.get("path"), {x: value.get("position").x,
           y: value.get("position").y}, {w: value.get("size").w,
-          h: value.get("size").h});
+          h: value.get("size").h}, {n: value.get("displayName")});
       }
       else
       {

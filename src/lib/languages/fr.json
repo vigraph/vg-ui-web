@@ -1,172 +1,175 @@
 {
-  "audio/sdl-out":
+  "descriptions":
   {
-    "description": "Sortie audio pour SDL",
-    "properties":
+    "audio/sdl-out":
     {
-      "buffer-size":
+      "description": "Sortie audio pour SDL",
+      "properties":
       {
-        "description": "Taille de la mémoire tampon en échantillons (doit être une puissance de 2)"
-      },
-      "channels":
-      {
-        "description": "Nombre de canaux"
-      },
-      "device":
-      {
-        "description": "Périphérique de sortie"
-      },
-      "max-delay":
-      {
-        "description": "Délai maximum (en échantillons) avant de perdre des données"
-      },
-      "max-recovery":
-      {
-        "description": "Nombre maximal d'échantillons à supprimer pour récupérer le délai"
+        "buffer-size":
+        {
+          "description": "Taille de la mémoire tampon en échantillons (doit être une puissance de 2)"
+        },
+        "channels":
+        {
+          "description": "Nombre de canaux"
+        },
+        "device":
+        {
+          "description": "Périphérique de sortie"
+        },
+        "max-delay":
+        {
+          "description": "Délai maximum (en échantillons) avant de perdre des données"
+        },
+        "max-recovery":
+        {
+          "description": "Nombre maximal d'échantillons à supprimer pour récupérer le délai"
+        }
       }
-    }
-  },
-  "audio/envelope":
-  {
-    "description": "Fournir une enveloppe ADSR sur le déclencheur/relâchement",
-    "properties":
+    },
+    "audio/envelope":
     {
-      "attack":
+      "description": "Fournir une enveloppe ADSR sur le déclencheur/relâchement",
+      "properties":
       {
-        "description": "Temps d'attaque"
-      },
-      "decay":
-      {
-        "description": "Temps de décroissance"
-      },
-      "release":
-      {
-        "description": "Temps de libération"
-      },
-      "reset":
-      {
-        "description": "Réinitialiser"
-      },
-      "start":
-      {
-        "description": "Début"
-      },
-      "stop":
-      {
-        "description": "Arrêtez"
-      },
-      "sustain":
-      {
-        "description": "Maintenir le niveau"
+        "attack":
+        {
+          "description": "Temps d'attaque"
+        },
+        "decay":
+        {
+          "description": "Temps de décroissance"
+        },
+        "release":
+        {
+          "description": "Temps de libération"
+        },
+        "reset":
+        {
+          "description": "Réinitialiser"
+        },
+        "start":
+        {
+          "description": "Début"
+        },
+        "stop":
+        {
+          "description": "Arrêtez"
+        },
+        "sustain":
+        {
+          "description": "Maintenir le niveau"
+        }
       }
-    }
-  },
-  "core/add":
-  {
-    "description": "Ajouter un décalage à une valeur de contrôle",
-    "properties":
+    },
+    "core/add":
     {
-      "offset":
+      "description": "Ajouter un décalage à une valeur de contrôle",
+      "properties":
       {
-        "description": "Montant compensé"
+        "offset":
+        {
+          "description": "Montant compensé"
+        }
       }
-    }
-  },
-  "core/beat":
-  {
-    "description": "Pouls régulier",
-    "properties":
+    },
+    "core/beat":
     {
-      "interval":
+      "description": "Pouls régulier",
+      "properties":
       {
-        "description": "Intervalle en secondes"
-      },
-      "offset":
-      {
-        "description": "Décalage"
-      },
-      "start":
-      {
-        "description": "Début"
-      },
-      "stop":
-      {
-        "description": "Arrêtez"
+        "interval":
+        {
+          "description": "Intervalle en secondes"
+        },
+        "offset":
+        {
+          "description": "Décalage"
+        },
+        "start":
+        {
+          "description": "Début"
+        },
+        "stop":
+        {
+          "description": "Arrêtez"
+        }
       }
-    }
-  },
-  "core/multiply":
-  {
-    "description": "Multiplier une valeur de contrôle",
-    "properties":
+    },
+    "core/multiply":
     {
-      "factor":
+      "description": "Multiplier une valeur de contrôle",
+      "properties":
       {
-        "description": "Facteur à multiplier avec"
+        "factor":
+        {
+          "description": "Facteur à multiplier avec"
+        }
       }
-    }
-  },
-  "core/oscillator":
-  {
-    "description": "Oscillateur",
-    "properties":
+    },
+    "core/oscillator":
     {
-      "freq":
+      "description": "Oscillateur",
+      "properties":
       {
-        "description": "La fréquence"
-      },
-      "pulse-width":
-      {
-        "description": "Largeur d'impulsion"
-      },
-      "wave":
-      {
-        "description": "Forme d'onde"
-      },
-      "start":
-      {
-        "description": "Début"
-      },
-      "stop":
-      {
-        "description": "Arrêtez"
+        "freq":
+        {
+          "description": "La fréquence"
+        },
+        "pulse-width":
+        {
+          "description": "Largeur d'impulsion"
+        },
+        "wave":
+        {
+          "description": "Forme d'onde"
+        },
+        "start":
+        {
+          "description": "Début"
+        },
+        "stop":
+        {
+          "description": "Arrêtez"
+        }
       }
-    }
-  },
-  "vector/websocket-display":
-  {
-    "description": "Serveur WebSocket pour les clients à affichage vectoriel",
-    "properties":
+    },
+    "vector/websocket-display":
     {
-      "port":
+      "description": "Serveur WebSocket pour les clients à affichage vectoriel",
+      "properties":
       {
-        "description": "Port d'écoute"
+        "port":
+        {
+          "description": "Port d'écoute"
+        }
       }
-    }
-  },
-  "bitmap/websocket-display":
-  {
-    "description": "Serveur WebSocket pour les clients d'affichage bitmap",
-    "properties":
+    },
+    "bitmap/websocket-display":
     {
-      "port":
+      "description": "Serveur WebSocket pour les clients d'affichage bitmap",
+      "properties":
       {
-        "description": "Port d'écoute"
+        "port":
+        {
+          "description": "Port d'écoute"
+        }
       }
-    }
-  },
-  "bitmap/rectangle":
-  {
-    "description": "Bitmap rectangle",
-    "properties":
+    },
+    "bitmap/rectangle":
     {
-      "width":
+      "description": "Bitmap rectangle",
+      "properties":
       {
-        "description": "Largeur du bitmap"
-      },
-      "height":
-      {
-        "description": "Hauteur de bitmap"
+        "width":
+        {
+          "description": "Largeur du bitmap"
+        },
+        "height":
+        {
+          "description": "Hauteur de bitmap"
+        }
       }
     }
   }

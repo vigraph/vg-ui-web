@@ -23,6 +23,8 @@ interface IState
 
 export default class InfoPanel extends React.Component<IProps, IState>
 {
+  private ipStrings: {[key: string]: string};
+
   constructor(props: IProps)
   {
     super(props);
@@ -31,6 +33,8 @@ export default class InfoPanel extends React.Component<IProps, IState>
     {
       show: true
     }
+
+    this.ipStrings = vgConfig.Strings.infoPanel;
   }
 
   public render()
@@ -121,6 +125,18 @@ export default class InfoPanel extends React.Component<IProps, IState>
           </div>
           <div id="info-node-category" className="info-text node category">
             {node.category}
+          </div>
+          <div id="info-node-display-name-wrapper"
+            className="info-section-wrapper"
+            key={"display-name-key-"+node.id+"-"+node.displayName}>
+            <div id="info-node-display-name" className="info-text displayName">
+              {this.ipStrings.displayName}
+            </div>
+            <input id="info-node-display-name-input" type="text"
+              className={"value-input display-name"}
+              defaultValue={node.displayName}
+              onBlur={this.displayNameInputOnBlur}
+              onKeyDown={this.textBoxKeyDown}/>
           </div>
         </div>
         {this.createInputsInfo(node)}
@@ -324,6 +340,27 @@ export default class InfoPanel extends React.Component<IProps, IState>
         this.updateValue(property, 1,
           () => { this.updateValue(property, 0); });
       }
+    }
+  }
+
+  // Update node display name
+  private displayNameInputOnBlur = (e: React.FocusEvent<HTMLInputElement>) =>
+  {
+    const textBox =
+      document.getElementById(e.currentTarget.id) as HTMLInputElement;
+
+    if (textBox && this.props.node)
+    {
+      const node = this.props.node;
+
+      vgData.updateLayout(node.path, undefined, undefined,
+        {n: textBox.value.toString()}, () =>
+        {
+          this.props.startUpdate();
+          node.displayName = textBox.value.toString();
+          this.props.update();
+          this.props.endUpdate();
+        });
     }
   }
 

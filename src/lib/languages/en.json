@@ -1,783 +1,790 @@
 {
-  "audio/alsa-out":
+  "infoPanel":
   {
-    "description": "ALSA Audio out",
-    "properties":
+    "displayName": "Display Name"
+  },
+  "descriptions":
+  {
+    "audio/alsa-out":
     {
-      "channels":
+      "description": "ALSA Audio out",
+      "properties":
       {
-        "description": "Channels"
-      },
-      "device":
-      {
-        "description": "Device"
-      },
-      "max-delay":
-      {
-        "description": "Max delay"
-      },
-      "max-recovery":
-      {
-        "max-recovery": "Max recovery"
-      },
-      "sample-rate":
-      {
-        "description": "Sample rate"
-      },
-      "start-threshold":
-      {
-        "description": "Start threshold"
+        "channels":
+        {
+          "description": "Channels"
+        },
+        "device":
+        {
+          "description": "Device"
+        },
+        "max-delay":
+        {
+          "description": "Max delay"
+        },
+        "max-recovery":
+        {
+          "max-recovery": "Max recovery"
+        },
+        "sample-rate":
+        {
+          "description": "Sample rate"
+        },
+        "start-threshold":
+        {
+          "description": "Start threshold"
+        }
       }
-    }
-  },
-  "audio/envelope":
-  {
-    "description": "Provide an ADSR envelope on trigger/release",
-    "properties":
+    },
+    "audio/envelope":
     {
-      "attack":
+      "description": "Provide an ADSR envelope on trigger/release",
+      "properties":
       {
-        "description": "Attack time"
-      },
-      "decay":
-      {
-        "description": "Decay time"
-      },
-      "release":
-      {
-        "description": "Release time"
-      },
-      "reset":
-      {
-        "description": "Reset"
-      },
-      "start":
-      {
-        "description": "Start"
-      },
-      "stop":
-      {
-        "description": "Stop"
-      },
-      "sustain":
-      {
-        "description": "Sustain level"
+        "attack":
+        {
+          "description": "Attack time"
+        },
+        "decay":
+        {
+          "description": "Decay time"
+        },
+        "release":
+        {
+          "description": "Release time"
+        },
+        "reset":
+        {
+          "description": "Reset"
+        },
+        "start":
+        {
+          "description": "Start"
+        },
+        "stop":
+        {
+          "description": "Stop"
+        },
+        "sustain":
+        {
+          "description": "Sustain level"
+        }
       }
-    }
-  },
-  "audio/pitch-shift":
-  {
-    "description": "Audio Pitch Shift",
-    "properties":
+    },
+    "audio/pitch-shift":
     {
-      "pitch":
+      "description": "Audio Pitch Shift",
+      "properties":
       {
-        "description": "Pitch Shift"
+        "pitch":
+        {
+          "description": "Pitch Shift"
+        }
       }
-    }
-  },
-  "audio/position":
-  {
-    "description": "Audio Position",
-    "properties":
+    },
+    "audio/position":
     {
-      "x":
+      "description": "Audio Position",
+      "properties":
       {
-        "description": "x"
+        "x":
+        {
+          "description": "x"
+        }
       }
-    }
-  },
-  "audio/sdl-out":
-  {
-    "description": "Audio output for SDL",
-    "properties":
+    },
+    "audio/sdl-out":
     {
-      "buffer-size":
+      "description": "Audio output for SDL",
+      "properties":
       {
-        "description": "Buffer size in samples (must be a power of 2)"
-      },
-      "channels":
-      {
-        "description": "Number of channels"
-      },
-      "device":
-      {
-        "description": "Device to output to"
-      },
-      "max-delay":
-      {
-        "description": "Maximum delay (in samples) before dropping data"
-      },
-      "max-recovery":
-      {
-        "description": "Maximum samples to drop to recover delay"
+        "buffer-size":
+        {
+          "description": "Buffer size in samples (must be a power of 2)"
+        },
+        "channels":
+        {
+          "description": "Number of channels"
+        },
+        "device":
+        {
+          "description": "Device to output to"
+        },
+        "max-delay":
+        {
+          "description": "Maximum delay (in samples) before dropping data"
+        },
+        "max-recovery":
+        {
+          "description": "Maximum samples to drop to recover delay"
+        }
       }
-    }
-  },
-  "audio/wav-in":
-  {
-    "description": "Audio Wav Input",
-    "properties":
+    },
+    "audio/wav-in":
     {
-      "loop":
+      "description": "Audio Wav Input",
+      "properties":
       {
-        "description": "Loop"
-      },
-      "file":
-      {
-        "description": "File Path"
+        "loop":
+        {
+          "description": "Loop"
+        },
+        "file":
+        {
+          "description": "File Path"
+        }
       }
-    }
-  },
-  "bitmap/fade":
-  {
-    "description": "Bitmap Fade",
-    "properties":
+    },
+    "bitmap/fade":
     {
-      "alpha":
+      "description": "Bitmap Fade",
+      "properties":
       {
-        "description": "Alpha"
+        "alpha":
+        {
+          "description": "Alpha"
+        }
       }
-    }
-  },
-  "bitmap/hsl":
-  {
-    "description": "Bitmap HSL",
-    "properties":
+    },
+    "bitmap/hsl":
     {
-      "h":
+      "description": "Bitmap HSL",
+      "properties":
       {
-        "description": "Hue"
-      },
-      "s":
-      {
-        "description": "Saturation"
-      },
-      "l":
-      {
-        "description": "Lightness"
+        "h":
+        {
+          "description": "Hue"
+        },
+        "s":
+        {
+          "description": "Saturation"
+        },
+        "l":
+        {
+          "description": "Lightness"
+        }
       }
-    }
-  },
-  "bitmap/pin":
-  {
-    "description": "Bitmap Pin"
-  },
-  "bitmap/rectangle":
-  {
-    "description": "Bitmap rectangle",
-    "properties":
+    },
+    "bitmap/pin":
     {
-      "width":
+      "description": "Bitmap Pin"
+    },
+    "bitmap/rectangle":
+    {
+      "description": "Bitmap rectangle",
+      "properties":
       {
-        "description": "Width of bitmap"
-      },
-      "height":
-      {
-        "description": "Height of bitmap"
+        "width":
+        {
+          "description": "Width of bitmap"
+        },
+        "height":
+        {
+          "description": "Height of bitmap"
+        }
       }
-    }
-  },
-  "bitmap/rgb":
-  {
-    "description": "Bitmap RGB",
-    "properties":
+    },
+    "bitmap/rgb":
     {
-      "r":
+      "description": "Bitmap RGB",
+      "properties":
       {
-        "description": "Red"
-      },
-      "g":
-      {
-        "description": "Green"
-      },
-      "b":
-      {
-        "description": "Blue"
+        "r":
+        {
+          "description": "Red"
+        },
+        "g":
+        {
+          "description": "Green"
+        },
+        "b":
+        {
+          "description": "Blue"
+        }
       }
-    }
-  },
-  "bitmap/translate":
-  {
-    "description": "3D Translation",
-    "properties":
+    },
+    "bitmap/translate":
     {
-      "x":
+      "description": "3D Translation",
+      "properties":
       {
-        "description": "Distance to move along X axis"
-      },
-      "y":
-      {
-        "description": "Distance to move along Y axis"
-      },
-      "z":
-      {
-        "description": "Distance to move along Z axis"
+        "x":
+        {
+          "description": "Distance to move along X axis"
+        },
+        "y":
+        {
+          "description": "Distance to move along Y axis"
+        },
+        "z":
+        {
+          "description": "Distance to move along Z axis"
+        }
       }
-    }
-  },
-  "bitmap/vector-fill":
-  {
-    "description": "Vector Fill",
-    "properties":
+    },
+    "bitmap/vector-fill":
     {
-      "height":
+      "description": "Vector Fill",
+      "properties":
       {
-        "description": "Height"
-      },
-      "width":
-      {
-        "description": "Width"
+        "height":
+        {
+          "description": "Height"
+        },
+        "width":
+        {
+          "description": "Width"
+        }
       }
-    }
-  },
-  "bitmap/websocket-display":
-  {
-    "description": "WebSocket server for bitmap display clients",
-    "properties":
+    },
+    "bitmap/websocket-display":
     {
-      "port":
+      "description": "WebSocket server for bitmap display clients",
+      "properties":
       {
-        "description": "Listening port"
-      },
-      "frame-rate":
-      {
-        "description": "Frame Rate"
-      },
-      "height":
-      {
-        "description": "Height"
-      },
-      "width":
-      {
-        "description": "Width"
+        "port":
+        {
+          "description": "Listening port"
+        },
+        "frame-rate":
+        {
+          "description": "Frame Rate"
+        },
+        "height":
+        {
+          "description": "Height"
+        },
+        "width":
+        {
+          "description": "Width"
+        }
       }
-    }
-  },
-  "core/add":
-  {
-    "description": "Add an offset to a control value",
-    "properties":
+    },
+    "core/add":
     {
-      "offset":
+      "description": "Add an offset to a control value",
+      "properties":
       {
-        "description": "Offset amount"
+        "offset":
+        {
+          "description": "Offset amount"
+        }
       }
-    }
-  },
-  "core/beat":
-  {
-    "description": "Regular beat pulse",
-    "properties":
+    },
+    "core/beat":
     {
-      "interval":
+      "description": "Regular beat pulse",
+      "properties":
       {
-        "description": "Interval in seconds"
-      },
-      "offset":
-      {
-        "description": "Offset"
-      },
-      "start":
-      {
-        "description": "Start"
-      },
-      "stop":
-      {
-        "description": "Stop"
+        "interval":
+        {
+          "description": "Interval in seconds"
+        },
+        "offset":
+        {
+          "description": "Offset"
+        },
+        "start":
+        {
+          "description": "Start"
+        },
+        "stop":
+        {
+          "description": "Stop"
+        }
       }
-    }
-  },
-  "core/clone":
-  {
-    "description": "Clones multiple copies of a sub-graph",
-    "properties":
+    },
+    "core/clone":
     {
-      "copies":
+      "description": "Clones multiple copies of a sub-graph",
+      "properties":
       {
-        "description": "Number of copies to clone"
+        "copies":
+        {
+          "description": "Number of copies to clone"
+        }
       }
-    }
-  },
-  "core/clone-info":
-  {
-    "description": "Clone Information"
-  },
-  "core/compare":
-  {
-    "description": "Compare a value",
-    "properties":
+    },
+    "core/clone-info":
     {
-      "value":
+      "description": "Clone Information"
+    },
+    "core/compare":
+    {
+      "description": "Compare a value",
+      "properties":
       {
-        "description": "Value"
-      },
-      "on-change":
-      {
-        "description": "On change"
+        "value":
+        {
+          "description": "Value"
+        },
+        "on-change":
+        {
+          "description": "On change"
+        }
       }
-    }
-  },
-  "core/count":
-  {
-    "description": "Count a value up or down",
-    "properties":
+    },
+    "core/count":
     {
-      "delta":
+      "description": "Count a value up or down",
+      "properties":
       {
-        "description": "Value to change by"
-      },
-      "down":
-      {
-        "description": "Down"
-      },
-      "up":
-      {
-        "description": "Up"
-      },
-      "reset":
-      {
-        "description": "Reset"
+        "delta":
+        {
+          "description": "Value to change by"
+        },
+        "down":
+        {
+          "description": "Down"
+        },
+        "up":
+        {
+          "description": "Up"
+        },
+        "reset":
+        {
+          "description": "Reset"
+        }
       }
-    }
-  },
-  "core/divide":
-  {
-    "description": "Divide",
-    "properties":
+    },
+    "core/divide":
     {
-      "factor":
+      "description": "Divide",
+      "properties":
       {
-        "description": "Factor"
+        "factor":
+        {
+          "description": "Factor"
+        }
       }
-    }
-  },
-  "core/filter":
-  {
-    "description": "Filter (low-, high- or band-pass)",
-    "properties":
+    },
+    "core/filter":
     {
-      "cutoff":
+      "description": "Filter (low-, high- or band-pass)",
+      "properties":
       {
-        "description": "Cutoff level (0-1)"
-      },
-      "mode":
-      {
-        "description": "Filter mode"
-      },
-      "resonance":
-      {
-        "description": "Resonance level (0-1)"
-      },
-      "steepness":
-      {
-        "description": "Steepness level (1-?)"
+        "cutoff":
+        {
+          "description": "Cutoff level (0-1)"
+        },
+        "mode":
+        {
+          "description": "Filter mode"
+        },
+        "resonance":
+        {
+          "description": "Resonance level (0-1)"
+        },
+        "steepness":
+        {
+          "description": "Steepness level (1-?)"
+        }
       }
-    }
-  },
-  "core/graph":
-  {
-    "description": "Creates a single sub-graph"
-  },
-  "core/limit":
-  {
-    "description": "Hard limit on a value",
-    "properties":
+    },
+    "core/graph":
     {
-      "max":
+      "description": "Creates a single sub-graph"
+    },
+    "core/limit":
+    {
+      "description": "Hard limit on a value",
+      "properties":
       {
-        "description": "Maximum value"
-      },
-      "min":
-      {
-        "description": "Minimum value"
+        "max":
+        {
+          "description": "Maximum value"
+        },
+        "min":
+        {
+          "description": "Minimum value"
+        }
       }
-    }
-  },
-  "core/log":
-  {
-    "description": "Log message",
-    "properties":
+    },
+    "core/log":
     {
-      "prefix":
+      "description": "Log message",
+      "properties":
       {
-        "description": "Log prefix"
+        "prefix":
+        {
+          "description": "Log prefix"
+        }
       }
-    }
-  },
-  "core/multiply":
-  {
-    "description": "Multiply a control value",
-    "properties":
+    },
+    "core/multiply":
     {
-      "factor":
+      "description": "Multiply a control value",
+      "properties":
       {
-        "description": "Factor to multiply with"
+        "factor":
+        {
+          "description": "Factor to multiply with"
+        }
       }
-    }
-  },
-  "core/pin":
-  {
-    "description": "Number Pin"
-  },
-  "core/oscillator":
-  {
-    "description": "Oscillator",
-    "properties":
+    },
+    "core/pin":
     {
-      "freq":
+      "description": "Number Pin"
+    },
+    "core/oscillator":
+    {
+      "description": "Oscillator",
+      "properties":
       {
-        "description": "Frequency"
-      },
-      "pulse-width":
-      {
-        "description": "Pulse Width"
-      },
-      "wave":
-      {
-        "description": "Waveform"
-      },
-      "start":
-      {
-        "description": "Start"
-      },
-      "stop":
-      {
-        "description": "Stop"
+        "freq":
+        {
+          "description": "Frequency"
+        },
+        "pulse-width":
+        {
+          "description": "Pulse Width"
+        },
+        "wave":
+        {
+          "description": "Waveform"
+        },
+        "start":
+        {
+          "description": "Start"
+        },
+        "stop":
+        {
+          "description": "Stop"
+        }
       }
-    }
-  },
-  "core/random":
-  {
-    "description": "Set a random value on another element",
-    "properties":
+    },
+    "core/random":
     {
-      "max":
+      "description": "Set a random value on another element",
+      "properties":
       {
-        "description": "Maximum value"
-      },
-      "min":
-      {
-        "description": "Minimum value"
-      },
-      "trigger":
-      {
-        "description": "Trigger to set value"
+        "max":
+        {
+          "description": "Maximum value"
+        },
+        "min":
+        {
+          "description": "Minimum value"
+        },
+        "trigger":
+        {
+          "description": "Trigger to set value"
+        }
       }
-    }
-  },
-  "core/subtract":
-  {
-    "description": "Subtract",
-    "properties":
+    },
+    "core/subtract":
     {
-      "offset":
+      "description": "Subtract",
+      "properties":
       {
-        "description": "Offset"
+        "offset":
+        {
+          "description": "Offset"
+        }
       }
-    }
-  },
-  "core/wrap":
-  {
-    "description": "Wrap a value into a range",
-    "properties":
+    },
+    "core/wrap":
     {
-      "max":
+      "description": "Wrap a value into a range",
+      "properties":
       {
-        "description": "Maximum value"
-      },
-      "min":
-      {
-        "description": "Minimum value"
+        "max":
+        {
+          "description": "Maximum value"
+        },
+        "min":
+        {
+          "description": "Minimum value"
+        }
       }
-    }
-  },
-  "midi/alsa-in":
-  {
-    "description": "ALSA MIDI input",
-    "properties":
+    },
+    "midi/alsa-in":
     {
-      "device":
+      "description": "ALSA MIDI input",
+      "properties":
       {
-        "description": "Device"
+        "device":
+        {
+          "description": "Device"
+        }
       }
-    }
-  },
-  "midi/control-in":
-  {
-    "description": "Generic MIDI Control Input",
-    "properties":
+    },
+    "midi/control-in":
     {
-      "channel":
+      "description": "Generic MIDI Control Input",
+      "properties":
       {
-        "description": "Channel"
-      },
-      "control":
-      {
-        "description": "Control number"
+        "channel":
+        {
+          "description": "Channel"
+        },
+        "control":
+        {
+          "description": "Control number"
+        }
       }
-    }
-  },
-  "midi/key-in":
-  {
-    "description": "Generic MIDI Key Input",
-    "properties":
+    },
+    "midi/key-in":
     {
-      "channel":
+      "description": "Generic MIDI Key Input",
+      "properties":
       {
-        "description": "Channel"
-      },
-      "key":
-      {
-        "description": "Key"
+        "channel":
+        {
+          "description": "Channel"
+        },
+        "key":
+        {
+          "description": "Key"
+        }
       }
-    }
-  },
-  "midi/keyboard-in":
-  {
-    "description": "MIDI Keyboard In",
-    "properties":
+    },
+    "midi/keyboard-in":
     {
-      "channel":
+      "description": "MIDI Keyboard In",
+      "properties":
       {
-        "description": "Channel"
+        "channel":
+        {
+          "description": "Channel"
+        }
       }
-    }
-  },
-  "sensor/load-dscusb":
-  {
-    "description": "DSCUSB Load",
-    "properties":
+    },
+    "sensor/load-dscusb":
     {
-      "device":
+      "description": "DSCUSB Load",
+      "properties":
       {
-        "description": "Device"
-      },
-      "interval":
-      {
-        "description": "Interval"
+        "device":
+        {
+          "description": "Device"
+        },
+        "interval":
+        {
+          "description": "Interval"
+        }
       }
-    }
-  },
-  "time-series/average":
-  {
-    "description": "Average",
-    "properties":
+    },
+    "time-series/average":
     {
-      "samples":
+      "description": "Average",
+      "properties":
       {
-        "description": "Samples"
+        "samples":
+        {
+          "description": "Samples"
+        }
       }
-    }
-  },
-  "time-series/last":
-  {
-    "description": "Last",
-    "properties":
+    },
+    "time-series/last":
     {
-      "samples":
+      "description": "Last",
+      "properties":
       {
-        "description": "Samples"
+        "samples":
+        {
+          "description": "Samples"
+        }
       }
-    }
-  },
-  "time-series/offset":
-  {
-    "description": "Offset",
-    "properties":
+    },
+    "time-series/offset":
     {
-      "amount":
+      "description": "Offset",
+      "properties":
       {
-        "description": "Amount"
+        "amount":
+        {
+          "description": "Amount"
+        }
       }
-    }
-  },
-  "time-series/plot":
-  {
-    "description": "Plot",
-    "properties":
+    },
+    "time-series/plot":
     {
-      "points":
+      "description": "Plot",
+      "properties":
       {
-        "description": "Points"
-      },
-      "auto":
-      {
-        "description": "Auto"
+        "points":
+        {
+          "description": "Points"
+        },
+        "auto":
+        {
+          "description": "Auto"
+        }
       }
-    }
-  },
-  "time-series/scale":
-  {
-    "description": "Scale",
-    "properties":
+    },
+    "time-series/scale":
     {
-      "factor":
+      "description": "Scale",
+      "properties":
       {
-        "description": "Factor"
+        "factor":
+        {
+          "description": "Factor"
+        }
       }
-    }
-  },
-  "time-series/web-fetch":
-  {
-    "description": "Web Fetch",
-    "properties":
+    },
+    "time-series/web-fetch":
     {
-      "name":
+      "description": "Web Fetch",
+      "properties":
       {
-        "description": "Name"
-      },
-      "url":
-      {
-        "description": "URL"
+        "name":
+        {
+          "description": "Name"
+        },
+        "url":
+        {
+          "description": "URL"
+        }
       }
-    }
-  },
-  "vector/fade":
-  {
-    "description": "Vector Fade",
-    "properties":
+    },
+    "vector/fade":
     {
-      "alpha":
+      "description": "Vector Fade",
+      "properties":
       {
-        "description": "Alpha"
+        "alpha":
+        {
+          "description": "Alpha"
+        }
       }
-    }
-  },
-  "vector/hsl":
-  {
-    "description": "Vector HSL",
-    "properties":
+    },
+    "vector/hsl":
     {
-      "h":
+      "description": "Vector HSL",
+      "properties":
       {
-        "description": "Hue"
-      },
-      "s":
-      {
-        "description": "Saturation"
-      },
-      "l":
-      {
-        "description": "Lightness"
+        "h":
+        {
+          "description": "Hue"
+        },
+        "s":
+        {
+          "description": "Saturation"
+        },
+        "l":
+        {
+          "description": "Lightness"
+        }
       }
-    }
-  },
-  "vector/pin":
-  {
-    "description": "Number Pin"
-  },
-  "vector/rgb":
-  {
-    "description": "Vector RGB",
-    "properties":
+    },
+    "vector/pin":
     {
-      "r":
+      "description": "Number Pin"
+    },
+    "vector/rgb":
+    {
+      "description": "Vector RGB",
+      "properties":
       {
-        "description": "Red"
-      },
-      "g":
-      {
-        "description": "Green"
-      },
-      "b":
-      {
-        "description": "Blue"
+        "r":
+        {
+          "description": "Red"
+        },
+        "g":
+        {
+          "description": "Green"
+        },
+        "b":
+        {
+          "description": "Blue"
+        }
       }
-    }
-  },
-  "vector/rotate":
-  {
-    "description": "3D Rotation",
-    "properties":
+    },
+    "vector/rotate":
     {
-      "x":
+      "description": "3D Rotation",
+      "properties":
       {
-        "description": "Angle to rotate on X axis"
-      },
-      "y":
-      {
-        "description": "Angle to rotate on Y axis"
-      },
-      "z":
-      {
-        "description": "Angle to rotate on Z axis"
+        "x":
+        {
+          "description": "Angle to rotate on X axis"
+        },
+        "y":
+        {
+          "description": "Angle to rotate on Y axis"
+        },
+        "z":
+        {
+          "description": "Angle to rotate on Z axis"
+        }
       }
-    }
-  },
-  "vector/scale":
-  {
-    "description": "3D Scaling",
-    "properties":
+    },
+    "vector/scale":
     {
-      "x":
+      "description": "3D Scaling",
+      "properties":
       {
-        "description": "Factor to scale X"
-      },
-      "y":
-      {
-        "description": "Factor to scale Y"
-      },
-      "z":
-      {
-        "description": "Factor to scale Z"
+        "x":
+        {
+          "description": "Factor to scale X"
+        },
+        "y":
+        {
+          "description": "Factor to scale Y"
+        },
+        "z":
+        {
+          "description": "Factor to scale Z"
+        }
       }
-    }
-  },
-  "vector/svg":
-  {
-    "description": "SVG vector graphic image",
-    "properties":
+    },
+    "vector/svg":
     {
-      "file":
+      "description": "SVG vector graphic image",
+      "properties":
       {
-        "description": "Filename of SVG file"
-      },
-      "normalise":
-      {
-        "description": "Scale to unit square"
-      },
-      "path":
-      {
-        "description": "SVG path data (as if in <path d=...>)"
-      },
-      "precision":
-      {
-        "description": "Curve precision"
+        "file":
+        {
+          "description": "Filename of SVG file"
+        },
+        "normalise":
+        {
+          "description": "Scale to unit square"
+        },
+        "path":
+        {
+          "description": "SVG path data (as if in <path d=...>)"
+        },
+        "precision":
+        {
+          "description": "Curve precision"
+        }
       }
-    }
-  },
-  "vector/translate":
-  {
-    "description": "3D Translation",
-    "properties":
+    },
+    "vector/translate":
     {
-      "x":
+      "description": "3D Translation",
+      "properties":
       {
-        "description": "Distance to move along X axis"
-      },
-      "y":
-      {
-        "description": "Distance to move along Y axis"
-      },
-      "z":
-      {
-        "description": "Distance to move along Z axis"
+        "x":
+        {
+          "description": "Distance to move along X axis"
+        },
+        "y":
+        {
+          "description": "Distance to move along Y axis"
+        },
+        "z":
+        {
+          "description": "Distance to move along Z axis"
+        }
       }
-    }
-  },
-  "vector/websocket-display":
-  {
-    "description": "WebSocket server for vector display clients",
-    "properties":
+    },
+    "vector/websocket-display":
     {
-      "port":
+      "description": "WebSocket server for vector display clients",
+      "properties":
       {
-        "description": "Listening port"
-      },
-      "frame-rate":
-      {
-        "description": "Frame Rate"
+        "port":
+        {
+          "description": "Listening port"
+        },
+        "frame-rate":
+        {
+          "description": "Frame Rate"
+        }
       }
     }
   }

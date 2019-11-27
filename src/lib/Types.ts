@@ -48,6 +48,7 @@ export interface IProcessedGraphItem
 {
   id: string,
   name: string,
+  displayName?: string,
   type: string,
   path: string,
   dynamic: boolean,
@@ -129,14 +130,21 @@ export interface IPropertiesConfig
 
 export interface ILanguageStrings
 {
-  [key: string]:
+  infoPanel:
   {
-    description: string,
-    properties?:
+    [key: string]: string
+  },
+  descriptions:
+  {
+    [key: string]:
     {
-      [key: string]:
+      description: string,
+      properties?:
       {
-        description: string
+        [key: string]:
+        {
+          description: string
+        }
       }
     }
   }
@@ -148,7 +156,8 @@ export interface ILayoutData
     x?: number,
     y?: number,
     w?: number,
-    h?: number
+    h?: number,
+    n?: string
   }
 }
 

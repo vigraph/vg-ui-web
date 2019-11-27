@@ -32,6 +32,16 @@ export class Node
     this.graph.setNodeProp(this.id, "name", name);
   }
 
+  get displayName(): string
+  {
+    return this.graph.getNodeProp(this.id, "displayName");
+  }
+
+  set displayName(displayName: string)
+  {
+    this.graph.setNodeProp(this.id, "displayName", displayName);
+  }
+
   get path(): string
   {
     return this.graph.getNodeProp(this.id, "path");

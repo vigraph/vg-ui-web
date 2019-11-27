@@ -171,8 +171,7 @@ export default class Node extends React.Component<IProps, IState>
     const width = this.state.w;
     const padding = this.props.padding;
     const node = this.props.node;
-    const title = (node.id.charAt(0) === vgConfig.Graph.idPrefix ? node.name :
-      node.id);
+    const title = node.displayName || node.name;
 
     const linesArray = vgUtils.wrapText(title,
       width - (this.props.padding * 2), this.titleFontSize);
@@ -182,7 +181,7 @@ export default class Node extends React.Component<IProps, IState>
         {linesArray.map((word: string, index: number) =>
           {
             return <tspan key={index} x={(width/2)+padding}
-              dy={index*this.titleFontSize}>{word}</tspan>
+              dy={(index?1:0)*this.titleFontSize}>{word}</tspan>
           })}
       </text>
   }

@@ -95,7 +95,7 @@ export default class TextDisplay extends React.Component<IProps, IState>
             {linesArray.map((word: string, index: number) =>
             {
               return <tspan key={index} x={0}
-                dy={index*(fontSize+2)}>{word}</tspan>
+                dy={(index?1:0)*(fontSize+2)}>{word}</tspan>
             })}
             </text>
           </svg>
