@@ -219,8 +219,9 @@ export default class ColourPicker extends React.Component<IProps, IState>
   private createIndicators = () =>
   {
     const disabled = this.props.disabled;
-    const position = (this.props.property.value ? ((this.props.property.value *
-      this.settings.barLength) + this.settings.indicatorThickness) : 0);
+    const position = (this.props.property.value !== undefined ?
+      ((this.props.property.value * this.settings.barLength) +
+      this.settings.indicatorThickness) : 0);
 
     return <svg className="indicator-wrapper"
       x={-this.settings.indicatorThickness}>

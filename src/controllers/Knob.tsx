@@ -89,9 +89,12 @@ export default class Knob extends React.Component<IProps, IState>
     let currentValue = settings.logControl ?
       Math.log10(this.state.currentValue) : this.state.currentValue;
 
-    if (currentValue > propRange.max)
+    currentValue = Math.min(currentValue, rangeMax);
+    currentValue = Math.max(currentValue, rangeMin);
+
+    if (isNaN(currentValue))
     {
-      currentValue = propRange.max;
+      currentValue = rangeMin;
     }
 
     // Current position in degrees from 0

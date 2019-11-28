@@ -86,26 +86,19 @@ export default class Slider extends React.Component<IProps, IState>
       propRange.min;
     const rangeMax = settings.logControl ? Math.log10(propRange.max) :
       propRange.max;
-    const currentValue = settings.logControl ?
+    let currentValue = settings.logControl ?
       Math.log10(this.state.currentValue) : this.state.currentValue;
 
-    let currentPos;
+    currentValue = Math.min(currentValue, rangeMax);
+    currentValue = Math.max(currentValue, rangeMin);
 
+    if (isNaN(currentValue))
+    {
+      currentValue = rangeMin;
+    }
 
-    if (rangeMin === -Infinity || rangeMax === -Infinity ||
-      currentValue === -Infinity)
-    {
-      currentPos = 0;
-    }
-    else if (currentValue > propRange.max)
-    {
-      currentPos = settings.length;
-    }
-    else
-    {
-      currentPos = ((currentValue - rangeMin) /
-      (rangeMax - rangeMin)) * settings.length;
-    }
+    const currentPos = ((currentValue - rangeMin) / (rangeMax - rangeMin)) *
+      settings.length;
 
     return(
         <svg id="slider" className={this.props.settingsType}

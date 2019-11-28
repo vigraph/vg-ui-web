@@ -57,6 +57,11 @@ class Utils
   // Calculate text wrapping and return text split into array of wrapped lines
   public wrapText(text: string, lineWidth: number, fontSize: number)
   {
+    if (!text)
+    {
+      return [];
+    }
+
     const words = text.split(' ');
 
     const svgEle = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
