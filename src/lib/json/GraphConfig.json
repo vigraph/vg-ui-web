@@ -36,6 +36,15 @@
     "nodeTitle": 12,
     "propertySettings": 10
   },
+  "menu":
+  {
+    "size": 10,
+    "pinnedPosition":
+    {
+      "x": 200,
+      "y": 0
+    }
+  },
   "menuSize": 10,
   "interpolate":
   {

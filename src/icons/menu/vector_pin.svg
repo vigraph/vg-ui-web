@@ -1,0 +1,29 @@
+<svg width="40" height="40" version="1.1" viewBox="0 0 10.583 10.583" xmlns="http://www.w3.org/2000/svg">
+ <g transform="translate(0 -286.42)">
+  <g transform="matrix(.26458 0 0 .26458 -112.78 277.7)">
+   <g fill="#fff">
+    <rect x="424.02" y="30.527" width="2" height="32"/>
+    <rect transform="rotate(90)" x="60.59" y="-456.05" width="2" height="32"/>
+    <path d="m422.39 32.982 1.2842-2.2244 1.2843-2.2244 2.5685 4.4488h-2.5685z" stroke="#fff" stroke-linejoin="round" stroke-width=".91737"/>
+    <path transform="rotate(90 452.88 61.396)" d="m450.46 61.072 2.5685-4.4488 2.5685 4.4488h-2.5685z" stroke="#fff" stroke-linejoin="round" stroke-width=".91737"/>
+   </g>
+   <rect x="430.99" y="36.379" width="14.648" height="11.133" fill="#4ecac2" stroke="#4ecac2" stroke-linejoin="round" stroke-width="2"/>
+   <circle cx="444.42" cy="49.026" r="6.8702" fill="#0f82af" stroke="#0f82af" stroke-linejoin="round" stroke-width="1.4431"/>
+  </g>
+  <g transform="matrix(.26458 0 0 .26458 -111.17 252.67)">
+   <rect x="420.17" y="127.56" width="40" height="40" fill="#141414"/>
+   <path d="m437.46 155.49v8.1597h8e-3l1.3508 1.2631 1.3587 1.2713 1.3587-1.2713 1.3508-1.2631h8e-3v-8.1597z" fill="#d4aa00" stroke="#000" stroke-linejoin="round" stroke-width=".45142"/>
+   <ellipse cx="440.17" cy="143.11" rx="11.84" ry="11.691" fill="#ccc" stroke="#0f82af" stroke-linejoin="round" stroke-width="1.219"/>
+   <g transform="matrix(1.2609 0 0 1.2609 -113.98 -37.325)">
+    <g>
+     <rect x="434.04" y="137.68" width=".68273" height="10.924"/>
+     <rect transform="rotate(90)" x="147.94" y="-444.97" width=".68273" height="10.924"/>
+     <path d="m433.48 138.52 0.4384-0.75933 0.4384-0.75932 0.4384 0.75932 0.4384 0.75933h-0.8768z" stroke="#000" stroke-linejoin="round" stroke-width=".31316"/>
+     <path transform="matrix(0 .34136 -.34136 0 464.85 -6.3787)" d="m450.46 61.072 2.5685-4.4488 2.5685 4.4488h-2.5685z" stroke="#000" stroke-linejoin="round" stroke-width=".91737"/>
+    </g>
+    <rect x="436.42" y="139.68" width="5.0004" height="3.8003" fill="#4ecac2" stroke="#4ecac2" stroke-linejoin="round" stroke-width=".68273"/>
+    <circle cx="441" cy="144" r="2.3452" fill="#0f82af" stroke="#0f82af" stroke-linejoin="round" stroke-width=".49262"/>
+   </g>
+  </g>
+ </g>
+</svg>

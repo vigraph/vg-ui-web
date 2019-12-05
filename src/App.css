@@ -6,9 +6,9 @@
 
 #buttons
 {
-  background-color: black;
   height: 32px;
   width: 100%;
+  position: absolute;
 }
 
 #buttons .app-button

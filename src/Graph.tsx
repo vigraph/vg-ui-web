@@ -27,7 +27,7 @@ interface IState
   targetNode: Model.Node | null,
   targetConnector: { connector: Model.Connector, parent: Model.Node } | null,
   targetProperty: { property: Model.Property | null, updating: boolean },
-  showMenu: boolean,
+  showMenu: string,
   view: { x: number, y: number, w: number, h: number }
 }
 
@@ -67,7 +67,7 @@ export default class Graph extends React.Component<IProps, IState>
       targetNode: null,
       targetConnector: null,
       targetProperty: {property: null, updating: false},
-      showMenu: false,
+      showMenu: "hidden",
       view: vgConfig.Graph.viewDefault
     };
 
@@ -84,8 +84,10 @@ export default class Graph extends React.Component<IProps, IState>
 
     return (
       <div className="wrapper">
-        {this.state.showMenu && <Menu position={this.mouseClick}
-          menuClosed={this.menuClosed}
+        {this.state.showMenu !== "hidden" && <Menu
+          position={(this.state.showMenu === "pinned" ?
+            vgConfig.Graph.menu.pinnedPosition : this.mouseClick)}
+          menuClosed={this.menuClosed} pinMenu={this.pinMenu}
           menuItemSelected={this.menuItemSelected}/>}
 
         <InfoPanel graph={this.graph} node={this.state.targetNode}
@@ -435,15 +437,15 @@ export default class Graph extends React.Component<IProps, IState>
     e.preventDefault();
     this.mouseClick = {x: e.pageX, y: e.pageY};
 
-    if (e.button === 2 && !this.state.showMenu)
+    if (e.button === 2 && this.state.showMenu === "hidden")
     {
-      this.setState({showMenu: true});
+      this.setState({showMenu: "show"});
     }
     else
     {
-      if (this.state.showMenu)
+      if (this.state.showMenu === "show")
       {
-        this.setState({showMenu: false});
+        this.setState({showMenu: "hidden"});
       }
 
       window.addEventListener('mousemove', this.handleGraphDrag);
@@ -484,12 +486,17 @@ export default class Graph extends React.Component<IProps, IState>
 
   private menuClosed = () =>
   {
-    this.setState({showMenu: false});
+    this.setState({showMenu: "hidden"});
   }
 
-  private menuItemSelected = (id: string) =>
+  private menuItemSelected = (id: string, position?: {x: number, y: number}) =>
   {
-    this.createNewNode(id);
+    this.createNewNode(id, position);
+  }
+
+  private pinMenu = (pin: boolean) =>
+  {
+    this.setState({showMenu: (pin ? "pinned" : "hidden")});
   }
 
   //============================================================================
@@ -510,7 +517,7 @@ export default class Graph extends React.Component<IProps, IState>
       });
   }
 
-  private createNewNode = (type: string) =>
+  private createNewNode = (type: string, position?: {x: number, y: number}) =>
   {
     this.graph.beginTransaction();
     let flag = false;
@@ -541,7 +548,7 @@ export default class Graph extends React.Component<IProps, IState>
         vgData.getNode(id, this.graph.getGraphID(), (node: any) =>
         {
           const svgMouseClick = vgUtils.windowToSVGPosition(
-            {x: this.mouseClick.x, y: this.mouseClick.y}, this.graphRef);
+            (position?position:this.mouseClick), this.graphRef);
           node.x = svgMouseClick.x;
           node.y = svgMouseClick.y;
 

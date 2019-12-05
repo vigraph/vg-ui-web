@@ -25,70 +25,55 @@
   pointer-events: none;
 }
 
+#menu #pin-button
+{
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background-color: black;
+  border: 2px solid #FF8C00;
+  pointer-events: auto;
+}
+
+#menu #pin-button.pinned
+{
+  background-color: #FF8C00;
+}
+
 #menu .menu-item
 {
   cursor: pointer;
-  padding: 3px;
-  height: 10px;
-  width: 130px;
-  line-height: 10px;
-  font-size: small;
-  border-bottom: 1px solid rgb(187, 187, 187);
-}
-
-#menu .menu-parent-wrapper .menu-item
-{
-  width: 70px;
-}
-
-#menu .menu-item:hover
-{
-  color: #2980b9;
+  height: 40px;
+  width: 40px;
+  display: inline-block;
+  border: 1px solid #FF8C00;
+  background-color: white;
 }
 
 #menu .menu-item.selected
 {
-  color: #2980b9;
-  font-weight: bold;
+  border-color: white;
+}
+
+#menu .menu-parent-wrapper,
+#menu .sub-menu-block
+{
+  height: 42px;
 }
 
 #menu .menu-parent-wrapper,
 #menu .menu-children-wrapper
 {
-  background: #ffffff;
-  border: 1px solid rgb(187, 187, 187);
-  border-bottom: 0px;
   pointer-events: auto;
-  margin-right: 1px;
   position: absolute;
+  white-space: nowrap;
 }
 
-#menu .sub-menu,
-#menu .nav-wrapper
+#menu .menu-parent-wrapper,
+#menu .sub-menu-block
 {
-  float: left;
-}
-
-#menu .sub-menu
-{
-  border-right: 1px solid rgb(187, 187, 187);
-}
-
-#menu .nav-wrapper
-{
-  width: 10px;
-}
-
-#menu .menu-nav
-{
-  width: 10px;
-  height: 10px;
-}
-
-#menu-next
-{
-  position: absolute;
-  bottom: 1px;
+  border: 1px solid #FF8C00;
+  width: fit-content;
 }
 
 .node

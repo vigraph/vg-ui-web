@@ -1,0 +1,26 @@
+<svg width="40" height="40" version="1.1" viewBox="0 0 10.583 10.583" xmlns="http://www.w3.org/2000/svg">
+ <g transform="translate(0 -286.42)">
+  <g transform="matrix(.26458 0 0 .26458 -112.18 207.04)">
+   <g>
+    <rect x="424" y="300.02" width="40" height="40" fill="#141414"/>
+    <rect x="426" y="325.09" width="6" height="1" fill="#4ecac2"/>
+    <rect transform="matrix(.88508 -.46544 .44532 .89537 0 0)" x="245.72" y="490.74" width="17.493" height="1.0751" fill="#4ecac2"/>
+   </g>
+   <circle cx="434.38" cy="325.59" r="2" fill="none" stroke="#4ecac2" stroke-linejoin="round"/>
+   <rect transform="scale(-1,1)" x="-461.94" y="317.08" width="6" height="1" fill="#4ecac2"/>
+   <circle transform="scale(-1,1)" cx="-453.56" cy="317.58" r="2" fill="none" stroke="#4ecac2" stroke-linejoin="round"/>
+   <rect transform="scale(-1,1)" x="-461.94" y="333.09" width="6" height="1" fill="#4ecac2"/>
+   <circle transform="scale(-1,1)" cx="-453.56" cy="333.59" r="2" fill="none" stroke="#4ecac2" stroke-linejoin="round"/>
+   <g transform="matrix(.43508 0 0 .43508 242.52 288.87)">
+    <g fill="#fff">
+     <rect x="424.02" y="30.527" width="2" height="32"/>
+     <rect transform="rotate(90)" x="60.59" y="-456.05" width="2" height="32"/>
+     <path d="m422.39 32.982 1.2842-2.2244 1.2843-2.2244 2.5685 4.4488h-2.5685z" stroke="#fff" stroke-linejoin="round" stroke-width=".91737"/>
+     <path transform="rotate(90 452.88 61.396)" d="m450.46 61.072 2.5685-4.4488 2.5685 4.4488h-2.5685z" stroke="#fff" stroke-linejoin="round" stroke-width=".91737"/>
+    </g>
+    <rect x="430.99" y="36.379" width="14.648" height="11.133" fill="#4ecac2" stroke="#4ecac2" stroke-linejoin="round" stroke-width="2"/>
+    <circle cx="444.42" cy="49.026" r="6.8702" fill="#0f82af" stroke="#0f82af" stroke-linejoin="round" stroke-width="1.4431"/>
+   </g>
+  </g>
+ </g>
+</svg>

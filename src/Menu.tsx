@@ -3,19 +3,22 @@ import * as React from 'react';
 import { vgData } from './data/Data';
 import { vgConfig } from './lib/Config';
 
+const reqSvgs = require.context('!@svgr/webpack!./icons/menu', true, /\.svg$/)
+
 interface IProps
 {
   position: {x: number, y: number},
   menuClosed: () => void,
-  menuItemSelected: (id: string) => void
+  menuItemSelected: (id: string, position?: {x: number, y: number}) => void,
+  pinMenu: (pin: boolean) => void
 }
 
 interface IState
 {
   menuItem?: {id: string, children: Array<string[]>},
-  subMenuBlock: number,
   position: {x: number, y: number},
-  subMenuPosition: {x: number, y: number, alignTop: boolean}
+  subMenuPosition: {x: number, y: number, reverse: boolean},
+  pinned: boolean
 }
 
 export default class Menu extends React.Component<IProps, IState>
@@ -24,6 +27,7 @@ export default class Menu extends React.Component<IProps, IState>
   private menuRef: HTMLDivElement | null;
   private subMenuRef: HTMLDivElement | null;
   private updateSubMenu: boolean;
+  private iconMap: {[key: string]: any};
 
   constructor(props: IProps)
   {
@@ -32,56 +36,56 @@ export default class Menu extends React.Component<IProps, IState>
     this.state =
     {
       menuItem: undefined,
-      subMenuBlock: 0,
       position: this.props.position,
-      subMenuPosition: {x: 0, y: 0, alignTop: true}
+      subMenuPosition: {x: 0, y: 0, reverse: false},
+      pinned: false
     }
 
     this.menuRef = null;
     this.subMenuRef = null;
     this.updateSubMenu = true;
 
-    this.menuData = [];
-
-    const metadata = vgData.returnMetadata();
-
-    for (const key of Object.keys(metadata))
+    this.iconMap = {};
+    reqSvgs.keys().forEach((path: string) =>
     {
-      const children: Array<string[]> = [[]];
-      let count: number = 0;
-      let section: number = 0;
+      const key = path.substring(path.lastIndexOf('/') + 1,
+        path.lastIndexOf('.'));
+      this.iconMap[key] = reqSvgs(path).default
+    });
 
-      for (const ckey of Object.keys(metadata[key]))
-      {
-        if (count + 1 > vgConfig.Graph.menuSize)
-        {
-          section++;
-          count = 0;
-          children[section] = [];
-        }
-        children[section].push(ckey);
-        count++;
-      }
-
-      this.menuData.push({id: key, children});
-    }
+    this.menuData = this.generateMenuData();
   }
 
   public render()
   {
-    return <div id="menu" className="menu" onContextMenu={this.handleMenuContextMenu}>
-        <div className={"menu-parent-wrapper"}
-        style={{left: this.state.position.x, top: this.state.position.y}}
-        ref={(ref) => { this.menuRef = ref; }}>
+    if (!this.menuData.length)
+    {
+      this.menuData = this.generateMenuData();
+    }
+
+    const position = (this.state.pinned ? this.props.position :
+      this.state.position);
+
+    return <div id="menu" className="menu"
+      onContextMenu={this.handleMenuContextMenu}>
+      <div id="pin-button" className={this.state.pinned?"pinned":""}
+        style={{left: position.x-10, top: position.y}}
+        onMouseDown={this.togglePin} />
+      <div className={"menu-parent-wrapper"}
+      style={{left: position.x, top: position.y}}
+      ref={(ref) => { this.menuRef = ref; }}>
       {
         this.menuData.map((value: {id: string, children: Array<string[]>},
           index: number) =>
         {
+          const Icon = this.iconMap[value.id] ? this.iconMap[value.id] : "";
           return <div key={index} id={"menu-"+value.id}
             className={`menu-item parent` +
-              ` ${(this.state.menuItem && value.id === this.state.menuItem.id) ?
-              "selected" : "" }`}
-            onMouseDown={this.handleParentMouseDown}> {value.id} </div>
+              ` ${(this.state.menuItem && value.id ===
+              this.state.menuItem.id) ? "selected" : "" }`}
+            onMouseDown={this.handleParentMouseDown}>
+              <Icon />
+            </div>
         })
       }
       </div>
@@ -99,7 +103,7 @@ export default class Menu extends React.Component<IProps, IState>
       const windowWidth = window.innerWidth;
       const windowHeight = window.innerHeight;
 
-      const newPosition = {...this.state.position};
+      const newPosition = {...this.props.position};
 
       const menuBoundX = newPosition.x + this.menuRef.offsetWidth;
       const menuBoundY = newPosition.y + this.menuRef.offsetHeight;
@@ -127,137 +131,157 @@ export default class Menu extends React.Component<IProps, IState>
 
   public componentDidUpdate()
   {
-    // Only update when updateSubMenu is set to stop an infinite of
+    // Only update when updateSubMenu is set to stop an infinite number of
     // componentDidUpdate calls
     if (this.state.menuItem && this.menuRef && this.subMenuRef &&
       this.updateSubMenu)
     {
+      // Reposition menu if it would be created off screen
       const windowWidth = window.innerWidth;
       const windowHeight = window.innerHeight;
 
-      const itemID = this.state.menuItem.id;
-      let index = this.menuData.findIndex(x => x.id === itemID);
-      const itemHeight = this.menuRef.offsetHeight / this.menuData.length;
+      const newPosition = (this.state.pinned ? {...this.props.position} :
+      {...this.state.position});
 
-      if (!this.state.subMenuPosition.alignTop)
+      newPosition.y += this.menuRef.offsetHeight;
+
+      const menuBoundX = newPosition.x + this.subMenuRef.offsetWidth;
+      const menuBoundY = newPosition.y + this.subMenuRef.offsetHeight;
+
+      let reverseOrder = false;
+
+      if (menuBoundX > windowWidth)
       {
-        index++;
+        newPosition.x -= (this.subMenuRef.offsetWidth -
+          this.menuRef.offsetWidth);
       }
 
-      // Position submenu next to parent
-      const adjustment = (this.menuRef.offsetHeight / this.menuData.length) *
-        index;
-      const newPosition = {...this.state.subMenuPosition};
-      newPosition.x = this.menuRef.offsetLeft + this.menuRef.offsetWidth;
-      newPosition.y = this.menuRef.offsetTop + adjustment;
-
-      // Reposition if menu would be created off screen
-      const subMenuBoundX = newPosition.x + this.subMenuRef.offsetWidth;
-      const subMenuBoundY = newPosition.y + this.subMenuRef.offsetHeight;
-
-      if (subMenuBoundX > windowWidth)
+      if (menuBoundY > windowHeight)
       {
-        newPosition.x -= (this.subMenuRef.offsetWidth + this.menuRef.offsetWidth);
-      }
+        newPosition.y -= (this.subMenuRef.offsetHeight +
+          this.menuRef.offsetHeight);
 
-      if (!newPosition.alignTop)
-      {
-        newPosition.y -= this.subMenuRef.offsetHeight;
-      }
-      else if (subMenuBoundY > windowHeight)
-      {
-        newPosition.y -= (this.subMenuRef.offsetHeight - itemHeight);
-        // Align top stopped for this submenu - ensure all future updates for
-        // this submenu don't align top either.
-        newPosition.alignTop = false;
+        reverseOrder = true;
       }
 
       this.updateSubMenu = false;
-      this.setState({subMenuPosition: newPosition});
+      this.setState({subMenuPosition: {...newPosition, reverse: reverseOrder}});
     }
   }
 
   private createSubMenu = () =>
   {
     const menuID = (this.state.menuItem ? this.state.menuItem.id : "");
-    const subMenuData = this.menuData.find(x => x.id === menuID);
+    const menuData = this.menuData.find(x => x.id === menuID);
 
-    if (subMenuData)
+    if (menuData)
     {
-      const position = this.state.subMenuPosition
+      if (this.state.pinned)
+      {
+        window.addEventListener("mousedown", this.handleWindowMouseDown);
+      }
+
+      const position = this.state.subMenuPosition;
+
+      // Reverse order of sub menu block creation when sub menu created above
+      // menu. Ensures submenu and menu are visually connected
+      const subMenuData = (position.reverse ?
+        menuData.children.slice(0).reverse() : menuData.children);
 
       return <div className={"menu-children-wrapper"}
         style={{left: position.x, top: position.y}}
         ref={(ref) => { this.subMenuRef = ref; }}>
-        <div className={"sub-menu"}>
         {
-          subMenuData.children[this.state.subMenuBlock].map(
-            (value: string, index: number) =>
-          {
-            const id = menuID + "/" + value;
-            return <div key={index} id={"menu-"+id} className="menu-item child"
-                onMouseDown={this.handleChildMouseDown}> {value} </div>
-          })
+          subMenuData.map(
+            (subMenuBlock: string[], index: number) =>
+            {
+              return <div id={"sub-menu-block-"+index} key={"block-"+index}
+                className={"sub-menu-block"}>
+                {
+                  subMenuBlock.map((value: string, index: number) =>
+                  {
+                    const id = menuID + "/" + value;
+                    const iconID = id.replace("/","_");
+                    const Icon = this.iconMap[iconID]?this.iconMap[iconID]:"";
+
+                    return <div key={index} id={"menu-"+id}
+                      className="menu-item child"
+                      onMouseDown={this.handleChildMouseDown}>
+                      {
+                        Icon ? <Icon /> : value
+                      }
+                      </div>
+                  })
+                }
+                </div>
+            })
         }
-        </div>
-        {this.createNavigation(subMenuData)}
       </div>
     }
   }
 
-  private createNavigation = (subMenuData: {id: string,
-    children: Array<string[]>}) =>
+  private generateMenuData = () =>
   {
-    let prevButton;
-    let nextButton;
-    let result = false;
+    const metadata = vgData.returnMetadata();
+    const menuData = [];
 
-    if (this.state.subMenuBlock !== 0 ||
-      subMenuData.children[this.state.subMenuBlock-1])
+    for (const key of Object.keys(metadata))
     {
-      result = true;
-      prevButton = <div id={"menu-prev"} className="menu-nav child"
-        onMouseDown={this.handleSubMenuPrev}>
-        <svg id={"menu-prev-icon"} width={20} height={10}>
-          <path className="menu-icon nav" d={`M 0,5 5,0 10,5 z`}/>
-        </svg>
-      </div>
+      const children: Array<string[]> = [[]];
+      let count: number = 0;
+      let section: number = 0;
+
+      for (const ckey of Object.keys(metadata[key]))
+      {
+        if (count + 1 > vgConfig.Graph.menu.size)
+        {
+          section++;
+          count = 0;
+          children[section] = [];
+        }
+        children[section].push(ckey);
+        count++;
+      }
+
+      menuData.push({id: key, children});
     }
 
-    if (subMenuData.children[this.state.subMenuBlock+1])
-    {
-      result = true;
-      nextButton = <div id={"menu-next"} className="menu-nav child"
-        onMouseDown={this.handleSubMenuNext}>
-        <svg id={"menu-next-icon"} width={20} height={10}>
-          <path className="menu-icon nav" d={`M 0,0 5,5 10,0 z`}/>
-        </svg>
-      </div>
-    }
-
-    if (result)
-    {
-      return <div className={"nav-wrapper"}>
-          {prevButton}
-          {nextButton}
-        </div>
-    }
+    return menuData;
   }
 
   private handleParentMouseDown = (e: React.MouseEvent<HTMLDivElement>) =>
   {
+    e.stopPropagation();
     const target = e.currentTarget.id;
     const targetItemID = target.substring(5, target.length)
-    this.updateSubMenu = true;
-    this.setState({menuItem: this.menuData.find(x => x.id === targetItemID),
-      subMenuBlock: 0, subMenuPosition: {x: 0, y: 0, alignTop: true}});
+
+    if (this.state.menuItem && this.state.menuItem.id === targetItemID)
+    {
+      this.setState({menuItem: undefined});
+    }
+    else
+    {
+      this.updateSubMenu = true;
+      this.setState({menuItem: this.menuData.find(x => x.id === targetItemID),
+        subMenuPosition: {x: 0, y: 0, reverse: false}});
+    }
   }
 
   private handleChildMouseDown = (e: React.MouseEvent<HTMLDivElement>) =>
   {
     const target = e.currentTarget.id;
-    this.props.menuClosed();
-    this.props.menuItemSelected(target.substring(5, target.length));
+    if (!this.state.pinned)
+    {
+      this.props.menuClosed();
+    }
+    else
+    {
+      this.setState({menuItem: undefined});
+    }
+
+    const position = (this.state.pinned ? {x: e.pageX, y: e.pageY}: undefined);
+
+    this.props.menuItemSelected(target.substring(5, target.length), position);
   }
 
   // Do nothing - prevents browser context menu from showing
@@ -266,15 +290,21 @@ export default class Menu extends React.Component<IProps, IState>
     e.preventDefault();
   }
 
-  private handleSubMenuPrev = () =>
+  private handleWindowMouseDown = (e: MouseEvent) =>
   {
-    this.updateSubMenu = true;
-    this.setState({subMenuBlock: this.state.subMenuBlock - 1});
+    e.stopPropagation();
+    window.removeEventListener("mousedown", this.handleWindowMouseDown);
+    this.setState({menuItem: undefined});
   }
 
-  private handleSubMenuNext = () =>
+  // Toggle pinning menu to set position (handled by Graph)
+  private togglePin = (e: React.MouseEvent<HTMLDivElement>) =>
   {
+    e.stopPropagation();
+    window.removeEventListener("mousedown", this.handleWindowMouseDown);
+    const newPinState = !this.state.pinned;
     this.updateSubMenu = true;
-    this.setState({subMenuBlock: this.state.subMenuBlock + 1});
+    this.setState({pinned: newPinState});
+    this.props.pinMenu(newPinState);
   }
 }

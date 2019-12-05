@@ -1,0 +1,12 @@
+<svg width="40" height="40" version="1.1" viewBox="0 0 10.583 10.583" xmlns="http://www.w3.org/2000/svg">
+ <g transform="translate(0 -286.42)">
+  <g transform="matrix(.26458 0 0 .26458 -88.371 165.1)">
+   <rect x="334" y="458.52" width="40" height="40" fill="#141414"/>
+   <g transform="translate(1.6849 .82401)" fill="#4ecac2">
+    <rect x="334.32" y="477.28" width="27.4" height="9.1924"/>
+    <path d="m357.15 488.86v-6.9857-6.9857l12.1 6.9857-6.0498 3.4928z" stroke="#4ecac2" stroke-linejoin="round" stroke-width="1.6618"/>
+   </g>
+   <text x="335.936" y="470.39966" fill="#ffffff" font-family="Ubuntu" font-size="10.667px" letter-spacing="0px" stroke-width="1px" word-spacing="0px" style="line-height:125%" xml:space="preserve"><tspan x="335.936" y="470.39966" font-size="8px">ALSA</tspan></text>
+  </g>
+ </g>
+</svg>

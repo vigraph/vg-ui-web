@@ -36,7 +36,7 @@ export default class App extends React.Component<IProps, IState>
         <div id="buttons">
           <div id="undo-button" className="app-button history"
             onClick={this.handleUndo}>
-            <svg>
+            <svg  width={28} height={27}>
               <path className="icon"
               d="M 14.813566,0 C 11.650793,0 8.725229,1.130139 6.453352,3.001886
               L 3.003434,0.264584 0,14.321608 13.773836,8.810832
@@ -52,7 +52,7 @@ export default class App extends React.Component<IProps, IState>
           </div>
           <div id="redo-button" className="app-button history"
             onClick={this.handleRedo}>
-            <svg>
+            <svg  width={28} height={27}>
               <path className="icon"
               d="M 13.156303,0 C 5.9200068,0 -2.1166661e-6,5.9200042 0,13.156302
               c 4.7625005e-6,7.23629 5.9200107,13.156302 13.156303,13.156302
@@ -70,7 +70,7 @@ export default class App extends React.Component<IProps, IState>
           {this.state.fullscreen ?
             <div id="windowed-button" className="app-button window"
               onClick={this.setWindowed}>
-                <svg>
+                <svg width={27} height={27}>
                   <path className="icon" transform="scale(0.26458333)"
                    d="M 85.318359 0 L 70.376953 14.943359 L 57.964844 2.5996094
                    L 58.230469 43.033203 L 98.576172 42.988281 L 86.164062
@@ -83,7 +83,7 @@ export default class App extends React.Component<IProps, IState>
             :
             <div id="fullscreen-button" className="app-button window"
               onClick={this.setFullScreen}>
-                <svg>
+                <svg  width={27} height={27}>
                   <path className="icon" transform="scale(0.26458333)"
                    d="M 100.79688 0 L 60.451172 0.044921875 L 72.863281 12.388672
                    L 57.964844 27.287109 L 73.708984 43.033203 L 88.652344
@@ -97,7 +97,7 @@ export default class App extends React.Component<IProps, IState>
           {!this.state.graphRoot &&
             <div id="back-button" className="app-button back"
               onClick={this.handleBack}>
-              <svg>
+              <svg  width={20} height={20}>
                 <path className="icon"
                  d="M 11.496094 0 L 0 11.496094 L 26.277344 37.773438 L 0
                  64.052734 L 11.496094 75.548828 L 37.773438 49.269531 L
