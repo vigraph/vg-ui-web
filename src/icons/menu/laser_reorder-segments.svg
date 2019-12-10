@@ -1,0 +1,22 @@
+<svg width="40" height="40" version="1.1" viewBox="0 0 10.583 10.583" xmlns="http://www.w3.org/2000/svg">
+ <g transform="translate(0 -286.42)">
+  <g transform="matrix(.26458 0 0 .26458 -68.795 195.22)">
+   <rect x="260.01" y="344.68" width="40" height="40" fill="#141414"/>
+   <g transform="translate(-.095818 5.1507)" fill="none" stroke="#fff" stroke-linejoin="round" stroke-width="1.3077">
+    <rect x="262.84" y="356.83" width="15.692" height="15.692"/>
+    <rect x="281.68" y="356.83" width="15.692" height="15.692"/>
+   </g>
+   <g transform="translate(-.11072 2.6758)" fill="none" stroke="#4ecac2" stroke-linejoin="round" stroke-width="1.3885">
+    <path transform="scale(-1)" d="m-270.19-352.22a10 5.6406 0 0 1-5 4.8849 10 5.6406 0 0 1-10 0 10 5.6406 0 0 1-5-4.8849"/>
+    <path transform="scale(-1)" d="m-289.03-352.59h-1.044-1.044l0.52202-0.90418 0.52203-0.90417 0.52202 0.90417z"/>
+    <path transform="scale(-1)" d="m-269.13-352.59h-1.044-1.0441l0.52203-0.90418 0.52203-0.90417 0.52202 0.90417z"/>
+   </g>
+   <g fill="#4ecac2">
+    <rect transform="rotate(-39.47)" x="-35.411" y="457.27" width="10" height="2"/>
+    <circle cx="271.71" cy="369.91" r="1.0625"/>
+    <rect transform="rotate(-39.47)" x="-20.771" y="469.15" width="13.712" height="2"/>
+    <circle cx="293.49" cy="367.36" r="1.0625"/>
+   </g>
+  </g>
+ </g>
+</svg>

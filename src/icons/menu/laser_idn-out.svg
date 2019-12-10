@@ -1,0 +1,12 @@
+<svg width="40" height="40" version="1.1" viewBox="0 0 10.583 10.583" xmlns="http://www.w3.org/2000/svg">
+ <g transform="translate(0 -286.42)">
+  <g transform="matrix(.26458 0 0 .26458 -68.792 220.93)">
+   <rect x="260" y="247.52" width="40" height="40" fill="#141414"/>
+   <g transform="matrix(-.99999 0 0 1 631.87 -114.54)" fill="#4ecac2">
+    <rect x="334.11" y="381.65" width="27.4" height="9.1924"/>
+    <path d="m356.94 393.23v-6.9857-6.9857l12.1 6.9857-6.0498 3.4928z" stroke="#4ecac2" stroke-linejoin="round" stroke-width="1.6618"/>
+   </g>
+   <text x="284.95847" y="259.51965" fill="#ffffff" font-family="Ubuntu" font-size="10.667px" letter-spacing="0px" stroke-width="1px" word-spacing="0px" style="line-height:125%" xml:space="preserve"><tspan x="284.95847" y="259.51965" font-size="8px">IDN</tspan></text>
+  </g>
+ </g>
+</svg>

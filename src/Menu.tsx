@@ -84,7 +84,9 @@ export default class Menu extends React.Component<IProps, IState>
               ` ${(this.state.menuItem && value.id ===
               this.state.menuItem.id) ? "selected" : "" }`}
             onMouseDown={this.handleParentMouseDown}>
-              <Icon />
+            {
+              Icon ? <Icon /> : value.id
+            }
             </div>
         })
       }
