@@ -43,7 +43,8 @@
     {
       "x": 200,
       "y": 0
-    }
+    },
+    "order": ["core", "laser", "midi", "audio", "vector", "colour"]
   },
   "menuSize": 10,
   "interpolate":
