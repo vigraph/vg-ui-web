@@ -120,6 +120,32 @@
       }
     }
   },
+  "audio/reverb":
+  {
+    "width": 110,
+    "height": 70,
+    "properties":
+    {
+     "time":
+      {
+        "controlType": "knob/default",
+        "rangeMin": 0,
+        "rangeMax": 2,
+        "increment": 0.01,
+        "x": 30,
+        "y": 30
+      },
+      "feedback":
+      {
+        "controlType": "knob/default",
+        "rangeMin": 0,
+        "rangeMax": 1,
+        "increment": 0.01,
+        "x": 70,
+        "y": 30
+      }
+    }
+  },
   "audio/position":
   {
     "width": 70,
@@ -649,7 +675,7 @@
     "height": 90,
     "properties":
     {
-      "max":
+      "min":
       {
         "controlType": "knob/log",
         "rangeMin": 0.1,
@@ -658,7 +684,7 @@
         "x": 30,
         "y": 28
       },
-      "min":
+      "max":
       {
         "controlType": "knob/log",
         "rangeMin": 0.1,
