@@ -1,0 +1,19 @@
+<svg width="40" height="40" version="1.1" viewBox="0 0 10.583 10.583" xmlns="http://www.w3.org/2000/svg">
+ <g transform="translate(0 -286.42)">
+  <g transform="matrix(.26458 0 0 .26458 -47.261 70.28)">
+   <rect x="178.62" y="816.89" width="40" height="40" fill="#141414"/>
+   <g transform="matrix(1.4347 0 0 1.4347 -96.213 97.47)">
+    <rect x="194.3" y="504.17" width="22.413" height="22.413" fill="#141414" stroke="#fff" stroke-linejoin="round" stroke-width=".76625"/>
+    <g transform="matrix(1.2672 0 0 1.2672 -54.27 -137.09)">
+     <g stroke="#4ecac2" stroke-linejoin="round">
+      <circle cx="201.26" cy="515.96" r="1.8429" fill="#4ecac2" stroke-width=".94355"/>
+      <circle cx="207.53" cy="511.13" r="2.0564" fill="none" stroke-width=".51656"/>
+      <circle cx="208.74" cy="518.66" r="2.0564" fill="none" stroke-width=".51656"/>
+     </g>
+     <rect transform="rotate(-38.849)" x="-169.18" y="527.69" width="8.2128" height=".77155" fill="#4ecac2"/>
+     <rect transform="rotate(19.357)" x="359.48" y="419.62" width="7.285" height=".6844" fill="#4ecac2"/>
+    </g>
+   </g>
+  </g>
+ </g>
+</svg>

@@ -1,0 +1,16 @@
+<svg width="40" height="40" version="1.1" viewBox="0 0 10.583 10.583" xmlns="http://www.w3.org/2000/svg">
+ <g transform="translate(0 -286.42)">
+  <g transform="matrix(.26458 0 0 .26458 -47.701 120.01)">
+   <rect x="180.29" y="628.93" width="40" height="40" fill="#141414"/>
+   <g transform="translate(-1.0002)" fill="#4ecac2" stroke="#4ecac2" stroke-linejoin="round">
+    <path transform="matrix(0 1.1364 -1.1364 0 876.11 421.27)" d="m207.57 588.71-2.3012 1.3286-2.3012 1.3286v-5.3143l2.3012 1.3286z" stroke-width="1.192"/>
+    <rect transform="rotate(90)" x="640.69" y="-207.78" width="11.285" height="1.4205" stroke-width="1.3546"/>
+   </g>
+   <g fill="#4ecac2">
+    <rect transform="matrix(0,-1,-1,0,0,0)" x="-657.31" y="-214.27" width="11.41" height="1.4205" stroke="#4ecac2" stroke-linejoin="round" stroke-width="1.3546"/>
+    <path transform="matrix(0 -1.1364 -1.1364 0 882.59 876.59)" d="m207.57 588.71-2.3012 1.3286-2.3012 1.3286v-5.3143l2.3012 1.3286z" stroke="#4ecac2" stroke-linejoin="round" stroke-width="1.192"/>
+    <text x="185.43875" y="657.84119" font-family="'Droid Sans Japanese'" font-size="24px" letter-spacing="0px" stroke-width="1px" word-spacing="0px" style="line-height:125%" xml:space="preserve"><tspan x="185.43875" y="657.84119">2</tspan></text>
+   </g>
+  </g>
+ </g>
+</svg>

@@ -1,0 +1,21 @@
+<svg width="40" height="40" version="1.1" viewBox="0 0 10.583 10.583" xmlns="http://www.w3.org/2000/svg">
+ <g transform="translate(0 -286.42)">
+  <g transform="matrix(.26458 0 0 .26458 -47.625 132.28)">
+   <rect x="180" y="582.58" width="40" height="40" fill="#141414"/>
+   <g transform="translate(0 9.4062)" stroke-linejoin="round">
+    <rect x="182.29" y="584.87" width="16.611" height="16.611" fill="#141414" stroke="#fff" stroke-width=".5679"/>
+    <g transform="matrix(1.1364 0 0 1.1364 -38.722 -76.139)" fill="#4ecac2" stroke="#4ecac2" stroke-width="1.192">
+     <rect x="195.88" y="588.08" width="7.125" height="1.25"/>
+     <path d="m207.57 588.71-2.3012 1.3286-2.3012 1.3286v-5.3143l2.3012 1.3286z"/>
+    </g>
+   </g>
+   <g transform="matrix(-1 0 0 1 399.91 9.4062)" stroke-linejoin="round">
+    <rect x="182.29" y="584.87" width="16.611" height="16.611" fill="#141414" stroke="#fff" stroke-width=".5679"/>
+    <g transform="matrix(1.1364 0 0 1.1364 -38.722 -76.139)" fill="#4ecac2" stroke="#4ecac2" stroke-width="1.192">
+     <rect x="195.88" y="588.08" width="7.125" height="1.25"/>
+     <path d="m207.57 588.71-2.3012 1.3286-2.3012 1.3286v-5.3143l2.3012 1.3286z"/>
+    </g>
+   </g>
+  </g>
+ </g>
+</svg>
