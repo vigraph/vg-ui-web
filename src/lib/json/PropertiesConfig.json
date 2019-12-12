@@ -40,8 +40,8 @@
   },
   "audio/envelope":
   {
-    "width": 190,
-    "height": 90,
+    "width": 110,
+    "height": 140,
     "properties":
     {
       "attack":
@@ -62,44 +62,44 @@
         "x": 70,
         "y": 30
       },
-      "release":
-      {
-        "controlType": "knob/log",
-        "rangeMin": 0.01,
-        "rangeMax": 30,
-        "increment": 0.01,
-        "x": 150,
-        "y": 30
-      },
-      "reset":
-      {
-        "controlType": "button/default",
-        "x": 82,
-        "y": 65,
-        "valueFormat": "triggerButton"
-      },
-      "start":
-      {
-        "controlType": "button/default",
-        "x": 32,
-        "y": 65,
-        "valueFormat": "triggerButton"
-      },
-      "stop":
-      {
-        "controlType": "button/default",
-        "x": 57,
-        "y": 65,
-        "valueFormat": "triggerButton"
-      },
       "sustain":
       {
         "controlType": "knob/default",
         "rangeMin": 0,
         "rangeMax": 1,
         "increment": 0.01,
-        "x": 110,
-        "y": 30
+        "x": 30,
+        "y": 70
+      },
+      "release":
+      {
+        "controlType": "knob/log",
+        "rangeMin": 0.01,
+        "rangeMax": 30,
+        "increment": 0.01,
+        "x": 70,
+        "y": 70
+      },
+      "start":
+      {
+        "controlType": "button/default",
+        "x": 32,
+        "y": 110,
+        "valueFormat": "triggerButton"
+      },
+      "stop":
+      {
+        "controlType": "button/default",
+        "x": 57,
+        "y": 110,
+        "valueFormat": "triggerButton"
+      },
+      "reset":
+      {
+        "controlType": "button/default",
+        "x": 82,
+        "y": 110,
+        "valueFormat": "triggerButton"
       }
     }
   },
@@ -616,8 +616,8 @@
   },
   "core/oscillator":
   {
-    "width": 210,
-    "height": 95,
+    "width": 200,
+    "height": 120,
     "properties":
     {
       "freq":
@@ -626,8 +626,8 @@
         "rangeMin": 0.01,
         "rangeMax": 10000,
         "increment": 0.001,
-        "x": 25,
-        "y": 22
+        "x": 30,
+        "y": 30
       },
       "pulse-width":
       {
@@ -635,8 +635,8 @@
         "rangeMin": 0,
         "rangeMax": 1,
         "increment": 0.01,
-        "x": 65,
-        "y": 22
+        "x": 70,
+        "y": 30
       },
       "phase":
       {
@@ -644,27 +644,27 @@
         "rangeMin": 0,
         "rangeMax": 1,
         "increment": 0.01,
-        "x": 105,
-        "y": 22
+        "x": 30,
+        "y": 70
       },
       "wave":
       {
         "controlType": "selector/vert",
-        "x": 150,
-        "y": 20
+        "x": 130,
+        "y": 30
       },
       "start":
       {
         "controlType": "button/default",
-        "x": 32,
-        "y": 60,
+        "x": 70,
+        "y": 80,
         "valueFormat": "triggerButton"
       },
       "stop":
       {
         "controlType": "button/default",
-        "x": 72,
-        "y": 60,
+        "x": 95,
+        "y": 80,
         "valueFormat": "triggerButton"
       }
     }
