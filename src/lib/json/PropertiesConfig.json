@@ -438,7 +438,7 @@
   "core/compare":
   {
     "width": 70,
-    "height": 70,
+    "height": 120,
     "properties":
     {
      "value":
@@ -448,7 +448,7 @@
         "rangeMax": 1000,
         "increment": 0.1,
         "x": 30,
-        "y": 30
+        "y": 45
       },
       "on-change":
       {
@@ -458,20 +458,80 @@
   "core/count":
   {
     "width": 90,
-    "height": 30,
+    "height": 100,
     "properties":
     {
       "delta":
       {
+        "controlType": "knob/log",
+        "rangeMin": 0.001,
+        "rangeMax": 1000,
+        "increment": 0.001,
+        "x": 40,
+        "y": 30
       },
       "up":
       {
+        "controlType": "button/default",
+        "x": 30,
+        "y": 70,
+        "valueFormat": "triggerButton"
       },
       "down":
       {
+        "controlType": "button/default",
+        "x": 50,
+        "y": 70,
+        "valueFormat": "triggerButton"
       },
       "reset":
       {
+        "controlType": "button/default",
+        "x": 70,
+        "y": 70,
+        "valueFormat": "triggerButton"
+      }
+    }
+  },
+  "core/interpolator":
+  {
+    "width": 110,
+    "height": 110,
+    "properties":
+    {
+      "from":
+      {
+        "controlType": "knob/log",
+        "rangeMin": 0.001,
+        "rangeMax": 1000,
+        "increment": 0.001,
+        "x": 30,
+        "y": 30
+      },
+      "to":
+      {
+        "controlType": "knob/log",
+        "rangeMin": 0.001,
+        "rangeMax": 1000,
+        "increment": 0.001,
+        "x": 70,
+        "y": 30
+      },
+      "period":
+      {
+        "controlType": "knob/default",
+        "rangeMin": 0.01,
+        "rangeMax": 1000,
+        "increment": 0.01,
+        "x": 30,
+        "y": 70
+      },
+      "start":
+      {
+        "controlType": "button/default",
+        "x": 80,
+        "y": 75,
+        "valueFormat": "triggerButton"
       }
     }
   },
@@ -725,7 +785,7 @@
     "height": 70,
     "properties":
     {
-      "max":
+      "min":
       {
         "controlType": "knob/log",
         "rangeMin": 0.1,
@@ -734,7 +794,7 @@
         "x": 30,
         "y": 30
       },
-      "min":
+      "max":
       {
         "controlType": "knob/log",
         "rangeMin": 0.1,
@@ -760,14 +820,14 @@
         "x": 36,
         "y": 28
       },
-      "start":
+      "reset":
       {
         "controlType": "button/default",
         "x": 58,
         "y": 65,
         "valueFormat": "triggerButton"
       },
-      "reset":
+      "start":
       {
         "controlType": "button/default",
         "x": 30,
