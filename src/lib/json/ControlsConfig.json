@@ -2,7 +2,7 @@
   "choice_data":
   {
     "waveform": ["sin","square","triangle","saw","random","none"],
-    "filter-mode": ["low-pass","high-pass","band-pass"],
+    "filter-mode": ["low-pass","band-pass","high-pass"],
     "blend-type": ["horizontal", "vertical", "rectangular", "radial"],
     "oscilloscope-slope": ["free","rising","falling"]
   },
