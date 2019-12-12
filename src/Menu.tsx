@@ -18,7 +18,8 @@ interface IState
   menuItem?: {id: string, children: Array<string[]>},
   position: {x: number, y: number},
   subMenuPosition: {x: number, y: number, reverse: boolean},
-  pinned: boolean
+  pinned: boolean,
+  showLabel: string | null
 }
 
 export default class Menu extends React.Component<IProps, IState>
@@ -28,6 +29,8 @@ export default class Menu extends React.Component<IProps, IState>
   private subMenuRef: HTMLDivElement | null;
   private updateSubMenu: boolean;
   private iconMap: {[key: string]: any};
+  private mousePosition: {x: number, y: number};
+  private hoverTimer: number | null;
 
   constructor(props: IProps)
   {
@@ -38,12 +41,15 @@ export default class Menu extends React.Component<IProps, IState>
       menuItem: undefined,
       position: this.props.position,
       subMenuPosition: {x: 0, y: 0, reverse: false},
-      pinned: false
+      pinned: false,
+      showLabel: null
     }
 
     this.menuRef = null;
     this.subMenuRef = null;
     this.updateSubMenu = true;
+    this.mousePosition = {x: 0, y: 0};
+    this.hoverTimer = null;
 
     this.iconMap = {};
     reqSvgs.keys().forEach((path: string) =>
@@ -83,7 +89,10 @@ export default class Menu extends React.Component<IProps, IState>
             className={`menu-item parent` +
               ` ${(this.state.menuItem && value.id ===
               this.state.menuItem.id) ? "selected" : "" }`}
-            onMouseDown={this.handleParentMouseDown}>
+            onMouseDown={this.handleParentMouseDown}
+            onMouseMove={this.handleMouseMove}
+            onMouseEnter={this.handleMouseEnter}
+            onMouseLeave={this.handleMouseLeave}>
             {
               Icon ? <Icon /> : value.id
             }
@@ -93,6 +102,9 @@ export default class Menu extends React.Component<IProps, IState>
       </div>
       {
         this.state.menuItem && this.createSubMenu()
+      }
+      {
+        this.state.showLabel && this.createLabel()
       }
     </div>
   }
@@ -208,7 +220,10 @@ export default class Menu extends React.Component<IProps, IState>
 
                     return <div key={index} id={"menu-"+id}
                       className="menu-item child"
-                      onMouseDown={this.handleChildMouseDown}>
+                      onMouseDown={this.handleChildMouseDown}
+                      onMouseMove={this.handleMouseMove}
+                      onMouseEnter={this.handleMouseEnter}
+                      onMouseLeave={this.handleMouseLeave}>
                       {
                         Icon ? <Icon /> : value
                       }
@@ -257,11 +272,19 @@ export default class Menu extends React.Component<IProps, IState>
     return menuData;
   }
 
+  private createLabel = () =>
+  {
+    return <div id={"menu-label"} className={"menu label"}
+      style={{left: this.mousePosition.x, top: this.mousePosition.y}}>
+        {this.state.showLabel}
+      </div>
+  }
+
   private handleParentMouseDown = (e: React.MouseEvent<HTMLDivElement>) =>
   {
     e.stopPropagation();
     const target = e.currentTarget.id;
-    const targetItemID = target.substring(5, target.length)
+    const targetItemID = target.substring(5, target.length);
 
     if (this.state.menuItem && this.state.menuItem.id === targetItemID)
     {
@@ -272,6 +295,7 @@ export default class Menu extends React.Component<IProps, IState>
       this.updateSubMenu = true;
       this.setState({menuItem: this.menuData.find(x => x.id === targetItemID),
         subMenuPosition: {x: 0, y: 0, reverse: false}});
+      this.clearHoverTimeout();
     }
   }
 
@@ -303,6 +327,42 @@ export default class Menu extends React.Component<IProps, IState>
     e.stopPropagation();
     window.removeEventListener("mousedown", this.handleWindowMouseDown);
     this.setState({menuItem: undefined});
+  }
+
+  private handleMouseMove = (e: React.MouseEvent) =>
+  {
+    this.mousePosition = {x: e.pageX+10, y: e.pageY+10};
+  }
+
+  private handleMouseEnter = (e: React.MouseEvent) =>
+  {
+    const id = e.currentTarget.id;
+    let itemID = id.substring(5, id.length);
+
+    if (itemID.lastIndexOf("/") >= 1)
+    {
+      itemID = itemID.substring(itemID.lastIndexOf("/") + 1, itemID.length);
+    }
+
+    this.hoverTimer = window.setTimeout(() =>
+      {
+        this.setState({showLabel: itemID});
+      }, vgConfig.Graph.menu.hoverTime * 1000)
+  }
+
+  private handleMouseLeave = (e: React.MouseEvent) =>
+  {
+    this.clearHoverTimeout();
+  }
+
+  private clearHoverTimeout = () =>
+  {
+    if (this.hoverTimer)
+    {
+      this.setState({showLabel: null});
+      window.clearTimeout(this.hoverTimer);
+      this.hoverTimer = null;
+    }
   }
 
   // Toggle pinning menu to set position (handled by Graph)
