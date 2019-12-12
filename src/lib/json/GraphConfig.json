@@ -39,14 +39,33 @@
   "menu":
   {
     "size": 10,
+    "hoverTime": 3,
     "pinnedPosition":
     {
       "x": 200,
       "y": 0
     },
-    "order": ["core", "laser", "midi", "audio", "vector", "colour"]
+    "parents": ["core", "laser", "midi", "audio", "vector", "colour",
+      "time-series", "sensor"],
+    "children":
+    {
+      "audio": ["alsa-in", "alsa-out", "bit-crush", "delay", "envelope", "loop",
+        "pitch-shift", "position", "reverb", "sdl-in", "sdl-out", "wav-in"],
+      "time-series": ["average", "last", "offset", "plot", "scale", "web-fetch"],
+      "sensor": ["load-dscusb"],
+      "colour": ["blend", "hsl", "pin", "rgb", "switch"],
+      "laser": ["add-blanking-anchors", "add-vertex-repeats", "beamify",
+        "idn-out", "infill-lines", "reorder-segments", "show-blanking"],
+      "midi": ["alsa-in", "control-in", "keyboard-in", "key-in", "pin"],
+      "vector": ["clip", "fade", "figure", "oscilloscope", "pin", "rotate",
+        "scale", "stroke", "svg", "switch", "translate", "websocket"],
+      "core": ["add", "subtract", "multiply", "divide", "beat", "clone",
+        "clone-info", "compare", "count", "cut", "filter", "graph",
+        "interpolator", "limit", "log", "oscillator", "pin", "number-pin",
+        "trigger-pin", "random", "selector", "start", "switch", "timer",
+        "toggle", "wrap"]
+    }
   },
-  "menuSize": 10,
   "interpolate":
   {
     "resizeProps":

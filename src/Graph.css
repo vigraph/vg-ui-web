@@ -25,6 +25,18 @@
   pointer-events: none;
 }
 
+#menu-label
+{
+  position: absolute;
+  color: #ccc;
+  background-color: #111;
+  border: 1px solid #ccc;
+  margin-bottom: 14px;
+  line-height: 14px;
+  font-size: 14px;
+  padding: 2px;
+}
+
 #menu #pin-button
 {
   position: absolute;

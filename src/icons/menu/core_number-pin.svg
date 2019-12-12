@@ -1,0 +1,12 @@
+<svg width="40" height="40" version="1.1" viewBox="0 0 10.583 10.583" xmlns="http://www.w3.org/2000/svg">
+ <g transform="translate(0 -286.42)">
+  <g>
+   <rect x="4.075e-7" y="286.42" width="10.583" height="10.583" fill="#141414"/>
+   <g>
+    <path d="m4.5727 293.81v2.1588h0.00212l0.35739 0.33421 0.3595 0.33636 0.3595-0.33636 0.35739-0.33421h0.00212v-2.1588z" fill="#d4aa00" stroke="#000" stroke-linejoin="round" stroke-width=".11944"/>
+    <ellipse cx="5.2917" cy="290.53" rx="3.1326" ry="3.0932" fill="#323232" stroke="#0f82af" stroke-linejoin="round" stroke-width=".32252"/>
+    <text x="5.2503257" y="291.55942" fill="#4ecac2" font-family="'Droid Sans Japanese'" font-size="2.8222px" letter-spacing="0px" stroke-width=".26458px" text-align="center" text-anchor="middle" word-spacing="0px" style="line-height:125%" xml:space="preserve"><tspan x="5.2503257" y="291.55942" stroke-width=".26458px" text-align="center" text-anchor="middle">123</tspan></text>
+   </g>
+  </g>
+ </g>
+</svg>
