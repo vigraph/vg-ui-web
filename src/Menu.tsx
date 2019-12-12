@@ -227,25 +227,28 @@ export default class Menu extends React.Component<IProps, IState>
     const metadata = vgData.returnMetadata();
     const menuData: Array<{id: string, children: Array<string[]>}> = [];
 
-    vgConfig.Graph.menu.order.forEach((category: string) =>
+    vgConfig.Graph.menu.parents.forEach((category: string) =>
       {
         const children: Array<string[]> = [[]];
         let count: number = 0;
         let section: number = 0;
 
-        if (metadata[category])
+        if (metadata[category] && vgConfig.Graph.menu.children[category])
         {
-          for (const ckey of Object.keys(metadata[category]))
+          vgConfig.Graph.menu.children[category].forEach((child: string) =>
           {
-            if (count + 1 > vgConfig.Graph.menu.size)
+            if (metadata[category][child])
             {
-              section++;
-              count = 0;
-              children[section] = [];
+              if (count + 1 > vgConfig.Graph.menu.size)
+              {
+                section++;
+                count = 0;
+                children[section] = [];
+              }
+              children[section].push(child);
+              count++;
             }
-            children[section].push(ckey);
-            count++;
-          }
+          });
 
           menuData.push({id: category, children});
         }
