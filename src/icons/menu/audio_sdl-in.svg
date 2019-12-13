@@ -1,9 +1,9 @@
 <svg width="40" height="40" version="1.1" viewBox="0 0 10.583 10.583" xmlns="http://www.w3.org/2000/svg">
  <g transform="translate(0 -286.42)">
-  <g transform="matrix(.26458 0 0 .26458 -88.371 190.5)">
-   <rect x="334" y="362.52" width="40" height="40" fill="#141414"/>
-   <text x="335.31201" y="374.51965" fill="#ffffff" font-family="Ubuntu" font-size="10.667px" letter-spacing="0px" stroke-width="1px" word-spacing="0px" style="line-height:125%" xml:space="preserve"><tspan x="335.31201" y="374.51965" font-size="8px">KEY</tspan></text>
-   <g transform="translate(-.044088 -142)">
+  <g transform="matrix(.26458 0 0 .26458 -4.0349 175.98)">
+   <rect x="15.25" y="417.4" width="40" height="40" fill="#141414"/>
+   <text x="17.16687" y="429.29135" fill="#ffffff" font-family="Ubuntu" font-size="8px" letter-spacing="0px" stroke-width="1px" word-spacing="0px" style="line-height:125%" xml:space="preserve"><tspan x="17.16687" y="429.29135" font-size="8px">SDL</tspan></text>
+   <g transform="translate(-318.75 -87.121)">
     <g transform="matrix(1.0069 0 0 1.0069 -1.2226 -142.77)" fill="#4ecac2">
      <rect x="334.96" y="665.55" width="18.647" height="6.1939"/>
      <path transform="matrix(.68054 0 0 1.0138 107.11 131.48)" d="m357.65 536.86v-6.9857-6.9857l12.1 6.9857-6.0498 3.4928z" stroke="#4ecac2" stroke-linejoin="round" stroke-width="1.6618"/>

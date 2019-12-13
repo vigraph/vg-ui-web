@@ -1,12 +1,13 @@
 <svg width="40" height="40" version="1.1" viewBox="0 0 10.583 10.583" xmlns="http://www.w3.org/2000/svg">
  <g transform="translate(0 -286.42)">
-  <g transform="matrix(.26458 0 0 .26458 -88.371 152.4)">
-   <rect x="334" y="506.52" width="40" height="40" fill="#141414"/>
-   <g transform="translate(1.1849 2.824)" fill="#4ecac2">
-    <rect x="334.82" y="525.28" width="27.4" height="9.1924"/>
-    <path d="m357.65 536.86v-6.9857-6.9857l12.1 6.9857-6.0498 3.4928z" stroke="#4ecac2" stroke-linejoin="round" stroke-width="1.6618"/>
+  <g transform="matrix(.26458 0 0 .26458 -88.371 152.93)">
+   <rect x="334" y="504.52" width="40" height="40" fill="#141414"/>
+   <text x="335.38654" y="516.41272" fill="#ffffff" font-family="Ubuntu" font-size="7.1333px" letter-spacing="0px" stroke-width="1px" word-spacing="0px" style="line-height:125%" xml:space="preserve"><tspan x="335.38654" y="516.41272" font-size="7.1333px">KEYBOARD</tspan></text>
+   <g transform="matrix(1.0069 0 0 1.0069 -1.2226 -142.77)" fill="#4ecac2">
+    <rect x="334.96" y="665.55" width="18.647" height="6.1939"/>
+    <path transform="matrix(.68054 0 0 1.0138 107.11 131.48)" d="m357.65 536.86v-6.9857-6.9857l12.1 6.9857-6.0498 3.4928z" stroke="#4ecac2" stroke-linejoin="round" stroke-width="1.6618"/>
    </g>
-   <text x="335.38654" y="518.41266" fill="#ffffff" font-family="Ubuntu" font-size="7.1333px" letter-spacing="0px" stroke-width="1px" word-spacing="0px" style="line-height:125%" xml:space="preserve"><tspan x="335.38654" y="518.41266" font-size="7.1333px">KEYBOARD</tspan></text>
+   <rect x="356.4" y="523.09" width="14.791" height="14.791" fill="none" stroke="#4ecac2" stroke-linejoin="round" stroke-width="1.2872"/>
   </g>
  </g>
 </svg>

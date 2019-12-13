@@ -49,8 +49,9 @@
       "time-series", "sensor"],
     "children":
     {
-      "audio": ["alsa-in", "alsa-out", "bit-crush", "delay", "envelope", "loop",
-        "pitch-shift", "position", "reverb", "sdl-in", "sdl-out", "wav-in"],
+      "audio": ["bit-crush", "delay", "envelope", "loop", "pitch-shift",
+        "position", "reverb", "wav-in", "alsa-in", "alsa-out","sdl-in",
+        "sdl-out"],
       "time-series": ["average", "last", "offset", "plot", "scale", "web-fetch"],
       "sensor": ["load-dscusb"],
       "colour": ["blend", "hsl", "pin", "rgb", "switch"],
