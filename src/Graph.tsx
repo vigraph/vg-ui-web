@@ -222,7 +222,16 @@ export default class Graph extends React.Component<IProps, IState>
 
       const fontSize = vgConfig.Graph.fontSize.connectorLabel;
 
-      const textBox = vgUtils.textBoundingSize(connector.id, fontSize);
+      let displayID = connector.id;
+
+      if (node.category === "subgraph")
+      {
+        const layout = vgData.getLayoutByID(node.path + "/" + connector.id);
+
+        displayID = (layout && layout.n ? layout.n : displayID);
+      }
+
+      const textBox = vgUtils.textBoundingSize(displayID, fontSize);
 
       if (connector.direction === "input")
       {
@@ -232,7 +241,7 @@ export default class Graph extends React.Component<IProps, IState>
             width={textBox.width+8} x={0} y={0}/>
           <text className="label connector-label input"
             fontSize={fontSize} x={4} y={textBox.height+2}>
-            {connector.id}
+            {displayID}
           </text>
           </svg>
       }
@@ -244,7 +253,7 @@ export default class Graph extends React.Component<IProps, IState>
             width={textBox.width+8} x={0} y={0}/>
           <text className="label connector-label output"
             fontSize={fontSize} x={4} y={textBox.height+2}>
-            {connector.id}
+            {displayID}
           </text>
           </svg>
       }

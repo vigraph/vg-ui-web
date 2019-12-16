@@ -189,6 +189,12 @@ class Data
       });
   }
 
+  // Get layout data for given ID
+  public getLayoutByID(id: string)
+  {
+    return this.layoutData[id];
+  }
+
   // Update edges from output Node with an Array of all valid edges.
   // Edge removed by copying current edges, removing the edge and updating with
   // new array.

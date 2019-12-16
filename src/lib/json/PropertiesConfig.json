@@ -414,6 +414,7 @@
   {
     "width": 90,
     "height": 35,
+    "category": "subgraph",
     "properties":
     {
       "copies":
@@ -597,6 +598,7 @@
   {
     "width": 60,
     "height": 40,
+    "category": "subgraph",
     "properties":
     {
     }
@@ -665,7 +667,16 @@
       }
     }
   },
-  "core/pin":
+  "core/number-pin":
+  {
+    "width": 70,
+    "height": 50,
+    "category": "pin",
+    "properties":
+    {
+    }
+  },
+  "core/trigger-pin":
   {
     "width": 70,
     "height": 50,
