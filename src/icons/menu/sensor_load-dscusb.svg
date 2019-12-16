@@ -1,0 +1,13 @@
+<svg width="40" height="40" version="1.1" viewBox="0 0 10.583 10.583" xmlns="http://www.w3.org/2000/svg">
+ <g transform="translate(0 -286.42)">
+  <g transform="matrix(.26458 0 0 .26458 -186.56 266.63)">
+   <rect x="705.1" y="74.77" width="40" height="40" fill="#141414"/>
+   <g fill="#4ecac2">
+    <rect x="708.1" y="110.64" width="34" height="2"/>
+    <path d="m725.1 110.4-4.9844-8.6332h4.9844 4.9844l-2.4922 4.3166z" stroke="#4ecac2" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+    <rect x="724.1" y="91.52" width="2" height="12" stroke="#4ecac2" stroke-linecap="round" stroke-width="2"/>
+   </g>
+   <text x="710.11017" y="87.170654" fill="#ffffff" font-family="Ubuntu" font-size="10.667px" letter-spacing="0px" stroke-width="1px" word-spacing="0px" style="line-height:125%" xml:space="preserve"><tspan x="710.11017" y="87.170654" font-size="8px">DSCUSB</tspan></text>
+  </g>
+ </g>
+</svg>

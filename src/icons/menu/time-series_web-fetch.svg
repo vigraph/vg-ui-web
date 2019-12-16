@@ -1,0 +1,13 @@
+<svg width="40" height="40" version="1.1" viewBox="0 0 10.583 10.583" xmlns="http://www.w3.org/2000/svg">
+ <g transform="translate(0 -286.42)">
+  <g transform="matrix(.26458 0 0 .26458 -153.49 215.64)">
+   <rect x="580.12" y="267.52" width="40" height="40" fill="#141414"/>
+   <rect x="583.61" y="270.13" width="33.029" height="25.029" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width=".97055"/>
+   <g fill="#4ecac2">
+    <text x="600.12012" y="286.01968" font-family="'Droid Sans Japanese'" font-size="10px" letter-spacing="0px" stroke-width="1px" word-spacing="0px" style="line-height:125%" xml:space="preserve"><tspan x="600.12012" y="286.01968" fill="#4ecac2" font-size="10px" text-align="center" text-anchor="middle">WWW</tspan></text>
+    <rect x="598.5" y="295.64" width="3.25" height="5.2586"/>
+    <path d="m600.12 304.9-4.115-7.1275h4.115 4.115l-2.0575 3.5637z" stroke="#4ecac2" stroke-linecap="round" stroke-linejoin="round"/>
+   </g>
+  </g>
+ </g>
+</svg>

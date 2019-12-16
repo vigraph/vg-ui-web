@@ -39,7 +39,7 @@
   "menu":
   {
     "size": 10,
-    "hoverTime": 3,
+    "hoverTime": 2,
     "pinnedPosition":
     {
       "x": 200,

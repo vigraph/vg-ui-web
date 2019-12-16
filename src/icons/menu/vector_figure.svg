@@ -1,11 +1,19 @@
 <svg width="40" height="40" version="1.1" viewBox="0 0 10.583 10.583" xmlns="http://www.w3.org/2000/svg">
  <g transform="translate(0 -286.42)">
-  <g transform="matrix(.26458 0 0 .26458 -111.12 147.37)">
-   <rect x="420" y="525.52" width="40" height="40" fill="#141414"/>
+  <g transform="matrix(.26458 0 0 .26458 -110.82 147.54)">
+   <rect x="418.85" y="524.9" width="40" height="40" fill="#141414"/>
    <g fill="none">
-    <ellipse transform="scale(1,-1)" cx="449.75" cy="-544.27" rx="7.0672" ry="8.9321" stroke="#fff" stroke-linejoin="round" stroke-width=".68709"/>
-    <path d="m421.75 534.31c1.4533-3.7038 2.9064-7.407 4.2671-7.4069 1.3608 1.5e-4 2.6296 3.7034 3.987 7.4522 1.3574 3.7488 2.8032 7.5424 4.253 7.5495 1.4498 7e-3 2.9028-3.7722 4.3556-7.5511" stroke="#4ecac2" stroke-width=".73673"/>
-    <path d="m429.21 548.74c3.292 1.2917 6.5834 2.5832 6.5833 3.7927-1.3e-4 1.2095-3.2916 2.3372-6.6235 3.5437-3.332 1.2065-6.7037 2.4915-6.71 3.7801-6e-3 1.2886 3.3527 2.58 6.7115 3.8713" stroke="#0f82af" stroke-width=".65481"/>
+    <ellipse transform="scale(1,-1)" cx="449.57" cy="-543.65" rx="7.0672" ry="8.9321" stroke="#fff" stroke-linejoin="round" stroke-width=".68709"/>
+    <path d="m420.58 533.69c1.274-3.7147 2.5479-7.4289 3.7408-7.4288s2.3052 3.7143 3.4952 7.4741c1.19 3.7599 2.4574 7.5646 3.7284 7.5718 1.271 7e-3 2.5447-3.7833 3.8184-7.5734" stroke="#4ecac2" stroke-width=".69082"/>
+    <path d="m428.05 548.12c3.292 1.2917 6.5834 2.5832 6.5833 3.7927-1.3e-4 1.2095-3.2916 2.3372-6.6235 3.5437-3.332 1.2065-6.7037 2.4915-6.71 3.7801-6e-3 1.2886 3.3527 2.58 6.7115 3.8713" stroke="#0f82af" stroke-width=".65481"/>
+   </g>
+   <g transform="translate(2.3802 -.61872)" fill="#fff">
+    <rect x="423.94" y="542.35" width="1" height="4"/>
+    <rect transform="rotate(90)" x="543.85" y="-426.44" width="1" height="4"/>
+   </g>
+   <g transform="translate(3.7123 -1.0797)" fill="#fff">
+    <rect transform="rotate(90)" x="545.11" y="-437.31" width="1" height="4"/>
+    <rect transform="rotate(90)" x="543.52" y="-437.31" width="1" height="4"/>
    </g>
   </g>
  </g>

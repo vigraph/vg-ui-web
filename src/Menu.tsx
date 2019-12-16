@@ -304,6 +304,7 @@ export default class Menu extends React.Component<IProps, IState>
     const target = e.currentTarget.id;
     if (!this.state.pinned)
     {
+      this.clearHoverTimeout();
       this.props.menuClosed();
     }
     else
