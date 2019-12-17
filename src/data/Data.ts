@@ -271,10 +271,10 @@ class Data
         const propConfig = vgConfig.Properties[item.type];
 
         // Node properties layout (height, width, x, y)
-        const h = this.layoutData[item.path] && this.layoutData[item.path].h ?
-          this.layoutData[item.path].h : (propConfig ? propConfig.height : 0);
         const w = this.layoutData[item.path] && this.layoutData[item.path].w ?
           this.layoutData[item.path].w : (propConfig ? propConfig.width : 0);
+
+        const h = this.calculateNodeHeight(item);
 
         const x = this.layoutData[item.path] && this.layoutData[item.path].x ?
           this.layoutData[item.path].x : 0;
@@ -657,33 +657,32 @@ class Data
     const layoutNodes: any[] = [];
     let successCount = 0;
 
-    nodes.forEach((value: vgTypes.IProcessedGraphItem) =>
+    nodes.forEach((node: vgTypes.IProcessedGraphItem) =>
     {
-      const propConfig = vgConfig.Properties[value.type];
+      const propConfig = vgConfig.Properties[node.type];
 
-      if (layout[value.path])
+      if (layout[node.path])
       {
         successCount++;
       }
 
-      const height = layout[value.path] && layout[value.path].h ?
-        layout[value.path].h : (propConfig ? propConfig.height : 50);
-      const width = layout[value.path] && layout[value.path].w ?
-        layout[value.path].w : (propConfig ? propConfig.width : 50);
+      const height = this.calculateNodeHeight(node);
+      const width = layout[node.path] && layout[node.path].w ?
+        layout[node.path].w : (propConfig ? propConfig.width : 50);
 
-      const name = layout[value.path] && layout[value.path].n ?
-        layout[value.path].n : undefined;
+      const name = layout[node.path] && layout[node.path].n ?
+        layout[node.path].n : undefined;
 
       const nodeLayout =
       {
-        x: layout[value.path] ? layout[value.path].x : 0,
-        y: layout[value.path] ? layout[value.path].y : 0,
+        x: layout[node.path] ? layout[node.path].x : 0,
+        y: layout[node.path] ? layout[node.path].y : 0,
         h: height,
         w: width,
         displayName: name
       }
 
-      layoutNodes.push({...value, ...nodeLayout});
+      layoutNodes.push({...node, ...nodeLayout});
     });
 
     if (successCount > 0)
@@ -695,6 +694,30 @@ class Data
     {
       failure(nodes);
     }
+  }
+
+  // Calculate node height based on layout data, properties config and number
+  // of inputs/outputs (if dynamic)
+  private calculateNodeHeight(node: vgTypes.IProcessedGraphItem)
+  {
+    const propConfig = vgConfig.Properties[node.type];
+
+    const layoutH = (this.layoutData[node.path] ? this.layoutData[node.path].h :
+      undefined);
+
+    let h: number = (layoutH !== undefined ? layoutH :
+      (propConfig ? propConfig.height : 50));
+
+    if (node.dynamic)
+    {
+      const connectorPadding = vgConfig.Graph.connector.padding;
+      const minHeight = Math.max((node.inputs.length + 1) * connectorPadding,
+        (node.outputs.length + 1) * connectorPadding);
+
+      h = (h ? Math.max(minHeight, h) : minHeight);
+    }
+
+    return h;
   }
 
   // Generate Graph layout without node position data. Nodes ranked by number of
@@ -793,9 +816,10 @@ class Data
 
       if (vgConfig.Properties[value.type])
       {
-        layout.h = vgConfig.Properties[value.type].height;
         layout.w = vgConfig.Properties[value.type].width;
       }
+
+      layout.h = this.calculateNodeHeight(value);
 
       const nRank = ranks[value.id] ? ranks[value.id] : 0;
 

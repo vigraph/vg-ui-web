@@ -9,7 +9,11 @@
   "logUpdateTime": 60,
   "viewDefault": {"x": 0, "y": 0, "w": 5000, "h": 5000},
   "zoomFactor": 1.1,
-  "connectorSize": 5,
+  "connector":
+  {
+    "size": 5,
+    "padding": 10
+  },
   "websocket":
   {
     "resizeProps":

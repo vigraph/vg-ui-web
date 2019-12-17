@@ -75,7 +75,7 @@ export default class Graph extends React.Component<IProps, IState>
     this.idCount = 0;
     this.graphRef = null;
     this.firstLoad = true;
-    this.csize = vgConfig.Graph.connectorSize;
+    this.csize = vgConfig.Graph.connector.size;
   }
 
   public render()
