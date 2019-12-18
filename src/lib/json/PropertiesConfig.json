@@ -38,6 +38,23 @@
       }
     }
   },
+  "audio/level":
+  {
+    "width": 70,
+    "height": 70,
+    "properties":
+    {
+      "gain":
+      {
+        "controlType": "knob/default",
+        "rangeMin": 0,
+        "rangeMax": 2,
+        "increment": 0.01,
+        "x": 30,
+        "y": 30
+      }
+    }
+  },
   "audio/oscillator":
   {
     "width": 200,
