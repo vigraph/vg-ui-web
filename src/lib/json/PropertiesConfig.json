@@ -38,6 +38,70 @@
       }
     }
   },
+  "audio/oscillator":
+  {
+    "width": 200,
+    "height": 140,
+    "properties":
+    {
+      "note":
+      {
+        "controlType": "knob/default",
+        "rangeMin": 0,
+        "rangeMax": 1,
+        "increment": 0.08333333,
+        "x": 30,
+        "y": 30
+      },
+      "octave":
+      {
+        "controlType": "knob/default",
+        "rangeMin": -3,
+        "rangeMax": 3,
+        "increment": 1,
+        "x": 70,
+        "y": 30
+      },
+      "detune":
+      {
+        "controlType": "knob/default",
+        "rangeMin": -3,
+        "rangeMax": 3,
+        "increment": 0.1,
+        "x": 30,
+        "y": 70
+      },
+      "pulse-width":
+      {
+        "controlType": "knob/default",
+        "rangeMin": 0,
+        "rangeMax": 1,
+        "increment": 0.01,
+        "x": 70,
+        "y": 70
+      },
+      "wave":
+      {
+        "controlType": "selector/vert",
+        "x": 130,
+        "y": 30
+      },
+      "start":
+      {
+        "controlType": "button/default",
+        "x": 38,
+        "y": 110,
+        "valueFormat": "triggerButton"
+      },
+      "stop":
+      {
+        "controlType": "button/default",
+        "x": 78,
+        "y": 110,
+        "valueFormat": "triggerButton"
+      }
+    }
+  },
   "audio/envelope":
   {
     "width": 110,
