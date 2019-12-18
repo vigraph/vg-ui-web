@@ -65,6 +65,12 @@ export interface IProcessedGraphItem
   subGraph?: boolean
 }
 
+export interface IStoredGraph
+{
+  graph: IRawGraphItem,
+  layout: ILayoutData
+}
+
 export interface IMetadata
 {
   // Section ID

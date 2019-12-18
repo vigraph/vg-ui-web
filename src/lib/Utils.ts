@@ -17,6 +17,43 @@ class Utils
     }
   }
 
+  public saveToFile(contents: string)
+  {
+    const text = encodeURIComponent(contents);
+
+    const date = new Date();
+
+    const link = document.createElement('a');
+    link.download = "graph-" + date.toISOString() + ".txt";
+    link.href = "data:application/octet-stream," + text;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  public loadFromFile(fileInputID: string, success: (contents: string) => void)
+  {
+    const fileInput = document.getElementById(fileInputID) as HTMLInputElement;
+
+    if (fileInput && fileInput.files)
+    {
+      const reader = new FileReader();
+      reader.onload = () =>
+      {
+        const contents = reader.result;
+
+        if (typeof contents === "string")
+        {
+          success(decodeURIComponent(contents));
+        }
+
+        fileInput.value = "";
+      }
+
+      reader.readAsText(fileInput.files[0]);
+    }
+  }
+
   // Returns window position if SVG position not available
   public windowToSVGPosition(windowPos: {x: number, y: number},
     svgElement: SVGSVGElement | null): {x: number, y: number}
