@@ -236,6 +236,9 @@
      "x":
       {
         "controlType": "knob/default",
+        "rangeMin": -0.5,
+        "rangeMax": 0.5,
+        "increment": 0.01,
         "x": 30,
         "y": 30
       }
@@ -965,6 +968,15 @@
       {
         "rangeMin": 2
       }
+    }
+  },
+  "midi/pin":
+  {
+    "width": 70,
+    "height": 50,
+    "category": "pin",
+    "properties":
+    {
     }
   },
   "midi/alsa-in":
