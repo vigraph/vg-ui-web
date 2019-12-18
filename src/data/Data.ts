@@ -39,6 +39,76 @@ class Data
     return this.metadata;
   }
 
+  // Get graph data JSON and layout data
+  public getGraphToStore(success: (graphJSON: vgTypes.IStoredGraph) => void)
+  {
+    this.getGraphData("graph", (rawGraph: vgTypes.IRawGraphItem) =>
+      {
+        const storeGraphJSON: vgTypes.IStoredGraph =
+          {graph: rawGraph, layout: this.layoutData};
+
+        success(storeGraphJSON);
+      });
+  }
+
+  // Load Graph from IStoredGraph json (graph engine data and layout data)
+  public loadGraphJSON(graphJSON: vgTypes.IStoredGraph, success: () => void)
+  {
+    this.layoutData = graphJSON.layout;
+    this.updateLayout();
+
+    this.postFullGraph(graphJSON.graph, () =>
+    {
+      success();
+    });
+  }
+
+  // Post full Graph data to engine
+  public postFullGraph(graph: vgTypes.IRawGraphItem, success?: () => void,
+    failure?: () => void)
+  {
+    const url = this.restURL + "/graph";
+
+    fetch(url,
+    {
+      method: "POST",
+      body: JSON.stringify(graph)
+    })
+    .then(response =>
+      {
+        if (response.status === 200)
+        {
+          // Success
+          vgUtils.log("Post Full Graph Success");
+          if (success)
+          {
+            success();
+          }
+        }
+        else
+        {
+          // Error
+          vgUtils.log("Post Full Graph Failure with response status: " +
+            response.status)
+
+          if (failure)
+          {
+            failure();
+          }
+        }
+      })
+    .catch(error =>
+      {
+        // Error
+        vgUtils.log("Post Full Graph Failure with error: " + error);
+
+        if (failure)
+        {
+          failure();
+        }
+      });
+  }
+
   // Update property (propID) on node (nodePath) with given value (value)
   public updateProperty(nodePath: string, propID: string,
     value: any, success?: () => void, failure?: () => void)
@@ -860,7 +930,8 @@ class Data
   //============================================================================
 
   // Get data for entire graph and create graph model
-  private async getGraphData(path: string)
+  private async getGraphData(path: string,
+    returnRaw?: (rawData: vgTypes.IRawGraphItem) => void)
   {
     try
     {
@@ -870,7 +941,14 @@ class Data
       if (res.statusCode === 200 && res.result)
       {
         vgUtils.log("Get Graph Data Success");
-        this.createGraphModel(res.result, path);
+        if (returnRaw)
+        {
+          returnRaw(res.result);
+        }
+        else
+        {
+          this.createGraphModel(res.result, path);
+        }
       }
       else
       {

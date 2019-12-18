@@ -5,6 +5,7 @@ import * as Model from './model';
 import { vgData } from './data/Data';
 import { vgUtils } from './lib/Utils';
 import { vgConfig } from './lib/Config';
+import * as vgTypes from './lib/Types';
 
 import './Graph.css';
 
@@ -410,6 +411,34 @@ export default class Graph extends React.Component<IProps, IState>
   private endUpdate = () =>
   {
     this.graph.commitTransaction();
+  }
+
+  public save = () =>
+  {
+    vgData.getGraphToStore((graphJSON: vgTypes.IStoredGraph) =>
+      {
+        const saveJSON = JSON.stringify(graphJSON);
+        vgUtils.saveToFile(saveJSON);
+      });
+  }
+
+  public load = (fileInputID: string) =>
+  {
+    vgUtils.loadFromFile(fileInputID, (fileContents: string) =>
+      {
+        const graphJSON: vgTypes.IStoredGraph = JSON.parse(fileContents);
+
+        vgData.loadGraphJSON(graphJSON, () =>
+        {
+          vgData.generateGraph("graph", (json:any) =>
+          {
+            this.graph.loadFrom(json, true, "graph");
+            this.resetView();
+            this.forceUpdate();
+          });
+        });
+
+      });
   }
 
   //============================================================================

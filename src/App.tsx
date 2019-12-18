@@ -108,6 +108,31 @@ export default class App extends React.Component<IProps, IState>
               </svg>
             </div>
           }
+          <div id="save-button" className="app-button save"
+            onClick={this.handleSave}>
+          <svg width="28" height="28" version="1.1" viewBox="0 0 7.4083 7.4083" xmlns="http://www.w3.org/2000/svg">
+             <g transform="translate(0 -289.59)" className="icon">
+               <rect y="289.59" width="7.4083" height="1.1103"/>
+               <path transform="matrix(1.1898 0 0 .99269 -.70299 2.1001)" d="m1.837 293.93 1.8672-3.234 1.8672 3.234h-1.8672z"/>
+               <rect x="3.09" y="293.72" width="1.2284" height="3.2364"/>
+             </g>
+          </svg>
+          </div>
+          <div id="load-button" className="app-button load">
+            <input id="fileLoadInput" className="fileLoadInput" type="file"
+              onChange={this.handleLoad} multiple={false} accept=".txt"/>
+           <label htmlFor="fileLoadInput" >
+          <svg width="28" height="28" version="1.1" viewBox="0 0 7.4083 7.4083" xmlns="http://www.w3.org/2000/svg">
+             <g transform="translate(0 -289.59)" className="icon">
+              <g transform="matrix(1 0 0 -1 -3.5261e-6 586.54)">
+               <rect y="289.59" width="7.4083" height="1.1103"/>
+               <path transform="matrix(1.1898 0 0 .99269 -.70299 2.1001)" d="m1.837 293.93 1.8672-3.234 1.8672 3.234h-1.8672z"/>
+               <rect x="3.09" y="293.72" width="1.2284" height="3.2364"/>
+              </g>
+             </g>
+            </svg>
+            </label>
+          </div>
          </div>
         <Graph ref={this.graph} notifyGraphRoot={this.notifyGraphRoot} />
       </div>
@@ -157,6 +182,22 @@ export default class App extends React.Component<IProps, IState>
     if (this.graph.current)
     {
       this.graph.current.goBack();
+    }
+  }
+
+  private handleSave = () =>
+  {
+    if (this.graph.current)
+    {
+      this.graph.current.save();
+    }
+  }
+
+  private handleLoad = (event: React.ChangeEvent<HTMLInputElement>) =>
+  {
+    if (this.graph.current)
+    {
+      this.graph.current.load(event.currentTarget.id);
     }
   }
 }

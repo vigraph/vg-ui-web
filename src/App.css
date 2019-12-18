@@ -37,6 +37,20 @@
   float: right;
 }
 
+#buttons .app-button.save,
+#buttons .app-button.load
+{
+  width: 28px;
+  height: 28px;
+  float: left;
+}
+
+#buttons .fileLoadInput
+{
+  position: absolute;
+  opacity: 0;
+}
+
 #buttons .icon
 {
   fill: white;
