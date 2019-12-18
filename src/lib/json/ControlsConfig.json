@@ -74,7 +74,8 @@
       "rangeMax": 270,
       "offset": 45,
       "turnScale": 1,
-      "logControl": false
+      "logControl": false,
+      "controlMode": "physical"
     },
     "basic":
     {
@@ -84,7 +85,8 @@
       "rangeMax": 270,
       "offset": 225,
       "turnScale": 1.5,
-      "logControl": false
+      "logControl": false,
+      "controlMode": "physical"
     },
     "mini":
     {
@@ -94,7 +96,8 @@
       "rangeMax": 270,
       "offset": 225,
       "turnScale": 1.5,
-      "logControl": false
+      "logControl": false,
+      "controlMode": "physical"
     },
     "log":
     {
@@ -104,7 +107,8 @@
       "rangeMax": 270,
       "offset": 45,
       "turnScale": 1,
-      "logControl": true
+      "logControl": true,
+      "controlMode": "physical"
     }
   },
   "selector":

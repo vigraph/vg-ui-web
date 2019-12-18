@@ -202,20 +202,24 @@ export default class Knob extends React.Component<IProps, IState>
     const currentValue = settings.logControl ?
       Math.log10(this.state.currentValue) : this.state.currentValue;
 
-    // Calculate angle between mouse start position and current mouse posiiton
-    // and add to current knob position (angle)
-    const dot = (this.mouseStart.x * currentX) + (this.mouseStart.y * currentY);
-    const det = (this.mouseStart.x * currentY) - (this.mouseStart.y * currentX);
-    const angleRad = Math.atan2(det, dot);
-    const angle = angleRad * (180 / Math.PI);
+    const currentPos = ((currentValue - rangeMin) /
+      (rangeMax - rangeMin) * this.range) + this.settings.rangeMin
 
-    // Current position in degrees from 0
-    let newPos = ((currentValue - rangeMin) /
-      (rangeMax - rangeMin) * this.range) + settings.rangeMin + angle;
+    let newPos;
 
-    // Mouse start can now but current mouse coords
-    this.mouseStart.x = currentX;
-    this.mouseStart.y = currentY;
+    // Knob control mode
+    if (this.settings.controlMode === "physical")
+    {
+      newPos = this.physicalMode(currentX, currentY, currentPos);
+    }
+    else if (this.settings.controlMode === "slider")
+    {
+      newPos = this.sliderMode(currentX, currentY, currentPos);
+    }
+    else
+    {
+      newPos = this.basicMode(currentX, currentY, currentPos);
+    }
 
     newPos = this.limitPosition(newPos);
 
@@ -227,6 +231,10 @@ export default class Knob extends React.Component<IProps, IState>
       newValue = Math.pow(10, newValue);
     }
 
+    // Mouse start can now be current mouse coords
+    this.mouseStart.x = currentX;
+    this.mouseStart.y = currentY;
+
     if (this.state.currentValue !== newValue)
     {
       this.setState({currentValue: newValue});
@@ -236,6 +244,50 @@ export default class Knob extends React.Component<IProps, IState>
         this.props.update(newValue);
       }
     }
+  }
+
+  // Basic - Moving right increases knob value
+  private basicMode = (currentX: number, currentY: number,
+    currentPos: number) =>
+  {
+    const distance = Math.hypot(currentX - this.mouseStart.x, currentY -
+      this.mouseStart.y) * Math.sign(currentX - this.mouseStart.x);
+
+    const newPos = currentPos + distance;
+
+    return newPos
+  }
+
+  // Physical - replicate physical knob control
+  private physicalMode = (currentX: number, currentY: number,
+    currentPos: number) =>
+  {
+    // Calculate angle between mouse start position and current mouse posiiton
+    // and add to current knob position (angle)
+    const dot = (this.mouseStart.x * currentX) + (this.mouseStart.y * currentY);
+    const det = (this.mouseStart.x * currentY) - (this.mouseStart.y * currentX);
+    const angleRad = Math.atan2(det, dot);
+    const angle = angleRad * (180 / Math.PI);
+
+    // Current position in degrees from 0
+    const newPos = currentPos + angle;
+
+    return newPos
+  }
+
+  // Slider - Vertical distance changes knob value, horizontal distance changes
+  // scale of the knob value change
+  private sliderMode = (currentX: number, currentY: number,
+    currentPos: number) =>
+  {
+    const diffX = currentX;
+    const diffY = (currentY - this.mouseStart.y) * (-1);
+
+    const diff = (diffY * (Math.abs(diffX) / 500));
+
+    const newPos = currentPos + diff;
+
+    return newPos;
   }
 
   // Limit the position given to between the knob minimum and maximum properties

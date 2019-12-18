@@ -168,6 +168,7 @@ export interface ILayoutData
 // offset    - Rotation offset of start from 0 (r, 2r)
 // turnScale - Scale increase whilst turning knob
 // logControl - Logarithmic scale control
+// controlMode - Knob control mode
 export interface IKnobSettings
 {
   radius: number,
@@ -176,7 +177,8 @@ export interface IKnobSettings
   rangeMax: number,
   offset: number,
   turnScale: number,
-  logControl: boolean
+  logControl: boolean,
+  controlMode: string
 }
 
 export interface ISliderSettings
