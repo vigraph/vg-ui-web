@@ -755,11 +755,11 @@
     "height": 120,
     "properties":
     {
-      "freq":
+      "period":
       {
         "controlType": "knob/log",
-        "rangeMin": 0.01,
-        "rangeMax": 10000,
+        "rangeMin": 0.001,
+        "rangeMax": 1000,
         "increment": 0.001,
         "x": 30,
         "y": 30
