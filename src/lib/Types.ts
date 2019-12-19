@@ -25,16 +25,6 @@ export interface IRawGraphItem
   elements?:
   {
     [key: string]: IRawGraphItem,
-  },
-  // Clone
-  graph?:
-  {
-    [key: string]: IRawGraphItem,
-  },
-  // Selector
-  graphs?:
-  {
-    [key: string]: IRawGraphItem,
   }
 }
 

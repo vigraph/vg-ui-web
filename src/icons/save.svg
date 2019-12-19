@@ -1,9 +1,12 @@
 <svg width="28" height="28" version="1.1" viewBox="0 0 7.4083 7.4083" xmlns="http://www.w3.org/2000/svg">
  <g transform="translate(0 -289.59)">
   <g fill="#fff">
-   <rect y="289.59" width="7.4083" height="1.1103"/>
-   <path transform="matrix(1.1898 0 0 .99269 -.70299 2.1001)" d="m1.837 293.93 1.8672-3.234 1.8672 3.234h-1.8672z"/>
-   <rect x="3.09" y="293.72" width="1.2284" height="3.2364"/>
+   <rect y="289.59" width="1.0583" height="7.4083"/>
+   <rect transform="rotate(90)" x="295.92" y="-7.4083" width="1.0583" height="7.4083"/>
+   <rect x="6.35" y="289.59" width="1.0583" height="7.4083"/>
+   <rect transform="rotate(90)" x="289.59" y="-7.4083" width="1.0583" height="3.7042"/>
+   <rect transform="scale(-1)" x="-4.3148" y="-293.3" width="1.0583" height="3.7042"/>
+   <path transform="matrix(1.0191 0 0 1.0086 1.8521 -4.155)" d="m1.8174 297-1.8174-3.1478h1.8174 1.8174l-0.90869 1.5739z"/>
   </g>
  </g>
 </svg>

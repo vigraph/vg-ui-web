@@ -110,27 +110,41 @@ export default class App extends React.Component<IProps, IState>
           }
           <div id="save-button" className="app-button save"
             onClick={this.handleSave}>
-          <svg width="28" height="28" version="1.1" viewBox="0 0 7.4083 7.4083" xmlns="http://www.w3.org/2000/svg">
-             <g transform="translate(0 -289.59)" className="icon">
-               <rect y="289.59" width="7.4083" height="1.1103"/>
-               <path transform="matrix(1.1898 0 0 .99269 -.70299 2.1001)" d="m1.837 293.93 1.8672-3.234 1.8672 3.234h-1.8672z"/>
-               <rect x="3.09" y="293.72" width="1.2284" height="3.2364"/>
+            <svg width="28" height="28" viewBox="0 0 7.4083 7.4083">
+             <g transform="translate(0 -289.59)">
+              <g fill="#fff">
+               <rect y="289.59" width="1.0583" height="7.4083"/>
+               <rect transform="rotate(90)" x="295.92" y="-7.4083"
+                 width="1.0583" height="7.4083"/>
+               <rect x="6.35" y="289.59" width="1.0583" height="7.4083"/>
+               <rect transform="rotate(90)" x="289.59" y="-7.4083"
+                 width="1.0583" height="3.7042"/>
+               <rect transform="scale(-1)" x="-4.3148" y="-293.3"
+                 width="1.0583" height="3.7042"/>
+               <path transform="matrix(1.0191 0 0 1.0086 1.8521 -4.155)"
+                 d="m1.8174 297-1.8174-3.1478h1.8174 1.8174l-0.90869 1.5739z"/>
+              </g>
              </g>
-          </svg>
+            </svg>
           </div>
           <div id="load-button" className="app-button load">
             <input id="fileLoadInput" className="fileLoadInput" type="file"
               onChange={this.handleLoad} multiple={false} accept=".txt"/>
-           <label htmlFor="fileLoadInput" >
-          <svg width="28" height="28" version="1.1" viewBox="0 0 7.4083 7.4083" xmlns="http://www.w3.org/2000/svg">
-             <g transform="translate(0 -289.59)" className="icon">
-              <g transform="matrix(1 0 0 -1 -3.5261e-6 586.54)">
-               <rect y="289.59" width="7.4083" height="1.1103"/>
-               <path transform="matrix(1.1898 0 0 .99269 -.70299 2.1001)" d="m1.837 293.93 1.8672-3.234 1.8672 3.234h-1.8672z"/>
-               <rect x="3.09" y="293.72" width="1.2284" height="3.2364"/>
-              </g>
-             </g>
-            </svg>
+            <label htmlFor="fileLoadInput" >
+              <svg width="28" height="28" viewBox="0 0 7.4083 7.4083">
+                <g transform="translate(0 -289.59)">
+                  <g fill="#fff">
+                   <path d="m-1.62e-6 289.59h1.0583v7.4083h-1.0583z"/>
+                   <path d="m7.4083 295.94v1.0583h-7.4083v-1.0583z"/>
+                   <path d="m6.35 293.3h1.0583v3.7042h-1.0583z"/>
+                   <path d="m3.7042 289.59v1.0583h-3.7042v-1.0583z"/>
+                   <path d="m6.35 289.59h1.0583v2.6458h-1.0583z"/>
+                   <path d="m7.4083 289.59v1.0583h-2.6458v-1.0583z"/>
+                   <path d="m6.0547 290.17 0.74835 0.74835-2.6192
+                     2.6192-0.74835-0.74835z"/>
+                  </g>
+                </g>
+              </svg>
             </label>
           </div>
          </div>

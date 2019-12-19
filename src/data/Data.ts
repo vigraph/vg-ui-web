@@ -220,6 +220,16 @@ class Data
       if (!position && !size && !name)
       {
         delete this.layoutData[id];
+
+        // Delete all subgraph children if found
+        for (const key of Object.keys(this.layoutData))
+        {
+          const start = key.slice(0, id.length);
+          if (id === start)
+          {
+            delete this.layoutData[key];
+          }
+        }
       }
       else
       {
@@ -725,15 +735,23 @@ class Data
   {
     const layout = this.layoutData;
     const layoutNodes: any[] = [];
-    let successCount = 0;
+
+    const currentLayouts: vgTypes.ILayoutData = {};
+    let nodePathLevel: string = "";
 
     nodes.forEach((node: vgTypes.IProcessedGraphItem) =>
     {
       const propConfig = vgConfig.Properties[node.type];
 
+      // Node found in layout so add to current valid layouts store
       if (layout[node.path])
       {
-        successCount++;
+        currentLayouts[node.path] = layout[node.path];
+      }
+
+      if (!nodePathLevel)
+      {
+        nodePathLevel = node.path
       }
 
       const height = this.calculateNodeHeight(node);
@@ -755,7 +773,29 @@ class Data
       layoutNodes.push({...node, ...nodeLayout});
     });
 
-    if (successCount > 0)
+    // Prune layout data and update if necessary
+    let update = false;
+    for (const key of Object.keys(this.layoutData))
+    {
+      const prefixData = key.slice(0, key.lastIndexOf("/"));
+      const prefixCurrent = nodePathLevel.slice(0,
+        nodePathLevel.lastIndexOf("/"));
+
+      if (key.split("/").length === nodePathLevel.split("/").length &&
+        !currentLayouts[key] && prefixData === prefixCurrent)
+      {
+        vgUtils.log("Pruning " + key + " from Layout Data");
+        update = true;
+        delete this.layoutData[key];
+      }
+    }
+
+    if (update)
+    {
+      this.updateLayout();
+    }
+
+    if (Object.keys(currentLayouts).length > 0)
     {
       const graph = { "nodes" : layoutNodes };
       success(graph);
