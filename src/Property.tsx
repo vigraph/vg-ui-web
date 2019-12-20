@@ -203,23 +203,27 @@ export default class Property extends React.Component<IProps, IState>
       property.valueType === "integer") ?
       vgUtils.snapValueToIncrement(value, property.increment) : value;
 
-    this.setState({value: newValue});
+    if (this.state.value !== newValue)
+    {
+      this.setState({value: newValue});
 
-    vgData.updateProperty(this.props.parent.path, property.id, value,
-      () =>
-      {
-        property.value = newValue;
-
-        if (this.props.update)
+      vgData.updateProperty(this.props.parent.path, property.id, newValue,
+        () =>
         {
-          this.props.update();
-        }
-      },
-      () =>
-      {
-        // Reset UI to actual property value on failure
-        this.setState({value: property.value});
-      });
+          property.value = newValue;
+
+          if (this.props.update)
+          {
+            this.props.update();
+          }
+        },
+        () =>
+        {
+          // Reset UI to actual property value on failure
+          this.setState({value: property.value});
+        });
+    }
+
   }
 
   private mouseEnter = (event: React.MouseEvent<SVGSVGElement>) =>
