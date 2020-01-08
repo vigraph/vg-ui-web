@@ -12,6 +12,8 @@
   --col-knob-overlay: black;
   --col-info-bg: #222;
   --col-info-border: white;
+  --col-label-border: #ccc;
+  --col-label-fill: #111;
 }
 
 /* Light theme */
@@ -27,6 +29,8 @@
   --col-knob-overlay: white;
   --col-info-bg: #eee;
   --col-info-border: #444;
+  --col-label-border: #111;
+  --col-label-fill: #ccc;
 }
 
 #container
