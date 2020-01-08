@@ -94,6 +94,15 @@ export default class App extends React.Component<IProps, IState>
                 </svg>
               </div>
           }
+          <div id="theme-button" className="app-button theme"
+               onClick={this.handleTheme}>
+            <svg  width={28} height={27}>
+             <g className="icon">
+               <rect x="3" y="3" height="15" width="15"/>
+               <rect y="12" x="12" height="15" width="15"/>
+             </g>
+            </svg>
+          </div>
           {!this.state.graphRoot &&
             <div id="back-button" className="app-button back"
               onClick={this.handleBack}>
@@ -111,8 +120,7 @@ export default class App extends React.Component<IProps, IState>
           <div id="save-button" className="app-button save"
             onClick={this.handleSave}>
             <svg width="28" height="28" viewBox="0 0 7.4083 7.4083">
-             <g transform="translate(0 -289.59)">
-              <g fill="#fff">
+             <g className="icon" transform="translate(0 -289.59)">
                <rect y="289.59" width="1.0583" height="7.4083"/>
                <rect transform="rotate(90)" x="295.92" y="-7.4083"
                  width="1.0583" height="7.4083"/>
@@ -123,7 +131,6 @@ export default class App extends React.Component<IProps, IState>
                  width="1.0583" height="3.7042"/>
                <path transform="matrix(1.0191 0 0 1.0086 1.8521 -4.155)"
                  d="m1.8174 297-1.8174-3.1478h1.8174 1.8174l-0.90869 1.5739z"/>
-              </g>
              </g>
             </svg>
           </div>
@@ -132,8 +139,7 @@ export default class App extends React.Component<IProps, IState>
               onChange={this.handleLoad} multiple={false} accept=".txt"/>
             <label htmlFor="fileLoadInput" >
               <svg width="28" height="28" viewBox="0 0 7.4083 7.4083">
-                <g transform="translate(0 -289.59)">
-                  <g fill="#fff">
+                <g className="icon" transform="translate(0 -289.59)">
                    <path d="m-1.62e-6 289.59h1.0583v7.4083h-1.0583z"/>
                    <path d="m7.4083 295.94v1.0583h-7.4083v-1.0583z"/>
                    <path d="m6.35 293.3h1.0583v3.7042h-1.0583z"/>
@@ -142,7 +148,6 @@ export default class App extends React.Component<IProps, IState>
                    <path d="m7.4083 289.59v1.0583h-2.6458v-1.0583z"/>
                    <path d="m6.0547 290.17 0.74835 0.74835-2.6192
                      2.6192-0.74835-0.74835z"/>
-                  </g>
                 </g>
               </svg>
             </label>
@@ -213,5 +218,14 @@ export default class App extends React.Component<IProps, IState>
     {
       this.graph.current.load(event.currentTarget.id);
     }
+  }
+
+  private handleTheme = () =>
+  {
+    var root = document.documentElement;
+    if (root.hasAttribute("class"))
+      root.removeAttribute("class");
+    else
+      root.setAttribute("class", "theme-light");
   }
 }

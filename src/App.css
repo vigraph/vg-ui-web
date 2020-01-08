@@ -1,3 +1,36 @@
+/* Colour scheme settings */
+/* Default */
+:root
+{
+  --col-background: black;
+  --col-text: white;
+  --col-node-border: #ccc;
+  --col-node-fill: #111;
+  --col-edge: white;
+  --col-label: #ccc;
+  --col-knob-bg: #444;
+  --col-knob-overlay: black;
+  --col-info-bg: #222;
+  --col-info-border: white;
+  --col-button-fill: white;
+}
+
+/* Light theme */
+:root.theme-light
+{
+  --col-background: white;
+  --col-text: black;
+  --col-node-border: #444;
+  --col-node-fill: #eee;
+  --col-edge: black;
+  --col-label: #444;
+  --col-knob-bg: #ccc;
+  --col-knob-overlay: white;
+  --col-info-bg: #eee;
+  --col-info-border: #444;
+  --col-button-fill: black;
+}
+
 #container
 {
   width: 100%;
@@ -23,7 +56,8 @@
   float: left;
 }
 
-#buttons .app-button.window
+#buttons .app-button.window,
+#buttons .app-button.theme
 {
   width: 27px;
   height: 27px;
@@ -53,13 +87,13 @@
 
 #buttons .icon
 {
-  fill: white;
+  fill: var(--col-button-fill);
 }
 
 body::-webkit-scrollbar
 {
   width: 12px;
-  background-color: black;
+  background-color: var(--col-background);
 }
 body::-webkit-scrollbar-thumb
 {
@@ -68,5 +102,5 @@ body::-webkit-scrollbar-thumb
 
 body::-webkit-scrollbar-corner
 {
-  background-color: black;
+  background-color: var(--col-background);
 }
