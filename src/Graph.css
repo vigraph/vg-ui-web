@@ -58,6 +58,7 @@
   height: 40px;
   width: 40px;
   display: inline-block;
+  vertical-align: top;
   border: 1px solid #FF8C00;
   background-color: white;
 }
@@ -86,6 +87,20 @@
 {
   border: 1px solid #FF8C00;
   width: fit-content;
+}
+
+#menu .menu-item.child
+{
+  background-color: black;
+}
+
+#menu .menu-item.child span
+{
+  display: block;
+  padding-top: 12px;
+  font-size: 70%;
+  text-align: center;
+  color: #4ecac2;
 }
 
 .node

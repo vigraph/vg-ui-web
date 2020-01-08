@@ -225,7 +225,7 @@ export default class Menu extends React.Component<IProps, IState>
                       onMouseEnter={this.handleMouseEnter}
                       onMouseLeave={this.handleMouseLeave}>
                       {
-                        Icon ? <Icon /> : value
+                        Icon ? <Icon /> : <span>{ value }</span>
                       }
                       </div>
                   })
