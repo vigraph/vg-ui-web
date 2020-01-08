@@ -12,7 +12,6 @@
   --col-knob-overlay: black;
   --col-info-bg: #222;
   --col-info-border: white;
-  --col-button-fill: white;
 }
 
 /* Light theme */
@@ -28,7 +27,6 @@
   --col-knob-overlay: white;
   --col-info-bg: #eee;
   --col-info-border: #444;
-  --col-button-fill: black;
 }
 
 #container
@@ -46,48 +44,20 @@
 
 #buttons .app-button
 {
+  display: inline-block;
   margin: 2px;
-}
-
-#buttons .app-button.history
-{
-  width: 28px;
-  height: 27px;
-  float: left;
-}
-
-#buttons .app-button.window,
-#buttons .app-button.theme
-{
-  width: 27px;
-  height: 27px;
-  float: left;
+  width: 40px;
+  height: 40px;
 }
 
 #buttons .app-button.back
 {
-  width: 20px;
-  height: 20px;
   float: right;
-}
-
-#buttons .app-button.save,
-#buttons .app-button.load
-{
-  width: 28px;
-  height: 28px;
-  float: left;
 }
 
 #buttons .fileLoadInput
 {
-  position: absolute;
-  opacity: 0;
-}
-
-#buttons .icon
-{
-  fill: var(--col-button-fill);
+  display: none;
 }
 
 body::-webkit-scrollbar
