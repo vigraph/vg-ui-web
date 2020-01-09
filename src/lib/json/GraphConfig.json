@@ -43,21 +43,22 @@
   "menu":
   {
     "size": 10,
-    "hoverTime": 2,
+    "hoverTime": 0.5,
     "pinnedPosition":
     {
       "x": 300,
       "y": 0
     },
-    "parents": ["core", "maths", "audio", "vector", "colour",
+    "parents": ["core", "trigger", "maths", "audio", "vector", "colour",
                 "midi", "laser", "time-series", "sensor"],
     "children":
     {
-      "core": ["beat", "clone",
-        "clone-info", "compare", "count", "cut", "filter", "graph",
-        "interpolator", "limit", "log", "oscillator", "pin", "number-pin",
-        "trigger-pin", "random", "selector", "start", "switch", "timer",
-        "toggle", "wrap"],
+      "core": ["clone",
+        "clone-info", "compare", "filter", "graph",
+        "interpolator", "limit", "log", "oscillator", "pin",
+        "random", "switch", "timer", "wrap"],
+      "trigger": ["beat", "count", "memory", "pin", "selector", "start",
+               "latch"],
       "maths": ["add", "subtract", "multiply", "divide", "mod", "power",
         "sin", "cos", "tan", "asin", "acos", "atan",
         "log10", "log", "exp10", "exp", "sqrt", "square", "cube",
