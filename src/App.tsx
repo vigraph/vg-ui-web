@@ -81,7 +81,7 @@ export default class App extends React.Component<IProps, IState>
           </div>
           <div id="load-button" className="app-button">
             <input id="fileLoadInput" className="fileLoadInput" type="file"
-              onChange={this.handleLoad} multiple={false} accept=".txt"/>
+              onChange={this.handleLoad} multiple={false} accept=".json"/>
             <label htmlFor="fileLoadInput" >
              { this.createIcon("load") }
             </label>
