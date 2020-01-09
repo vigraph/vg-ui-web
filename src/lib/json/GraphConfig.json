@@ -46,7 +46,7 @@
     "hoverTime": 2,
     "pinnedPosition":
     {
-      "x": 200,
+      "x": 300,
       "y": 0
     },
     "parents": ["core", "maths", "audio", "vector", "colour",

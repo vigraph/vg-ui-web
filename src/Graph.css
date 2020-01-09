@@ -40,16 +40,38 @@
 #menu #pin-button
 {
   position: absolute;
-  width: 10px;
-  height: 10px;
-  background-color: var(--col-background);
-  border: 2px solid #FF8C00;
+  left: 6px;
+  top: 3px;
+  width: 15px;
+  height: 15px;
   pointer-events: auto;
 }
 
-#menu #pin-button.pinned
+#menu #pin-button circle
 {
-  background-color: #FF8C00;
+  position: absolute;
+  left: 5px;
+  top: 5px;
+  fill: var(--col-pin-fill);
+  stroke: var(--col-menu-border);
+  stroke-width: 1;
+  cursor: pointer;
+}
+
+#menu #pin-button.pinned circle
+{
+  fill: var(--col-pin-fill-pinned);
+}
+
+#menu .menu-parent-wrapper,
+#menu .menu-children-wrapper
+{
+  padding: 10px 0px 10px 25px;
+  border: 1px solid var(--col-menu-border);
+  background-color: var(--col-menu-fill);
+  pointer-events: auto;
+  position: absolute;
+  white-space: nowrap;
 }
 
 #menu .menu-item
@@ -58,40 +80,36 @@
   height: 40px;
   width: 40px;
   display: inline-block;
+  margin-right: 10px;
   vertical-align: top;
-  border: 1px solid #FF8C00;
-  background-color: white;
+  border: 1px solid var(--col-menu-border);
+  background-color: var(--col-menu-item-fill);
 }
 
 #menu .menu-item.selected
 {
-  border-color: white;
+  border-color: var(--col-menu-border-highlight);
 }
 
-#menu .menu-parent-wrapper,
-#menu .sub-menu-block
-{
-  height: 42px;
-}
-
-#menu .menu-parent-wrapper,
 #menu .menu-children-wrapper
 {
-  pointer-events: auto;
-  position: absolute;
-  white-space: nowrap;
+  padding-bottom: 0px;
 }
 
 #menu .menu-parent-wrapper,
 #menu .sub-menu-block
 {
-  border: 1px solid #FF8C00;
   width: fit-content;
+}
+
+#menu .sub-menu-block
+{
+  margin-bottom: 10px;
 }
 
 #menu .menu-item.child
 {
-  background-color: black;
+  background-color: var(--col-menu-item-fill);
 }
 
 #menu .menu-item.child span
@@ -100,7 +118,7 @@
   padding-top: 12px;
   font-size: 70%;
   text-align: center;
-  color: #4ecac2;
+  color: var(--col-menu-item-text);
 }
 
 .node
@@ -111,7 +129,7 @@
 .node-border
 {
   fill: var(--col-node-fill);
-  fill-opacity: 0.7;
+  fill-opacity: 0.15;
   stroke: var(--col-node-border);
   stroke-width: 0.75;
   overflow: visible;
@@ -641,7 +659,7 @@ foreignObject
   padding: 5px;
   border: 1px solid var(--col-info-border);
   background: var(--col-info-bg);
-  top: 30px;
+  top: 50px;
   right: 0px;
 }
 

@@ -4,16 +4,23 @@
 {
   --col-background: black;
   --col-text: white;
-  --col-node-border: #ccc;
-  --col-node-fill: #111;
+  --col-node-border: #888;
+  --col-node-fill: #888;
   --col-edge: white;
   --col-label: #ccc;
   --col-knob-bg: #444;
   --col-knob-overlay: black;
   --col-info-bg: #222;
-  --col-info-border: white;
+  --col-info-border: #888;
   --col-label-border: #ccc;
   --col-label-fill: #111;
+  --col-menu-border: #888;
+  --col-menu-border-highlight: white;
+  --col-menu-fill: #222;
+  --col-menu-item-fill: black;
+  --col-menu-item-text: #4ecac2;
+  --col-pin-fill: black;
+  --col-pin-fill-pinned: white;
 }
 
 /* Light theme */
@@ -21,16 +28,19 @@
 {
   --col-background: white;
   --col-text: black;
-  --col-node-border: #444;
-  --col-node-fill: #eee;
   --col-edge: black;
   --col-label: #444;
   --col-knob-bg: #ccc;
   --col-knob-overlay: white;
   --col-info-bg: #eee;
-  --col-info-border: #444;
   --col-label-border: #111;
   --col-label-fill: #ccc;
+  --col-menu-border-highlight: #c44;
+  --col-menu-fill: #eee;
+  --col-menu-item-fill: white;
+  --col-menu-item-text: #206060;
+  --col-pin-fill: white;
+  --col-pin-fill-pinned: black;
 }
 
 #container
