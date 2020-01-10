@@ -29,7 +29,7 @@ export default class Menu extends React.Component<IProps, IState>
   private subMenuRef: HTMLDivElement | null;
   private updateSubMenu: boolean;
   private iconMap: {[key: string]: any};
-  private mousePosition: {x: number, y: number};
+  private pointerPosition: {x: number, y: number};
   private hoverTimer: number | null;
 
   constructor(props: IProps)
@@ -48,7 +48,7 @@ export default class Menu extends React.Component<IProps, IState>
     this.menuRef = null;
     this.subMenuRef = null;
     this.updateSubMenu = true;
-    this.mousePosition = {x: 0, y: 0};
+    this.pointerPosition = {x: 0, y: 0};
     this.hoverTimer = null;
 
     this.iconMap = {};
@@ -76,7 +76,7 @@ export default class Menu extends React.Component<IProps, IState>
       onContextMenu={this.handleMenuContextMenu}>
       <div id="pin-button" className={this.state.pinned?"pinned":""}
         style={{left: position.x-10, top: position.y}}
-        onMouseDown={this.togglePin} />
+        onPointerDown={this.togglePin} />
       <div className={"menu-parent-wrapper"}
       style={{left: position.x, top: position.y}}
       ref={(ref) => { this.menuRef = ref; }}>
@@ -89,10 +89,10 @@ export default class Menu extends React.Component<IProps, IState>
             className={`menu-item parent` +
               ` ${(this.state.menuItem && value.id ===
               this.state.menuItem.id) ? "selected" : "" }`}
-            onMouseDown={this.handleParentMouseDown}
-            onMouseMove={this.handleMouseMove}
-            onMouseEnter={this.handleMouseEnter}
-            onMouseLeave={this.handleMouseLeave}>
+            onPointerDown={this.handleParentPointerDown}
+            onPointerMove={this.handlePointerMove}
+            onPointerEnter={this.handlePointerEnter}
+            onPointerLeave={this.handlePointerLeave}>
             {
               Icon ? <Icon /> : value.id
             }
@@ -192,7 +192,7 @@ export default class Menu extends React.Component<IProps, IState>
     {
       if (this.state.pinned)
       {
-        window.addEventListener("mousedown", this.handleWindowMouseDown);
+        window.addEventListener("pointerdown", this.handleWindowPointerDown);
       }
 
       const position = this.state.subMenuPosition;
@@ -220,10 +220,10 @@ export default class Menu extends React.Component<IProps, IState>
 
                     return <div key={index} id={"menu-"+id}
                       className="menu-item child"
-                      onMouseDown={this.handleChildMouseDown}
-                      onMouseMove={this.handleMouseMove}
-                      onMouseEnter={this.handleMouseEnter}
-                      onMouseLeave={this.handleMouseLeave}>
+                      onPointerDown={this.handleChildPointerDown}
+                      onPointerMove={this.handlePointerMove}
+                      onPointerEnter={this.handlePointerEnter}
+                      onPointerLeave={this.handlePointerLeave}>
                       {
                         Icon ? <Icon /> : value
                       }
@@ -275,12 +275,12 @@ export default class Menu extends React.Component<IProps, IState>
   private createLabel = () =>
   {
     return <div id={"menu-label"} className={"menu label"}
-      style={{left: this.mousePosition.x, top: this.mousePosition.y}}>
+      style={{left: this.pointerPosition.x, top: this.pointerPosition.y}}>
         {this.state.showLabel}
       </div>
   }
 
-  private handleParentMouseDown = (e: React.MouseEvent<HTMLDivElement>) =>
+  private handleParentPointerDown = (e: React.PointerEvent<HTMLDivElement>) =>
   {
     e.stopPropagation();
     const target = e.currentTarget.id;
@@ -299,7 +299,7 @@ export default class Menu extends React.Component<IProps, IState>
     }
   }
 
-  private handleChildMouseDown = (e: React.MouseEvent<HTMLDivElement>) =>
+  private handleChildPointerDown = (e: React.PointerEvent<HTMLDivElement>) =>
   {
     const target = e.currentTarget.id;
     if (!this.state.pinned)
@@ -318,24 +318,24 @@ export default class Menu extends React.Component<IProps, IState>
   }
 
   // Do nothing - prevents browser context menu from showing
-  private handleMenuContextMenu = (e: React.MouseEvent<HTMLDivElement>) =>
+  private handleMenuContextMenu = (e: React.PointerEvent<HTMLDivElement>) =>
   {
     e.preventDefault();
   }
 
-  private handleWindowMouseDown = (e: MouseEvent) =>
+  private handleWindowPointerDown = (e: PointerEvent) =>
   {
     e.stopPropagation();
-    window.removeEventListener("mousedown", this.handleWindowMouseDown);
+    window.removeEventListener("pointerdown", this.handleWindowPointerDown);
     this.setState({menuItem: undefined});
   }
 
-  private handleMouseMove = (e: React.MouseEvent) =>
+  private handlePointerMove = (e: React.PointerEvent) =>
   {
-    this.mousePosition = {x: e.pageX+10, y: e.pageY+10};
+    this.pointerPosition = {x: e.pageX+10, y: e.pageY+10};
   }
 
-  private handleMouseEnter = (e: React.MouseEvent) =>
+  private handlePointerEnter = (e: React.PointerEvent) =>
   {
     const id = e.currentTarget.id;
     let itemID = id.substring(5, id.length);
@@ -351,7 +351,7 @@ export default class Menu extends React.Component<IProps, IState>
       }, vgConfig.Graph.menu.hoverTime * 1000)
   }
 
-  private handleMouseLeave = (e: React.MouseEvent) =>
+  private handlePointerLeave = (e: React.PointerEvent) =>
   {
     this.clearHoverTimeout();
   }
@@ -367,10 +367,10 @@ export default class Menu extends React.Component<IProps, IState>
   }
 
   // Toggle pinning menu to set position (handled by Graph)
-  private togglePin = (e: React.MouseEvent<HTMLDivElement>) =>
+  private togglePin = (e: React.PointerEvent<HTMLDivElement>) =>
   {
     e.stopPropagation();
-    window.removeEventListener("mousedown", this.handleWindowMouseDown);
+    window.removeEventListener("pointerdown", this.handleWindowPointerDown);
     const newPinState = !this.state.pinned;
     this.updateSubMenu = true;
     this.setState({pinned: newPinState});

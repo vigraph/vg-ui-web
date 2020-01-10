@@ -34,7 +34,7 @@ export default class Slider extends React.Component<IProps, IState>
 
   private property: Model.Property;
 
-  private mouseStart: {x: number, y: number};
+  private pointerStart: {x: number, y: number};
 
   private settings: vgTypes.ISliderSettings;
 
@@ -58,7 +58,7 @@ export default class Slider extends React.Component<IProps, IState>
       sliding: false
     };
 
-    this.mouseStart = {x: 0, y: 0};
+    this.pointerStart = {x: 0, y: 0};
   }
 
   public render()
@@ -103,7 +103,7 @@ export default class Slider extends React.Component<IProps, IState>
     return(
         <svg id="slider" className={this.props.settingsType}
           ref={(ref) => {this.sliderRef = ref}}
-          onMouseDown={this.handleMouseDown}>
+          onPointerDown={this.handlePointerDown}>
 
           <rect className="slider-background"
             width={settings.length} height={settings.thickness}
@@ -128,16 +128,16 @@ export default class Slider extends React.Component<IProps, IState>
     );
   }
 
-  private handleMouseDown = (e: React.MouseEvent<SVGElement>) =>
+  private handlePointerDown = (e: React.PointerEvent<SVGElement>) =>
   {
     e.stopPropagation();
-    window.addEventListener('mouseup', this.handleMouseUp);
-    window.addEventListener('mousemove', this.handleMouseMove);
+    window.addEventListener('pointerup', this.handlePointerUp);
+    window.addEventListener('pointermove', this.handlePointerMove);
 
     const currentPosition = vgUtils.windowToSVGPosition(
       {x: e.pageX, y: e.pageY}, this.sliderRef);
 
-    this.mouseStart = currentPosition;
+    this.pointerStart = currentPosition;
 
     this.setState({sliding: true});
 
@@ -180,10 +180,10 @@ export default class Slider extends React.Component<IProps, IState>
     }
   }
 
-  private handleMouseUp = (e: MouseEvent) =>
+  private handlePointerUp = (e: PointerEvent) =>
   {
-    window.removeEventListener('mouseup', this.handleMouseUp);
-    window.removeEventListener('mousemove', this.handleMouseMove);
+    window.removeEventListener('pointerup', this.handlePointerUp);
+    window.removeEventListener('pointermove', this.handlePointerMove);
 
     this.setState({sliding: false});
 
@@ -193,13 +193,13 @@ export default class Slider extends React.Component<IProps, IState>
     }
   }
 
-  private handleMouseMove = (e: MouseEvent) =>
+  private handlePointerMove = (e: PointerEvent) =>
   {
     const currentPosition = vgUtils.windowToSVGPosition(
       {x: e.pageX, y: e.pageY}, this.sliderRef);
 
     const diff = this.settings.horizontal ? currentPosition.x -
-      this.mouseStart.x : this.mouseStart.y - currentPosition.y;
+      this.pointerStart.x : this.pointerStart.y - currentPosition.y;
 
     const settings = this.settings;
 
@@ -229,7 +229,7 @@ export default class Slider extends React.Component<IProps, IState>
 
     this.setState({currentValue: newValue});
 
-    this.mouseStart = currentPosition;
+    this.pointerStart = currentPosition;
 
     if (this.props.update)
     {

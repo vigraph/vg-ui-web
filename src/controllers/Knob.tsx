@@ -35,7 +35,7 @@ export default class Knob extends React.Component<IProps, IState>
   private property: Model.Property;
 
   private arcStart: {x: number, y: number};
-  private mouseStart: {x: number, y: number};
+  private pointerStart: {x: number, y: number};
   private circleCentre: {x: number, y: number};
   private range: number;
 
@@ -59,7 +59,7 @@ export default class Knob extends React.Component<IProps, IState>
     };
 
     this.arcStart = {x: this.settings.radius, y: 2*this.settings.radius};
-    this.mouseStart = {x: 0, y: 0};
+    this.pointerStart = {x: 0, y: 0};
     this.circleCentre = {x: 0, y: 0};
 
     this.range = this.settings.rangeMax - this.settings.rangeMin;
@@ -110,7 +110,7 @@ export default class Knob extends React.Component<IProps, IState>
     return(
         <svg id="knob" className={this.props.settingsType}
           height={r*2} width={r*2}
-          onMouseDown={this.handleMouseDown}>
+          onPointerDown={this.handlePointerDown}>
           <path
             className={`knob-background range`}
             d={`M${r} ${r} `+
@@ -147,20 +147,20 @@ export default class Knob extends React.Component<IProps, IState>
     );
   }
 
-  private handleMouseDown = (e: React.MouseEvent<SVGElement>) =>
+  private handlePointerDown = (e: React.PointerEvent<SVGElement>) =>
   {
     e.stopPropagation();
-    window.addEventListener('mouseup', this.handleMouseUp);
-    window.addEventListener('mousemove', this.handleMouseMove);
+    window.addEventListener('pointerup', this.handlePointerUp);
+    window.addEventListener('pointermove', this.handlePointerMove);
 
     this.circleCentre.x = e.currentTarget.getBoundingClientRect().left +
       this.settings.radius;
     this.circleCentre.y = e.currentTarget.getBoundingClientRect().top +
       this.settings.radius;
 
-    // Mouse start coordinates with circle centre as origin
-    this.mouseStart.x = e.pageX - this.circleCentre.x;
-    this.mouseStart.y = e.pageY - this.circleCentre.y;
+    // Pointer start coordinates with circle centre as origin
+    this.pointerStart.x = e.pageX - this.circleCentre.x;
+    this.pointerStart.y = e.pageY - this.circleCentre.y;
 
     this.setState({turning: true});
 
@@ -170,10 +170,10 @@ export default class Knob extends React.Component<IProps, IState>
     }
   }
 
-  private handleMouseUp = (e: MouseEvent) =>
+  private handlePointerUp = (e: PointerEvent) =>
   {
-    window.removeEventListener('mouseup', this.handleMouseUp);
-    window.removeEventListener('mousemove', this.handleMouseMove);
+    window.removeEventListener('pointerup', this.handlePointerUp);
+    window.removeEventListener('pointermove', this.handlePointerMove);
 
     this.setState({turning: false});
 
@@ -183,9 +183,9 @@ export default class Knob extends React.Component<IProps, IState>
     }
   }
 
-  private handleMouseMove = (e: MouseEvent) =>
+  private handlePointerMove = (e: PointerEvent) =>
   {
-    // Current mouse position coordinates with circle centre as origin
+    // Current pointer position coordinates with circle centre as origin
     const currentX = e.pageX - this.circleCentre.x;
     const currentY = e.pageY - this.circleCentre.y;
 
@@ -231,9 +231,9 @@ export default class Knob extends React.Component<IProps, IState>
       newValue = Math.pow(10, newValue);
     }
 
-    // Mouse start can now be current mouse coords
-    this.mouseStart.x = currentX;
-    this.mouseStart.y = currentY;
+    // Pointer start can now be current pointer coords
+    this.pointerStart.x = currentX;
+    this.pointerStart.y = currentY;
 
     if (this.state.currentValue !== newValue)
     {
@@ -250,8 +250,8 @@ export default class Knob extends React.Component<IProps, IState>
   private basicMode = (currentX: number, currentY: number,
     currentPos: number) =>
   {
-    const distance = Math.hypot(currentX - this.mouseStart.x, currentY -
-      this.mouseStart.y) * Math.sign(currentX - this.mouseStart.x);
+    const distance = Math.hypot(currentX - this.pointerStart.x, currentY -
+      this.pointerStart.y) * Math.sign(currentX - this.pointerStart.x);
 
     const newPos = currentPos + distance;
 
@@ -262,10 +262,10 @@ export default class Knob extends React.Component<IProps, IState>
   private physicalMode = (currentX: number, currentY: number,
     currentPos: number) =>
   {
-    // Calculate angle between mouse start position and current mouse posiiton
+    // Calculate angle between pointer start position and current pointer posiiton
     // and add to current knob position (angle)
-    const dot = (this.mouseStart.x * currentX) + (this.mouseStart.y * currentY);
-    const det = (this.mouseStart.x * currentY) - (this.mouseStart.y * currentX);
+    const dot = (this.pointerStart.x * currentX) + (this.pointerStart.y * currentY);
+    const det = (this.pointerStart.x * currentY) - (this.pointerStart.y * currentX);
     const angleRad = Math.atan2(det, dot);
     const angle = angleRad * (180 / Math.PI);
 
@@ -281,7 +281,7 @@ export default class Knob extends React.Component<IProps, IState>
     currentPos: number) =>
   {
     const diffX = currentX;
-    const diffY = (currentY - this.mouseStart.y) * (-1);
+    const diffY = (currentY - this.pointerStart.y) * (-1);
 
     const diff = (diffY * (Math.abs(diffX) / 500));
 

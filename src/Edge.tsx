@@ -13,8 +13,10 @@ interface IProps
   graphRef: SVGSVGElement | null;
   removeEdge: (srcID: string, srcOutput: string, destID: string,
     destInput: string, success?: () => void) => void;
-  moveEdge: (node: Model.Node, connectorId: string,
-    e: MouseEvent, direction: string, remove: () => void) => void;
+  moveEdgeFromInput: (inNode: Model.Node, inConnector: Model.Connector,
+    position: {x: number, y: number}) => void;
+  moveEdgeFromOutput: (outNode: Model.Node, outConnector: Model.Connector,
+    position: {x: number, y: number}) => void;
 }
 
 interface IState
@@ -25,7 +27,7 @@ interface IState
 
 export default class Edge extends React.Component<IProps, IState>
 {
-  private mouseStart: {x: number, y: number};
+  private pointerStart: {x: number, y: number};
   private edgeStart: {x: number, y: number};
   private edgeStop: {x: number, y: number};
 
@@ -39,7 +41,7 @@ export default class Edge extends React.Component<IProps, IState>
       hover: false
     }
 
-    this.mouseStart = {x: 0, y: 0};
+    this.pointerStart = {x: 0, y: 0};
     this.edgeStart = {x: 0, y: 0};
     this.edgeStop = {x: 0, y: 0};
   }
@@ -94,15 +96,16 @@ export default class Edge extends React.Component<IProps, IState>
         />
         <path className="edge-boundary"
           d={`M${sx} ${sy} C ${sx + cpx} ${sy} ${dx - cpx} ${dy} ${dx} ${dy}`}
-          onMouseDown={this.edgeMouseDown}
-          onMouseEnter={this.edgeMouseEnter}
-          onMouseLeave={this.edgeMouseLeave}
+          touch-action="none"
+          onPointerDown={this.edgePointerDown}
+          onPointerEnter={this.edgePointerEnter}
+          onPointerLeave={this.edgePointerLeave}
         />
         {
           this.state.edgeSelected && <svg className="delete-wrapper">
             <circle className="edge-delete"
               cx={deleteX} cy={deleteY} r={8}
-              onMouseDown={this.removeEdgeMouse}/>
+              onPointerDown={this.removeEdgePointer}/>
             <path className="delete-line" d={`M ${deleteX-5} ${deleteY-5} L` +
               `${deleteX+5} ${deleteY+5}`}/>
             <path className="delete-line" d={`M ${deleteX-5} ${deleteY+5} L` +
@@ -113,79 +116,87 @@ export default class Edge extends React.Component<IProps, IState>
     );
   }
 
-  private edgeMouseEnter = (e: React.MouseEvent<SVGElement>) =>
+  private edgePointerEnter = (e: React.PointerEvent<SVGElement>) =>
   {
     this.setState({hover: true});
   }
 
-  private edgeMouseLeave = (e: React.MouseEvent<SVGElement>) =>
+  private edgePointerLeave = (e: React.PointerEvent<SVGElement>) =>
   {
     this.setState({hover: false});
   }
 
-  private edgeMouseDown = (e: React.MouseEvent<SVGElement>) =>
+  private edgePointerDown = (e: React.PointerEvent<SVGElement>) =>
   {
     e.stopPropagation();
-    this.mouseStart = {x: e.pageX, y: e.pageY};
-    window.addEventListener('mouseup', this.edgeMouseUp);
-    window.addEventListener('mousemove', this.edgeMouseMove);
+    this.pointerStart = {x: e.pageX, y: e.pageY};
+    window.addEventListener('pointerup', this.edgePointerUp);
+    window.addEventListener('pointermove', this.edgePointerMove);
   }
 
-  private edgeMouseMove = (e: MouseEvent) =>
+  private edgePointerMove = (e: PointerEvent) =>
   {
-    // If mouse moved more than 5 pixels (to avoid unintentional moving)
+    // If pointer moved more than 5 pixels (to avoid unintentional moving)
     // disconnect edge from closest connector and start moving the connector
-    if (Math.abs(this.mouseStart.x - e.pageX) > 5 || Math.abs(
-      this.mouseStart.y - e.pageY) > 5)
+    if (Math.abs(this.pointerStart.x - e.pageX) > 5 || Math.abs(
+      this.pointerStart.y - e.pageY) > 5)
     {
-      window.removeEventListener('mousemove', this.edgeMouseMove);
-      window.removeEventListener('mouseup', this.edgeMouseUp);
+      window.removeEventListener('pointermove', this.edgePointerMove);
+      window.removeEventListener('pointerup', this.edgePointerUp);
+
       if (this.state.edgeSelected)
       {
         this.setState({edgeSelected: false});
       }
 
-      const mStart = vgUtils.windowToSVGPosition({x: this.mouseStart.x,
-        y: this.mouseStart.y}, this.props.graphRef);
+      const mStart = vgUtils.windowToSVGPosition({x: this.pointerStart.x,
+        y: this.pointerStart.y}, this.props.graphRef);
 
-      const srcMouseDistance = Math.hypot(this.edgeStart.x - mStart.x,
+      const srcPointerDistance = Math.hypot(this.edgeStart.x - mStart.x,
         this.edgeStart.y - mStart.y);
 
-      const destMouseDistance = Math.hypot(this.edgeStop.x - mStart.x,
+      const destPointerDistance = Math.hypot(this.edgeStop.x - mStart.x,
         this.edgeStop.y - mStart.y);
 
-      if (srcMouseDistance > destMouseDistance)
+      const position = {x: e.pageX, y: e.pageY};
+
+      if (srcPointerDistance < destPointerDistance)
       {
-        this.props.moveEdge(this.props.src, this.props.srcOutput, e, "output",
-          this.removeEdge);
+        const outputConnector =
+          this.props.src.getOutputConnector(this.props.srcOutput);
+
+        if (outputConnector)
+        {
+          this.props.moveEdgeFromOutput(this.props.src, outputConnector,
+            position);
+        }
       }
       else
       {
-        this.props.moveEdge(this.props.dest, this.props.destInput, e, "input",
-          this.removeEdge);
-      }
+        const inputConnector =
+          this.props.dest.getInputConnector(this.props.destInput);
 
+        if (inputConnector)
+        {
+          this.props.moveEdgeFromInput(this.props.dest, inputConnector,
+            position);
+        }
+      }
     }
   }
 
-  private edgeMouseUp = (e: MouseEvent) =>
+  private edgePointerUp = (e: PointerEvent) =>
   {
-    window.removeEventListener('mousemove', this.edgeMouseMove);
-    window.removeEventListener('mouseup', this.edgeMouseUp);
+    window.removeEventListener('pointermove', this.edgePointerMove);
+    window.removeEventListener('pointerup', this.edgePointerUp);
     this.setState({edgeSelected: !this.state.edgeSelected});
   }
 
-  private removeEdgeMouse = (e: React.MouseEvent<SVGCircleElement>) =>
+  private removeEdgePointer = (e: React.PointerEvent<SVGCircleElement>) =>
   {
     e.stopPropagation();
-    this.removeEdge();
-  }
-
-  private removeEdge = (success?: () => void) =>
-  {
-    this.setState({edgeSelected: false});
     this.props.removeEdge(this.props.src.id, this.props.srcOutput,
-      this.props.dest.id, this.props.destInput, success);
+      this.props.dest.id, this.props.destInput);
   }
 }
 

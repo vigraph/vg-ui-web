@@ -48,10 +48,11 @@ export default class Node extends React.Component<IProps, IState>
 
   private offsetX: number;
   private offsetY: number;
-  private mouseDown: {x: number, y: number};
-  private resizeMouseDown: {x: number, y: number};
+  private pointerDown: {x: number, y: number};
+  private resizePointerDown: {x: number, y: number};
   private titleFontSize: number;
   private updateStarted: boolean;
+  private lastPointerUp: number;
 
   constructor(props: IProps)
   {
@@ -69,10 +70,11 @@ export default class Node extends React.Component<IProps, IState>
 
     this.offsetX = 0;
     this.offsetY = 0;
-    this.mouseDown = {x: 0, y: 0};
-    this.resizeMouseDown = {x: 0, y: 0};
+    this.pointerDown = {x: 0, y: 0};
+    this.resizePointerDown = {x: 0, y: 0};
     this.titleFontSize = vgConfig.Graph.fontSize.nodeTitle;
     this.updateStarted = false;
+    this.lastPointerUp = 0;
   }
 
   public render()
@@ -91,8 +93,7 @@ export default class Node extends React.Component<IProps, IState>
         <rect x={padding} width={width} height={height}
           className={`node-border ${this.state.dragging ? "dragging" : ""} ` +
             `${this.state.resizing ? "resizing" : ""}`}
-          onMouseDown={this.handleMouseDown}
-          onDoubleClick={this.handleDoubleClick}
+          onPointerDown={this.handlePointerDown}
           onContextMenu={this.handleContextMenu}
         />
         {this.generateTitle()}
@@ -215,7 +216,7 @@ export default class Node extends React.Component<IProps, IState>
       return <svg id={"node-resize-wrapper"}
         x={this.state.w+this.props.padding-3} y={this.state.h-3}>
         <rect className={"node-resize-boundary"} x={-3} y={-3} width={15}
-          height={15} onMouseDown={this.handleResizeMouseDown}/>
+          height={15} onPointerDown={this.handleResizePointerDown}/>
         <rect className={"node-resize-icon"} x={0} y={0} width={6} height={6}/>
       </svg>
     }
@@ -246,22 +247,12 @@ export default class Node extends React.Component<IProps, IState>
     e.stopPropagation();
   }
 
-  private handleDoubleClick = (e: React.MouseEvent<SVGRectElement>) =>
-  {
-    this.setState({ dragging: false });
-    window.removeEventListener('mouseup', this.handleMouseUp);
-    window.removeEventListener('mousemove', this.handleMouseMove);
-    if (this.props.node.subGraph)
-    {
-      this.props.showNodeGraph(this.props.node.path);
-    }
-  }
-
-  private handleMouseDown = (e: React.MouseEvent<SVGRectElement>) =>
+  private handlePointerDown = (e: React.PointerEvent<SVGRectElement>) =>
   {
     e.stopPropagation();
-    window.addEventListener('mouseup', this.handleMouseUp);
-    window.addEventListener('mousemove', this.handleMouseMove);
+    e.preventDefault();
+    window.addEventListener('pointerup', this.handlePointerUp);
+    window.addEventListener('pointermove', this.handlePointerMove);
     this.setState({ dragging: true });
 
     this.props.updateTargetNode(this.props.node);
@@ -269,23 +260,23 @@ export default class Node extends React.Component<IProps, IState>
     const currentPosition = vgUtils.windowToSVGPosition(
       {x: e.pageX, y: e.pageY}, this.props.graphRef);
 
-    this.mouseDown = {x: this.state.x, y: this.state.y};
+    this.pointerDown = {x: this.state.x, y: this.state.y};
 
     this.offsetX = currentPosition.x - this.state.x;
     this.offsetY = currentPosition.y - this.state.y;
   }
 
-  private handleMouseUp = (e: MouseEvent) =>
+  private handlePointerUp = (e: PointerEvent) =>
   {
     if (this.state.dragging)
     {
       this.setState({ dragging: false });
     }
 
-    window.removeEventListener('mouseup', this.handleMouseUp);
-    window.removeEventListener('mousemove', this.handleMouseMove);
+    window.removeEventListener('pointerup', this.handlePointerUp);
+    window.removeEventListener('pointermove', this.handlePointerMove);
 
-    if (this.mouseDown.x !== this.state.x || this.mouseDown.y !==
+    if (this.pointerDown.x !== this.state.x || this.pointerDown.y !==
       this.state.y)
     {
       // Update graph layout data
@@ -299,9 +290,21 @@ export default class Node extends React.Component<IProps, IState>
     }
 
     this.updateStarted = false;
+
+    const date = new Date();
+
+    if (date.getTime() - this.lastPointerUp < 300)
+    {
+      if (this.props.node.subGraph)
+      {
+        this.props.showNodeGraph(this.props.node.path);
+      }
+    }
+
+    this.lastPointerUp = date.getTime();
   }
 
-  private handleMouseMove = (e: MouseEvent) =>
+  private handlePointerMove = (e: PointerEvent) =>
   {
     const currentPosition = vgUtils.windowToSVGPosition(
       {x: e.pageX, y: e.pageY}, this.props.graphRef);
@@ -327,19 +330,19 @@ export default class Node extends React.Component<IProps, IState>
     }
   }
 
-  private handleResizeMouseDown = (e: React.MouseEvent<SVGElement>) =>
+  private handleResizePointerDown = (e: React.PointerEvent<SVGElement>) =>
   {
     e.stopPropagation();
 
     this.setState({resizing: true});
 
-    window.addEventListener('mouseup', this.handleResizeMouseUp);
-    window.addEventListener('mousemove', this.handleResizeMouseMove);
+    window.addEventListener('pointerup', this.handleResizePointerUp);
+    window.addEventListener('pointermove', this.handleResizePointerMove);
 
     const currentPosition = vgUtils.windowToSVGPosition(
       {x: e.pageX, y: e.pageY}, this.props.graphRef);
 
-    this.resizeMouseDown = {x: currentPosition.x, y: currentPosition.y};
+    this.resizePointerDown = {x: currentPosition.x, y: currentPosition.y};
 
     if (this.props.startUpdate)
     {
@@ -347,13 +350,13 @@ export default class Node extends React.Component<IProps, IState>
     }
   }
 
-  private handleResizeMouseMove = (e: MouseEvent) =>
+  private handleResizePointerMove = (e: PointerEvent) =>
   {
     const currentPosition = vgUtils.windowToSVGPosition(
       {x: e.pageX, y: e.pageY}, this.props.graphRef);
 
-    const diffX = currentPosition.x - this.resizeMouseDown.x;
-    const diffY = currentPosition.y - this.resizeMouseDown.y;
+    const diffX = currentPosition.x - this.resizePointerDown.x;
+    const diffY = currentPosition.y - this.resizePointerDown.y;
 
     const newState = {...this.state};
     newState.w += diffX;
@@ -376,17 +379,17 @@ export default class Node extends React.Component<IProps, IState>
       }
     }
 
-    this.resizeMouseDown = {x: currentPosition.x, y: currentPosition.y};
+    this.resizePointerDown = {x: currentPosition.x, y: currentPosition.y};
   }
 
-  private handleResizeMouseUp = (e: MouseEvent) =>
+  private handleResizePointerUp = (e: PointerEvent) =>
   {
     this.setState({resizing: false});
 
-    window.removeEventListener('mouseup', this.handleResizeMouseUp);
-    window.removeEventListener('mousemove', this.handleResizeMouseMove);
+    window.removeEventListener('pointerup', this.handleResizePointerUp);
+    window.removeEventListener('pointermove', this.handleResizePointerMove);
 
-    this.resizeMouseDown = {x: 0, y: 0};
+    this.resizePointerDown = {x: 0, y: 0};
 
     vgData.updateLayout(this.props.node.path, undefined, {w: this.state.w,
       h: this.state.h});

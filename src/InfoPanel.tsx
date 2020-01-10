@@ -56,7 +56,7 @@ export default class InfoPanel extends React.Component<IProps, IState>
     {
       return <div id="info-hide-icon" className="info-visible-icon">
         <svg id="info-hide-icon-svg" x={0} y={0} width={20} height={20}
-          onMouseUp={this.toggleShow}>
+          onPointerDown={this.toggleShow}>
           <path className="info-panel-icon show arrowhead"
             d="M 10,0 20,10 10,20 z"/>
           <rect className="info-panel-icon show arrowbody" x={0} y={7}
@@ -68,7 +68,7 @@ export default class InfoPanel extends React.Component<IProps, IState>
     {
       return <div id="info-show-icon" className="info-visible-icon">
         <svg id="info-show-icon-svg" x={0} y={0} width={20} height={20}
-          onMouseUp={this.toggleShow}>
+          onPointerDown={this.toggleShow}>
           <path className="info-panel-icon hide arrowhead"
             d="M 0,10 10,0 10,20 z"/>
           <rect className="info-panel-icon hide arrowbody" x={10} y={7}
@@ -90,7 +90,7 @@ export default class InfoPanel extends React.Component<IProps, IState>
         <svg className="delete-wrapper" height={20} width={20} x={0} y={0}>
         <circle className="node-delete"
           cx={deleteX} cy={deleteY} r={10}
-          onMouseDown={this.removeNode}/>
+          onPointerDown={this.removeNode}/>
         <path className="delete-line" d={`M ${deleteX-7} ${deleteY-7} L` +
           `${deleteX+7} ${deleteY+7}`}/>
         <path className="delete-line" d={`M ${deleteX-7} ${deleteY+7} L` +
@@ -223,7 +223,7 @@ export default class InfoPanel extends React.Component<IProps, IState>
     {
       return <input id={property.id} type="button" disabled={disabled}
         className={"value-button " + property.propType}
-        defaultValue={property.id} onMouseUp={this.buttonTrigger}/>
+        defaultValue={property.id} onPointerUp={this.buttonTrigger}/>
     }
     // Text box input for number, text and file types. Value checking and
     // validation done in onBlur
@@ -277,7 +277,7 @@ export default class InfoPanel extends React.Component<IProps, IState>
             })}
         </select>
         <svg id={property.id + "-delete"} className="curve-delete-icon"
-          width={20} height={20} onMouseDown={this.deletePointFromCurve}>
+          width={20} height={20} onPointerDown={this.deletePointFromCurve}>
           <rect className="delete-icon horz" x={0} y={8} width={20} height={4}
             transform="rotate(45 10 10)"/>
           <rect className="delete-icon vert" x={8} y={0} width={4} height={20}
@@ -291,7 +291,7 @@ export default class InfoPanel extends React.Component<IProps, IState>
           onBlur={this.curveTextBoxOnBlur}
           onKeyDown={this.textBoxKeyDown}/>
         <svg id={property.id + "-add"} className="curve-add-icon"
-          width={20} height={20} onMouseDown={this.addPointToCurve}>
+          width={20} height={20} onPointerDown={this.addPointToCurve}>
           <rect className="add-icon horz" x={0} y={8} width={20} height={4}/>
           <rect className="add-icon vert" x={8} y={0} width={4} height={20}/>
         </svg>
@@ -326,7 +326,7 @@ export default class InfoPanel extends React.Component<IProps, IState>
   }
 
   // Momentary button trigger
-  private buttonTrigger = (e: React.MouseEvent) =>
+  private buttonTrigger = (e: React.PointerEvent) =>
   {
     const button =
       document.getElementById(e.currentTarget.id) as HTMLInputElement;
@@ -362,6 +362,11 @@ export default class InfoPanel extends React.Component<IProps, IState>
           this.props.endUpdate();
         });
     }
+
+    // Scroll page back to 0,0 in case it was moved showing onscreen keyboard
+    window.scrollTo(0,0);
+    document.body.scrollTop = 0;
+    document.body.scrollLeft = 0;
   }
 
   // Pressing enter in a text box removes focus from that text box
@@ -428,6 +433,11 @@ export default class InfoPanel extends React.Component<IProps, IState>
         }
       }
     }
+
+    // Scroll page back to 0,0 in case it was moved showing onscreen keyboard
+    window.scrollTo(0,0);
+    document.body.scrollTop = 0;
+    document.body.scrollLeft = 0;
   }
 
   // Update property value on check box value change (true/false)
@@ -466,10 +476,15 @@ export default class InfoPanel extends React.Component<IProps, IState>
         textBox.value = newValue;
       }
     }
+
+    // Scroll page back to 0,0 in case it was moved showing onscreen keyboard
+    window.scrollTo(0,0);
+    document.body.scrollTop = 0;
+    document.body.scrollLeft = 0;
   }
 
   // Validate curve point, add to curve and update
-  private addPointToCurve = (e: React.MouseEvent<SVGElement>) =>
+  private addPointToCurve = (e: React.PointerEvent<SVGElement>) =>
   {
     const propID = e.currentTarget.id.substring(0, e.currentTarget.id.length-4);
 
@@ -516,7 +531,7 @@ export default class InfoPanel extends React.Component<IProps, IState>
   }
 
   // Delete selected point from curve
-  private deletePointFromCurve = (e: React.MouseEvent<SVGElement>) =>
+  private deletePointFromCurve = (e: React.PointerEvent<SVGElement>) =>
   {
     const propID = e.currentTarget.id.substring(0, e.currentTarget.id.length-7);
 

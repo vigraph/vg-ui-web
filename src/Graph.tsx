@@ -35,11 +35,13 @@ interface IState
 export default class Graph extends React.Component<IProps, IState>
 {
   private graph: Model.Graph;
-  private mouseClick: {x: number, y: number};
+  private pointerClick: {x: number, y: number, t: number};
   private idCount: number;
   private graphRef: SVGSVGElement | null;
   private firstLoad: boolean;
   private csize: number;
+  private pointerCache: any[];
+  private pointerDiff: number;
 
   constructor(props: IProps)
   {
@@ -72,22 +74,25 @@ export default class Graph extends React.Component<IProps, IState>
       view: vgConfig.Graph.viewDefault
     };
 
-    this.mouseClick = {x: 0, y: 0};
+    this.pointerClick = {x: 0, y: 0, t: 0};
     this.idCount = 0;
     this.graphRef = null;
     this.firstLoad = true;
     this.csize = vgConfig.Graph.connector.size;
+    this.pointerCache = [];
+    this.pointerDiff = 0;
   }
 
   public render()
   {
     const view = this.state.view;
+    const pointerPos = {x: this.pointerClick.x, y: this.pointerClick.y};
 
     return (
       <div className="wrapper">
         {this.state.showMenu !== "hidden" && <Menu
           position={(this.state.showMenu === "pinned" ?
-            vgConfig.Graph.menu.pinnedPosition : this.mouseClick)}
+            vgConfig.Graph.menu.pinnedPosition : pointerPos)}
           menuClosed={this.menuClosed} pinMenu={this.pinMenu}
           menuItemSelected={this.menuItemSelected}/>}
 
@@ -98,8 +103,8 @@ export default class Graph extends React.Component<IProps, IState>
 
         <svg id="graph"
           viewBox={`${view.x} ${view.y} ${view.w} ${view.h}`}
-          ref={(ref) => { this.graphRef = ref; }}
-          onMouseDown={this.handleGraphMouseDown}
+          ref={(ref) => { this.graphRef = ref; }} touch-action="none"
+          onPointerDown={this.handleGraphPointerDown}
           onContextMenu={this.handleContextMenu}
           onWheel={this.handleMouseWheel}>
           <svg id="edges">
@@ -107,8 +112,8 @@ export default class Graph extends React.Component<IProps, IState>
               this.graph.getNodes().map((node: Model.Node, i) =>
               {
                 return node.getForwardEdges().map(
-                  (edge: {outputId: string, dest: Model.Node, destInput: string},
-                    index) =>
+                  (edge: {outputId: string, dest: Model.Node,
+                    destInput: string}, index) =>
                   {
                     return edge.dest.id !== "dummynode" ?
                       this.createEdgeComponent(node, edge,
@@ -192,7 +197,8 @@ export default class Graph extends React.Component<IProps, IState>
       return <Edge key={key} src={node} srcOutput={edge.outputId}
         dest={edge.dest} destInput={edge.destInput} offset={this.csize}
         graphRef={this.graphRef} removeEdge={this.removeEdge}
-        moveEdge={this.moveEdge}/>
+        moveEdgeFromInput={this.moveEdgeFromInput}
+        moveEdgeFromOutput={this.moveEdgeFromOutput}/>
     }
   }
 
@@ -442,7 +448,7 @@ export default class Graph extends React.Component<IProps, IState>
   }
 
   //============================================================================
-  // Mouse click/move functions
+  // Mouse/Pointer click/move functions
   //============================================================================
 
   // Do nothing - prevents browser context menu from showing
@@ -451,14 +457,13 @@ export default class Graph extends React.Component<IProps, IState>
     e.preventDefault();
   }
 
-  // Mouse wheel to zoom in/out
-  private handleMouseWheel = (e: React.WheelEvent<SVGSVGElement>) =>
+  // Zoom view around given centre point
+  private zoomView = (zoomCentre: {x: number, y: number}, direction: number) =>
   {
     const zoomFactor = vgConfig.Graph.zoomFactor;
-    const scale = -1 * Math.sign(e.deltaY) > 0 ? 1 / zoomFactor : zoomFactor;
+    const scale = -1 * Math.sign(direction) > 0 ? 1 / zoomFactor : zoomFactor;
 
-    const startPoint = vgUtils.windowToSVGPosition({x: e.pageX, y: e.pageY},
-      this.graphRef);
+    const startPoint = vgUtils.windowToSVGPosition(zoomCentre, this.graphRef);
 
     const newView = Object.assign({}, this.state.view);
 
@@ -470,10 +475,29 @@ export default class Graph extends React.Component<IProps, IState>
     this.setState({view: newView});
   }
 
-  private handleGraphMouseDown = (e: React.MouseEvent<SVGSVGElement>) =>
+  // Mouse wheel to zoom in/out
+  private handleMouseWheel = (e: React.WheelEvent<SVGSVGElement>) =>
+  {
+    this.zoomView({x: e.pageX, y: e.pageY}, e.deltaY);
+  }
+
+  private handleGraphPointerDown = (e: React.PointerEvent<SVGSVGElement>) =>
   {
     e.preventDefault();
-    this.mouseClick = {x: e.pageX, y: e.pageY};
+
+    e.persist();
+
+    this.pointerCache.push(e);
+
+    // Store pointer down time to track long press, unless multiple pointer
+    // points down (touch pinch to zoom)
+    const date = new Date();
+    this.pointerClick = {x: e.pageX, y: e.pageY, t: date.getTime()};
+
+    if (this.pointerCache.length > 1)
+    {
+      this.pointerClick.t = 0;
+    }
 
     if (e.button === 2 && this.state.showMenu === "hidden")
     {
@@ -486,36 +510,93 @@ export default class Graph extends React.Component<IProps, IState>
         this.setState({showMenu: "hidden"});
       }
 
-      window.addEventListener('mousemove', this.handleGraphDrag);
-      window.addEventListener('mouseup', this.handleGraphDragRelease);
+      window.addEventListener('pointermove', this.handleGraphDrag);
+      window.addEventListener('pointerup', this.handleGraphDragRelease);
     }
   }
 
   // Move/scroll graph by dragging background
-  private handleGraphDrag = (e: MouseEvent) =>
+  private handleGraphDrag = (e: PointerEvent) =>
   {
-    const currentPosition = vgUtils.windowToSVGPosition(
-      {x: e.pageX, y: e.pageY}, this.graphRef);
+    // Find this event in the cache and update its record with this event
+    for (var i = 0; i < this.pointerCache.length; i++)
+    {
+      if (e.pointerId === this.pointerCache[i].pointerId)
+      {
+        this.pointerCache[i] = e;
+        break;
+      }
+    }
 
-    const svgMouseClick = vgUtils.windowToSVGPosition(
-      {x: this.mouseClick.x, y: this.mouseClick.y}, this.graphRef);
+    // Multiple points - touch pinch zoom instead of graph drag
+    if (this.pointerCache.length > 1)
+    {
+      const x1 = this.pointerCache[1].clientX;
+      const x2 = this.pointerCache[0].clientX;
+      const y1 = this.pointerCache[1].clientY;
+      const y2 = this.pointerCache[0].clientY;
 
-    const diffX = Math.round(currentPosition.x - svgMouseClick.x);
-    const diffY = Math.round(currentPosition.y - svgMouseClick.y);
+      const curDiff = Math.hypot(x1 - x2, y1 - y2);
+      const cX = (x1 + x2) / 2;
+      const cY = (y1 + y2) / 2;
 
-    const newView = Object.assign({}, this.state.view);
-    newView.x = newView.x - diffX;
-    newView.y = newView.y - diffY;
+      const moveDiff = this.pointerDiff - curDiff;
 
-    this.mouseClick = {x: e.pageX, y: e.pageY};
+      if (this.pointerDiff > 0)
+      {
+        this.zoomView({x: cX, y: cY}, moveDiff);
+      }
 
-    this.setState({view: newView});
+      this.pointerDiff = curDiff;
+    }
+    else
+    {
+      const currentPosition = vgUtils.windowToSVGPosition(
+        {x: e.pageX, y: e.pageY}, this.graphRef);
+
+      const svgPointerClick = vgUtils.windowToSVGPosition(
+        {x: this.pointerClick.x, y: this.pointerClick.y}, this.graphRef);
+
+      const diffX = Math.round(currentPosition.x - svgPointerClick.x);
+      const diffY = Math.round(currentPosition.y - svgPointerClick.y);
+
+      const newView = Object.assign({}, this.state.view);
+      newView.x = newView.x - diffX;
+      newView.y = newView.y - diffY;
+
+      this.pointerClick = {...this.pointerClick, ...{x: e.pageX, y: e.pageY}};
+
+      this.setState({view: newView});
+    }
   }
 
-  private handleGraphDragRelease = (e: MouseEvent) =>
+  private handleGraphDragRelease = (e: PointerEvent) =>
   {
-    window.removeEventListener('mousemove', this.handleGraphDrag);
-    window.removeEventListener('mouseup', this.handleGraphDragRelease);
+    const date = new Date();
+    const pointerDuration = date.getTime() - this.pointerClick.t;
+
+    // Show menu on single long press
+    if (this.pointerClick.t && pointerDuration > 1500 &&
+      this.state.showMenu === "hidden")
+    {
+      this.setState({showMenu: "show"});
+    }
+
+    // Remove pointer event from cache
+    for (let i = 0; i < this.pointerCache.length; i++)
+    {
+      if (e.pointerId === this.pointerCache[i].pointerId)
+      {
+        this.pointerCache.splice(i, 1);
+      }
+    }
+
+    if (this.pointerCache.length < 1)
+    {
+      this.pointerDiff = 0;
+      window.removeEventListener('pointermove', this.handleGraphDrag);
+      window.removeEventListener('pointerup', this.handleGraphDragRelease);
+    }
   }
 
   //============================================================================
@@ -585,13 +666,13 @@ export default class Graph extends React.Component<IProps, IState>
       {
         vgData.getNode(id, this.graph.getGraphID(), (node: any) =>
         {
-          const svgMouseClick = vgUtils.windowToSVGPosition(
-            (position?position:this.mouseClick), this.graphRef);
-          node.x = svgMouseClick.x;
-          node.y = svgMouseClick.y;
+          const svgPointerClick = vgUtils.windowToSVGPosition(
+            (position?position:this.pointerClick), this.graphRef);
+          node.x = svgPointerClick.x;
+          node.y = svgPointerClick.y;
 
           vgData.updateLayout(node.path,
-            {x: svgMouseClick.x, y: svgMouseClick.y});
+            {x: svgPointerClick.x, y: svgPointerClick.y});
 
           this.graph.addNodeFromJSON(node);
           this.forceUpdate();
@@ -812,8 +893,8 @@ export default class Graph extends React.Component<IProps, IState>
     {
       // Only add edge if there are no other connections between the same
       // connectors on the same nodes
-      if (!src.getForwardEdges().some((value:{outputId: string, dest: Model.Node,
-        destInput: string}) =>
+      if (!src.getForwardEdges().some((value:{outputId: string,
+        dest: Model.Node, destInput: string}) =>
         {
           if (value.outputId === srcOutput && value.dest.id === destID &&
             value.destInput === destInput)
@@ -858,7 +939,8 @@ export default class Graph extends React.Component<IProps, IState>
     if (src && dest && output)
     {
       const edges = src.edgesFromConnector(output);
-      const newEdges = edges.filter((value: {dest: string, destInput: string}) =>
+      const newEdges = edges.filter((value: {dest: string,
+        destInput: string}) =>
         {
           return !(destID === value.dest && destInput === value.destInput);
         });
@@ -871,24 +953,8 @@ export default class Graph extends React.Component<IProps, IState>
     }
   }
 
-  private moveEdge = (node: Model.Node, connectorId: string,
-    e: MouseEvent, direction: string, selfRemove: (success: ()=>void) => void) =>
-  {
-    const connector = (direction === "output") ?
-      node.getOutputConnector(connectorId) :
-      node.getInputConnector(connectorId);
-
-    if (connector)
-    {
-      selfRemove(() =>
-        {
-          this.newMovingConnectorEdge(node, connector, e);
-        });
-    }
-  }
-
   private moveEdgeFromInput = (inNode: Model.Node, inConnector: Model.Connector,
-    e: React.MouseEvent) =>
+    position: {x: number, y: number}) =>
   {
     const reverse = inNode.getReverseEdges();
     let srcNode;
@@ -908,20 +974,51 @@ export default class Graph extends React.Component<IProps, IState>
     {
       const sNode: Model.Node = srcNode;
       const sConnector: Model.Connector = srcConnector;
-      e.persist();
       this.removeEdge(sNode.id, sConnector.id, inNode.id, inConnector.id,
         () =>
         {
-          this.newMovingConnectorEdge(sNode, sConnector, e);
+          this.newMovingConnectorEdge(sNode, sConnector, position);
         });
     }
   }
 
-  private newMovingConnectorEdge = (node: Model.Node, connector: Model.Connector,
-    e: React.MouseEvent | MouseEvent) =>
+  private moveEdgeFromOutput = (outNode: Model.Node,
+    outConnector: Model.Connector, position: {x: number, y: number}) =>
   {
-    window.addEventListener('mouseup', this.dropConnectorEdge);
-    window.addEventListener('mousemove', this.moveConnectorEdge);
+    const forward = outNode.getForwardEdges();
+    let destNode;
+    let destConnector;
+
+    for (const edge of forward)
+    {
+      if (edge.outputId === outConnector.id)
+      {
+        destNode = edge.dest;
+        destConnector = destNode.getInputConnector(edge.destInput);
+        break;
+      }
+    }
+
+    if (destNode && destConnector)
+    {
+      const dNode: Model.Node = destNode;
+      const dConnector: Model.Connector = destConnector
+      this.removeEdge(outNode.id, outConnector.id, dNode.id, dConnector.id,
+        () =>
+        {
+          this.newMovingConnectorEdge(dNode, dConnector, position);
+        });
+    }
+  }
+
+  private newMovingConnectorEdge = (node: Model.Node,
+    connector: Model.Connector, position: {x: number, y: number}) =>
+  {
+    if (this.graphRef)
+    {
+      this.graphRef.addEventListener('pointermove', this.moveConnectorEdge);
+      this.graphRef.addEventListener('pointerup', this.dropConnectorEdge);
+    }
 
     this.graph.beginTransaction();
 
@@ -932,7 +1029,7 @@ export default class Graph extends React.Component<IProps, IState>
     dummyNode.size = {w: 0, h: 0};
 
     const currentPosition = vgUtils.windowToSVGPosition(
-      {x: e.pageX, y: e.pageY}, this.graphRef);
+      {x: position.x, y: position.y}, this.graphRef);
 
     dummyNode.position = {x: currentPosition.x - (2 * this.csize),
       y: currentPosition.y}
@@ -958,10 +1055,13 @@ export default class Graph extends React.Component<IProps, IState>
     this.setState({ tempConnectors: {dummy: dummyConnector, real: connector}});
   }
 
-  private dropConnectorEdge = (e: MouseEvent) =>
+  private dropConnectorEdge = (e: PointerEvent) =>
   {
-    window.removeEventListener('mouseup', this.dropConnectorEdge);
-    window.removeEventListener('mousemove', this.moveConnectorEdge);
+    if (this.graphRef)
+    {
+      window.removeEventListener('pointerup', this.dropConnectorEdge);
+      window.removeEventListener('pointermove', this.moveConnectorEdge);
+    }
 
     if (this.state.tempNodes && this.state.tempConnectors)
     {
@@ -996,8 +1096,16 @@ export default class Graph extends React.Component<IProps, IState>
         rconnector.type === "any") &&
         tconnector.connector.direction === dconnector.direction)
       {
-        this.addEdge(rnode.id, rconnector.id, tconnector.parent.id,
-          tconnector.connector.id);
+        if (dconnector.direction === "input")
+        {
+          this.addEdge(rnode.id, rconnector.id, tconnector.parent.id,
+            tconnector.connector.id);
+        }
+        else
+        {
+          this.addEdge(tconnector.parent.id, tconnector.connector.id, rnode.id,
+            rconnector.id);
+        }
       }
     }
 
@@ -1008,9 +1116,10 @@ export default class Graph extends React.Component<IProps, IState>
     this.forceUpdate();
   }
 
-  private moveConnectorEdge = (e: MouseEvent) =>
+  private moveConnectorEdge = (e: PointerEvent) =>
   {
-    // Move temp dummy node positioned so the connector is under the mouse
+    e.preventDefault();
+    // Move temp dummy node positioned so the connector is under the 'cursor'
     if (this.state.tempNodes)
     {
       const dnode = this.state.tempNodes.dummy;

@@ -207,8 +207,8 @@ export default class ColourPicker extends React.Component<IProps, IState>
         <rect id={name} className={"picker-background " + name}
         width={settings.barLength} height={settings.barThickness}
         fill={"url(#"+name+"-gradient-"+this.gradKey+")"}
-        onMouseDown={this.handleMouseDown}
-        onMouseMove={this.handleMouseMove} />
+        onPointerDown={this.handlePointerDown}
+        onPointerMove={this.handlePointerMove} />
 
         {this.createIndicators()}
 
@@ -243,7 +243,7 @@ export default class ColourPicker extends React.Component<IProps, IState>
     </svg>
   }
 
-  private handleMouseDown = (e: React.MouseEvent<SVGElement>) =>
+  private handlePointerDown = (e: React.PointerEvent<SVGElement>) =>
   {
     e.stopPropagation();
 
@@ -252,7 +252,7 @@ export default class ColourPicker extends React.Component<IProps, IState>
       return;
     }
 
-    window.addEventListener('mouseup', this.handleMouseUp);
+    window.addEventListener('pointerup', this.handlePointerUp);
 
     this.setState({picking: true});
 
@@ -264,7 +264,7 @@ export default class ColourPicker extends React.Component<IProps, IState>
     this.updateValue(e);
   }
 
-  private handleMouseMove = (e: React.MouseEvent<SVGElement>) =>
+  private handlePointerMove = (e: React.PointerEvent<SVGElement>) =>
   {
     if (this.state.picking)
     {
@@ -272,7 +272,7 @@ export default class ColourPicker extends React.Component<IProps, IState>
     }
   }
 
-  private updateValue = (e: React.MouseEvent<SVGElement>) =>
+  private updateValue = (e: React.PointerEvent<SVGElement>) =>
   {
     const svgPosition = vgUtils.windowToSVGPosition({x: e.pageX, y: e.pageY},
         this.pickerRef);
@@ -289,9 +289,9 @@ export default class ColourPicker extends React.Component<IProps, IState>
     }
   }
 
-  private handleMouseUp = (e: MouseEvent) =>
+  private handlePointerUp = (e: PointerEvent) =>
   {
-    window.removeEventListener('mouseup', this.handleMouseUp);
+    window.removeEventListener('pointerup', this.handlePointerUp);
 
     this.setState({picking: false});
 

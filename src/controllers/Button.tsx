@@ -35,6 +35,8 @@ export default class Button extends React.Component<IProps, IState>
 
   private settings: vgTypes.IButtonSettings;
 
+  private latchPrevious: boolean;
+
   constructor(props: IProps)
   {
     super(props);
@@ -45,6 +47,8 @@ export default class Button extends React.Component<IProps, IState>
 
     this.settings = buttonSettings[this.props.settingsType] ?
       buttonSettings[this.props.settingsType] : buttonSettings.default;
+
+    this.latchPrevious = this.property.value;
 
     this.state =
     {
@@ -60,7 +64,7 @@ export default class Button extends React.Component<IProps, IState>
     return(
         <svg id="button" className={this.props.settingsType}
           height={settings.height} width={settings.width}
-          onMouseDown={this.handleMouseDown}>
+          onPointerDown={this.handlePointerDown}>
 
           <rect className="button-outer"
             width={settings.width} height={settings.height}
@@ -77,10 +81,11 @@ export default class Button extends React.Component<IProps, IState>
     );
   }
 
-  private handleMouseDown = (e: React.MouseEvent<SVGElement>) =>
+  // Set value to true on button down
+  private handlePointerDown = (e: React.PointerEvent<SVGElement>) =>
   {
     e.stopPropagation();
-    window.addEventListener('mouseup', this.handleMouseUp);
+    window.addEventListener('pointerup', this.handlePointerUp);
 
     this.setState({pressing: true});
 
@@ -89,34 +94,46 @@ export default class Button extends React.Component<IProps, IState>
       this.props.startUpdate();
     }
 
-    if (!this.settings.latch)
+    const newValue = true;
+
+    if (!this.state.currentValue)
     {
-      this.toggleValue();
+      this.setState({currentValue: newValue});
+
+      if (this.props.update)
+      {
+        this.props.update(newValue);
+      }
     }
   }
 
-  private handleMouseUp = (e: MouseEvent) =>
+  // Set value to false on button down unless latching (toggle)
+  private handlePointerUp = (e: PointerEvent) =>
   {
-    window.removeEventListener('mouseup', this.handleMouseUp);
+    window.removeEventListener('pointerup', this.handlePointerUp);
+    this.setState({pressing: false});
 
-    this.toggleValue();
+    let newValue = false;
+
+    if (this.settings.latch)
+    {
+      this.latchPrevious = !this.latchPrevious;
+      newValue = this.latchPrevious;
+    }
+
+    if (this.state.currentValue !== newValue)
+    {
+      this.setState({currentValue: newValue});
+
+      if (this.props.update)
+      {
+        this.props.update(newValue);
+      }
+    }
 
     if (this.props.endUpdate)
     {
       this.props.endUpdate();
-    }
-  }
-
-  private toggleValue = () =>
-  {
-    this.setState({pressing: false});
-
-    const newValue = !this.state.currentValue;
-    this.setState({currentValue: newValue});
-
-    if (this.props.update)
-    {
-      this.props.update(newValue);
     }
   }
 }

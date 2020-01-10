@@ -80,8 +80,8 @@ export default class Selector extends React.Component<IProps, IState>
           {this.choices.map((value: any, index: number) =>
             {
               return <svg id={value} key={index}
-                  onMouseDown={this.handleMouseDown}
-                  onMouseEnter={this.handleMouseEnter}>
+                  onPointerDown={this.handlePointerDown}
+                  onPointerEnter={this.handlePointerEnter}>
                 <rect className={`selector-position ${value.toString()}
                   ${value === this.state.currentValue ? "selected" : ""}`}
                   width={positionSize} height={settings.thickness}
@@ -111,10 +111,10 @@ export default class Selector extends React.Component<IProps, IState>
     );
   }
 
-  private handleMouseDown = (e: React.MouseEvent<SVGElement>) =>
+  private handlePointerDown = (e: React.PointerEvent<SVGElement>) =>
   {
     e.stopPropagation();
-    window.addEventListener('mouseup', this.handleMouseUp);
+    window.addEventListener('pointerup', this.handlePointerUp);
 
     this.setState({selecting: true});
 
@@ -126,7 +126,7 @@ export default class Selector extends React.Component<IProps, IState>
     this.selectValue(e.currentTarget.id);
   }
 
-  private handleMouseEnter = (e: React.MouseEvent<SVGElement>) =>
+  private handlePointerEnter = (e: React.PointerEvent<SVGElement>) =>
   {
     if (this.state.selecting)
     {
@@ -146,9 +146,9 @@ export default class Selector extends React.Component<IProps, IState>
     }
   }
 
-  private handleMouseUp = (e: MouseEvent) =>
+  private handlePointerUp = (e: PointerEvent) =>
   {
-    window.removeEventListener('mouseup', this.handleMouseUp);
+    window.removeEventListener('pointerup', this.handlePointerUp);
 
     this.setState({selecting: false});
 
