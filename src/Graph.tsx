@@ -484,10 +484,7 @@ export default class Graph extends React.Component<IProps, IState>
   private handleGraphPointerDown = (e: React.PointerEvent<SVGSVGElement>) =>
   {
     e.preventDefault();
-
     e.persist();
-
-    this.pointerCache.push(e);
 
     // Store pointer down time to track long press, unless multiple pointer
     // points down (touch pinch to zoom)
@@ -509,6 +506,8 @@ export default class Graph extends React.Component<IProps, IState>
       {
         this.setState({showMenu: "hidden"});
       }
+
+      this.pointerCache.push(e);
 
       window.addEventListener('pointermove', this.handleGraphDrag);
       window.addEventListener('pointerup', this.handleGraphDragRelease);

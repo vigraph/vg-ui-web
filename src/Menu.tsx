@@ -302,6 +302,7 @@ export default class Menu extends React.Component<IProps, IState>
 
   private handleChildPointerDown = (e: React.PointerEvent<HTMLDivElement>) =>
   {
+    e.stopPropagation();
     const target = e.currentTarget.id;
     if (!this.state.pinned)
     {
