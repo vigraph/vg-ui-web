@@ -24,7 +24,7 @@ class Utils
     const date = new Date();
 
     const link = document.createElement('a');
-    link.download = "graph-" + date.toISOString() + ".txt";
+    link.download = "graph-" + date.toISOString() + ".json";
     link.href = "data:application/octet-stream," + text;
     document.body.appendChild(link);
     link.click();

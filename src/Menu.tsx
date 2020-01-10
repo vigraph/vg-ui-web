@@ -74,12 +74,13 @@ export default class Menu extends React.Component<IProps, IState>
 
     return <div id="menu" className="menu"
       onContextMenu={this.handleMenuContextMenu}>
-      <div id="pin-button" className={this.state.pinned?"pinned":""}
-        style={{left: position.x-10, top: position.y}}
-        onPointerDown={this.togglePin} />
       <div className={"menu-parent-wrapper"}
       style={{left: position.x, top: position.y}}
       ref={(ref) => { this.menuRef = ref; }}>
+        <svg id="pin-button" className={this.state.pinned?"pinned":""}
+        onPointerDown={this.togglePin}>
+          <circle cx="7" cy="7" r="5"/>
+        </svg>
       {
         this.menuData.map((value: {id: string, children: Array<string[]>},
           index: number) =>
@@ -157,7 +158,7 @@ export default class Menu extends React.Component<IProps, IState>
       const newPosition = (this.state.pinned ? {...this.props.position} :
       {...this.state.position});
 
-      newPosition.y += this.menuRef.offsetHeight;
+      newPosition.y += this.menuRef.offsetHeight + 10;
 
       const menuBoundX = newPosition.x + this.subMenuRef.offsetWidth;
       const menuBoundY = newPosition.y + this.subMenuRef.offsetHeight;
@@ -225,7 +226,7 @@ export default class Menu extends React.Component<IProps, IState>
                       onPointerEnter={this.handlePointerEnter}
                       onPointerLeave={this.handlePointerLeave}>
                       {
-                        Icon ? <Icon /> : value
+                        Icon ? <Icon /> : <span>{ value }</span>
                       }
                       </div>
                   })
@@ -367,7 +368,8 @@ export default class Menu extends React.Component<IProps, IState>
   }
 
   // Toggle pinning menu to set position (handled by Graph)
-  private togglePin = (e: React.PointerEvent<HTMLDivElement>) =>
+
+  private togglePin = (e: React.MouseEvent<SVGSVGElement>) =>
   {
     e.stopPropagation();
     window.removeEventListener("pointerdown", this.handleWindowPointerDown);

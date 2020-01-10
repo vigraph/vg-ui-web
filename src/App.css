@@ -1,3 +1,48 @@
+/* Colour scheme settings */
+/* Default */
+:root
+{
+  --col-background: black;
+  --col-text: white;
+  --col-node-border: #888;
+  --col-node-fill: #888;
+  --col-edge: white;
+  --col-label: #ccc;
+  --col-knob-bg: #444;
+  --col-knob-overlay: black;
+  --col-info-bg: #222;
+  --col-info-border: #888;
+  --col-label-border: #ccc;
+  --col-label-fill: #111;
+  --col-menu-border: #888;
+  --col-menu-border-highlight: white;
+  --col-menu-fill: #222;
+  --col-menu-item-fill: black;
+  --col-menu-item-text: #4ecac2;
+  --col-pin-fill: black;
+  --col-pin-fill-pinned: white;
+}
+
+/* Light theme */
+:root.theme-light
+{
+  --col-background: white;
+  --col-text: black;
+  --col-edge: black;
+  --col-label: #444;
+  --col-knob-bg: #ccc;
+  --col-knob-overlay: white;
+  --col-info-bg: #eee;
+  --col-label-border: #111;
+  --col-label-fill: #ccc;
+  --col-menu-border-highlight: #c44;
+  --col-menu-fill: #eee;
+  --col-menu-item-fill: white;
+  --col-menu-item-text: #206060;
+  --col-pin-fill: white;
+  --col-pin-fill-pinned: black;
+}
+
 #container
 {
   width: 100%;
@@ -13,53 +58,26 @@
 
 #buttons .app-button
 {
+  display: inline-block;
   margin: 2px;
-}
-
-#buttons .app-button.history
-{
-  width: 28px;
-  height: 27px;
-  float: left;
-}
-
-#buttons .app-button.window
-{
-  width: 27px;
-  height: 27px;
-  float: left;
+  width: 40px;
+  height: 40px;
 }
 
 #buttons .app-button.back
 {
-  width: 20px;
-  height: 20px;
   float: right;
-}
-
-#buttons .app-button.save,
-#buttons .app-button.load
-{
-  width: 28px;
-  height: 28px;
-  float: left;
 }
 
 #buttons .fileLoadInput
 {
-  position: absolute;
-  opacity: 0;
-}
-
-#buttons .icon
-{
-  fill: white;
+  display: none;
 }
 
 body::-webkit-scrollbar
 {
   width: 12px;
-  background-color: black;
+  background-color: var(--col-background);
 }
 body::-webkit-scrollbar-thumb
 {
@@ -68,5 +86,5 @@ body::-webkit-scrollbar-thumb
 
 body::-webkit-scrollbar-corner
 {
-  background-color: black;
+  background-color: var(--col-background);
 }

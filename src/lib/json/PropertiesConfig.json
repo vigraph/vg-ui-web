@@ -1415,5 +1415,107 @@
     "properties":
     {
     }
+  },
+  "maths/add":
+  {
+    "width": 70,
+    "height": 70,
+    "properties":
+    {
+      "offset":
+      {
+        "controlType": "knob/log",
+        "rangeMin": 0.1,
+        "rangeMax": 1000,
+        "increment": 0.1,
+        "x": 30,
+        "y": 30
+      }
+    }
+  },
+  "maths/subtract":
+  {
+    "width": 70,
+    "height": 70,
+    "properties":
+    {
+      "offset":
+      {
+        "controlType": "knob/log",
+        "rangeMin": 0.1,
+        "rangeMax": 1000,
+        "increment": 0.1,
+        "x": 30,
+        "y": 30
+      }
+    }
+  },
+  "maths/multiply":
+  {
+    "width": 70,
+    "height": 70,
+    "properties":
+    {
+      "factor":
+      {
+        "controlType": "knob/log",
+        "rangeMin": 0.001,
+        "rangeMax": 1000,
+        "increment": 0.001,
+        "x": 30,
+        "y": 30
+      }
+    }
+  },
+  "maths/divide":
+  {
+    "width": 70,
+    "height": 70,
+    "properties":
+    {
+      "factor":
+      {
+        "controlType": "knob/log",
+        "rangeMin": 0.1,
+        "rangeMax": 1000,
+        "increment": 0.1,
+        "x": 30,
+        "y": 30
+      }
+    }
+  },
+  "maths/mod":
+  {
+    "width": 70,
+    "height": 70,
+    "properties":
+    {
+      "modulus":
+      {
+        "controlType": "knob/log",
+        "rangeMin": 2,
+        "rangeMax": 10000,
+        "increment": 1,
+        "x": 30,
+        "y": 30
+      }
+    }
+  },
+  "maths/power":
+  {
+    "width": 70,
+    "height": 70,
+    "properties":
+    {
+      "exponent":
+      {
+        "controlType": "knob/default",
+        "rangeMin": 0.1,
+        "rangeMax": 20,
+        "increment": 0.1,
+        "x": 30,
+        "y": 30
+      }
+    }
   }
 }

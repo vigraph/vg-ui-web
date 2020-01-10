@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   height="40"
+   width="40"
+   version="1.1"
+   viewBox="0 0 10.583333 10.583334"
+   id="svg9404"
+   sodipodi:docname="redo.svg"
+   inkscape:version="0.92.1 r15371">
+  <metadata
+     id="metadata9410">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs9408" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1920"
+     inkscape:window-height="995"
+     id="namedview9406"
+     showgrid="false"
+     inkscape:zoom="5.9"
+     inkscape:cx="-13.220339"
+     inkscape:cy="20"
+     inkscape:window-x="0"
+     inkscape:window-y="24"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg9404" />
+  <path
+     inkscape:connector-curvature="0"
+     id="path9400"
+     d="m 4.9574,1.04 c 1.0774,0 2.0741,0.385 2.848,1.0226 L 8.9807,1.13011 10.0039,5.91881 5.3117,4.04151 6.422,3.16042 C 5.99768,2.89591 5.49876,2.74338 4.9575,2.74338 c -1.5446,0 -2.7785,1.2339 -2.7785,2.7785 1e-6,1.5446 1.2339,2.7785 2.7785,2.7785 0.87863,0 1.651,-0.40199 2.1611,-1.0325 a 0.85174,0.85174 0 1 1 1.324,1.0712 c -0.82087,1.0146 -2.0828,1.6646 -3.4851,1.6646 -2.4651,0 -4.4819,-2.0167 -4.4819,-4.4818 0,-2.4651 2.0167,-4.4819 4.4819,-4.4819 z"
+     style="color:#000000;font-variant-ligatures:normal;font-variant-position:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-alternates:normal;font-feature-settings:normal;text-indent:0;text-decoration:none;text-decoration-line:none;text-decoration-style:solid;text-decoration-color:#000000;text-transform:none;text-orientation:mixed;dominant-baseline:auto;white-space:normal;shape-padding:0;isolation:auto;mix-blend-mode:normal;solid-color:#000000;fill:#808080;color-rendering:auto;image-rendering:auto;shape-rendering:auto" />
+</svg>

@@ -43,32 +43,38 @@
   "menu":
   {
     "size": 10,
-    "hoverTime": 2,
+    "hoverTime": 0.5,
     "pinnedPosition":
     {
-      "x": 200,
+      "x": 300,
       "y": 0
     },
-    "parents": ["core", "laser", "midi", "audio", "vector", "colour",
-      "time-series", "sensor"],
+    "parents": ["core", "trigger", "maths", "audio", "vector", "colour",
+                "midi", "laser", "time-series", "sensor"],
     "children":
     {
+      "core": ["clone",
+        "clone-info", "compare", "filter", "graph",
+        "interpolator", "log", "oscillator", "pin",
+        "random", "switch", "timer"],
+      "trigger": ["beat", "count", "memory", "pin", "selector", "start",
+               "latch"],
+      "maths": ["add", "subtract", "multiply", "divide", "mod", "power",
+        "sin", "cos", "tan", "asin", "acos", "atan",
+        "log10", "log", "exp10", "exp", "sqrt", "square", "cube",
+        "inverse", "floor", "round", "abs", "limit", "wrap", "polar-position"],
       "audio": ["level", "oscillator", "bit-crush", "delay", "envelope", "loop",
                 "pitch-shift", "position", "reverb", "wav-in", "alsa-in",
                 "alsa-out","sdl-in", "sdl-out"],
-      "time-series": ["average", "last", "offset", "plot", "scale", "web-fetch"],
-      "sensor": ["load-dscusb"],
+      "vector": ["clip", "fade", "figure", "oscilloscope", "pin", "rotate",
+        "scale", "stroke", "svg", "switch", "translate", "websocket-display"],
       "colour": ["blend", "hsl", "pin", "rgb", "switch"],
       "laser": ["add-blanking-anchors", "add-vertex-repeats", "beamify",
         "idn-out", "infill-lines", "reorder-segments", "show-blanking"],
       "midi": ["alsa-in", "control-in", "keyboard-in", "key-in", "pin"],
-      "vector": ["clip", "fade", "figure", "oscilloscope", "pin", "rotate",
-        "scale", "stroke", "svg", "switch", "translate", "websocket-display"],
-      "core": ["add", "subtract", "multiply", "divide", "beat", "clone",
-        "clone-info", "compare", "count", "cut", "filter", "graph",
-        "interpolator", "limit", "log", "oscillator", "pin", "number-pin",
-        "trigger-pin", "random", "selector", "start", "switch", "timer",
-        "toggle", "wrap"]
+      "time-series": ["average", "last", "offset", "plot",
+                      "scale", "web-fetch"],
+      "sensor": ["load-dscusb"]
     }
   },
   "interpolate":
