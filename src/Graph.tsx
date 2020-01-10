@@ -518,6 +518,9 @@ export default class Graph extends React.Component<IProps, IState>
   // Move/scroll graph by dragging background
   private handleGraphDrag = (e: PointerEvent) =>
   {
+    // Reset pointer time so long press isn't triggered on graph drag
+    this.pointerClick.t = 0;
+
     // Find this event in the cache and update its record with this event
     for (var i = 0; i < this.pointerCache.length; i++)
     {
