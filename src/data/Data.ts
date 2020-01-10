@@ -44,6 +44,35 @@ class Data
   {
     this.getGraphData("graph", (rawGraph: vgTypes.IRawGraphItem) =>
       {
+        // Prune layout to only paths that exist
+        const finalLayout: vgTypes.ILayoutData = {};
+
+        const parseGraphLevel = (graphItems:
+          {[key: string]: vgTypes.IRawGraphItem}, prefix: string) =>
+        {
+          for (const key of Object.keys(graphItems))
+          {
+            const layoutID = prefix + "/" + key;
+            if (this.layoutData[layoutID])
+            {
+              finalLayout[layoutID] = this.layoutData[layoutID];
+            }
+
+            const elements = graphItems[key].elements;
+            if (elements !== undefined)
+            {
+              parseGraphLevel(elements, layoutID);
+            }
+          }
+        }
+
+        if (rawGraph.elements)
+        {
+          parseGraphLevel(rawGraph.elements, "graph");
+        }
+
+        this.layoutData = finalLayout;
+
         const storeGraphJSON: vgTypes.IStoredGraph =
           {graph: rawGraph, layout: this.layoutData};
 
@@ -772,28 +801,6 @@ class Data
 
       layoutNodes.push({...node, ...nodeLayout});
     });
-
-    // Prune layout data and update if necessary
-    let update = false;
-    for (const key of Object.keys(this.layoutData))
-    {
-      const prefixData = key.slice(0, key.lastIndexOf("/"));
-      const prefixCurrent = nodePathLevel.slice(0,
-        nodePathLevel.lastIndexOf("/"));
-
-      if (key.split("/").length === nodePathLevel.split("/").length &&
-        !currentLayouts[key] && prefixData === prefixCurrent)
-      {
-        vgUtils.log("Pruning " + key + " from Layout Data");
-        update = true;
-        delete this.layoutData[key];
-      }
-    }
-
-    if (update)
-    {
-      this.updateLayout();
-    }
 
     if (Object.keys(currentLayouts).length > 0)
     {
