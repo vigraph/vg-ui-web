@@ -16,7 +16,6 @@ class Icons
     {
       const key = path.substring(path.lastIndexOf('/') + 1,
         path.lastIndexOf('.')).replace("_","/");
-      window.console.log("key from path - " + key + " " + path);
       this.Menu[key] = reqMenuSvgs(path).default;
     });
 
