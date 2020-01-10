@@ -3,7 +3,7 @@ import * as React from 'react';
 import './App.css';
 import Graph from './Graph';
 
-const reqSvgs = require.context('!@svgr/webpack!./icons/app', false, /\.svg$/)
+import { vgIcons } from './icons/Icons';
 
 interface IProps
 {
@@ -19,7 +19,6 @@ interface IState
 export default class App extends React.Component<IProps, IState>
 {
   private graph = React.createRef<Graph>();
-  private iconMap: {[key: string]: any};
 
   constructor(props: any)
   {
@@ -30,20 +29,11 @@ export default class App extends React.Component<IProps, IState>
       graphRoot: true,
       fullscreen: false
     };
-
-    // Make icon paths into simple names
-    this.iconMap = {};
-    reqSvgs.keys().forEach((path: string) =>
-    {
-      const key = path.substring(path.lastIndexOf('/') + 1,
-        path.lastIndexOf('.'));
-      this.iconMap[key] = reqSvgs(path).default
-    });
   }
 
   private createIcon(name: string)
   {
-    const Icon = this.iconMap[name];
+    const Icon = vgIcons.App[name];
     return < Icon />
   }
 

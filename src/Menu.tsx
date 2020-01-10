@@ -2,8 +2,7 @@ import * as React from 'react';
 
 import { vgData } from './data/Data';
 import { vgConfig } from './lib/Config';
-
-const reqSvgs = require.context('!@svgr/webpack!./icons/menu', true, /\.svg$/)
+import { vgIcons } from './icons/Icons';
 
 interface IProps
 {
@@ -28,7 +27,6 @@ export default class Menu extends React.Component<IProps, IState>
   private menuRef: HTMLDivElement | null;
   private subMenuRef: HTMLDivElement | null;
   private updateSubMenu: boolean;
-  private iconMap: {[key: string]: any};
   private pointerPosition: {x: number, y: number};
   private hoverTimer: number | null;
 
@@ -50,14 +48,6 @@ export default class Menu extends React.Component<IProps, IState>
     this.updateSubMenu = true;
     this.pointerPosition = {x: 0, y: 0};
     this.hoverTimer = null;
-
-    this.iconMap = {};
-    reqSvgs.keys().forEach((path: string) =>
-    {
-      const key = path.substring(path.lastIndexOf('/') + 1,
-        path.lastIndexOf('.'));
-      this.iconMap[key] = reqSvgs(path).default
-    });
 
     this.menuData = this.generateMenuData();
   }
@@ -85,7 +75,7 @@ export default class Menu extends React.Component<IProps, IState>
         this.menuData.map((value: {id: string, children: Array<string[]>},
           index: number) =>
         {
-          const Icon = this.iconMap[value.id] ? this.iconMap[value.id] : "";
+          const Icon = vgIcons.Menu[value.id] ? vgIcons.Menu[value.id] : "";
           return <div key={index} id={"menu-"+value.id}
             className={`menu-item parent` +
               ` ${(this.state.menuItem && value.id ===
@@ -216,8 +206,7 @@ export default class Menu extends React.Component<IProps, IState>
                   subMenuBlock.map((value: string, index: number) =>
                   {
                     const id = menuID + "/" + value;
-                    const iconID = id.replace("/","_");
-                    const Icon = this.iconMap[iconID]?this.iconMap[iconID]:"";
+                    const Icon = vgIcons.Menu[id]?vgIcons.Menu[id]:"";
 
                     return <div key={index} id={"menu-"+id}
                       className="menu-item child"
