@@ -59,7 +59,7 @@ export default class Edge extends React.Component<IProps, IState>
     // boundary of connector and ends at the left boundary
     let sx = this.props.src.position.x + (3*offset);
     let sy = this.props.src.position.y;
-    let dx = this.props.dest.position.x + offset;
+    let dx = this.props.dest.position.x + (2*offset);
     let dy = this.props.dest.position.y;
 
     if (outputConnector && inputConnector)

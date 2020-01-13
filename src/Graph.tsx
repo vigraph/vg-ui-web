@@ -159,7 +159,7 @@ export default class Graph extends React.Component<IProps, IState>
               inputConnectorSelected={this.moveEdgeFromInput}
               outputConnectorSelected={this.newMovingConnectorEdge}
               updateTargetConnector={this.updateTargetConnector}
-              radius={this.csize}
+              radius={this.csize} nodePadding={this.csize*2}
               position={node.getConnectorPosition(connector)}/>
           }
           else
@@ -178,7 +178,7 @@ export default class Graph extends React.Component<IProps, IState>
               inputConnectorSelected={this.moveEdgeFromInput}
               outputConnectorSelected={this.newMovingConnectorEdge}
               updateTargetConnector={this.updateTargetConnector}
-              radius={this.csize}
+              radius={this.csize} nodePadding={this.csize*2}
               position={node.getConnectorPosition(connector)}/>
           }
           else
@@ -243,11 +243,11 @@ export default class Graph extends React.Component<IProps, IState>
       if (connector.direction === "input")
       {
         return <svg className="connector-label-wrapper input"
-          x={x - textBox.width - this.csize} y={y - ((textBox.height + 8) / 2)}>
+          x={x - textBox.width} y={y - ((textBox.height + 8) / 2)}>
           <rect className="connector-label-border" height={textBox.height+8}
             width={textBox.width+8} x={0} y={0}/>
           <text className="label connector-label input"
-            fontSize={fontSize} x={4} y={textBox.height+2}>
+            fontSize={fontSize} x={4} y={textBox.height}>
             {displayID}
           </text>
           </svg>
@@ -259,7 +259,7 @@ export default class Graph extends React.Component<IProps, IState>
           <rect className="connector-label-border" height={textBox.height+8}
             width={textBox.width+8} x={0} y={0}/>
           <text className="label connector-label output"
-            fontSize={fontSize} x={4} y={textBox.height+2}>
+            fontSize={fontSize} x={4} y={textBox.height}>
             {displayID}
           </text>
           </svg>

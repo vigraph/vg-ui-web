@@ -1,6 +1,12 @@
+@font-face
+{
+  font-family: 'latoRegular';
+  src: url(./fonts/Lato-Regular.ttf);
+}
+
 body {
   margin: 0;
   padding: 0;
-  font-family: sans-serif;
   overflow: hidden;
+  font-family: latoRegular;
 }

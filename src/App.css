@@ -2,7 +2,6 @@
 /* Default */
 :root
 {
-  --col-background: black;
   --col-text: white;
   --col-node-border: #888;
   --col-node-fill: #888;
@@ -21,6 +20,13 @@
   --col-menu-item-text: #4ecac2;
   --col-pin-fill: black;
   --col-pin-fill-pinned: white;
+  /* UI 2.0 **/
+  --col-background: black;
+  --col-number-type: #4ecac2;
+  --col-trigger-type: #a0f0a0;
+  --col-border: #808080;
+  --col-default-background: #141414;
+  --col-menu-background: #262626;
 }
 
 /* Light theme */

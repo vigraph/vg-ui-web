@@ -13,6 +13,7 @@ interface IProps
     parent: Model.Node } | null) => void;
   radius: number;
   position: {x: number, y: number};
+  nodePadding: number;
 }
 
 export default class Connector extends React.Component<IProps>
@@ -24,23 +25,49 @@ export default class Connector extends React.Component<IProps>
 
   public render()
   {
-    const position = this.props.position;
     const radius = this.props.radius;
 
     return (
-      <svg id={`connector-${this.props.connector.id}`} className={"connector"}>
+      <svg id={`connector-${this.props.parent.id}-${this.props.connector.id}`}
+        className={"connector"}>
         <rect className={"connector-boundary " + this.props.connector.id}
-          x={position.x} y={position.y-(2*radius)}
+          x={this.props.position.x + this.props.nodePadding - (2*radius)}
+          y={this.props.position.y - (2*radius)}
           width={radius*4} height={radius*4} onPointerEnter={this.pointerEnter}
-          onPointerLeave={this.pointerLeave}
-          onPointerDown={this.pointerDown} />
-        <circle className={`connector-icon ${this.props.connector.id}` +
-          ` ${this.props.connector.direction}`}
-          cx={position.x+(2*radius)}
-          cy={position.y}
-          r={radius} />
+          onPointerLeave={this.pointerLeave} onPointerDown={this.pointerDown} />
+        <path className={`connector-icon ${this.props.connector.id}` +
+          ` ${this.props.connector.direction} ${this.props.connector.type}`}
+          d={this.pathForType(this.props.connector.type)}
+          />
       </svg>
     );
+  }
+
+  private pathForType = (type: string) =>
+  {
+    const radius = this.props.radius;
+    const position = this.props.position;
+    const nodePad = this.props.nodePadding;
+
+    if (type === "number")
+    {
+      return `M${position.x + nodePad} ${position.y} L${position.x + nodePad}` +
+        ` ${position.y - radius} A ${radius} ${radius} 0 0 1` +
+        ` ${position.x + nodePad} ${position.y + radius} Z`;
+    }
+    else if (type === "trigger")
+    {
+      return `M${position.x + nodePad} ${position.y + radius}` +
+        ` L${position.x + nodePad} ${position.y - radius}` +
+        ` L${position.x + nodePad + radius} ${position.y} Z`;
+    }
+    else
+    {
+      return `M${position.x + nodePad} ${position.y + radius}` +
+        ` L${position.x + nodePad} ${position.y - radius}` +
+        ` L${position.x + nodePad + radius} ${position.y - radius}` +
+        ` L${position.x + nodePad + radius} ${position.y + radius} Z`;
+    }
   }
 
   private pointerDown = (e: React.PointerEvent<SVGRectElement>) =>

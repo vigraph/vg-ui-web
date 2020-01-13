@@ -1,8 +1,13 @@
+/* UI 2.0 */
 #graph
 {
-/*    width: 100%;
-    height: 100%;*/
   background-color: var(--col-background);
+}
+
+.wrapper
+{
+  width: 5000px;
+  height: 5000px;
 }
 
 #nodes,
@@ -13,11 +18,53 @@
   overflow: visible;
 }
 
-.wrapper
+/* Connector */
+.connector
 {
-  width: 5000px;
-  height: 5000px;
+  overflow: visible;
 }
+
+.connector-icon
+{
+  fill: white;
+  stroke: none;
+  pointer-events: none;
+}
+
+.connector-boundary
+{
+  fill: transparent;
+}
+
+.connector-icon.disabled
+{
+  opacity: 0.6;
+}
+
+.connector-icon.number
+{
+  fill: var(--col-number-type);
+}
+
+.connector-icon.trigger
+{
+  fill: var(--col-trigger-type);
+}
+
+.connector-label-wrapper
+{
+  overflow: visible;
+  pointer-events: none;
+}
+
+.connector-label-border
+{
+  fill: var(--col-background);
+  fill-opacity: 0.4;
+  overflow: visible;
+}
+
+/* UI 1.0 */
 
 #menu.menu
 {
@@ -151,7 +198,6 @@
   fill: transparent;
 }
 
-
 .node .dragging
 {
   fill: #444;
@@ -254,56 +300,9 @@
   pointer-events: none;
 }
 
-.connector
-{
-  overflow: visible;
-}
-
-.connector-icon
-{
-  fill: white;
-  stroke: none;
-  pointer-events: none;
-}
-
-.connector-boundary
-{
-  fill: transparent;
-}
-
-.connector-icon.input
-{
-  fill: #a44;
-}
-
-.connector-icon.output
-{
-  fill: #44c;
-}
-
-.connector-icon.disabled
-{
-  opacity: 0.6;
-}
-
 #connector-dummyconnector .connector-icon
 {
   opacity: 1;
-}
-
-.connector-label-wrapper
-{
-  overflow: visible;
-  pointer-events: none;
-}
-
-.connector-label-border
-{
-  fill: var(--col-label-fill);
-  fill-opacity: 0.7;
-  stroke: var(--col-label-border);
-  stroke-width: 0.75;
-  overflow: visible;
 }
 
 .property-wrapper
