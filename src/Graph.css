@@ -26,7 +26,7 @@
 
 .connector-icon
 {
-  fill: white;
+  fill: var(--col-default-connector);
   stroke: none;
   pointer-events: none;
 }
@@ -60,8 +60,80 @@
 .connector-label-border
 {
   fill: var(--col-background);
-  fill-opacity: 0.4;
+  fill-opacity: 0.8;
   overflow: visible;
+}
+
+/* Edge */
+.edge
+{
+  stroke: var(--col-default-edge);
+  stroke-width: 2;
+  stroke-opacity: 0.2;
+  fill: none;
+}
+
+.edge.number
+{
+  stroke: var(--col-number-type);
+}
+
+.edge.trigger
+{
+  stroke: var(--col-trigger-type);
+}
+
+.edge.selected
+{
+  stroke-opacity: 1;
+}
+
+.edge.hover
+{
+  stroke-opacity: 1;
+}
+
+.edge.hover.dummy
+{
+  stroke-opacity: 0.2;
+}
+
+.edge-boundary
+{
+  stroke: transparent;
+  stroke-width: 15;
+  fill: none;
+}
+
+.edge-boundary.dummy
+{
+  pointer-events: none;
+}
+
+/* Node */
+#dummynode
+{
+  pointer-events: none;
+}
+
+/* Delete Icon (node, edge) */
+.delete-wrapper
+{
+  overflow: visible;
+}
+
+.node-delete,
+.edge-delete
+{
+  fill: var(--col-delete);
+}
+
+.delete-line
+{
+  stroke: black;
+  stroke-width: 1.5;
+  fill: none;
+  pointer-events: none;
 }
 
 /* UI 1.0 */
@@ -247,56 +319,6 @@
 
 #node-dummyconnector
 {
-  pointer-events: none;
-}
-
-.edge
-{
-  stroke: var(--col-edge);
-  stroke-width: 2;
-  stroke-opacity: 0.2;
-  fill: none;
-}
-
-.edge.selected
-{
-  stroke: grey;
-  stroke-opacity: 1;
-}
-
-.edge.hover
-{
-  stroke-opacity: 1;
-}
-
-.edge.hover.dummy
-{
-  stroke-opacity: 0.2;
-}
-
-.edge-boundary
-{
-  stroke: transparent;
-  stroke-width: 15;
-  fill: none;
-}
-
-.delete-wrapper
-{
-  overflow: visible;
-}
-
-.node-delete,
-.edge-delete
-{
-  fill: #c10000;
-}
-
-.delete-line
-{
-  stroke: white;
-  stroke-width: 1;
-  fill: none;
   pointer-events: none;
 }
 

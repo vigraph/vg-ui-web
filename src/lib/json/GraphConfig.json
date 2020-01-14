@@ -35,10 +35,14 @@
   },
   "fontSize":
   {
-    "connectorLabel": 10,
+    "connectorLabel": 12,
     "propertyLabel": 10,
     "nodeTitle": 12,
     "propertySettings": 10
+  },
+  "edge":
+  {
+    "hoverTime": 2
   },
   "menu":
   {

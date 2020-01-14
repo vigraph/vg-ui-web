@@ -132,7 +132,7 @@ export default class Graph extends React.Component<IProps, IState>
             }
           </svg>
           {this.createDummyNode()}
-          {this.createConnectorLabel()}
+          {this.createConnectorLabel(this.state.targetConnector)}
           {this.createPropertyLabel()}
         </svg>
       </div>
@@ -194,11 +194,18 @@ export default class Graph extends React.Component<IProps, IState>
   {
     if (edge)
     {
-      return <Edge key={key} src={node} srcOutput={edge.outputId}
-        dest={edge.dest} destInput={edge.destInput} offset={this.csize}
-        graphRef={this.graphRef} removeEdge={this.removeEdge}
-        moveEdgeFromInput={this.moveEdgeFromInput}
-        moveEdgeFromOutput={this.moveEdgeFromOutput}/>
+      const oConnector = node.getOutputConnector(edge.outputId);
+      const iConnector = edge.dest.getInputConnector(edge.destInput);
+
+      if (oConnector && iConnector)
+      {
+        return <Edge key={key} src={node} srcOutput={oConnector}
+          dest={edge.dest} destInput={iConnector} offset={this.csize}
+          graphRef={this.graphRef} removeEdge={this.removeEdge}
+          moveEdgeFromInput={this.moveEdgeFromInput}
+          moveEdgeFromOutput={this.moveEdgeFromOutput}
+          showConnectorLabel={this.createConnectorLabel}/>
+      }
     }
   }
 
@@ -215,12 +222,13 @@ export default class Graph extends React.Component<IProps, IState>
     }
   }
 
-  private createConnectorLabel = () =>
+  private createConnectorLabel = (label: {connector: Model.Connector,
+    parent: Model.Node} | null) =>
   {
-    if (this.state.targetConnector)
+    if (label)
     {
-      const node = this.state.targetConnector.parent;
-      const connector = this.state.targetConnector.connector;
+      const node = label.parent;
+      const connector = label.connector;
 
       const position = node.getConnectorPosition(connector);
 

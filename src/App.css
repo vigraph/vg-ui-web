@@ -5,7 +5,6 @@
   --col-text: white;
   --col-node-border: #888;
   --col-node-fill: #888;
-  --col-edge: white;
   --col-label: #ccc;
   --col-knob-bg: #444;
   --col-knob-overlay: black;
@@ -27,6 +26,9 @@
   --col-border: #808080;
   --col-default-background: #141414;
   --col-menu-background: #262626;
+  --col-default-edge: white;
+  --col-delete: #c10000;
+  --col-default-connector: white;
 }
 
 /* Light theme */
@@ -34,7 +36,7 @@
 {
   --col-background: white;
   --col-text: black;
-  --col-edge: black;
+  --col-default-edge: black;
   --col-label: #444;
   --col-knob-bg: #ccc;
   --col-knob-overlay: white;
