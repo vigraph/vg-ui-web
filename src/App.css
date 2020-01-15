@@ -25,6 +25,14 @@
   --col-fallback: white;
   --col-number-type: #4ecac2;
   --col-trigger-type: #a0f0a0;
+  --col-audio-type: #fcc2ff;
+  --col-colour-type: #fdfd96;
+  --col-frame-type: #b19cd9;
+  --col-dataset-type: #ffb347;
+  --col-midi-type: #ff6961;
+  --col-waveform-type: #84b4c8;
+  --col-filter-mode-type: #aec6cf;
+  --col-oscilloscope-slope-type: #c23b22;
   --col-node-background: #262626;
   --col-knob-background: #808080;
   --col-knob-overlay: #262626;

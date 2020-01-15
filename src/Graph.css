@@ -146,6 +146,46 @@
   fill: var(--col-trigger-type);
 }
 
+.connector-icon.frame
+{
+  fill: var(--col-frame-type);
+}
+
+.connector-icon.dataset
+{
+  fill: var(--col-dataset-type);
+}
+
+.connector-icon.waveform
+{
+  fill: var(--col-waveform-type);
+}
+
+.connector-icon.audio
+{
+  fill: var(--col-audio-type);
+}
+
+.connector-icon.colour
+{
+  fill: var(--col-colour-type);
+}
+
+.connector-icon.filter-mode
+{
+  fill: var(--col-filter-mode-type);
+}
+
+.connector-icon.oscilloscope-slope
+{
+  fill: var(--col-oscilloscope-slope-type);
+}
+
+.connector-icon.midi
+{
+  fill: var(--col-midi-type);
+}
+
 .connector-label-wrapper
 {
   overflow: visible;
@@ -311,6 +351,16 @@
 .selector-position.selected
 {
   fill: var(--col-fallback);
+}
+
+#selector.filter-mode .selector-position.selected
+{
+  fill: var(--col-filter-mode-type);
+}
+
+#selector.waveform .selector-position.selected
+{
+  fill: var(--col-waveform-type);
 }
 
 .selector-dial,

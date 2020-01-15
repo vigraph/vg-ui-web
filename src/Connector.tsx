@@ -43,30 +43,62 @@ export default class Connector extends React.Component<IProps>
     );
   }
 
+  // Connector icon path
   private pathForType = (type: string) =>
   {
-    const radius = this.props.radius;
-    const position = this.props.position;
-    const nodePad = this.props.nodePadding;
+    const r = this.props.radius;
+    const x = this.props.position.x + this.props.nodePadding;
+    const y = this.props.position.y;
 
     if (type === "number")
     {
-      return `M${position.x + nodePad} ${position.y} L${position.x + nodePad}` +
-        ` ${position.y - radius} A ${radius} ${radius} 0 0 1` +
-        ` ${position.x + nodePad} ${position.y + radius} Z`;
+      return `M${x} ${y} L${x} ${y - r} A ${r} ${r} 0 0 1 ${x} ${y + r} Z`;
     }
     else if (type === "trigger")
     {
-      return `M${position.x + nodePad} ${position.y + radius}` +
-        ` L${position.x + nodePad} ${position.y - radius}` +
-        ` L${position.x + nodePad + radius} ${position.y} Z`;
+      return `M${x} ${y + r} L${x} ${y - r} L${x + r} ${y} Z`;
+    }
+    else if (type === "audio")
+    {
+      return `M${x} ${y + r/2} L${x + r} ${y + r} L${x + r} ${y - r}` +
+        ` L${x} ${y - r/2} Z`;
+    }
+    else if (type === "frame")
+    {
+      return `M${x} ${y + r} L${x} ${y - r} L${x + r} ${y - r} L${x + r}` +
+        ` ${y + r} Z`;
+    }
+    else if (type === "waveform")
+    {
+      return `M${x} ${y + r} L${x + r/2} ${y + r} L${x + r} ${y}` +
+        ` L${x + r/2} ${y - r} L${x} ${y - r} Z`;
+    }
+    else if (type === "filter-mode")
+    {
+      return `M${x} ${y + r} L${x} ${y - r} L${x + r} ${y - r} Z`;
+    }
+    else if (type === "midi")
+    {
+      return `M${x} ${y + r} L${x + r} ${y + r} L${x + r/2} ${y} L${x + r}` +
+        ` ${y - r} L${x} ${y - r} Z `
+    }
+    else if (type === "oscilloscope-slope")
+    {
+      return `M${x} ${y - r} A ${r} ${r} 0 0 1 ${x + r} ${y} L${x} ${y} Z`;
+    }
+    else if (type === "dataset")
+    {
+      return `M${x} ${y - r/2} A ${r} ${r/2} 0 0 1 ${x} ${y + r/2} Z`;
+    }
+    else if (type === "colour")
+    {
+      return `M${x} ${y - r} L${x + r/2} ${y - r} A ${r/2} ${r} 0 0 1` +
+        ` ${x + r/2} ${y + r} L${x} ${y + r} Z`;
     }
     else
     {
-      return `M${position.x + nodePad} ${position.y + radius}` +
-        ` L${position.x + nodePad} ${position.y - radius}` +
-        ` L${position.x + nodePad + radius} ${position.y - radius}` +
-        ` L${position.x + nodePad + radius} ${position.y + radius} Z`;
+      return `M${x} ${y + r/2} L${x} ${y - r/2} L${x + r/2} ${y - r/2}` +
+        ` L${x + r/2} ${y + r/2} Z`;
     }
   }
 
