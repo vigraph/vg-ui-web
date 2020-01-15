@@ -555,7 +555,7 @@
   },
   "core/clone-info":
   {
-    "width": 100,
+    "width": 130,
     "height": 50,
     "properties":
     {
@@ -802,6 +802,15 @@
     }
   },
   "core/trigger-pin":
+  {
+    "width": 70,
+    "height": 50,
+    "category": "pin",
+    "properties":
+    {
+    }
+  },
+  "core/pin":
   {
     "width": 70,
     "height": 50,

@@ -7,6 +7,7 @@ import WebsocketCanvas from './WebsocketCanvas';
 import { vgData } from './data/Data';
 import { vgUtils } from './lib/Utils';
 import { vgConfig } from './lib/Config';
+import { vgIcons } from './icons/Icons';
 
 interface IProps
 {
@@ -90,13 +91,18 @@ export default class Node extends React.Component<IProps, IState>
         className={"node " + this.props.node.type.replace("/","-") + " " +
           (this.props.node.category ? this.props.node.category : "")}
         x={this.state.x} y={this.state.y}>
-        <rect x={padding} width={width} height={height}
-          className={`node-border ${this.state.dragging ? "dragging" : ""} ` +
-            `${this.state.resizing ? "resizing" : ""}`}
+        <rect x={padding} y={0} width={width} height={height}
+          className={`node-background ${this.state.dragging ? "dragging" :
+            ""} ${this.state.resizing ? "resizing" : ""}`}
           onPointerDown={this.handlePointerDown}
           onContextMenu={this.handleContextMenu}
         />
-        {this.generateTitle()}
+        <path className={`node-border ${this.state.dragging ? "dragging" :
+          ""} ${this.state.resizing ? "resizing" : ""}`}
+          d={`M ${padding} ${0} L ${padding} ${height} L ${padding+width}
+            ${height} L ${padding+width} ${0}`}
+        />
+        {this.generateHeader()}
         {this.generateSpecialCases()}
         {this.generateResizeIcon()}
         {properties.map((property: Model.Property, j) =>
@@ -167,24 +173,50 @@ export default class Node extends React.Component<IProps, IState>
     }
   }
 
-  private generateTitle = () =>
+  private generateHeader = () =>
   {
-    const width = this.state.w;
-    const padding = this.props.padding;
     const node = this.props.node;
     const title = node.displayName || node.name;
 
-    const linesArray = vgUtils.wrapText(title,
-      width - (this.props.padding * 2), this.titleFontSize);
+    const width = this.state.w;
+    const padding = this.props.padding;
+    const iconSize = vgConfig.Graph.node.iconSize;
+    // Full width minus left padding, icon width and icon padding
+    const titleWidth = this.state.w - padding - (iconSize + padding / 2);
 
-    return <text className={"node-label " + this.props.node.id}
-      fontSize={this.titleFontSize} x={(width/2)+padding} y={15}>
-        {linesArray.map((word: string, index: number) =>
-          {
-            return <tspan key={index} x={(width/2)+padding}
-              dy={(index?1:0)*this.titleFontSize}>{word}</tspan>
-          })}
-      </text>
+    const linesArray = vgUtils.wrapText(title, titleWidth, this.titleFontSize);
+    const textBox = vgUtils.textBoundingSize(linesArray[0], this.titleFontSize);
+
+    const height = (textBox.height * linesArray.length) + padding;
+
+    const Icon = vgIcons.Menu[node.type] ? vgIcons.Menu[node.type] : "";
+
+    return <svg id={node.id+"-header-wrapper"} className={"node-header-wrapper"}
+      x={padding} y={-height}>
+        <rect x={0} y={0} width={width} height={height}
+          className={`node-background ${this.state.dragging ? "dragging" :
+            ""} ${this.state.resizing ? "resizing" : ""}`}
+          onPointerDown={this.handlePointerDown}
+          onContextMenu={this.handleContextMenu}/>
+        <path className={`node-border ${this.state.dragging ? "dragging" :
+          ""} ${this.state.resizing ? "resizing" : ""}`}
+          d={`M ${0} ${height} L ${0} ${0}
+            L ${width} ${0} L ${width} ${height}`}/>
+        <text className={"node-title " + this.props.node.id}
+          fontSize={this.titleFontSize} x={padding} y={(padding/2)+1}>
+            {linesArray.map((word: string, index: number) =>
+              {
+                return <tspan key={index} x={padding}
+                  dy={(index?1:0)*this.titleFontSize}>{word}</tspan>
+              })}
+        </text>
+        {
+          Icon ? <Icon x={width-(iconSize+padding/4)} y={padding/4}
+            width={iconSize} height={iconSize}/> : ""
+        }
+        <path className={"node-header-separator"}
+          d={`M ${padding/2} ${height} L ${width-(padding/2)} ${height}`}/>
+      </svg>
   }
 
   private generateSpecialCases = () =>

@@ -41,6 +41,10 @@
     "propertySettings": 10,
     "selectorLabel": 10
   },
+  "node":
+  {
+    "iconSize": 20
+  },
   "edge":
   {
     "hoverTime": 2
