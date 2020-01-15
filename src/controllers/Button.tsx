@@ -62,7 +62,8 @@ export default class Button extends React.Component<IProps, IState>
      const settings = this.settings;
 
     return(
-        <svg id="button" className={this.props.settingsType}
+        <svg id="button" className={this.props.settingsType + " " +
+          this.props.property.valueType}
           height={settings.height} width={settings.width}
           onPointerDown={this.handlePointerDown}>
 

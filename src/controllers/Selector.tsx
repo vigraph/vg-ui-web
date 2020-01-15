@@ -66,20 +66,16 @@ export default class Selector extends React.Component<IProps, IState>
     const currentPos = this.choices.indexOf(this.state.currentValue);
 
     const positionSize = settings.length / this.choices.length;
+    const fontSize = vgConfig.Graph.fontSize.selectorLabel;
 
     return(
         <svg id="selector" className={`${this.props.settingsType}
+          ${this.props.property.valueType}
           ${this.state.selecting ? "selecting" : ""}`}>
-
-          <rect className="selector-background" width={settings.length}
-            height={settings.thickness}
-            transform={`rotate(${settings.horizontal ? "0" : "90"}, ${0},
-              ${0}) translate(5, ${settings.horizontal ? "0" :
-               -settings.thickness})`}/>
 
           {this.choices.map((value: any, index: number) =>
             {
-              return <svg id={value} key={index}
+              return <svg id={value} className={"selector-choice"} key={index}
                   onPointerDown={this.handlePointerDown}
                   onPointerEnter={this.handlePointerEnter}>
                 <rect className={`selector-position ${value.toString()}
@@ -90,6 +86,7 @@ export default class Selector extends React.Component<IProps, IState>
                   ${0}) translate(5, ${settings.horizontal ? "0" :
                   -settings.thickness})`}/>
                 <text className="label selector-label"
+                  fontSize={fontSize}
                   x={`${settings.horizontal ? (positionSize * index) + 5 :
                     settings.thickness + 10}`}
                   y={`${settings.horizontal ? settings.thickness + 10 :

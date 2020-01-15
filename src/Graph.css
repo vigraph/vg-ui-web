@@ -26,7 +26,7 @@
 
 .connector-icon
 {
-  fill: var(--col-default-connector);
+  fill: var(--col-fallback);
   stroke: none;
   pointer-events: none;
 }
@@ -67,7 +67,7 @@
 /* Edge */
 .edge
 {
-  stroke: var(--col-default-edge);
+  stroke: var(--col-fallback);
   stroke-width: 2;
   stroke-opacity: 0.2;
   fill: none;
@@ -134,6 +134,143 @@
   stroke-width: 1.5;
   fill: none;
   pointer-events: none;
+}
+
+/* Knob */
+#knob
+{
+  overflow: visible;
+}
+
+.knob-background
+{
+  fill: var(--col-knob-background);
+}
+
+.knob-overlay
+{
+  fill: var(--col-knob-overlay)
+}
+
+.knob-arc
+{
+  fill: var(--col-fallback);
+}
+
+#knob.number .knob-arc
+{
+  fill: var(--col-number-type);
+}
+
+.knob-dial
+{
+  display: none;
+}
+
+/* Button */
+#button
+{
+  overflow: visible;
+}
+
+.button-outer
+{
+  stroke: var(--col-border);
+  stroke-width: 2px;
+}
+
+.button-inner
+{
+  fill: var(--col-button-fill);
+}
+
+.button-inner.true
+{
+  fill: var(--col-fallback);
+}
+
+#button.number .button-inner.true
+{
+  fill: var(--col-number-type);
+}
+
+#button.trigger .button-inner.true
+{
+  fill: var(--col-trigger-type);
+}
+
+/* Selector */
+#selector,
+.selector-choice
+{
+  overflow: visible;
+}
+
+.selector-position
+{
+  stroke: var(--col-border);
+  stroke-width: 1px;
+  fill: var(--col-selector-background);
+}
+
+.selector-position.selected
+{
+  fill: var(--col-fallback);
+}
+
+.selector-dial,
+#selector.default .selector-label,
+#selector.horz .selector-label
+{
+  display: none;
+}
+
+/* Colour Picker */
+#colour-display,
+#colour-picker,
+#colour-picker-wrapper
+{
+  overflow: visible;
+}
+
+#colour-display .colour-display
+{
+  stroke: var(--col-border);
+  stroke-width: 1px;
+  overflow: visible;
+}
+
+.picker
+{
+  stroke: var(--col-border);
+  stroke-width: 1px;
+  overflow: visible;
+}
+
+.picker-indicator
+{
+  stroke: none;
+}
+
+.indicator-top
+{
+  fill: black;
+}
+
+.indicator-bottom
+{
+  fill: white;
+}
+
+.picker-indicator.disabled
+{
+  fill: var(--col-border);
+}
+
+.colourPicker.property-wrapper.disabled
+{
+  pointer-events: auto;
+  opacity: 1;
 }
 
 /* UI 1.0 */
@@ -247,9 +384,9 @@
 
 .node-border
 {
-  fill: var(--col-node-fill);
-  fill-opacity: 0.15;
-  stroke: var(--col-node-border);
+  fill: var(--col-node-background);
+  fill-opacity: 0.9;
+  stroke: var(--col-border);
   stroke-width: 0.75;
   overflow: visible;
 }
@@ -272,7 +409,7 @@
 
 .node .dragging
 {
-  fill: #444;
+  opacity: 0.8;
 }
 
 .node .resizing
@@ -338,86 +475,6 @@
   opacity: 0.1;
 }
 
-#knob
-{
-  overflow: visible;
-}
-
-.knob-wrapper
-{
-  overflow: visible
-}
-
-.knob-background
-{
-  fill: var(--col-knob-bg);
-}
-
-.knob-background.full
-{
-  display: none;
-}
-
-.knob-overlay
-{
-  fill: var(--col-knob-overlay)
-}
-
-.knob-arc
-{
-  fill: green;
-}
-
-.knob-dial
-{
-  stroke: #8a9597;
-  stroke-width: 3px;
-}
-
-#knob .knob-arc
-{
-  fill: #00ff00;
-}
-
-#knob.basic .knob-overlay,
-#knob.basic .knob-dial
-{
-  display: none;
-}
-
-#knob.basic .knob-background
-{
-  stroke: blue;
-  stroke-width: 5px;
-}
-
-#button
-{
-  overflow: visible;
-}
-
-.button-outer
-{
-  stroke: grey;
-  stroke-width: 2px;
-}
-
-.button-inner
-{
-  fill: grey;
-}
-
-.button-inner.pressing,
-.button-inner.pressing.true
-{
-  fill: #80ff80;
-}
-
-.button-inner.true
-{
-  fill: #00ff00;
-}
-
 #slider
 {
   overflow: visible;
@@ -437,100 +494,6 @@
 {
   stroke: grey;
   stroke-width: 3px;
-}
-
-.picker
-{
-  stroke: white;
-  stroke-width: 1px;
-  overflow: visible;
-}
-
-.picker-indicator
-{
-  stroke: none;
-}
-
-.indicator-top
-{
-  fill: black;
-}
-
-.indicator-bottom
-{
-  fill: white;
-}
-
-.picker-indicator.disabled
-{
-  fill: grey;
-}
-
-#selector
-{
-  overflow: visible;
-}
-
-.selector-position
-{
-  stroke: #888;
-  stroke-width: 1px;
-  fill: #444;
-}
-
-.selector-position.selected
-{
-  fill: #00ff00;
-}
-
-.selector-dial
-{
-  stroke: black;
-  stroke-width: 3px;
-  pointer-events: none;
-}
-
-.selector-background
-{
-  fill: green;
-}
-
-#selector.default .selector-label,
-#selector.horz .selector-label
-{
-  display: none;
-}
-
-#selector .selector-label
-{
-  font-size: x-small;
-}
-
-#colour-picker .picker-label
-{
-  font-size: small;
-  text-anchor: middle;
-  fill: grey;
-}
-
-#colour-display,
-#colour-picker,
-#colour-picker-wrapper
-{
-  overflow: visible;
-}
-
-#colour-display .colour-display
-{
-  stroke: #ccc;
-  stroke-width: 0.5;
-  overflow: visible;
-}
-
-.colourPicker.property-wrapper.disabled
-{
-  pointer-events: auto;
-  opacity: 1;
 }
 
 #text-display-text

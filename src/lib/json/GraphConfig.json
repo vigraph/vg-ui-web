@@ -38,7 +38,8 @@
     "connectorLabel": 12,
     "propertyLabel": 10,
     "nodeTitle": 12,
-    "propertySettings": 10
+    "propertySettings": 10,
+    "selectorLabel": 10
   },
   "edge":
   {

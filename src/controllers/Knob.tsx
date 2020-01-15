@@ -108,7 +108,8 @@ export default class Knob extends React.Component<IProps, IState>
     const backgroundSweep = settings.rangeMax > 180 ? 1 : 0;
 
     return(
-        <svg id="knob" className={this.props.settingsType}
+        <svg id="knob" className={this.props.settingsType + " " +
+          this.props.property.valueType}
           height={r*2} width={r*2}
           onPointerDown={this.handlePointerDown}>
           <path
@@ -119,10 +120,6 @@ export default class Knob extends React.Component<IProps, IState>
               `${backgroundEnd.x},${backgroundEnd.y} z`}
             transform={`scale(${this.state.turning ? settings.turnScale :
               1}) rotate(${settings.offset}, ${r}, ${r})`}
-          />
-          <circle className={`knob-background full`}
-            cx={r} cy={r} r={r}
-            transform={`scale(${this.state.turning ? settings.turnScale : 1})`}
           />
           <path
             className={`knob-arc`}

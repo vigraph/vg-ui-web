@@ -6,8 +6,6 @@
   --col-node-border: #888;
   --col-node-fill: #888;
   --col-label: #ccc;
-  --col-knob-bg: #444;
-  --col-knob-overlay: black;
   --col-info-bg: #222;
   --col-info-border: #888;
   --col-label-border: #ccc;
@@ -21,14 +19,17 @@
   --col-pin-fill-pinned: white;
   /* UI 2.0 **/
   --col-background: black;
+  --col-default-background: #141414;
+  --col-border: #808080;
+  --col-delete: #c10000;
+  --col-fallback: white;
   --col-number-type: #4ecac2;
   --col-trigger-type: #a0f0a0;
-  --col-border: #808080;
-  --col-default-background: #141414;
-  --col-menu-background: #262626;
-  --col-default-edge: white;
-  --col-delete: #c10000;
-  --col-default-connector: white;
+  --col-node-background: #262626;
+  --col-knob-background: #808080;
+  --col-knob-overlay: #262626;
+  --col-button-fill: #808080;
+  --col-selector-background: #262626;
 }
 
 /* Light theme */
@@ -36,7 +37,7 @@
 {
   --col-background: white;
   --col-text: black;
-  --col-default-edge: black;
+  --col-default: black;
   --col-label: #444;
   --col-knob-bg: #ccc;
   --col-knob-overlay: white;
