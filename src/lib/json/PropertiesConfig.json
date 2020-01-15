@@ -1336,13 +1336,22 @@
         "rangeMax": 1000,
         "increment": 1,
         "x": 50,
-        "y": 10
+        "y": 10,
+        "connector": { "x": 0, "y": 15 }
       },
       "closed":
       {
         "controlType": "button/toggle",
         "x": 110,
-        "y": 15
+        "y": 15,
+        "connector": { "x": 0, "y": 30 }
+      },
+      "x-wave":
+      {
+        "controlType": "selector/vert",
+        "x": 110,
+        "y": 50,
+        "connector": { "x": 0, "y": 60 }
       },
       "x-freq":
       {
@@ -1351,7 +1360,8 @@
         "rangeMax": 100,
         "increment": 0.01,
         "x": 30,
-        "y": 50
+        "y": 50,
+        "connector": { "x": 0, "y": 75 }
       },
       "x-phase":
       {
@@ -1360,7 +1370,8 @@
         "rangeMax": 1,
         "increment": 0.01,
         "x": 70,
-        "y": 50
+        "y": 50,
+        "connector": { "x": 0, "y": 90 }
       },
       "x-pulse-width":
       {
@@ -1369,13 +1380,15 @@
         "rangeMax": 1,
         "increment": 0.01,
         "x": 50,
-        "y": 85
+        "y": 85,
+        "connector": { "x": 0, "y": 105 }
       },
-      "x-wave":
+      "y-wave":
       {
         "controlType": "selector/vert",
         "x": 110,
-        "y": 50
+        "y": 125,
+        "connector": { "x": 0, "y": 135 }
       },
       "y-freq":
       {
@@ -1384,7 +1397,8 @@
         "rangeMax": 100,
         "increment": 0.01,
         "x": 30,
-        "y": 125
+        "y": 125,
+        "connector": { "x": 0, "y": 150 }
       },
       "y-phase":
       {
@@ -1393,7 +1407,8 @@
         "rangeMax": 1,
         "increment": 0.01,
         "x": 70,
-        "y": 125
+        "y": 125,
+        "connector": { "x": 0, "y": 165 }
       },
       "y-pulse-width":
       {
@@ -1402,13 +1417,15 @@
         "rangeMax": 1,
         "increment": 0.01,
         "x": 50,
-        "y": 160
+        "y": 160,
+        "connector": { "x": 0, "y": 180 }
       },
-      "y-wave":
+      "z-wave":
       {
         "controlType": "selector/vert",
         "x": 110,
-        "y": 125
+        "y": 200,
+        "connector": { "x": 0, "y": 210 }
       },
       "z-freq":
       {
@@ -1417,7 +1434,8 @@
         "rangeMax": 100,
         "increment": 0.01,
         "x": 30,
-        "y": 200
+        "y": 200,
+        "connector": { "x": 0, "y": 225 }
       },
       "z-phase":
       {
@@ -1426,7 +1444,8 @@
         "rangeMax": 1,
         "increment": 0.01,
         "x": 70,
-        "y": 200
+        "y": 200,
+        "connector": { "x": 0, "y": 240 }
       },
       "z-pulse-width":
       {
@@ -1435,13 +1454,8 @@
         "rangeMax": 1,
         "increment": 0.01,
         "x": 50,
-        "y": 235
-      },
-      "z-wave":
-      {
-        "controlType": "selector/vert",
-        "x": 110,
-        "y": 200
+        "y": 235,
+        "connector": { "x": 0, "y": 255 }
       }
     }
   },
