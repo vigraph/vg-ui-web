@@ -116,7 +116,7 @@ export interface IPropertiesConfig
         rangeMax?: number,
         increment?: number,
         connector?: {
-          x: number,
+          x?: number,
           y: number
         }
       }

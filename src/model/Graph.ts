@@ -140,7 +140,7 @@ export class Graph
       for (const i of n.inputs)
       {
         const input = this.addNodeInput(n.id, i.id, i.type);
-        input.position = ((i.x !== undefined && i.y !== undefined) ?
+        input.position = (i.y !== undefined ?
           { x: i.x || 0, y: i.y || 0 } : null);
       }
     }
