@@ -1323,6 +1323,128 @@
       }
     }
   },
+  "vector/figure":
+  {
+    "width": 170,
+    "height": 280,
+    "properties":
+    {
+      "points":
+      {
+        "controlType": "knob/log",
+        "rangeMin": 1,
+        "rangeMax": 1000,
+        "increment": 1,
+        "x": 50,
+        "y": 10
+      },
+      "closed":
+      {
+        "controlType": "button/toggle",
+        "x": 110,
+        "y": 15
+      },
+      "x-freq":
+      {
+        "controlType": "knob/log",
+        "rangeMin": 0.01,
+        "rangeMax": 100,
+        "increment": 0.01,
+        "x": 30,
+        "y": 50
+      },
+      "x-phase":
+      {
+        "controlType": "knob/default",
+        "rangeMin": 0,
+        "rangeMax": 1,
+        "increment": 0.01,
+        "x": 70,
+        "y": 50
+      },
+      "x-pulse-width":
+      {
+        "controlType": "knob/default",
+        "rangeMin": 0,
+        "rangeMax": 1,
+        "increment": 0.01,
+        "x": 50,
+        "y": 85
+      },
+      "x-wave":
+      {
+        "controlType": "selector/vert",
+        "x": 110,
+        "y": 50
+      },
+      "y-freq":
+      {
+        "controlType": "knob/log",
+        "rangeMin": 0.01,
+        "rangeMax": 100,
+        "increment": 0.01,
+        "x": 30,
+        "y": 125
+      },
+      "y-phase":
+      {
+        "controlType": "knob/default",
+        "rangeMin": 0,
+        "rangeMax": 1,
+        "increment": 0.01,
+        "x": 70,
+        "y": 125
+      },
+      "y-pulse-width":
+      {
+        "controlType": "knob/default",
+        "rangeMin": 0,
+        "rangeMax": 1,
+        "increment": 0.01,
+        "x": 50,
+        "y": 160
+      },
+      "y-wave":
+      {
+        "controlType": "selector/vert",
+        "x": 110,
+        "y": 125
+      },
+      "z-freq":
+      {
+        "controlType": "knob/log",
+        "rangeMin": 0.01,
+        "rangeMax": 100,
+        "increment": 0.01,
+        "x": 30,
+        "y": 200
+      },
+      "z-phase":
+      {
+        "controlType": "knob/default",
+        "rangeMin": 0,
+        "rangeMax": 1,
+        "increment": 0.01,
+        "x": 70,
+        "y": 200
+      },
+      "z-pulse-width":
+      {
+        "controlType": "knob/default",
+        "rangeMin": 0,
+        "rangeMax": 1,
+        "increment": 0.01,
+        "x": 50,
+        "y": 235
+      },
+      "z-wave":
+      {
+        "controlType": "selector/vert",
+        "x": 110,
+        "y": 200
+      }
+    }
+  },
   "vector/svg":
   {
     "width": 100,
