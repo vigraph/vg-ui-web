@@ -119,6 +119,47 @@
       }
     }
   },
+  "audio/filter":
+  {
+    "width": 145,
+    "height": 100,
+    "properties":
+    {
+      "mode":
+      {
+        "controlType": "selector/default",
+        "x": 40,
+        "y": 30
+      },
+      "cutoff":
+      {
+        "controlType": "knob/default",
+        "rangeMin": 0,
+        "rangeMax": 1,
+        "increment": 0.01,
+        "x": 30,
+        "y": 60
+      },
+      "resonance":
+      {
+        "controlType": "knob/default",
+        "rangeMin": 0,
+        "rangeMax": 1,
+        "increment": 0.01,
+        "x": 70,
+        "y": 60
+      },
+      "steepness":
+      {
+        "controlType": "knob/default",
+        "rangeMin": 0,
+        "rangeMax": 5,
+        "increment": 0.1,
+        "x": 110,
+        "y": 60
+      }
+    }
+  },
   "audio/envelope":
   {
     "width": 110,
