@@ -51,6 +51,11 @@
   --col-menu-item-text: #206060;
   --col-pin-fill: white;
   --col-pin-fill-pinned: black;
+
+  --col-node-background: #ddd;
+  --col-fallback: #222;
+  --col-number-type: #266;
+  --col-trigger-type: #262;
 }
 
 #container
