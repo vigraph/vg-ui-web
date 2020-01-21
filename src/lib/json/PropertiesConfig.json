@@ -1481,7 +1481,7 @@
   },
   "vector/graph":
   {
-    "width": 100,
+    "width": 110,
     "height": 90,
     "properties":
     {
@@ -1491,27 +1491,39 @@
         "rangeMin": 10,
         "rangeMax": 2000,
         "x": 25,
-        "y": 22
+        "y": 12
       },
       "scroll":
       {
         "controlType": "button/toggle",
         "x": 65,
-        "y": 22
+        "y": 18
+      },
+      "auto-range":
+      {
+        "controlType": "button/toggle",
+        "x": 95,
+        "y": 18
+      },
+      "input":
+      {
+        "connector": { "x": 0, "y": 25 }
       },
       "start":
       {
         "controlType": "button/default",
-        "x": 32,
-        "y": 60,
-        "valueFormat": "triggerButton"
+        "x": 40,
+        "y": 55,
+        "valueFormat": "triggerButton",
+        "connector": { "x": 0, "y": 50 }
       },
       "clear":
       {
         "controlType": "button/default",
-        "x": 72,
-        "y": 60,
-        "valueFormat": "triggerButton"
+        "x": 80,
+        "y": 55,
+        "valueFormat": "triggerButton",
+        "connector": { "x": 0, "y": 70 }
       }
     }
   },
