@@ -495,7 +495,7 @@
       }
     }
   },
-  "core/beat":
+  "/beat":
   {
     "width": 100,
     "height": 90,
@@ -1476,6 +1476,42 @@
       },
       "precision":
       {
+      }
+    }
+  },
+  "vector/graph":
+  {
+    "width": 100,
+    "height": 90,
+    "properties":
+    {
+      "points":
+      {
+        "controlType": "knob/default",
+        "rangeMin": 10,
+        "rangeMax": 2000,
+        "x": 25,
+        "y": 22
+      },
+      "scroll":
+      {
+        "controlType": "button/toggle",
+        "x": 65,
+        "y": 22
+      },
+      "start":
+      {
+        "controlType": "button/default",
+        "x": 32,
+        "y": 60,
+        "valueFormat": "triggerButton"
+      },
+      "clear":
+      {
+        "controlType": "button/default",
+        "x": 72,
+        "y": 60,
+        "valueFormat": "triggerButton"
       }
     }
   },
