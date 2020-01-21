@@ -674,6 +674,11 @@ foreignObject
   pointer-events: none;
 }
 
+:root.theme-light #canvas
+{
+  filter: invert(1);
+}
+
 .settings.label
 {
   pointer-events: none;
