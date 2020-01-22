@@ -1,6 +1,11 @@
 {
   "restURL": "http://localhost:33381",
   "language": "en",
+  "debugMode":
+  {
+    "enabled": false,
+    "connectorLabelText": 10
+  },
   "layoutPadding":
   {
     "x": 30,

@@ -18,7 +18,8 @@ export interface IRawGraphItem
     [key: string]:
     {
       connections?: Array<{ element: string, input: any }>,
-      type: string
+      type: string,
+      sample_rate: number
     }
   },
   // Subgraphs
@@ -31,7 +32,8 @@ export interface IRawGraphItem
 export interface IRawProperty
 {
   type: string,
-  value: any
+  value: any,
+  sample_rate?: number
 }
 
 export interface IProcessedGraphItem
@@ -44,8 +46,9 @@ export interface IProcessedGraphItem
   dynamic: boolean,
   category?: string,
   description?: string,
-  inputs: Array<{ id: string, type: string, x?: number, y?: number}>,
-  outputs: Array<{ id: string, type: string}>,
+  inputs: Array<{ id: string, type: string, sampleRate: number, x?: number,
+    y?: number}>,
+  outputs: Array<{ id: string, type: string, sampleRate: number}>,
   edges: Array<{ output: string, destId: string, input: string}>,
   // propType = "input" | "setting"
   properties?: Array<{ id: string, value: any, valueType: string,

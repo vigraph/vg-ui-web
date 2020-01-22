@@ -1067,26 +1067,32 @@ class Data
 
     // Inputs - position added later
     const gInputs:
-      Array<{ id: string, type: string, x?: number, y?: number}> = [];
+      Array<{ id: string, type: string, sampleRate: number, x?: number,
+        y?: number}> = [];
 
     const mInputs = metadata.inputs;
     if (mInputs)
     {
       for (const inputID of Object.keys(mInputs))
       {
-        gInputs.push({id: inputID, type: mInputs[inputID].type});
+        const sampleRate = (item.inputs && item.inputs[inputID].sample_rate) ?
+          item.inputs[inputID].sample_rate:0
+
+        gInputs.push({id: inputID, type: mInputs[inputID].type, sampleRate:
+          sampleRate ? sampleRate : 0});
       }
     }
 
     // Outputs
-    const gOutputs: Array<{ id: string, type: string }> = [];
+    const gOutputs: Array<{ id: string, type: string, sampleRate: number }> = [];
 
     const mOutputs = metadata.outputs;
     if (mOutputs)
     {
       for (const outputID of Object.keys(mOutputs))
       {
-        gOutputs.push({id: outputID, type: mOutputs[outputID].type});
+        gOutputs.push({id: outputID, type: mOutputs[outputID].type,
+          sampleRate: item.outputs?item.outputs[outputID].sample_rate:0});
       }
     }
 
@@ -1097,7 +1103,8 @@ class Data
       {
         for (const iID of Object.keys(item.inputs))
         {
-          gInputs.push({id: iID, type: item.inputs[iID].type});
+          gInputs.push({id: iID, type: item.inputs[iID].type,
+            sampleRate: item.inputs[iID].sample_rate || 0});
         }
       }
 
@@ -1105,7 +1112,8 @@ class Data
       {
         for (const oID of Object.keys(item.outputs))
         {
-          gOutputs.push({id: oID, type: item.outputs[oID].type});
+          gOutputs.push({id: oID, type: item.outputs[oID].type,
+            sampleRate: item.outputs[oID].sample_rate});
         }
       }
     }

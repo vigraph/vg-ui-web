@@ -16,8 +16,8 @@
 //            dynamic: boolean
 //            category: string
 //            description: string
-//            inputs: Map<id, { type: string, position: {x, y} }>
-//            outputs: Map<id, { type: string, position: null }>
+//            inputs: Map<id, { type: string, sampleRate: number, position: {x, y} }>
+//            outputs: Map<id, { type: string, sampleRate: number, position: null }>
 //            forwardEdges: Map<output, List<{ destId: string, destInput: string }>>
 //            reverseEdges: Map<input, List<{ srcId: string, srcOutput: string }>>
 //            position: { x, y },
@@ -64,8 +64,8 @@ export class Graph
   // { nodes: [
   //     { id, name, displayName, type, path, dynamic, category, description,
   //       x, y, w, h,
-  //       inputs: [ { id, type, x, y } ],
-  //       outputs: [ { id, type } ],
+  //       inputs: [ { id, type, sampleRate, x, y } ],
+  //       outputs: [ { id, type, sampleRate } ],
   //       edges: [ { output, destId, input } ],
   //       properties: [ { id, description, propType, valueType, valueFormat,
   //                       controlType, x, y, value, rangeMin, rangeMax,
@@ -140,6 +140,7 @@ export class Graph
       for (const i of n.inputs)
       {
         const input = this.addNodeInput(n.id, i.id, i.type);
+        input.sampleRate = i.sampleRate || 0;
         input.position = (i.y !== undefined ?
           { x: i.x || 0, y: i.y || 0 } : null);
       }
@@ -152,6 +153,7 @@ export class Graph
       for (const o of n.outputs)
       {
         const output = this.addNodeOutput(n.id, o.id, o.type);
+        output.sampleRate = o.sampleRate || 0;
         output.position = null;
       }
     }

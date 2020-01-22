@@ -199,6 +199,21 @@
   overflow: visible;
 }
 
+#connector-debug-label
+{
+  pointer-events: none;
+}
+
+#connector-debug-label .label-background
+{
+  opacity: 0.5;
+}
+
+#connector-debug-label .label
+{
+  dominant-baseline: hanging;
+}
+
 /* Edge */
 .edge
 {

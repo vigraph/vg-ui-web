@@ -1,6 +1,9 @@
 import * as React from 'react';
 import * as Model from './model';
 
+import { vgConfig } from './lib/Config';
+import { vgUtils } from './lib/Utils';
+
 interface IProps
 {
   parent: Model.Node;
@@ -39,6 +42,7 @@ export default class Connector extends React.Component<IProps>
           ` ${this.props.connector.direction} ${this.props.connector.type}`}
           d={this.pathForType(this.props.connector.type)}
           />
+        {vgConfig.Graph.debugMode.enabled && this.createDebugLabel()}
       </svg>
     );
   }
@@ -100,6 +104,26 @@ export default class Connector extends React.Component<IProps>
       return `M${x} ${y + r/2} L${x} ${y - r/2} L${x + r/2} ${y - r/2}` +
         ` L${x + r/2} ${y + r/2} Z`;
     }
+  }
+
+  private createDebugLabel = () =>
+  {
+    const radius = this.props.radius;
+    const fontSize = vgConfig.Graph.debugMode.connectorLabelText;
+    const textBox = vgUtils.textBoundingSize(
+      this.props.connector.sampleRate.toString(), fontSize);
+
+    return <svg id={"connector-debug-label"}
+        x={this.props.position.x + this.props.nodePadding + radius}
+        y={this.props.position.y-radius}>
+      <rect id={"connector-sample-rate"}
+        className={"connector-debug sample-rate label-background"}
+        width={textBox.width+2} height={fontSize+2}/>
+      <text id={"connector-sample-rate-text"} x={1} y={1}
+        fontSize={fontSize}
+        className={"label debug"}>{this.props.connector.sampleRate}</text>
+      }
+    </svg>
   }
 
   private pointerDown = (e: React.PointerEvent<SVGRectElement>) =>

@@ -25,6 +25,18 @@ export class Connector
       "type");
   }
 
+  get sampleRate(): number
+  {
+    return this.graph.getNodeConnectorProp(this.id, this.parent, this.direction,
+      "sampleRate");
+  }
+
+  set sampleRate(sampleRate: number)
+  {
+    this.graph.setNodeConnectorProp(this.id, this.parent, this.direction,
+      "sampleRate", sampleRate);
+  }
+
   get position(): {x: number, y: number} | null
   {
     return this.graph.getNodeConnectorProp(this.id, this.parent, this.direction,
