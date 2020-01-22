@@ -164,7 +164,7 @@ export default class Menu extends React.Component<IProps, IState>
       if (menuBoundY > windowHeight)
       {
         newPosition.y -= (this.subMenuRef.offsetHeight +
-          this.menuRef.offsetHeight);
+          this.menuRef.offsetHeight + 20);
 
         reverseOrder = true;
       }

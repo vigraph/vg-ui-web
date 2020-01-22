@@ -1,4 +1,354 @@
 {
+  "core/clone":
+  {
+    "width": 90,
+    "height": 35,
+    "category": "subgraph",
+    "properties":
+    {
+      "copies":
+      {
+        "controlType": "none/label",
+        "x": 55,
+        "y": 20,
+        "rangeMin": 1,
+        "rangeMax": 100,
+        "increment": 1
+      }
+    }
+  },
+  "core/clone-info":
+  {
+    "width": 110,
+    "height": 50,
+    "properties":
+    {
+    }
+  },
+  "core/compare":
+  {
+    "width": 90,
+    "height": 90,
+    "properties":
+    {
+     "value":
+      {
+        "controlType": "knob/default",
+        "rangeMin": 0,
+        "rangeMax": 1000,
+        "increment": 0.1,
+        "x": 40,
+        "y": 30
+      },
+      "on-change":
+      {
+      }
+    }
+  },
+  "core/filter":
+  {
+    "width": 145,
+    "height": 90,
+    "properties":
+    {
+      "input":
+      {
+        "connector":
+        {
+          "y": 10
+        }
+      },
+      "mode":
+      {
+        "controlType": "selector/default",
+        "x": 40,
+        "y": 19,
+        "connector":
+        {
+          "y": 30
+        }
+      },
+      "cutoff":
+      {
+        "controlType": "knob/default",
+        "rangeMin": 0,
+        "rangeMax": 1,
+        "increment": 0.01,
+        "x": 30,
+        "y": 53,
+        "connector":
+        {
+          "y": 53
+        }
+      },
+      "resonance":
+      {
+        "controlType": "knob/default",
+        "rangeMin": 0,
+        "rangeMax": 1,
+        "increment": 0.01,
+        "x": 70,
+        "y": 53,
+        "connector":
+        {
+          "y": 66
+        }
+      },
+      "steepness":
+      {
+        "controlType": "knob/default",
+        "rangeMin": 0,
+        "rangeMax": 5,
+        "increment": 0.1,
+        "x": 110,
+        "y": 53,
+        "connector":
+        {
+          "y": 79
+        }
+      }
+    }
+  },
+  "core/graph":
+  {
+    "width": 80,
+    "height": 30,
+    "category": "subgraph",
+    "properties":
+    {
+    }
+  },
+  "core/interpolator":
+  {
+    "width": 110,
+    "height": 120,
+    "properties":
+    {
+      "from":
+      {
+        "controlType": "knob/log",
+        "rangeMin": 0.001,
+        "rangeMax": 1000,
+        "increment": 0.001,
+        "x": 30,
+        "y": 15,
+        "connector":
+        {
+          "y": 20
+        }
+      },
+      "to":
+      {
+        "controlType": "knob/log",
+        "rangeMin": 0.001,
+        "rangeMax": 1000,
+        "increment": 0.001,
+        "x": 70,
+        "y": 15,
+        "connector":
+        {
+          "y": 35
+        }
+      },
+      "period":
+      {
+        "controlType": "knob/default",
+        "rangeMin": 0.01,
+        "rangeMax": 1000,
+        "increment": 0.01,
+        "x": 50,
+        "y": 50,
+        "connector":
+        {
+          "y": 65
+        }
+      },
+      "start":
+      {
+        "controlType": "button/default",
+        "x": 58,
+        "y": 92,
+        "valueFormat": "triggerButton",
+        "connector":
+        {
+          "y": 98
+        }
+      }
+    }
+  },
+  "core/log":
+  {
+    "width": 150,
+    "height": 40,
+    "properties":
+    {
+      "input":
+      {
+        "x": 142,
+        "y": 25,
+        "controlType": "textDisplay/default"
+      },
+      "prefix":
+      {
+        "x": 25,
+        "y": 25,
+        "controlType": "none/label",
+        "rangeMax": 20
+      }
+    }
+  },
+  "core/oscillator":
+  {
+    "width": 190,
+    "height": 120,
+    "properties":
+    {
+      "period":
+      {
+        "controlType": "knob/log",
+        "rangeMin": 0.001,
+        "rangeMax": 1000,
+        "increment": 0.001,
+        "x": 30,
+        "y": 15
+      },
+      "pulse-width":
+      {
+        "controlType": "knob/default",
+        "rangeMin": 0,
+        "rangeMax": 1,
+        "increment": 0.01,
+        "x": 70,
+        "y": 15
+      },
+      "phase":
+      {
+        "controlType": "knob/default",
+        "rangeMin": 0,
+        "rangeMax": 1,
+        "increment": 0.01,
+        "x": 50,
+        "y": 50
+      },
+      "wave":
+      {
+        "controlType": "selector/vert",
+        "x": 120,
+        "y": 15
+      },
+      "start":
+      {
+        "controlType": "button/default",
+        "x": 46,
+        "y": 90,
+        "valueFormat": "triggerButton"
+      },
+      "stop":
+      {
+        "controlType": "button/default",
+        "x": 71,
+        "y": 90,
+        "valueFormat": "triggerButton"
+      }
+    }
+  },
+  "core/pin":
+  {
+    "width": 70,
+    "height": 40,
+    "category": "pin",
+    "properties":
+    {
+    }
+  },
+  "core/random":
+  {
+    "width": 110,
+    "height": 80,
+    "properties":
+    {
+      "min":
+      {
+        "controlType": "knob/log",
+        "rangeMin": 0.1,
+        "rangeMax": 1000,
+        "increment": 0.1,
+        "x": 30,
+        "y": 15,
+        "connector":
+        {
+          "y": 20
+        }
+      },
+      "max":
+      {
+        "controlType": "knob/log",
+        "rangeMin": 0.1,
+        "rangeMax": 1000,
+        "increment": 0.1,
+        "x": 70,
+        "y": 15,
+        "connector":
+        {
+          "y": 35
+        }
+      },
+      "trigger":
+      {
+        "controlType": "button/default",
+        "x": 58,
+        "y": 55,
+        "valueFormat": "triggerButton",
+        "connector":
+        {
+          "y": 62
+        }
+      }
+    }
+  },
+  "core/timer":
+  {
+    "width": 80,
+    "height": 90,
+    "properties":
+    {
+      "period":
+      {
+        "controlType": "knob/log",
+        "rangeMin": 0.01,
+        "rangeMax": 100,
+        "increment": 0.01,
+        "x": 36,
+        "y": 15,
+        "connector":
+        {
+          "y": 27
+        }
+      },
+      "reset":
+      {
+        "controlType": "button/default",
+        "x": 58,
+        "y": 60,
+        "valueFormat": "triggerButton",
+        "connector":
+        {
+          "y": 60
+        }
+      },
+      "start":
+      {
+        "controlType": "button/default",
+        "x": 30,
+        "y": 60,
+        "valueFormat": "triggerButton",
+        "connector":
+        {
+          "y": 75
+        }
+      }
+    }
+  },
   "audio/alsa-out":
   {
     "width": 100,
@@ -41,7 +391,7 @@
   "audio/level":
   {
     "width": 70,
-    "height": 70,
+    "height": 55,
     "properties":
     {
       "gain":
@@ -51,14 +401,14 @@
         "rangeMax": 2,
         "increment": 0.01,
         "x": 30,
-        "y": 30
+        "y": 15
       }
     }
   },
   "audio/oscillator":
   {
-    "width": 200,
-    "height": 140,
+    "width": 190,
+    "height": 135,
     "properties":
     {
       "note":
@@ -68,7 +418,11 @@
         "rangeMax": 1,
         "increment": 0.08333333,
         "x": 30,
-        "y": 30
+        "y": 15,
+        "connector":
+        {
+          "y": 26
+        }
       },
       "octave":
       {
@@ -77,7 +431,11 @@
         "rangeMax": 3,
         "increment": 1,
         "x": 70,
-        "y": 30
+        "y": 15,
+        "connector":
+        {
+          "y": 39
+        }
       },
       "detune":
       {
@@ -86,7 +444,11 @@
         "rangeMax": 3,
         "increment": 0.1,
         "x": 30,
-        "y": 70
+        "y": 50,
+        "connector":
+        {
+          "y": 52
+        }
       },
       "pulse-width":
       {
@@ -95,27 +457,101 @@
         "rangeMax": 1,
         "increment": 0.01,
         "x": 70,
-        "y": 70
+        "y": 50,
+        "connector":
+        {
+          "y": 65
+        }
       },
       "wave":
       {
         "controlType": "selector/vert",
-        "x": 130,
-        "y": 30
+        "x": 120,
+        "y": 15,
+        "connector":
+        {
+          "y": 122
+        }
       },
       "start":
       {
         "controlType": "button/default",
         "x": 38,
-        "y": 110,
-        "valueFormat": "triggerButton"
+        "y": 90,
+        "valueFormat": "triggerButton",
+        "connector":
+        {
+          "y": 90
+        }
       },
       "stop":
       {
         "controlType": "button/default",
         "x": 78,
-        "y": 110,
-        "valueFormat": "triggerButton"
+        "y": 90,
+        "valueFormat": "triggerButton",
+        "connector":
+        {
+          "y": 103
+        }
+      }
+    }
+  },
+  "audio/bit-crush":
+  {
+    "width": 110,
+    "height": 60,
+    "properties":
+    {
+      "input":
+      {
+        "connector":
+        {
+          "y": 12
+        }
+      },
+      "bits":
+      {
+        "controlType": "knob/default",
+        "rangeMin": 0,
+        "rangeMax": 1,
+        "increment": 0.01,
+        "x": 30,
+        "y": 15,
+        "connector":
+        {
+          "y": 29
+        }
+      },
+      "rate":
+      {
+        "controlType": "knob/default",
+        "rangeMin": 0,
+        "rangeMax": 1,
+        "increment": 0.01,
+        "x": 70,
+        "y": 15,
+        "connector":
+        {
+          "y": 42
+        }
+      }
+    }
+  },
+  "audio/delay":
+  {
+    "width": 80,
+    "height": 55,
+    "properties":
+    {
+      "time":
+      {
+        "controlType": "knob/default",
+        "rangeMin": 0,
+        "rangeMax": 1,
+        "increment": 0.01,
+        "x": 35,
+        "y": 15
       }
     }
   },
@@ -163,7 +599,7 @@
   "audio/envelope":
   {
     "width": 110,
-    "height": 140,
+    "height": 130,
     "properties":
     {
       "attack":
@@ -173,7 +609,11 @@
         "rangeMax": 10,
         "increment": 0.001,
         "x": 30,
-        "y": 30
+        "y": 15,
+        "connector":
+        {
+          "y": 26
+        }
       },
       "decay":
       {
@@ -182,7 +622,11 @@
         "rangeMax": 10,
         "increment": 0.05,
         "x": 70,
-        "y": 30
+        "y": 15,
+        "connector":
+        {
+          "y": 39
+        }
       },
       "sustain":
       {
@@ -191,7 +635,11 @@
         "rangeMax": 1,
         "increment": 0.01,
         "x": 30,
-        "y": 70
+        "y": 50,
+        "connector":
+        {
+          "y": 52
+        }
       },
       "release":
       {
@@ -200,35 +648,51 @@
         "rangeMax": 30,
         "increment": 0.01,
         "x": 70,
-        "y": 70
+        "y": 50,
+        "connector":
+        {
+          "y": 65
+        }
       },
       "start":
       {
         "controlType": "button/default",
         "x": 32,
-        "y": 110,
-        "valueFormat": "triggerButton"
+        "y": 95,
+        "valueFormat": "triggerButton",
+        "connector":
+        {
+          "y": 90
+        }
       },
       "stop":
       {
         "controlType": "button/default",
         "x": 57,
-        "y": 110,
-        "valueFormat": "triggerButton"
+        "y": 95,
+        "valueFormat": "triggerButton",
+        "connector":
+        {
+          "y": 103
+        }
       },
       "reset":
       {
         "controlType": "button/default",
         "x": 82,
-        "y": 110,
-        "valueFormat": "triggerButton"
+        "y": 95,
+        "valueFormat": "triggerButton",
+        "connector":
+        {
+          "y": 116
+        }
       }
     }
   },
   "audio/pitch-shift":
   {
-    "width": 70,
-    "height": 70,
+    "width": 80,
+    "height": 55,
     "properties":
     {
      "pitch":
@@ -237,17 +701,24 @@
         "rangeMin": -60,
         "rangeMax": 60,
         "increment": 0.1,
-        "x": 30,
-        "y": 30
+        "x": 35,
+        "y": 15
       }
     }
   },
   "audio/reverb":
   {
     "width": 110,
-    "height": 70,
+    "height": 60,
     "properties":
     {
+      "input":
+      {
+        "connector":
+        {
+          "y": 15
+        }
+      },
      "time":
       {
         "controlType": "knob/default",
@@ -255,7 +726,11 @@
         "rangeMax": 2,
         "increment": 0.01,
         "x": 30,
-        "y": 30
+        "y": 15,
+        "connector":
+        {
+          "y": 30
+        }
       },
       "feedback":
       {
@@ -264,14 +739,54 @@
         "rangeMax": 1,
         "increment": 0.01,
         "x": 70,
-        "y": 30
+        "y": 15,
+        "connector":
+        {
+          "y": 45
+        }
+      }
+    }
+  },
+  "audio/loop":
+  {
+    "width": 80,
+    "height": 80,
+    "properties":
+    {
+      "play-start":
+      {
+        "controlType": "button/default",
+        "x": 30,
+        "y": 15,
+        "valueFormat": "triggerButton"
+      },
+      "play-stop":
+      {
+        "controlType": "button/default",
+        "x": 60,
+        "y": 15,
+        "valueFormat": "triggerButton"
+      },
+      "record-start":
+      {
+        "controlType": "button/default",
+        "x": 30,
+        "y": 45,
+        "valueFormat": "triggerButton"
+      },
+      "record-stop":
+      {
+        "controlType": "button/default",
+        "x": 60,
+        "y": 45,
+        "valueFormat": "triggerButton"
       }
     }
   },
   "audio/position":
   {
-    "width": 70,
-    "height": 70,
+    "width": 80,
+    "height": 55,
     "properties":
     {
      "x":
@@ -280,8 +795,8 @@
         "rangeMin": -0.5,
         "rangeMax": 0.5,
         "increment": 0.01,
-        "x": 30,
-        "y": 30
+        "x": 35,
+        "y": 15
       }
     }
   },
@@ -322,8 +837,8 @@
   },
   "audio/wav-in":
   {
-    "width": 100,
-    "height": 25,
+    "width": 120,
+    "height": 45,
     "properties":
     {
       "file":
@@ -535,52 +1050,6 @@
       }
     }
   },
-  "core/clone":
-  {
-    "width": 90,
-    "height": 35,
-    "category": "subgraph",
-    "properties":
-    {
-      "copies":
-      {
-        "controlType": "none/label",
-        "x": 55,
-        "y": 30,
-        "rangeMin": 1,
-        "rangeMax": 100,
-        "increment": 1
-      }
-    }
-  },
-  "core/clone-info":
-  {
-    "width": 130,
-    "height": 50,
-    "properties":
-    {
-    }
-  },
-  "core/compare":
-  {
-    "width": 70,
-    "height": 120,
-    "properties":
-    {
-     "value":
-      {
-        "controlType": "knob/default",
-        "rangeMin": 0,
-        "rangeMax": 1000,
-        "increment": 0.1,
-        "x": 30,
-        "y": 45
-      },
-      "on-change":
-      {
-      }
-    }
-  },
   "core/count":
   {
     "width": 90,
@@ -619,48 +1088,6 @@
       }
     }
   },
-  "core/interpolator":
-  {
-    "width": 110,
-    "height": 110,
-    "properties":
-    {
-      "from":
-      {
-        "controlType": "knob/log",
-        "rangeMin": 0.001,
-        "rangeMax": 1000,
-        "increment": 0.001,
-        "x": 30,
-        "y": 30
-      },
-      "to":
-      {
-        "controlType": "knob/log",
-        "rangeMin": 0.001,
-        "rangeMax": 1000,
-        "increment": 0.001,
-        "x": 70,
-        "y": 30
-      },
-      "period":
-      {
-        "controlType": "knob/default",
-        "rangeMin": 0.01,
-        "rangeMax": 1000,
-        "increment": 0.01,
-        "x": 30,
-        "y": 70
-      },
-      "start":
-      {
-        "controlType": "button/default",
-        "x": 80,
-        "y": 75,
-        "valueFormat": "triggerButton"
-      }
-    }
-  },
   "core/divide":
   {
     "width": 70,
@@ -676,56 +1103,6 @@
         "x": 30,
         "y": 30
       }
-    }
-  },
-  "core/filter":
-  {
-    "width": 145,
-    "height": 100,
-    "properties":
-    {
-      "mode":
-      {
-        "controlType": "selector/default",
-        "x": 40,
-        "y": 30
-      },
-      "cutoff":
-      {
-        "controlType": "knob/default",
-        "rangeMin": 0,
-        "rangeMax": 1,
-        "increment": 0.01,
-        "x": 30,
-        "y": 60
-      },
-      "resonance":
-      {
-        "controlType": "knob/default",
-        "rangeMin": 0,
-        "rangeMax": 1,
-        "increment": 0.01,
-        "x": 70,
-        "y": 60
-      },
-      "steepness":
-      {
-        "controlType": "knob/default",
-        "rangeMin": 0,
-        "rangeMax": 5,
-        "increment": 0.1,
-        "x": 110,
-        "y": 60
-      }
-    }
-  },
-  "core/graph":
-  {
-    "width": 60,
-    "height": 40,
-    "category": "subgraph",
-    "properties":
-    {
     }
   },
   "core/limit":
@@ -751,27 +1128,6 @@
         "increment": 0.1,
         "x": 70,
         "y": 30
-      }
-    }
-  },
-  "core/log":
-  {
-    "width": 150,
-    "height": 50,
-    "properties":
-    {
-      "input":
-      {
-        "x": 142,
-        "y": 35,
-        "controlType": "textDisplay/default"
-      },
-      "prefix":
-      {
-        "x": 25,
-        "y": 35,
-        "controlType": "none/label",
-        "rangeMax": 20
       }
     }
   },
@@ -808,103 +1164,6 @@
     "category": "pin",
     "properties":
     {
-    }
-  },
-  "core/pin":
-  {
-    "width": 70,
-    "height": 50,
-    "category": "pin",
-    "properties":
-    {
-    }
-  },
-  "core/oscillator":
-  {
-    "width": 200,
-    "height": 120,
-    "properties":
-    {
-      "period":
-      {
-        "controlType": "knob/log",
-        "rangeMin": 0.001,
-        "rangeMax": 1000,
-        "increment": 0.001,
-        "x": 30,
-        "y": 30
-      },
-      "pulse-width":
-      {
-        "controlType": "knob/default",
-        "rangeMin": 0,
-        "rangeMax": 1,
-        "increment": 0.01,
-        "x": 70,
-        "y": 30
-      },
-      "phase":
-      {
-        "controlType": "knob/default",
-        "rangeMin": 0,
-        "rangeMax": 1,
-        "increment": 0.01,
-        "x": 30,
-        "y": 70
-      },
-      "wave":
-      {
-        "controlType": "selector/vert",
-        "x": 130,
-        "y": 30
-      },
-      "start":
-      {
-        "controlType": "button/default",
-        "x": 70,
-        "y": 80,
-        "valueFormat": "triggerButton"
-      },
-      "stop":
-      {
-        "controlType": "button/default",
-        "x": 95,
-        "y": 80,
-        "valueFormat": "triggerButton"
-      }
-    }
-  },
-  "core/random":
-  {
-    "width": 110,
-    "height": 90,
-    "properties":
-    {
-      "min":
-      {
-        "controlType": "knob/log",
-        "rangeMin": 0.1,
-        "rangeMax": 1000,
-        "increment": 0.1,
-        "x": 30,
-        "y": 28
-      },
-      "max":
-      {
-        "controlType": "knob/log",
-        "rangeMin": 0.1,
-        "rangeMax": 1000,
-        "increment": 0.1,
-        "x": 70,
-        "y": 28
-      },
-      "trigger":
-      {
-        "controlType": "button/default",
-        "x": 58,
-        "y": 65,
-        "valueFormat": "triggerButton"
-      }
     }
   },
   "core/subtract":
@@ -947,37 +1206,6 @@
         "increment": 0.1,
         "x": 70,
         "y": 30
-      }
-    }
-  },
-  "core/timer":
-  {
-    "width": 80,
-    "height": 90,
-    "properties":
-    {
-      "period":
-      {
-        "controlType": "knob/log",
-        "rangeMin": 0.01,
-        "rangeMax": 100,
-        "increment": 0.01,
-        "x": 36,
-        "y": 28
-      },
-      "reset":
-      {
-        "controlType": "button/default",
-        "x": 58,
-        "y": 65,
-        "valueFormat": "triggerButton"
-      },
-      "start":
-      {
-        "controlType": "button/default",
-        "x": 30,
-        "y": 65,
-        "valueFormat": "triggerButton"
       }
     }
   },
