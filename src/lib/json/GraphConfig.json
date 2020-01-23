@@ -11,6 +11,7 @@
     "x": 30,
     "y": 30
   },
+  "longPressTime": 1.5,
   "logUpdateTime": 60,
   "viewDefault": {"x": 0, "y": 0, "w": 5000, "h": 5000},
   "zoomFactor": 1.1,

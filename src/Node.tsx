@@ -3,6 +3,7 @@ import * as Model from './model';
 
 import Property from './Property';
 import WebsocketCanvas from './WebsocketCanvas';
+import Delete from './Delete'
 
 import { vgData } from './data/Data';
 import { vgUtils } from './lib/Utils';
@@ -23,12 +24,14 @@ interface IProps
   updateTargetNode: (node: Model.Node) => void;
   updateTargetProperty: (updateID: string, property: Model.Property | null,
     updating: boolean) => void;
+  removeNode: (node: Model.Node) => void;
 }
 
 interface IState
 {
   dragging: boolean;
   resizing: boolean;
+  showDelete: boolean;
   x: number;
   y: number;
   h: number;
@@ -62,6 +65,7 @@ export default class Node extends React.Component<IProps, IState>
       {
         dragging: false,
         resizing: false,
+        showDelete: false,
         x: props.node.position.x,
         y: props.node.position.y,
         h: props.node.size.h,
@@ -95,16 +99,16 @@ export default class Node extends React.Component<IProps, IState>
           className={`node-background ${this.state.dragging ? "dragging" :
             ""} ${this.state.resizing ? "resizing" : ""}`}
           onPointerDown={this.handlePointerDown}
-          onContextMenu={this.handleContextMenu}
+          onContextMenu={this.handleContextMenu}/>
         />
         <path className={`node-border ${this.state.dragging ? "dragging" :
           ""} ${this.state.resizing ? "resizing" : ""}`}
           d={`M ${padding} ${0} L ${padding} ${height} L ${padding+width}
             ${height} L ${padding+width} ${0}`}
         />
-        {this.generateHeader()}
-        {this.generateSpecialCases()}
-        {this.generateResizeIcon()}
+        {this.createHeader()}
+        {this.createSpecialCases()}
+        {this.createResizeIcon()}
         {properties.map((property: Model.Property, j) =>
           {
             return <Property key={j} property={property}
@@ -169,11 +173,10 @@ export default class Node extends React.Component<IProps, IState>
       {
         this.setState({relatedProperties: relatedProps});
       }
-
     }
   }
 
-  private generateHeader = () =>
+  private createHeader = () =>
   {
     const node = this.props.node;
     const title = node.displayName || node.name;
@@ -216,10 +219,12 @@ export default class Node extends React.Component<IProps, IState>
         }
         <path className={"node-header-separator"}
           d={`M ${padding/2} ${height} L ${width-(padding/2)} ${height}`}/>
+        {this.state.showDelete && <Delete x={0} y={0} radius={10}
+          deletePressed={this.deleteNode}/>}
       </svg>
   }
 
-  private generateSpecialCases = () =>
+  private createSpecialCases = () =>
   {
     const padding = this.props.padding;
 
@@ -241,7 +246,7 @@ export default class Node extends React.Component<IProps, IState>
     }
   }
 
-  private generateResizeIcon = () =>
+  private createResizeIcon = () =>
   {
     if (this.resizeNodeProps() !== null)
     {
@@ -252,6 +257,12 @@ export default class Node extends React.Component<IProps, IState>
         <rect className={"node-resize-icon"} x={0} y={0} width={6} height={6}/>
       </svg>
     }
+  }
+
+  // Create node delete icon if info panel shown
+  private deleteNode = () =>
+  {
+    this.props.removeNode(this.props.node);
   }
 
   // Returns nodes resize props (aspect ratio, minimum width and height) from
@@ -308,12 +319,18 @@ export default class Node extends React.Component<IProps, IState>
     window.removeEventListener('pointerup', this.handlePointerUp);
     window.removeEventListener('pointermove', this.handlePointerMove);
 
+    // Only update layout if node has been moved
     if (this.pointerDown.x !== this.state.x || this.pointerDown.y !==
       this.state.y)
     {
       // Update graph layout data
       vgData.updateLayout(this.props.node.path, {x: this.state.x,
         y: this.state.y});
+
+    }
+    else
+    {
+      this.setState({showDelete: !this.state.showDelete});
     }
 
     if (this.props.endUpdate)

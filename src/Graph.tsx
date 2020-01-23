@@ -98,7 +98,7 @@ export default class Graph extends React.Component<IProps, IState>
 
         <InfoPanel graph={this.graph} node={this.state.targetNode}
           startUpdate={this.startUpdate} update={this.update}
-          endUpdate={this.endUpdate} removeNode={this.removeNode}
+          endUpdate={this.endUpdate}
           dynamicNodeUpdate={this.dynamicNodeUpdate}/>
 
         <svg id="graph"
@@ -144,7 +144,7 @@ export default class Graph extends React.Component<IProps, IState>
     return <Node key={node.path+":"+i} node={node}
       startUpdate={this.startUpdate} update={this.update}
       endUpdate={this.endUpdate} padding={this.csize*2} graphRef={this.graphRef}
-      showNodeGraph={this.showNodeGraph}
+      showNodeGraph={this.showNodeGraph} removeNode={this.removeNode}
       updateTargetNode={this.updateTargetNode}
       dynamicNodeUpdate={this.dynamicNodeUpdate}
       updateTargetProperty={this.updateTargetProperty}>
@@ -586,8 +586,8 @@ export default class Graph extends React.Component<IProps, IState>
     const pointerDuration = date.getTime() - this.pointerClick.t;
 
     // Show menu on single long press
-    if (this.pointerClick.t && pointerDuration > 1500 &&
-      this.state.showMenu === "hidden")
+    if (this.pointerClick.t && pointerDuration >
+      (vgConfig.Graph.longPressTime * 1000) && this.state.showMenu === "hidden")
     {
       this.setState({showMenu: "show"});
     }

@@ -51,6 +51,11 @@
   pointer-events: none;
 }
 
+.node.pin .node-border
+{
+  stroke: var(--col-node-pin-border);
+}
+
 .node-resize-icon
 {
   fill: var(--col-node-resize);
