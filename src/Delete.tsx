@@ -6,7 +6,6 @@ interface IProps
 {
   x: number;
   y: number;
-  radius: number;
   deletePressed: () => void;
 }
 

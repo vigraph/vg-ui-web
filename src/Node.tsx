@@ -219,7 +219,7 @@ export default class Node extends React.Component<IProps, IState>
         }
         <path className={"node-header-separator"}
           d={`M ${padding/2} ${height} L ${width-(padding/2)} ${height}`}/>
-        {this.state.showDelete && <Delete x={0} y={0} radius={10}
+        {this.state.showDelete && <Delete x={0} y={0}
           deletePressed={this.deleteNode}/>}
       </svg>
   }

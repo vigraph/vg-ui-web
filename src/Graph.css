@@ -742,15 +742,6 @@ foreignObject
   height: 20px;
 }
 
-#info-delete-icon
-{
-  position: absolute;
-  width: 20px;
-  height: 20px;
-  right: 5px;
-  top: 5px;
-}
-
 #info .info-text
 {
   color: var(--col-text);

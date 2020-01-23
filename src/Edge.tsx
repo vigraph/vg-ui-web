@@ -1,5 +1,6 @@
 import * as React from 'react';
 import * as Model from './model';
+import Delete from './Delete'
 
 import { vgUtils } from './lib/Utils';
 import { vgConfig } from './lib/Config';
@@ -102,15 +103,8 @@ export default class Edge extends React.Component<IProps, IState>
           onPointerLeave={this.edgePointerLeave}
         />
         {
-          this.state.edgeSelected && <svg className="delete-wrapper">
-            <circle className="edge-delete"
-              cx={deleteX} cy={deleteY} r={8}
-              onPointerDown={this.removeEdgePointer}/>
-            <path className="delete-line" d={`M ${deleteX-5} ${deleteY-5} L` +
-              `${deleteX+5} ${deleteY+5}`}/>
-            <path className="delete-line" d={`M ${deleteX-5} ${deleteY+5} L` +
-              `${deleteX+5} ${deleteY-5}`}/>
-            </svg>
+          this.state.edgeSelected && <Delete x={deleteX} y={deleteY}
+            deletePressed={this.removeEdge}/>
         }
         {
           (this.state.edgeSelected &&
@@ -208,11 +202,10 @@ export default class Edge extends React.Component<IProps, IState>
     this.clearHoverTimeout();
   }
 
-  private removeEdgePointer = (e: React.PointerEvent<SVGCircleElement>) =>
+  private removeEdge = () =>
   {
     this.setState({edgeSelected: false});
     this.clearHoverTimeout();
-    e.stopPropagation();
     this.props.removeEdge(this.props.src.id, this.props.srcOutput.id,
       this.props.dest.id, this.props.destInput.id);
   }
