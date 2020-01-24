@@ -32,6 +32,7 @@ interface IState
   dragging: boolean;
   resizing: boolean;
   showDelete: boolean;
+  editTitle: boolean;
   x: number;
   y: number;
   h: number;
@@ -66,6 +67,7 @@ export default class Node extends React.Component<IProps, IState>
         dragging: false,
         resizing: false,
         showDelete: false,
+        editTitle: false,
         x: props.node.position.x,
         y: props.node.position.y,
         h: props.node.size.h,
@@ -194,6 +196,41 @@ export default class Node extends React.Component<IProps, IState>
 
     const Icon = vgIcons.Menu[node.type] ? vgIcons.Menu[node.type] : "";
 
+    // Display title text or edit box
+    const titleDisplay = () =>
+    {
+      if (this.state.editTitle)
+      {
+        return  <foreignObject id="node-title-edit-wrapper"
+          className={"foreign-object " + this.props.node.id}
+          width={titleWidth} height={height}
+          fontSize={this.titleFontSize} x={2} y={2}>
+          <input id="node-title-edit-input" type="text"
+            className={"value-input display-name"} autoComplete={"off"}
+            width={titleWidth} height={height} defaultValue={title}
+            onPointerDown={this.titleEditPointerdown}
+            onBlur={this.titleEditOnBlur}
+            onKeyDown={this.titleEditKeyDown}/>
+        </foreignObject>;
+      }
+      else
+      {
+        return <svg className={"node-title-wrapper " + this.props.node.id}
+          width={titleWidth} height={height} x={0} y={(padding/2)+1}>
+          <text className={"node-title " + this.props.node.id}
+            fontSize={this.titleFontSize} x={0} y={0}
+              onPointerDown={this.handleTitlePointerDown}
+              onPointerUp={this.handleTitlePointerUp}>
+              {linesArray.map((word: string, index: number) =>
+                {
+                  return <tspan key={index} x={padding} width={titleWidth}
+                    dy={(index?1:0)*this.titleFontSize}>{word}</tspan>
+                })}
+          </text>
+        </svg>
+      }
+    }
+
     return <svg id={node.id+"-header-wrapper"} className={"node-header-wrapper"}
       x={padding} y={-height}>
         <rect x={0} y={0} width={width} height={height}
@@ -205,14 +242,7 @@ export default class Node extends React.Component<IProps, IState>
           ""} ${this.state.resizing ? "resizing" : ""}`}
           d={`M ${0} ${height} L ${0} ${0}
             L ${width} ${0} L ${width} ${height}`}/>
-        <text className={"node-title " + this.props.node.id}
-          fontSize={this.titleFontSize} x={padding} y={(padding/2)+1}>
-            {linesArray.map((word: string, index: number) =>
-              {
-                return <tspan key={index} x={padding}
-                  dy={(index?1:0)*this.titleFontSize}>{word}</tspan>
-              })}
-        </text>
+        { titleDisplay() }
         {
           Icon ? <Icon x={width-(iconSize+padding/4)} y={padding/4}
             width={iconSize} height={iconSize}/> : ""
@@ -327,6 +357,12 @@ export default class Node extends React.Component<IProps, IState>
       vgData.updateLayout(this.props.node.path, {x: this.state.x,
         y: this.state.y});
 
+    }
+    // Click without moving - hide title edit box if it is shown otherwise
+    // show delete icon
+    else if (this.state.editTitle)
+    {
+      this.setState({editTitle: false});
     }
     else
     {
@@ -446,6 +482,67 @@ export default class Node extends React.Component<IProps, IState>
     if (this.props.endUpdate)
     {
       this.props.endUpdate();
+    }
+  }
+
+  // Click (release/up) on title starts edit 'mode'
+  private handleTitlePointerUp = (e: React.PointerEvent<SVGTextElement>) =>
+  {
+    this.setState({editTitle: true, showDelete: false});
+  }
+
+  // Stop pointer down event in title propagating to graph background
+  private handleTitlePointerDown = (e: React.PointerEvent<SVGTextElement>) =>
+  {
+    e.stopPropagation();
+  }
+
+  // Stop pointer event in edit box propagating to graph background
+  private titleEditPointerdown = (e: React.PointerEvent<HTMLInputElement>) =>
+  {
+    e.stopPropagation();
+  }
+
+  // On blur (focus off) update display name of node
+  private titleEditOnBlur = (e: React.FocusEvent<HTMLInputElement>) =>
+  {
+    const textBox =
+      document.getElementById(e.currentTarget.id) as HTMLInputElement;
+
+    if (textBox && this.props.node)
+    {
+      const node = this.props.node;
+
+      vgData.updateLayout(node.path, undefined, undefined,
+        {n: textBox.value.toString()}, () =>
+        {
+          this.props.startUpdate();
+          node.displayName = textBox.value.toString();
+          this.props.update();
+          this.props.endUpdate();
+        });
+    }
+
+    // Scroll page back to 0,0 in case it was moved showing onscreen keyboard
+    window.scrollTo(0,0);
+    document.body.scrollTop = 0;
+    document.body.scrollLeft = 0;
+
+    this.setState({editTitle: false});
+  }
+
+  // Pressing enter removes focus from the text box
+  // Value validation and updating happens on text box onBlur (focus lost)
+  // so simulates pressing enter submitting the new value
+  private titleEditKeyDown = (e: React.KeyboardEvent) =>
+  {
+    const textBox =
+      document.getElementById(e.currentTarget.id) as HTMLInputElement;
+
+    // Enter key = 13
+    if (textBox && e.which === 13)
+    {
+      textBox.blur();
     }
   }
 

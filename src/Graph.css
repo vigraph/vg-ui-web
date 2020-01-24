@@ -79,7 +79,6 @@
 
 .node-title
 {
-  pointer-events: none;
   font-weight: bold;
   fill: var(--col-label);
   dominant-baseline: hanging;
@@ -87,6 +86,16 @@
   -moz-user-select: none; /* Firefox */
   -ms-user-select: none; /* IE10+/Edge */
   user-select: none; /* Standard */
+}
+
+#node-title-edit-input
+{
+  width: 100%;
+}
+
+.node-title tspan
+{
+  overflow: hidden;
 }
 
 /* Property label */
