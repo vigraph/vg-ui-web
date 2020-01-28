@@ -6,8 +6,6 @@
   --col-node-border: #888;
   --col-node-fill: #888;
   --col-label: #ccc;
-  --col-info-bg: #222;
-  --col-info-border: #888;
   --col-label-border: #ccc;
   --col-label-fill: #111;
   --col-menu-border: #888;
@@ -40,6 +38,10 @@
   --col-selector-background: #262626;
   --col-node-resize: #ccc;
   --col-node-pin-border: #d4aa00;
+  --col-info-bg: #4b4b4b;
+  --col-info-border: #888;
+  --col-info-input-bg: #222;
+  --col-info-input-focus: white;
 }
 
 /* Light theme */

@@ -55,6 +55,10 @@
   {
     "hoverTime": 2
   },
+  "infoPanel":
+  {
+    "iconSize": 30
+  },
   "menu":
   {
     "size": 10,

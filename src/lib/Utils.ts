@@ -17,6 +17,11 @@ class Utils
     }
   }
 
+  public capitaliseFirstLetter(str: string)
+  {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  }
+
   public saveToFile(contents: string)
   {
     const text = encodeURIComponent(contents);

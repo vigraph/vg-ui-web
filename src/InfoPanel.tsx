@@ -4,6 +4,7 @@ import * as Model from './model';
 import { vgConfig } from './lib/Config';
 import { vgUtils } from './lib/Utils';
 import { vgData } from './data/Data';
+import { vgIcons } from './icons/Icons';
 
 interface IProps
 {
@@ -84,35 +85,28 @@ export default class InfoPanel extends React.Component<IProps, IState>
 
     if (node && this.state.show)
     {
-      const section = node.type.split("/")[0];
+      const title = node.displayName || node.name;
+      const section = vgUtils.capitaliseFirstLetter(node.type.split("/")[0]);
+      const type = vgUtils.capitaliseFirstLetter(node.type.split("/")[1]);
+
+      const Icon = vgIcons.Menu[node.type] ? vgIcons.Menu[node.type] : "";
+      const iconSize = vgConfig.Graph.infoPanel.iconSize;
+
       return <div id="info-panel">
-        <div id="node-info-wrapper" className="info-section-wrapper">
-          <div id="info-node-name" className="info-text node name">
-            {node.name}
-          </div>
-          <div id="info-node-id" className="info-text node id">
-            {node.id}
-          </div>
-          <div id="info-node-desc" className="info-text node desc">
-            {node.description}
+        <div id="node-info-wrapper" className="info-header-wrapper">
+          <div id="info-node-title" className="info-text node title">
+            {title}
           </div>
           <div id="info-node-section" className="info-text node section">
             {section}
           </div>
-          <div id="info-node-category" className="info-text node category">
-            {node.category}
+          <div id="info-node-type" className="info-text node type">
+            {type}
           </div>
-          <div id="info-node-display-name-wrapper"
-            className="info-section-wrapper"
-            key={"display-name-key-"+node.id+"-"+node.displayName}>
-            <div id="info-node-display-name" className="info-text displayName">
-              {this.ipStrings.displayName}
-            </div>
-            <input id="info-node-display-name-input" type="text"
-              className={"value-input display-name"}
-              defaultValue={node.displayName}
-              onBlur={this.displayNameInputOnBlur}
-              onKeyDown={this.textBoxKeyDown}/>
+          <div id="info-node-icon" className="node icon">
+            {
+              Icon ? <Icon x={0} y={0} width={iconSize} height={iconSize}/> : ""
+            }
           </div>
         </div>
         {this.createInputsInfo(node)}
@@ -125,7 +119,7 @@ export default class InfoPanel extends React.Component<IProps, IState>
     }
   }
 
-  // Create input properties info section with property description and
+  // Create input properties info section with property name and
   // value display or control based on property value type
   private createInputsInfo = (node: Model.Node) =>
   {
@@ -142,20 +136,23 @@ export default class InfoPanel extends React.Component<IProps, IState>
           {
             const key = "input-" + index + "-" + (typeof input.value !==
               "undefined" ? input.value.toString() : "undefined");
+            const name = vgUtils.capitaliseFirstLetter(input.id);
+            const disabled = input.hasConnection();
 
-            return <div id={input.id+"-wrapper"} className="input-wrapper"
+            return <div id={input.id+"-wrapper"} className={`input-wrapper
+              ${disabled?"disabled":""}`}
               key={key}>
-              <div id={input.id+"-desc"} className="info-text input desc">
-                {input.description ? input.description : input.id}
+              <div id={input.id+"-name"} className={`info-text input-name`}>
+                {name}
               </div>
-              {this.createValueControl(input, input.hasConnection())}
+              {this.createValueControl(input, disabled)}
             </div>
           })}
       </div>
     }
   }
 
-  // Create settings properties info section with property description and
+  // Create settings properties info section with property name and
   // value display or control based on property value type
   private createSettingsInfo = (node: Model.Node) =>
   {
@@ -172,11 +169,12 @@ export default class InfoPanel extends React.Component<IProps, IState>
           {
             const key = "setting-" + index + "-" + (typeof setting.value !==
               "undefined" ? setting.value.toString() : "undefined");
+            const name = vgUtils.capitaliseFirstLetter(setting.id);
 
             return <div id={setting.id+"-wrapper"} className="setting-wrapper"
               key={key}>
-              <div id={setting.id+"-desc"} className="info-text setting desc">
-                {setting.description ? setting.description : setting.id}
+              <div id={setting.id+"-name"} className="info-text setting-name">
+                {name}
               </div>
               {this.createValueControl(setting, false)}
             </div>
@@ -230,7 +228,8 @@ export default class InfoPanel extends React.Component<IProps, IState>
         onChange={this.choiceValueChange}>
         {choices.map((option: string, index: number) =>
         {
-          return <option key={property.id+"-"+index} value={index}>
+          return <option key={property.id+"-"+index} value={index}
+            className={"value-select-option"}>
               {option}
             </option>
         })}
@@ -317,32 +316,6 @@ export default class InfoPanel extends React.Component<IProps, IState>
           () => { this.updateValue(property, 0); });
       }
     }
-  }
-
-  // Update node display name
-  private displayNameInputOnBlur = (e: React.FocusEvent<HTMLInputElement>) =>
-  {
-    const textBox =
-      document.getElementById(e.currentTarget.id) as HTMLInputElement;
-
-    if (textBox && this.props.node)
-    {
-      const node = this.props.node;
-
-      vgData.updateLayout(node.path, undefined, undefined,
-        {n: textBox.value.toString()}, () =>
-        {
-          this.props.startUpdate();
-          node.displayName = textBox.value.toString();
-          this.props.update();
-          this.props.endUpdate();
-        });
-    }
-
-    // Scroll page back to 0,0 in case it was moved showing onscreen keyboard
-    window.scrollTo(0,0);
-    document.body.scrollTop = 0;
-    document.body.scrollLeft = 0;
   }
 
   // Pressing enter in a text box removes focus from that text box
