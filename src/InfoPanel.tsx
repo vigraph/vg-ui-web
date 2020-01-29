@@ -18,7 +18,8 @@ interface IProps
 
 interface IState
 {
-  show: boolean
+  show: boolean,
+  editTitle: boolean
 }
 
 export default class InfoPanel extends React.Component<IProps, IState>
@@ -31,7 +32,8 @@ export default class InfoPanel extends React.Component<IProps, IState>
 
     this.state =
     {
-      show: true
+      show: true,
+      editTitle: false
     }
 
     this.ipStrings = vgConfig.Strings.infoPanel;
@@ -85,7 +87,6 @@ export default class InfoPanel extends React.Component<IProps, IState>
 
     if (node && this.state.show)
     {
-      const title = node.displayName || node.name;
       const section = vgUtils.capitaliseFirstLetter(node.type.split("/")[0]);
       const type = vgUtils.capitaliseFirstLetter(node.type.split("/")[1]);
 
@@ -94,14 +95,14 @@ export default class InfoPanel extends React.Component<IProps, IState>
 
       return <div id="info-panel">
         <div id="node-info-wrapper" className="info-header-wrapper">
-          <div id="info-node-title" className="info-text node title">
-            {title}
-          </div>
-          <div id="info-node-section" className="info-text node section">
-            {section}
-          </div>
-          <div id="info-node-type" className="info-text node type">
-            {type}
+          {this.createTitle(node)}
+          <div id="info-node-type-wrapper">
+            <div id="info-node-section" className="info-text node section">
+              {section}
+            </div>
+            <div id="info-node-type" className="info-text node type">
+              {type}
+            </div>
           </div>
           <div id="info-node-icon" className="node icon">
             {
@@ -116,6 +117,29 @@ export default class InfoPanel extends React.Component<IProps, IState>
     else
     {
       return ""
+    }
+  }
+
+  private createTitle = (node: Model.Node) =>
+  {
+    const title = node.displayName || node.name;
+
+    if (this.state.editTitle)
+    {
+      return <input id="info-node-title-edit" type="text"
+        className={"node-title-input"} autoComplete={"off"}
+        defaultValue={title}
+        onPointerDown={this.titleEditPointerDown}
+        onBlur={this.titleEditOnBlur}
+        onKeyDown={this.textBoxKeyDown}/>
+    }
+    else
+    {
+      return <div id="info-node-title" className="info-text node title"
+          onPointerDown={this.handleTitlePointerDown}
+          onPointerUp={this.handleTitlePointerUp}>
+          {title}
+        </div>
     }
   }
 
@@ -672,4 +696,52 @@ export default class InfoPanel extends React.Component<IProps, IState>
       return null;
     }
   }
+
+  // Click (release/up) on title starts edit 'mode'
+  private handleTitlePointerUp = (e: React.PointerEvent<HTMLDivElement>) =>
+  {
+    this.setState({editTitle: true});
+  }
+
+  // Stop pointer down event in title propagating to graph background
+  private handleTitlePointerDown = (e: React.PointerEvent<HTMLDivElement>) =>
+  {
+    e.stopPropagation();
+  }
+
+  // Stop pointer event in edit box propagating to graph background
+  private titleEditPointerDown = (e: React.PointerEvent<HTMLInputElement>) =>
+  {
+    e.stopPropagation();
+  }
+
+  // On blur (focus off) update display name of node
+  private titleEditOnBlur = (e: React.FocusEvent<HTMLInputElement>) =>
+  {
+    const textBox =
+      document.getElementById(e.currentTarget.id) as HTMLInputElement;
+
+    if (textBox && this.props.node)
+    {
+      const node = this.props.node;
+
+      vgData.updateLayout(node.path, undefined, undefined,
+        {n: textBox.value.toString()}, () =>
+        {
+          this.props.startUpdate();
+          node.displayName = textBox.value.toString();
+          this.props.update();
+          this.props.endUpdate();
+        });
+    }
+
+    // Scroll page back to 0,0 in case it was moved showing onscreen keyboard
+    window.scrollTo(0,0);
+    document.body.scrollTop = 0;
+    document.body.scrollLeft = 0;
+
+    this.setState({editTitle: false});
+  }
+
+
 }
