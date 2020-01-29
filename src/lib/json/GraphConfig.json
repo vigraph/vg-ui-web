@@ -69,7 +69,7 @@
       "y": 0
     },
     "parents": ["core", "trigger", "maths", "audio", "vector", "colour",
-                "midi", "laser", "time-series", "sensor"],
+                "midi", "laser", "dmx", "time-series", "sensor"],
     "children":
     {
       "core": ["clone",
@@ -91,7 +91,9 @@
                  "websocket-display"],
       "colour": ["blend", "hsl", "pin", "rgb", "switch"],
       "laser": ["add-blanking-anchors", "add-vertex-repeats", "beamify",
-        "idn-out", "infill-lines", "reorder-segments", "show-blanking"],
+                "idn-out", "infill-lines", "reorder-segments", "show-blanking"],
+      "dmx": ["set-value", "get-value", "bitmap-render",
+              "artnet-out", "ola-out", "ola-in" ],
       "midi": ["alsa-in", "control-in", "keyboard-in", "key-in", "pin"],
       "time-series": ["average", "last", "offset", "plot",
                       "scale", "web-fetch"],
