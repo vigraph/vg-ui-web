@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   height="40"
+   viewBox="0 0 10.583 10.583"
+   width="40"
+   version="1.1"
+   id="svg817"
+   sodipodi:docname="dmx_ola-out.svg"
+   inkscape:version="0.92.4 (5da689c313, 2019-01-14)">
+  <metadata
+     id="metadata823">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs821" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1920"
+     inkscape:window-height="995"
+     id="namedview819"
+     showgrid="false"
+     inkscape:zoom="9.8"
+     inkscape:cx="33.723974"
+     inkscape:cy="7.5305739"
+     inkscape:window-x="0"
+     inkscape:window-y="24"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg817" />
+  <g
+     id="g901"
+     transform="matrix(0.6515533,0,0,0.6515533,3.9595658,-0.1882623)">
+    <circle
+       r="3.2865803"
+       style="opacity:1;fill:none;fill-opacity:1;stroke:#4ecac2;stroke-width:0.3999874;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="circle856"
+       cx="5.3975611"
+       cy="5.3016586" />
+    <ellipse
+       ry="0.54305166"
+       rx="0.59704655"
+       cy="6.5975361"
+       cx="3.9127016"
+       id="circle866"
+       style="opacity:1;fill:#4ecac2;fill-opacity:1;stroke:none;stroke-width:0.1999937;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+    <ellipse
+       style="opacity:1;fill:#4ecac2;fill-opacity:1;stroke:none;stroke-width:0.1999937;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="ellipse868"
+       cx="5.3975611"
+       cy="7.326467"
+       rx="0.59704655"
+       ry="0.54305166" />
+    <ellipse
+       style="opacity:1;fill:#4ecac2;fill-opacity:1;stroke:none;stroke-width:0.1999937;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="ellipse870"
+       cx="3.2917602"
+       cy="5.2206664"
+       rx="0.59704655"
+       ry="0.54305166" />
+    <ellipse
+       ry="0.54305166"
+       rx="0.59704655"
+       cy="5.247664"
+       cx="7.611352"
+       id="ellipse872"
+       style="opacity:1;fill:#4ecac2;fill-opacity:1;stroke:none;stroke-width:0.1999937;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+    <ellipse
+       style="opacity:1;fill:#4ecac2;fill-opacity:1;stroke:none;stroke-width:0.1999937;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="ellipse874"
+       cx="6.855423"
+       cy="6.5975361"
+       rx="0.59704655"
+       ry="0.54305166" />
+  </g>
+  <g
+     style="fill:#4ecac2"
+     id="g970"
+     transform="matrix(0.16760628,0,0,0.16760628,-55.334613,-108.81682)">
+    <rect
+       id="rect966"
+       height="6.1939001"
+       width="18.646999"
+       y="665.54999"
+       x="334.95999" />
+    <path
+       style="stroke:#4ecac2;stroke-width:1.66180003;stroke-linejoin:round"
+       inkscape:connector-curvature="0"
+       id="path968"
+       d="m 357.65,536.86 v -6.9857 -6.9857 l 12.1,6.9857 -6.0498,3.4928 z"
+       transform="matrix(0.68054,0,0,1.0138,107.11,131.48)" />
+  </g>
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.8402226px;line-height:2.40013909px;font-family:Arial;-inkscape-font-specification:Arial;letter-spacing:0px;word-spacing:0px;fill:#4ecac2;fill-opacity:1;stroke:none;stroke-width:0.09600557px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;"
+     x="1.3788453"
+     y="9.2074471"
+     id="text2170"><tspan
+       sodipodi:role="line"
+       id="tspan2168"
+       x="1.3788453"
+       y="9.2074471"
+       style="stroke-width:0.09600557px;fill:#4ecac2;fill-opacity:1;">OLA</tspan></text>
+</svg>

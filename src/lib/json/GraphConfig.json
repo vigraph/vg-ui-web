@@ -89,7 +89,7 @@
       "vector": ["clip", "fade", "figure", "graph", "oscilloscope", "pin",
                  "rotate", "scale", "stroke", "svg", "switch", "translate",
                  "websocket-display"],
-      "colour": ["blend", "hsl", "pin", "rgb", "switch"],
+      "colour": ["blend", "hsl", "pin", "rgb", "switch", "split"],
       "laser": ["add-blanking-anchors", "add-vertex-repeats", "beamify",
                 "idn-out", "infill-lines", "reorder-segments", "show-blanking"],
       "dmx": ["set-value", "get-value", "bitmap-render",

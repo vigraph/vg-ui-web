@@ -1911,6 +1911,35 @@
     {
     }
   },
+  "colour/split":
+  {
+    "width": 100,
+    "height": 50,
+    "properties":
+    {
+      "red":
+      {
+        "connector":
+        {
+          "y": 10
+        }
+      },
+      "green":
+      {
+        "connector":
+        {
+          "y": 30
+        }
+      },
+      "blue":
+      {
+        "connector":
+        {
+          "y": 50
+        }
+      }
+    }
+  },
   "maths/add":
   {
     "width": 70,
