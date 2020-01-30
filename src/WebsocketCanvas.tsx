@@ -20,6 +20,7 @@ export default class WebsocketCanvas extends React.Component<IProps>
   private canvasRef = React.createRef<HTMLCanvasElement>()
   private previousSize: {x: number, y: number};
   private webSocket: WebSocket | null = null;
+  private keepaliveInterval: NodeJS.Timeout | null = null;
 
   constructor(props: IProps)
   {
@@ -37,6 +38,11 @@ export default class WebsocketCanvas extends React.Component<IProps>
     );
   }
 
+  private keepAlive()
+  {
+    this.webSocket && this.webSocket.send("");  // Empty message as keepalive
+  }
+
   public componentDidMount()
   {
     console.log("Opening websocket");
@@ -44,10 +50,17 @@ export default class WebsocketCanvas extends React.Component<IProps>
     this.webSocket.binaryType = 'arraybuffer';
     this.webSocket.onmessage =
       (e: MessageEvent) => { this.handleFrame(e.data); };
+    this.keepaliveInterval = setInterval(() => this.keepAlive(), 15000);
   }
 
   public componentWillUnmount()
   {
+    if (this.keepaliveInterval)
+    {
+      clearInterval(this.keepaliveInterval);
+      this.keepaliveInterval = null;
+    }
+
     if (this.webSocket)
     {
       console.log("Closing websocket");
