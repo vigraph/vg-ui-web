@@ -19,6 +19,7 @@ export default class WebsocketCanvas extends React.Component<IProps>
 
   private canvasRef = React.createRef<HTMLCanvasElement>()
   private previousSize: {x: number, y: number};
+  private webSocket: WebSocket | null = null;
 
   constructor(props: IProps)
   {
@@ -38,9 +39,21 @@ export default class WebsocketCanvas extends React.Component<IProps>
 
   public componentDidMount()
   {
-    const rxSocket = new WebSocket(this.props.ip+':'+this.props.port+'/');
-    rxSocket.binaryType = 'arraybuffer';
-    rxSocket.onmessage = (e: MessageEvent) => { this.handleFrame(e.data); };
+    console.log("Opening websocket");
+    this.webSocket = new WebSocket(this.props.ip+':'+this.props.port+'/');
+    this.webSocket.binaryType = 'arraybuffer';
+    this.webSocket.onmessage =
+      (e: MessageEvent) => { this.handleFrame(e.data); };
+  }
+
+  public componentWillUnmount()
+  {
+    if (this.webSocket)
+    {
+      console.log("Closing websocket");
+      this.webSocket.close();
+      this.webSocket = null;
+    }
   }
 
   private handleVectorFrame(view: DataView, ctx: CanvasRenderingContext2D)
