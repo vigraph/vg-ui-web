@@ -40,9 +40,9 @@ class Data
   }
 
   // Get graph data JSON and layout data
-  public getGraphToStore(success: (graphJSON: vgTypes.IStoredGraph) => void)
+  public getGraphToStore(success: (graphJSON: vgTypes.ICombinedGraph) => void)
   {
-    this.getGraphData("graph", (rawGraph: vgTypes.IRawGraphItem) =>
+    this.getGraphData("graph", true, (rawGraph: vgTypes.IRawGraphItem) =>
       {
         // Prune layout to only paths that exist
         const finalLayout: vgTypes.ILayoutData = {};
@@ -73,15 +73,19 @@ class Data
 
         this.layoutData = finalLayout;
 
-        const storeGraphJSON: vgTypes.IStoredGraph =
-          {graph: rawGraph, layout: this.layoutData};
-
-        success(storeGraphJSON);
+        this.updateLayout(undefined, undefined, undefined, undefined, () =>
+          {
+            this.getCombinedGraphData(
+              (combinedGraphJSON: vgTypes.ICombinedGraph) =>
+              {
+                success(combinedGraphJSON)
+              });
+          });
       });
   }
 
-  // Load Graph from IStoredGraph json (graph engine data and layout data)
-  public loadGraphJSON(graphJSON: vgTypes.IStoredGraph, success: () => void)
+  // Load Graph from ICombinedGraph json (graph engine data and layout data)
+  public loadGraphJSON(graphJSON: vgTypes.ICombinedGraph, success: () => void)
   {
     this.layoutData = graphJSON.layout;
     this.updateLayout();
@@ -976,14 +980,15 @@ class Data
   // Graph Data
   //============================================================================
 
-  // Get data for entire graph and create graph model
-  private async getGraphData(path: string,
+  // Get data for entire graph and create graph model or return raw data
+  private async getGraphData(path: string, recursive?: boolean,
     returnRaw?: (rawData: vgTypes.IRawGraphItem) => void)
   {
     try
     {
       const res: rm.IRestResponse<vgTypes.IRawGraphItem> =
-        await this.rest.get<vgTypes.IRawGraphItem>("/" + path);
+        await this.rest.get<vgTypes.IRawGraphItem>("/" + path +
+          (recursive?"?recursive=1":""));
 
       if (res.statusCode === 200 && res.result)
       {
@@ -1008,6 +1013,34 @@ class Data
     {
       // Error
       vgUtils.log("Get Graph Data Failure with error: " + error);
+    }
+  }
+
+  // Get data for entire graph combined with layout data
+  private async getCombinedGraphData(success:
+    (combinedData: vgTypes.ICombinedGraph) => void)
+  {
+    try
+    {
+      const res: rm.IRestResponse<vgTypes.ICombinedGraph> =
+        await this.rest.get<vgTypes.ICombinedGraph>("/combined");
+
+      if (res.statusCode === 200 && res.result)
+      {
+        vgUtils.log("Get Combined Graph Data Success");
+        success(res.result);
+      }
+      else
+      {
+        // Error with status code
+        vgUtils.log("Get combined Graph Data Failure with status code: " +
+          res.statusCode);
+      }
+    }
+    catch (error)
+    {
+      // Error
+      vgUtils.log("Get Combined Graph Data Failure with error: " + error);
     }
   }
 

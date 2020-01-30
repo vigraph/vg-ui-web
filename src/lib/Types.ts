@@ -58,7 +58,7 @@ export interface IProcessedGraphItem
   subGraph?: boolean
 }
 
-export interface IStoredGraph
+export interface ICombinedGraph
 {
   graph: IRawGraphItem,
   layout: ILayoutData

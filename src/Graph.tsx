@@ -429,7 +429,7 @@ export default class Graph extends React.Component<IProps, IState>
 
   public save = () =>
   {
-    vgData.getGraphToStore((graphJSON: vgTypes.IStoredGraph) =>
+    vgData.getGraphToStore((graphJSON: vgTypes.ICombinedGraph) =>
       {
         const saveJSON = JSON.stringify(graphJSON);
         vgUtils.saveToFile(saveJSON);
@@ -440,7 +440,7 @@ export default class Graph extends React.Component<IProps, IState>
   {
     vgUtils.loadFromFile(fileInputID, (fileContents: string) =>
       {
-        const graphJSON: vgTypes.IStoredGraph = JSON.parse(fileContents);
+        const graphJSON: vgTypes.ICombinedGraph = JSON.parse(fileContents);
 
         vgData.loadGraphJSON(graphJSON, () =>
         {
