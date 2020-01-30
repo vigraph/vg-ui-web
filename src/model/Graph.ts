@@ -76,6 +76,11 @@ export class Graph
   // Baseline set if given json is the baseline graph
   public loadFrom(json: any, baseline: boolean, id: string)
   {
+    if (baseline)
+    {
+      this.state = Map<string, any>();
+    }
+
     this.beginTransaction();
 
     this.setGraphID(id);
