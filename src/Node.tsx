@@ -53,7 +53,7 @@ export default class Node extends React.Component<IProps, IState>
 
   private offsetX: number;
   private offsetY: number;
-  private pointerDown: {x: number, y: number};
+  private pointerDown: {x: number, y: number, target: string};
   private resizePointerDown: {x: number, y: number};
   private titleFontSize: number;
   private updateStarted: boolean;
@@ -77,7 +77,7 @@ export default class Node extends React.Component<IProps, IState>
 
     this.offsetX = 0;
     this.offsetY = 0;
-    this.pointerDown = {x: 0, y: 0};
+    this.pointerDown = {x: 0, y: 0, target: ""};
     this.resizePointerDown = {x: 0, y: 0};
     this.titleFontSize = vgConfig.Graph.fontSize.nodeTitle;
     this.updateStarted = false;
@@ -97,7 +97,7 @@ export default class Node extends React.Component<IProps, IState>
         className={"node " + this.props.node.type.replace("/","-") + " " +
           (this.props.node.category ? this.props.node.category : "")}
         x={this.state.x} y={this.state.y}>
-        <rect x={padding} y={0} width={width} height={height}
+        <rect x={padding} y={0} width={width} height={height} id={"node-body"}
           className={`node-background ${this.state.dragging ? "dragging" :
             ""} ${this.state.resizing ? "resizing" : ""}`}
           onPointerDown={this.handlePointerDown}
@@ -218,9 +218,7 @@ export default class Node extends React.Component<IProps, IState>
         return <svg className={"node-title-wrapper " + this.props.node.id}
           width={titleWidth} height={height} x={0} y={(padding/2)+1}>
           <text className={"node-title " + this.props.node.id}
-            fontSize={this.titleFontSize} x={0} y={0}
-              onPointerDown={this.handleTitlePointerDown}
-              onPointerUp={this.handleTitlePointerUp}>
+            fontSize={this.titleFontSize} x={0} y={0}>
               {linesArray.map((word: string, index: number) =>
                 {
                   return <tspan key={index} x={padding} width={titleWidth}
@@ -233,7 +231,7 @@ export default class Node extends React.Component<IProps, IState>
 
     return <svg id={node.id+"-header-wrapper"} className={"node-header-wrapper"}
       x={padding} y={-height}>
-        <rect x={0} y={0} width={width} height={height}
+        <rect x={0} y={0} width={width} height={height} id={"node-header"}
           className={`node-background ${this.state.dragging ? "dragging" :
             ""} ${this.state.resizing ? "resizing" : ""}`}
           onPointerDown={this.handlePointerDown}
@@ -324,6 +322,7 @@ export default class Node extends React.Component<IProps, IState>
   {
     e.stopPropagation();
     e.preventDefault();
+
     window.addEventListener('pointerup', this.handlePointerUp);
     window.addEventListener('pointermove', this.handlePointerMove);
     this.setState({ dragging: true });
@@ -333,7 +332,8 @@ export default class Node extends React.Component<IProps, IState>
     const currentPosition = vgUtils.windowToSVGPosition(
       {x: e.pageX, y: e.pageY}, this.props.graphRef);
 
-    this.pointerDown = {x: this.state.x, y: this.state.y};
+    this.pointerDown = {x: this.state.x, y: this.state.y,
+      target: e.currentTarget.id};
 
     this.offsetX = currentPosition.x - this.state.x;
     this.offsetY = currentPosition.y - this.state.y;
@@ -380,7 +380,11 @@ export default class Node extends React.Component<IProps, IState>
 
     if (date.getTime() - this.lastPointerUp < 300)
     {
-      if (this.props.node.subGraph)
+      if (this.pointerDown.target === "node-header")
+      {
+        this.setState({editTitle: true, showDelete: false});
+      }
+      else if (this.props.node.subGraph)
       {
         this.props.showNodeGraph(this.props.node.path);
       }
@@ -483,18 +487,6 @@ export default class Node extends React.Component<IProps, IState>
     {
       this.props.endUpdate();
     }
-  }
-
-  // Click (release/up) on title starts edit 'mode'
-  private handleTitlePointerUp = (e: React.PointerEvent<SVGTextElement>) =>
-  {
-    this.setState({editTitle: true, showDelete: false});
-  }
-
-  // Stop pointer down event in title propagating to graph background
-  private handleTitlePointerDown = (e: React.PointerEvent<SVGTextElement>) =>
-  {
-    e.stopPropagation();
   }
 
   // Stop pointer event in edit box propagating to graph background
