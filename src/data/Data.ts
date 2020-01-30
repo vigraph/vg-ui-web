@@ -1076,6 +1076,7 @@ class Data
     const itemSection = splitType[0];
     const itemType = splitType[1];
     const metadata = this.metadata[itemSection][itemType];
+    const propsConfig = vgConfig.Properties[item.type];
 
     // Edges
     const gEdges:
@@ -1098,6 +1099,15 @@ class Data
       }
     }
 
+    // Get connector position from properties config for a given input/output id
+    const getConnectorPosition = (id: string) =>
+    {
+      if (propsConfig && propsConfig.properties[id])
+      {
+        return propsConfig.properties[id].connector;
+      }
+    }
+
     // Inputs - position added later
     const gInputs:
       Array<{ id: string, type: string, sampleRate: number, x?: number,
@@ -1112,7 +1122,7 @@ class Data
           item.inputs[inputID].sample_rate:0
 
         gInputs.push({id: inputID, type: mInputs[inputID].type, sampleRate:
-          sampleRate ? sampleRate : 0});
+          sampleRate ? sampleRate : 0, ...getConnectorPosition(inputID)});
       }
     }
 
@@ -1125,7 +1135,8 @@ class Data
       for (const outputID of Object.keys(mOutputs))
       {
         gOutputs.push({id: outputID, type: mOutputs[outputID].type,
-          sampleRate: item.outputs?item.outputs[outputID].sample_rate:0});
+          sampleRate: item.outputs?item.outputs[outputID].sample_rate:0,
+          ...getConnectorPosition(outputID)});
       }
     }
 
@@ -1137,7 +1148,8 @@ class Data
         for (const iID of Object.keys(item.inputs))
         {
           gInputs.push({id: iID, type: item.inputs[iID].type,
-            sampleRate: item.inputs[iID].sample_rate || 0});
+            sampleRate: item.inputs[iID].sample_rate || 0,
+            ...getConnectorPosition(iID)});
         }
       }
 
@@ -1146,7 +1158,8 @@ class Data
         for (const oID of Object.keys(item.outputs))
         {
           gOutputs.push({id: oID, type: item.outputs[oID].type,
-            sampleRate: item.outputs[oID].sample_rate});
+            sampleRate: item.outputs[oID].sample_rate,
+            ...getConnectorPosition(oID)});
         }
       }
     }
@@ -1157,7 +1170,6 @@ class Data
       valueFormat?: string, rangeMin?: number, rangeMax?: number,
       increment?: number, x?: number, y?: number}> = [];
 
-    const propsConfig = vgConfig.Properties[item.type];
     const itemStrings = vgConfig.Strings.descriptions[item.type];
 
     if (metadata.inputs)
@@ -1181,15 +1193,6 @@ class Data
           propType: "input",
           ...iPropsConfig, ...iPropsStrings
         });
-
-        // Add connector position to input
-        const propInputIndex = gInputs.findIndex(x => x.id === inputID);
-
-        if (propInputIndex >= 0 && iPropsConfig)
-        {
-          gInputs[propInputIndex] = {...gInputs[propInputIndex],
-            ...iPropsConfig.connector};
-        }
       }
     }
 
