@@ -1913,6 +1913,112 @@
       }
     }
   },
+  "vector/clip":
+  {
+    "width": 95,
+    "height": 180,
+    "properties":
+    {
+      "input":
+      {
+        "connector":
+        {
+          "y": 15
+        }
+      },
+      "min-x":
+      {
+        "controlType": "knob/default",
+        "rangeMin": -0.5,
+        "rangeMax": 0.5,
+        "increment": 0.01,
+        "x": 25,
+        "y": 30,
+        "connector":
+        {
+          "y": 35
+        }
+      },
+      "max-x":
+      {
+        "controlType": "knob/default",
+        "rangeMin": -0.5,
+        "rangeMax": 0.5,
+        "increment": 0.01,
+        "x": 65,
+        "y": 30,
+        "connector":
+        {
+          "y": 50
+        }
+      },
+      "min-y":
+      {
+        "controlType": "knob/default",
+        "rangeMin": -0.5,
+        "rangeMax": 0.5,
+        "increment": 0.01,
+        "x": 25,
+        "y": 65,
+        "connector":
+        {
+          "y": 70
+        }
+      },
+      "max-y":
+      {
+        "controlType": "knob/default",
+        "rangeMin": -0.5,
+        "rangeMax": 0.5,
+        "increment": 0.01,
+        "x": 65,
+        "y": 65,
+        "connector":
+        {
+          "y": 85
+        }
+      },
+      "min-z":
+      {
+        "controlType": "knob/default",
+        "rangeMin": -0.5,
+        "rangeMax": 0.5,
+        "increment": 0.01,
+        "x": 25,
+        "y": 100,
+        "connector":
+        {
+          "y": 105
+        }
+      },
+      "max-z":
+      {
+        "controlType": "knob/default",
+        "rangeMin": -0.5,
+        "rangeMax": 0.5,
+        "increment": 0.01,
+        "x": 65,
+        "y": 100,
+        "connector":
+        {
+          "y": 120
+        }
+      },
+      "alpha":
+      {
+        "controlType": "knob/default",
+        "rangeMin": 0,
+        "rangeMax": 1,
+        "increment": 0.01,
+        "x": 25,
+        "y": 140,
+        "connector":
+        {
+          "y": 150
+        }
+      }
+    }
+  },
   "vector/websocket-display":
   {
     "width": 200,
