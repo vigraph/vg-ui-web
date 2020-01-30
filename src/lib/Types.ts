@@ -58,7 +58,7 @@ export interface IProcessedGraphItem
   subGraph?: boolean
 }
 
-export interface IStoredGraph
+export interface ICombinedGraph
 {
   graph: IRawGraphItem,
   layout: ILayoutData
@@ -111,9 +111,9 @@ export interface IPropertiesConfig
     category?: string,
     properties: {
       [key: string]: {
-        controlType: string,
-        x: number,
-        y: number,
+        controlType?: string,
+        x?: number,
+        y?: number,
         valueFormat?: string,
         rangeMin?: number,
         rangeMax?: number,

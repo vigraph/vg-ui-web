@@ -40,9 +40,9 @@ class Data
   }
 
   // Get graph data JSON and layout data
-  public getGraphToStore(success: (graphJSON: vgTypes.IStoredGraph) => void)
+  public getGraphToStore(success: (graphJSON: vgTypes.ICombinedGraph) => void)
   {
-    this.getGraphData("graph", (rawGraph: vgTypes.IRawGraphItem) =>
+    this.getGraphData("graph", true, (rawGraph: vgTypes.IRawGraphItem) =>
       {
         // Prune layout to only paths that exist
         const finalLayout: vgTypes.ILayoutData = {};
@@ -73,15 +73,19 @@ class Data
 
         this.layoutData = finalLayout;
 
-        const storeGraphJSON: vgTypes.IStoredGraph =
-          {graph: rawGraph, layout: this.layoutData};
-
-        success(storeGraphJSON);
+        this.updateLayout(undefined, undefined, undefined, undefined, () =>
+          {
+            this.getCombinedGraphData(
+              (combinedGraphJSON: vgTypes.ICombinedGraph) =>
+              {
+                success(combinedGraphJSON)
+              });
+          });
       });
   }
 
-  // Load Graph from IStoredGraph json (graph engine data and layout data)
-  public loadGraphJSON(graphJSON: vgTypes.IStoredGraph, success: () => void)
+  // Load Graph from ICombinedGraph json (graph engine data and layout data)
+  public loadGraphJSON(graphJSON: vgTypes.ICombinedGraph, success: () => void)
   {
     this.layoutData = graphJSON.layout;
     this.updateLayout();
@@ -976,14 +980,15 @@ class Data
   // Graph Data
   //============================================================================
 
-  // Get data for entire graph and create graph model
-  private async getGraphData(path: string,
+  // Get data for entire graph and create graph model or return raw data
+  private async getGraphData(path: string, recursive?: boolean,
     returnRaw?: (rawData: vgTypes.IRawGraphItem) => void)
   {
     try
     {
       const res: rm.IRestResponse<vgTypes.IRawGraphItem> =
-        await this.rest.get<vgTypes.IRawGraphItem>("/" + path);
+        await this.rest.get<vgTypes.IRawGraphItem>("/" + path +
+          (recursive?"?recursive=1":""));
 
       if (res.statusCode === 200 && res.result)
       {
@@ -1008,6 +1013,34 @@ class Data
     {
       // Error
       vgUtils.log("Get Graph Data Failure with error: " + error);
+    }
+  }
+
+  // Get data for entire graph combined with layout data
+  private async getCombinedGraphData(success:
+    (combinedData: vgTypes.ICombinedGraph) => void)
+  {
+    try
+    {
+      const res: rm.IRestResponse<vgTypes.ICombinedGraph> =
+        await this.rest.get<vgTypes.ICombinedGraph>("/combined");
+
+      if (res.statusCode === 200 && res.result)
+      {
+        vgUtils.log("Get Combined Graph Data Success");
+        success(res.result);
+      }
+      else
+      {
+        // Error with status code
+        vgUtils.log("Get combined Graph Data Failure with status code: " +
+          res.statusCode);
+      }
+    }
+    catch (error)
+    {
+      // Error
+      vgUtils.log("Get Combined Graph Data Failure with error: " + error);
     }
   }
 
@@ -1043,6 +1076,7 @@ class Data
     const itemSection = splitType[0];
     const itemType = splitType[1];
     const metadata = this.metadata[itemSection][itemType];
+    const propsConfig = vgConfig.Properties[item.type];
 
     // Edges
     const gEdges:
@@ -1065,6 +1099,15 @@ class Data
       }
     }
 
+    // Get connector position from properties config for a given input/output id
+    const getConnectorPosition = (id: string) =>
+    {
+      if (propsConfig && propsConfig.properties[id])
+      {
+        return propsConfig.properties[id].connector;
+      }
+    }
+
     // Inputs - position added later
     const gInputs:
       Array<{ id: string, type: string, sampleRate: number, x?: number,
@@ -1079,7 +1122,7 @@ class Data
           item.inputs[inputID].sample_rate:0
 
         gInputs.push({id: inputID, type: mInputs[inputID].type, sampleRate:
-          sampleRate ? sampleRate : 0});
+          sampleRate ? sampleRate : 0, ...getConnectorPosition(inputID)});
       }
     }
 
@@ -1092,7 +1135,8 @@ class Data
       for (const outputID of Object.keys(mOutputs))
       {
         gOutputs.push({id: outputID, type: mOutputs[outputID].type,
-          sampleRate: item.outputs?item.outputs[outputID].sample_rate:0});
+          sampleRate: item.outputs?item.outputs[outputID].sample_rate:0,
+          ...getConnectorPosition(outputID)});
       }
     }
 
@@ -1104,7 +1148,8 @@ class Data
         for (const iID of Object.keys(item.inputs))
         {
           gInputs.push({id: iID, type: item.inputs[iID].type,
-            sampleRate: item.inputs[iID].sample_rate || 0});
+            sampleRate: item.inputs[iID].sample_rate || 0,
+            ...getConnectorPosition(iID)});
         }
       }
 
@@ -1113,7 +1158,8 @@ class Data
         for (const oID of Object.keys(item.outputs))
         {
           gOutputs.push({id: oID, type: item.outputs[oID].type,
-            sampleRate: item.outputs[oID].sample_rate});
+            sampleRate: item.outputs[oID].sample_rate,
+            ...getConnectorPosition(oID)});
         }
       }
     }
@@ -1124,7 +1170,6 @@ class Data
       valueFormat?: string, rangeMin?: number, rangeMax?: number,
       increment?: number, x?: number, y?: number}> = [];
 
-    const propsConfig = vgConfig.Properties[item.type];
     const itemStrings = vgConfig.Strings.descriptions[item.type];
 
     if (metadata.inputs)
@@ -1148,15 +1193,6 @@ class Data
           propType: "input",
           ...iPropsConfig, ...iPropsStrings
         });
-
-        // Add connector position to input
-        const propInputIndex = gInputs.findIndex(x => x.id === inputID);
-
-        if (propInputIndex >= 0 && iPropsConfig)
-        {
-          gInputs[propInputIndex] = {...gInputs[propInputIndex],
-            ...iPropsConfig.connector};
-        }
       }
     }
 

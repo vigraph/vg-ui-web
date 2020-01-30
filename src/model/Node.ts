@@ -215,7 +215,7 @@ export class Node
   // connector doesn't have a given position already
   public getConnectorPosition(connector: Connector): {x: number, y: number}
   {
-    let x = 0;
+    let x = (connector.direction === "input" ? 0 : this.size.w);
     let y = 0;
 
     const allConnectors = this.graph.getNodeConnectors(this.id,
@@ -225,7 +225,7 @@ export class Node
     {
       return connector.position;
     }
-    else if (connector.direction === "input")
+    else
     {
       const nonPositionedConnectors: Array<Connector> = [];
 
@@ -239,16 +239,9 @@ export class Node
 
       if (nonPositionedConnectors.length)
       {
-        x = 0;
         y = (this.size.h / (nonPositionedConnectors.length + 1)) *
           (nonPositionedConnectors.findIndex(x => x.id === connector.id) + 1);
       }
-    }
-    else
-    {
-      x = this.size.w;
-      y = (this.size.h / (allConnectors.length + 1)) *
-        (allConnectors.findIndex(x => x.id === connector.id) + 1);
     }
 
     return ({x,y});
