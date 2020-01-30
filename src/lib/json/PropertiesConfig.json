@@ -390,18 +390,29 @@
   },
   "audio/level":
   {
-    "width": 70,
+    "width": 100,
     "height": 55,
     "properties":
     {
+      "input":
+      {
+        "connector":
+        {
+          "y": 15
+        }
+      },
       "gain":
       {
         "controlType": "knob/default",
         "rangeMin": 0,
         "rangeMax": 2,
         "increment": 0.01,
-        "x": 30,
-        "y": 15
+        "x": 45,
+        "y": 15,
+        "connector":
+        {
+          "y": 35
+        }
       }
     }
   },
@@ -561,11 +572,22 @@
     "height": 100,
     "properties":
     {
+      "input":
+      {
+        "connector":
+        {
+          "y": 15
+        }
+      },
       "mode":
       {
         "controlType": "selector/default",
         "x": 40,
-        "y": 30
+        "y": 30,
+        "connector":
+        {
+          "y": 35
+        }
       },
       "cutoff":
       {
@@ -574,7 +596,11 @@
         "rangeMax": 1,
         "increment": 0.01,
         "x": 30,
-        "y": 60
+        "y": 60,
+        "connector":
+        {
+          "y": 50
+        }
       },
       "resonance":
       {
@@ -583,7 +609,11 @@
         "rangeMax": 1,
         "increment": 0.01,
         "x": 70,
-        "y": 60
+        "y": 60,
+        "connector":
+        {
+          "y": 65
+        }
       },
       "steepness":
       {
@@ -592,7 +622,11 @@
         "rangeMax": 5,
         "increment": 0.1,
         "x": 110,
-        "y": 60
+        "y": 60,
+        "connector":
+        {
+          "y": 80
+        }
       }
     }
   },
@@ -1307,13 +1341,31 @@
   "midi/keyboard-in":
   {
     "width": 100,
-    "height": 60,
+    "height": 65,
     "properties":
     {
+      "input":
+      {
+        "connector":
+        {
+          "y": 15
+        }
+      },
       "channel":
       {
         "rangeMin": 0,
-        "rangeMax": 2
+        "rangeMax": 2,
+        "connector":
+        {
+          "y": 35
+        }
+      },
+      "voice":
+      {
+        "connector":
+        {
+          "y": 50
+        }
       }
     }
   },
@@ -1785,6 +1837,44 @@
         "y": 55,
         "valueFormat": "triggerButton",
         "connector": { "x": 0, "y": 70 }
+      }
+    }
+  },
+  "vector/oscilloscope":
+  {
+    "width": 140,
+    "height": 90,
+    "properties":
+    {
+      "input":
+      {
+        "connector": { "y": 15 }
+      },
+      "slope":
+      {
+        "controlType": "selector/vert",
+        "x": 80,
+        "y": 15,
+        "connector": { "y": 40 }
+      },
+      "level":
+      {
+        "controlType": "knob/default",
+        "rangeMin": -1,
+        "rangeMax": 1,
+        "increment": 0.01,
+        "x": 30,
+        "y": 15,
+        "connector": { "y": 55 }
+      },
+      "max-points":
+      {
+        "controlType": "knob/default",
+        "rangeMin": 10,
+        "rangeMax": 2000,
+        "x": 30,
+        "y": 55,
+        "connector": { "y": 75 }
       }
     }
   },
