@@ -292,10 +292,22 @@
   overflow: visible;
 }
 
-.node-delete,
-.edge-delete
+@keyframes deleteAnimation
+{
+  from {transform: scale(0.1);}
+  to {transform: scale(1);}
+}
+
+.delete-icon
 {
   fill: var(--col-delete);
+}
+
+.delete-icon-animate
+{
+  fill: var(--col-delete-animation);
+  animation: deleteAnimation 2s;
+  pointer-events: none;
 }
 
 .delete-line

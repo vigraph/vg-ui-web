@@ -9,7 +9,12 @@ interface IProps
   deletePressed: () => void;
 }
 
-export default class Node extends React.Component<IProps>
+interface IState
+{
+  pointerDown: boolean;
+}
+
+export default class Node extends React.Component<IProps, IState>
 {
   private pointerDownTime: number;
 
@@ -18,6 +23,11 @@ export default class Node extends React.Component<IProps>
     super(props);
 
     this.pointerDownTime = 0;
+
+    this.state =
+    {
+      pointerDown: false
+    }
   }
 
   public render()
@@ -26,9 +36,12 @@ export default class Node extends React.Component<IProps>
     const y = this.props.y;
 
     return <svg className="delete-wrapper">
-      <circle className="edge-delete" cx={x} cy={y} r={8}
+      <circle className="delete-icon" cx={x} cy={y} r={8}
         onPointerDown={this.handlePointerDown}
-        onPointerUp={this.handlePointerUp}/>
+        onPointerUp={this.handlePointerUp}
+        onPointerLeave={this.handlePointerLeave}/>
+      {this.state.pointerDown &&
+        <circle className="delete-icon-animate" cx={x} cy={y} r={8}/>}
       <path className="delete-line" d={`M ${x-5} ${y-5} L${x+5} ${y+5}`}/>
       <path className="delete-line" d={`M ${x-5} ${y+5} L${x+5} ${y-5}`}/>
       </svg>
@@ -39,6 +52,7 @@ export default class Node extends React.Component<IProps>
     e.stopPropagation();
     const date = new Date();
     this.pointerDownTime = date.getTime();
+    this.setState({pointerDown: true});
   }
 
   private handlePointerUp = (e: React.PointerEvent<SVGCircleElement>) =>
@@ -47,9 +61,17 @@ export default class Node extends React.Component<IProps>
     const date = new Date();
     const current = date.getTime();
 
-    if (current - this.pointerDownTime > (vgConfig.Graph.longPressTime*1000))
+    if (this.pointerDownTime &&
+      current - this.pointerDownTime > (vgConfig.Graph.longPressTime*1000))
     {
       this.props.deletePressed();
     }
+    this.setState({pointerDown: false});
+  }
+
+  private handlePointerLeave = (e: React.PointerEvent<SVGCircleElement>) =>
+  {
+    this.pointerDownTime = 0;
+    this.setState({pointerDown: false});
   }
 }
