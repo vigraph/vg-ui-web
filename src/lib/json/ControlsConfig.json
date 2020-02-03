@@ -75,7 +75,7 @@
       "offset": 45,
       "turnScale": 1,
       "logControl": false,
-      "controlMode": "physical"
+      "controlMode": "slider"
     },
     "basic":
     {
@@ -108,7 +108,7 @@
       "offset": 45,
       "turnScale": 1,
       "logControl": true,
-      "controlMode": "physical"
+      "controlMode": "slider"
     }
   },
   "selector":
