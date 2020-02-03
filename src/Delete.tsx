@@ -35,15 +35,15 @@ export default class Node extends React.Component<IProps, IState>
     const x = this.props.x;
     const y = this.props.y;
 
-    return <svg className="delete-wrapper">
-      <circle className="delete-icon" cx={x} cy={y} r={8}
+    return <svg className="delete-wrapper" x={x} y={y}>
+      <circle className="delete-icon" cx={0} cy={0} r={8}
         onPointerDown={this.handlePointerDown}
         onPointerUp={this.handlePointerUp}
         onPointerLeave={this.handlePointerLeave}/>
       {this.state.pointerDown &&
-        <circle className="delete-icon-animate" cx={x} cy={y} r={8}/>}
-      <path className="delete-line" d={`M ${x-5} ${y-5} L${x+5} ${y+5}`}/>
-      <path className="delete-line" d={`M ${x-5} ${y+5} L${x+5} ${y-5}`}/>
+        <circle className="delete-icon-animate" cx={0} cy={0} r={8}/>}
+      <path className="delete-line" d={`M ${-5} ${-5} L${5} ${5}`}/>
+      <path className="delete-line" d={`M ${-5} ${5} L${5} ${-5}`}/>
       </svg>
   }
 
