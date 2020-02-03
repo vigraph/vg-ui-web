@@ -25,6 +25,7 @@ interface IProps
   updateTargetProperty: (updateID: string, property: Model.Property | null,
     updating: boolean) => void;
   removeNode: (node: Model.Node) => void;
+  clearUI: boolean;
 }
 
 interface IState
@@ -178,6 +179,15 @@ export default class Node extends React.Component<IProps, IState>
     }
   }
 
+  // Clear UI (title edit and delete icon) if set in properties
+  public componentDidUpdate()
+  {
+    if (this.props.clearUI && (this.state.showDelete || this.state.editTitle))
+    {
+      this.setState({showDelete: false, editTitle: false});
+    }
+  }
+
   private createHeader = () =>
   {
     const node = this.props.node;
@@ -187,7 +197,8 @@ export default class Node extends React.Component<IProps, IState>
     const padding = this.props.padding;
     const iconSize = vgConfig.Graph.node.iconSize;
     // Full width minus left padding, icon width and icon padding
-    const titleWidth = this.state.w - padding - (iconSize + padding / 2);
+    const titleWidth = (this.state.w ? this.state.w - padding - (iconSize +
+      padding / 2) : 0);
 
     const linesArray = vgUtils.wrapText(title, titleWidth, this.titleFontSize);
     const textBox = vgUtils.textBoundingSize(linesArray[0], this.titleFontSize);

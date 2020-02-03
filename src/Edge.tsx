@@ -21,6 +21,7 @@ interface IProps
     position: {x: number, y: number}) => void;
   showConnectorLabel: (label: {connector: Model.Connector,
     parent: Model.Node}) => void;
+  clearUI: boolean;
 }
 
 interface IState
@@ -118,6 +119,15 @@ export default class Edge extends React.Component<IProps, IState>
         }
       </svg>
     );
+  }
+
+  // Clear UI (delete icon) if set in properties
+  public componentDidUpdate()
+  {
+    if (this.props.clearUI && this.state.edgeSelected)
+    {
+      this.setState({edgeSelected: false});
+    }
   }
 
   private edgePointerEnter = (e: React.PointerEvent<SVGElement>) =>

@@ -30,6 +30,7 @@ interface IState
   targetProperty: { property: Model.Property | null, updating: boolean },
   showMenu: string,
   view: { x: number, y: number, w: number, h: number }
+  pointerDown: boolean;
 }
 
 export default class Graph extends React.Component<IProps, IState>
@@ -71,7 +72,8 @@ export default class Graph extends React.Component<IProps, IState>
       targetConnector: null,
       targetProperty: {property: null, updating: false},
       showMenu: "hidden",
-      view: vgConfig.Graph.viewDefault
+      view: vgConfig.Graph.viewDefault,
+      pointerDown: false
     };
 
     this.pointerClick = {x: 0, y: 0, t: 0};
@@ -147,7 +149,8 @@ export default class Graph extends React.Component<IProps, IState>
       showNodeGraph={this.showNodeGraph} removeNode={this.removeNode}
       updateTargetNode={this.updateTargetNode}
       dynamicNodeUpdate={this.dynamicNodeUpdate}
-      updateTargetProperty={this.updateTargetProperty}>
+      updateTargetProperty={this.updateTargetProperty}
+      clearUI={this.state.pointerDown}>
       {
         this.graph.getNodeConnectors(node.id, "input").map(
         (connector: Model.Connector, j) =>
@@ -204,7 +207,8 @@ export default class Graph extends React.Component<IProps, IState>
           graphRef={this.graphRef} removeEdge={this.removeEdge}
           moveEdgeFromInput={this.moveEdgeFromInput}
           moveEdgeFromOutput={this.moveEdgeFromOutput}
-          showConnectorLabel={this.createConnectorLabel}/>
+          showConnectorLabel={this.createConnectorLabel}
+          clearUI={this.state.pointerDown}/>
       }
     }
   }
@@ -516,6 +520,7 @@ export default class Graph extends React.Component<IProps, IState>
       }
 
       this.pointerCache.push(e);
+      this.setState({pointerDown: true});
 
       window.addEventListener('pointermove', this.handleGraphDrag);
       window.addEventListener('pointerup', this.handleGraphDragRelease);
@@ -606,6 +611,7 @@ export default class Graph extends React.Component<IProps, IState>
       this.pointerDiff = 0;
       window.removeEventListener('pointermove', this.handleGraphDrag);
       window.removeEventListener('pointerup', this.handleGraphDragRelease);
+      this.setState({pointerDown: false});
     }
   }
 
