@@ -234,6 +234,26 @@
   dominant-baseline: hanging;
 }
 
+/* Icon label */
+.icon-label-wrapper
+{
+  overflow: visible;
+  pointer-events: none;
+  opacity: 0.8;
+}
+
+.icon-label-border
+{
+  fill: var(--col-label-fill);
+  fill-opacity: 0.8;
+  overflow: visible;
+}
+
+.icon-label-wrapper .icon-label
+{
+  dominant-baseline: hanging;
+}
+
 /* Edge */
 .edge
 {

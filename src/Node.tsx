@@ -22,8 +22,10 @@ interface IProps
   showNodeGraph: (path: string, pathSpecific?: string,
     sourceSpecific?: string) => void;
   updateTargetNode: (node: Model.Node) => void;
-  updateTargetProperty: (updateID: string, property: Model.Property | null,
-    updating: boolean) => void;
+  updateTargetProperty: (updateID: Model.Property,
+    property: Model.Property | null, updating: boolean) => void;
+  updateTargetIcon: (icon: {name: string,
+    position: {x: number, y: number}} | null) => void;
   removeNode: (node: Model.Node) => void;
   clearUI: boolean;
 }
@@ -59,6 +61,7 @@ export default class Node extends React.Component<IProps, IState>
   private titleFontSize: number;
   private updateStarted: boolean;
   private lastPointerUp: number;
+  private headerHeight: number;
 
   constructor(props: IProps)
   {
@@ -83,6 +86,7 @@ export default class Node extends React.Component<IProps, IState>
     this.titleFontSize = vgConfig.Graph.fontSize.nodeTitle;
     this.updateStarted = false;
     this.lastPointerUp = 0;
+    this.headerHeight = 0;
   }
 
   public render()
@@ -204,6 +208,7 @@ export default class Node extends React.Component<IProps, IState>
     const textBox = vgUtils.textBoundingSize(linesArray[0], this.titleFontSize);
 
     const height = (textBox.height * linesArray.length) + padding;
+    this.headerHeight = height;
 
     const Icon = vgIcons.Menu[node.type] ? vgIcons.Menu[node.type] : "";
 
@@ -254,7 +259,10 @@ export default class Node extends React.Component<IProps, IState>
         { titleDisplay() }
         {
           Icon ? <Icon x={width-(iconSize+padding/4)} y={padding/4}
-            width={iconSize} height={iconSize}/> : ""
+            width={iconSize} height={iconSize}
+            onPointerEnter={this.iconPointerEnter}
+            onPointerLeave={this.iconPointerLeave}
+            onPointerDown={this.iconPointerDown}/> : ""
         }
         <path className={"node-header-separator"}
           d={`M ${padding/2} ${height} L ${width-(padding/2)} ${height}`}/>
@@ -428,6 +436,30 @@ export default class Node extends React.Component<IProps, IState>
     {
       this.props.update();
     }
+  }
+
+  private iconPointerEnter = (e: React.PointerEvent<SVGElement>) =>
+  {
+    const node = this.props.node;
+    const padding = this.props.padding;
+    const iconSize = vgConfig.Graph.node.iconSize;
+
+    const name = node.type.split("/")[1];
+    const x = node.position.x + node.size.w + padding - (iconSize + padding/4);
+    const y = node.position.y + padding/4 - this.headerHeight;
+    const position = {x, y};
+
+    this.props.updateTargetIcon({name, position})
+  }
+
+  private iconPointerLeave = (e: React.PointerEvent<SVGElement>) =>
+  {
+    this.props.updateTargetIcon(null);
+  }
+
+  private iconPointerDown = (e: React.PointerEvent<SVGElement>) =>
+  {
+    e.stopPropagation();
   }
 
   private handleResizePointerDown = (e: React.PointerEvent<SVGElement>) =>

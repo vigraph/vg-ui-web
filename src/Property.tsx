@@ -30,8 +30,8 @@ interface IProps
   showNodeGraph: (path: string, pathSpecific?: string,
     sourceSpecific?: string) => void;
   padding: number;
-  updateTargetProperty: (updateID: string, property: Model.Property | null,
-    updating: boolean) => void;
+  updateTargetProperty: (updateID: Model.Property,
+    property: Model.Property | null, updating: boolean) => void;
   relatedProperties?: {[key: string]: Model.Property};
 }
 
@@ -175,7 +175,7 @@ export default class Property extends React.Component<IProps, IState>
   private startPropertyUpdate = () =>
   {
     this.setState({updating: true});
-    this.props.updateTargetProperty(this.props.property.id, this.props.property,
+    this.props.updateTargetProperty(this.props.property, this.props.property,
       true);
 
     if (this.props.startUpdate)
@@ -187,7 +187,7 @@ export default class Property extends React.Component<IProps, IState>
   private endPropertyUpdate = () =>
   {
     this.setState({updating: false});
-    this.props.updateTargetProperty(this.props.property.id, this.state.hover ?
+    this.props.updateTargetProperty(this.props.property, this.state.hover ?
       this.props.property : null, false);
 
     if (this.props.endUpdate)
@@ -231,7 +231,7 @@ export default class Property extends React.Component<IProps, IState>
     this.setState({hover: true});
     if (!this.state.updating)
     {
-      this.props.updateTargetProperty(this.props.property.id,
+      this.props.updateTargetProperty(this.props.property,
         this.props.property, false);
     }
   }
@@ -241,7 +241,7 @@ export default class Property extends React.Component<IProps, IState>
     this.setState({hover: false});
     if (!this.state.updating)
     {
-      this.props.updateTargetProperty(this.props.property.id, null, false);
+      this.props.updateTargetProperty(this.props.property, null, false);
     }
   }
 }

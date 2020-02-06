@@ -28,6 +28,7 @@ interface IState
   targetNode: Model.Node | null,
   targetConnector: { connector: Model.Connector, parent: Model.Node } | null,
   targetProperty: { property: Model.Property | null, updating: boolean },
+  targetIcon: {name: string, position: {x: number, y: number}} | null,
   showMenu: string,
   view: { x: number, y: number, w: number, h: number }
   pointerDown: boolean;
@@ -71,6 +72,7 @@ export default class Graph extends React.Component<IProps, IState>
       targetNode: null,
       targetConnector: null,
       targetProperty: {property: null, updating: false},
+      targetIcon: null,
       showMenu: "hidden",
       view: vgConfig.Graph.viewDefault,
       pointerDown: false
@@ -136,6 +138,7 @@ export default class Graph extends React.Component<IProps, IState>
           {this.createDummyNode()}
           {this.createConnectorLabel(this.state.targetConnector)}
           {this.createPropertyLabel()}
+          {this.createIconLabel()}
         </svg>
       </div>
     );
@@ -143,6 +146,9 @@ export default class Graph extends React.Component<IProps, IState>
 
   private createNodeComponent = (node: Model.Node, i: number) =>
   {
+    const clearUI = this.state.pointerDown || (this.state.targetNode !== null &&
+      this.state.targetNode.id !== node.id);
+
     return <Node key={node.path+":"+i} node={node}
       startUpdate={this.startUpdate} update={this.update}
       endUpdate={this.endUpdate} padding={this.csize*2} graphRef={this.graphRef}
@@ -150,7 +156,8 @@ export default class Graph extends React.Component<IProps, IState>
       updateTargetNode={this.updateTargetNode}
       dynamicNodeUpdate={this.dynamicNodeUpdate}
       updateTargetProperty={this.updateTargetProperty}
-      clearUI={this.state.pointerDown}>
+      updateTargetIcon={this.updateTargetIcon}
+      clearUI={clearUI}>
       {
         this.graph.getNodeConnectors(node.id, "input").map(
         (connector: Model.Connector, j) =>
@@ -327,6 +334,27 @@ export default class Graph extends React.Component<IProps, IState>
     else
     {
       return "";
+    }
+  }
+
+  private createIconLabel = () =>
+  {
+    if (this.state.targetIcon)
+    {
+      const icon = this.state.targetIcon;
+      const fSize = vgConfig.Graph.fontSize.iconLabel;
+      const name = vgUtils.capitaliseFirstLetter(icon.name);
+      const nameSize = vgUtils.textBoundingSize(name, fSize);
+
+      return <svg className={"icon-label-wrapper"}
+        x={icon.position.x}
+        y={icon.position.y}>
+        <rect className="icon-label-border" x={0} y={0}
+          height={nameSize.height+4} width={nameSize.width+4}/>
+          <text className="label icon-label" fontSize={fSize} x={2} y={3}>
+            {name}
+          </text>
+      </svg>
     }
   }
 
@@ -1159,14 +1187,15 @@ export default class Graph extends React.Component<IProps, IState>
   }
 
   // Target (mouse over) property
-  private updateTargetProperty = (updateID: string,
+  private updateTargetProperty = (updateProp: Model.Property,
     property: Model.Property | null, updating: boolean) =>
   {
     // Only update if there was no previous target property, or the current
     // target property is updated. To account for changing a property whilst
     // hovering over another.
     if (!this.state.targetProperty.property ||
-      updateID === this.state.targetProperty.property.id)
+      (updateProp.id === this.state.targetProperty.property.id &&
+      updateProp.parent === this.state.targetProperty.property.parent))
     {
       this.setState({targetProperty: {property, updating}});
     }
@@ -1182,6 +1211,20 @@ export default class Graph extends React.Component<IProps, IState>
     else if (!this.state.targetNode || node.id !== this.state.targetNode.id)
     {
       this.setState({targetNode: node});
+    }
+  }
+
+  // Target (hover) node icon - shows icon label
+  private updateTargetIcon = (icon: {name: string,
+    position: {x: number, y: number}} | null) =>
+  {
+    if (!icon)
+    {
+      this.setState({targetIcon: null});
+    }
+    else
+    {
+      this.setState({targetIcon: icon});
     }
   }
 }
