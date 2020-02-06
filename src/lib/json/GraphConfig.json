@@ -70,7 +70,7 @@
       "y": 0
     },
     "parents": ["core", "trigger", "maths", "audio", "vector", "colour",
-                "midi", "laser", "dmx", "time-series", "sensor"],
+                "midi", "laser", "dmx", "time-series", "iot"],
     "children":
     {
       "core": ["clone",
@@ -98,7 +98,7 @@
       "midi": ["alsa-in", "control-in", "keyboard-in", "key-in", "pin"],
       "time-series": ["average", "last", "offset", "plot",
                       "scale", "web-fetch"],
-      "sensor": ["load-dscusb"]
+      "iot": ["load-dscusb", "mqtt-in"]
     }
   },
   "interpolate":
