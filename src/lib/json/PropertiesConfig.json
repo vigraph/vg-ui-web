@@ -1402,7 +1402,7 @@
     {
     }
   },
-  "sensor/load-dscusb":
+  "iot/load-dscusb":
   {
     "width": 100,
     "height": 50,
@@ -1416,6 +1416,20 @@
       },
       "interval":
       {
+      }
+    }
+  },
+  "iot/mqtt-in":
+  {
+    "width": 250,
+    "height": 50,
+    "properties":
+    {
+      "topic":
+      {
+        "controlType": "none/label",
+        "x": 135,
+        "y": 20
       }
     }
   },
