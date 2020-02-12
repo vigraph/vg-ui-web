@@ -153,6 +153,21 @@ export default class InfoPanel extends React.Component<IProps, IState>
         return property.propType === "input" && property.id !== "input";
       });
 
+    // Sort inputs based on y position of their connectors
+    inputs.sort((a: Model.Property, b: Model.Property) =>
+      {
+        const nodeA = a.getParentNode();
+        const nodeB = b.getParentNode();
+        const connectorA = nodeA ? nodeA.getInputConnector(a.id) : null;
+        const connectorB = nodeB ? nodeB.getInputConnector(b.id) : null;
+        const posA = connectorA && nodeA ?
+          nodeA.getConnectorPosition(connectorA).y : 0;
+        const posB = connectorB && nodeB ?
+          nodeB.getConnectorPosition(connectorB).y : 0;
+
+        return posA - posB;
+      });
+
     if (inputs.length)
     {
       return <div id="inputs-info-wrapper" className="info-section-wrapper">

@@ -713,7 +713,7 @@
 #menu #pin-button
 {
   position: absolute;
-  left: 6px;
+  left: 8px;
   top: 3px;
   width: 15px;
   height: 15px;
@@ -739,7 +739,7 @@
 #menu .menu-parent-wrapper,
 #menu .menu-children-wrapper
 {
-  padding: 10px 0px 10px 25px;
+  padding: 10px 0px 10px 30px;
   border: 1px solid var(--col-menu-border);
   background-color: var(--col-menu-fill);
   pointer-events: auto;
@@ -946,6 +946,11 @@ foreignObject
 .node .settings.label
 {
   text-anchor: middle;
+}
+
+#text-property .settings.label
+{
+  text-anchor: start;
 }
 
 #prefix-property .settings.label

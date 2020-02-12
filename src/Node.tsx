@@ -232,12 +232,12 @@ export default class Node extends React.Component<IProps, IState>
       else
       {
         return <svg className={"node-title-wrapper " + this.props.node.id}
-          width={titleWidth} height={height} x={0} y={(padding/2)+1}>
+          width={titleWidth} height={height} x={padding} y={(padding/2)+1}>
           <text className={"node-title " + this.props.node.id}
             fontSize={this.titleFontSize} x={0} y={0}>
               {linesArray.map((word: string, index: number) =>
                 {
-                  return <tspan key={index} x={padding} width={titleWidth}
+                  return <tspan key={index} x={0} width={titleWidth}
                     dy={(index?1:0)*this.titleFontSize}>{word}</tspan>
                 })}
           </text>
