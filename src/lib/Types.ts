@@ -129,6 +129,10 @@ export interface IPropertiesConfig
 
 export interface ILanguageStrings
 {
+  appButtons:
+  {
+    [key: string]: string
+  },
   infoPanel:
   {
     [key: string]: string

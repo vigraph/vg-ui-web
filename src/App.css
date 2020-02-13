@@ -101,6 +101,25 @@
   display: none;
 }
 
+@keyframes delayedShow
+{
+  0% { opacity: 0; }
+  99% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+#buttons .button-label
+{
+  position: absolute;
+  color: var(--col-label);
+  background-color: var(--col-label-fill);
+  border: solid 2px var(--col-label-border);
+  padding: 2px;
+  margin-top: 10px;
+  pointer-events: none;
+  animation: delayedShow 2s;
+}
+
 body::-webkit-scrollbar
 {
   width: 12px;

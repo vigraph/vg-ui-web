@@ -1,4 +1,18 @@
 {
+  "appButtons":
+  {
+    "undo": "Undo",
+    "redo": "Redo",
+    "fullscreen": "Fullscreen Mode",
+    "windowed": "Windowed Mode",
+    "theme": "Change Theme",
+    "save": "Save Graph",
+    "load": "Load Graph"
+  },
+  "infoPanel":
+  {
+    "displayName": "Display Name"
+  },
   "descriptions":
   {
     "audio/sdl-out":

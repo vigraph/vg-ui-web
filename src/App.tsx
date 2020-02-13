@@ -4,6 +4,8 @@ import './App.css';
 import Graph from './Graph';
 
 import { vgIcons } from './icons/Icons';
+import { vgConfig } from './lib/Config';
+import { vgUtils } from './lib/Utils';
 
 interface IProps
 {
@@ -13,7 +15,8 @@ interface IProps
 interface IState
 {
   graphRoot: boolean,
-  fullscreen: boolean
+  fullscreen: boolean,
+  buttonLabel: {name: string, x: number, y: number} | null
 }
 
 export default class App extends React.Component<IProps, IState>
@@ -27,8 +30,40 @@ export default class App extends React.Component<IProps, IState>
     this.state =
     {
       graphRoot: true,
-      fullscreen: false
+      fullscreen: false,
+      buttonLabel: null
     };
+  }
+
+  public render()
+  {
+    return (
+      <div id="container">
+        <div id="buttons">
+          {this.createButton("undo", this.handleUndo)}
+          {this.createButton("redo", this.handleRedo)}
+          {this.state.fullscreen ?
+           this.createButton("window", this.setWindowed)
+           :
+          this.createButton("fullscreen", this.setFullScreen)
+          }
+          {this.createButton("theme", this.handleTheme)}
+          {this.createButton("save", this.handleSave)}
+          <div id="load-button" className="app-button"
+            onPointerEnter={this.handleButtonEnter}
+            onPointerLeave={this.handleButtonLeave}>
+            <input id="fileLoadInput" className="fileLoadInput" type="file"
+              onChange={this.handleLoad} multiple={false} accept=".json"/>
+            <label htmlFor="fileLoadInput" >
+             { this.createIcon("load") }
+            </label>
+          </div>
+          {!this.state.graphRoot && this.createButton("back", this.handleBack)}
+          {this.createLabel()}
+         </div>
+        <Graph ref={this.graph} notifyGraphRoot={this.notifyGraphRoot} />
+      </div>
+    );
   }
 
   private createIcon(name: string)
@@ -37,55 +72,31 @@ export default class App extends React.Component<IProps, IState>
     return < Icon />
   }
 
-  public render()
+  private createButton(name: string, onClick: () => void)
   {
-    return (
-      <div id="container">
-        <div id="buttons">
-          <div id="undo-button" className="app-button"
-            onClick={this.handleUndo}>
-            { this.createIcon("undo") }
-          </div>
-          <div id="redo-button" className="app-button"
-            onClick={this.handleRedo}>
-            { this.createIcon("redo") }
-          </div>
-          {this.state.fullscreen ?
-           <div id="windowed-button" className="app-button"
-                onClick={this.setWindowed}>
-             { this.createIcon("window") }
-           </div>
-           :
-           <div id="fullscreen-button" className="app-button"
-                onClick={this.setFullScreen}>
-             { this.createIcon("fullscreen") }
-           </div>
-          }
-          <div id="theme-button" className="app-button"
-               onClick={this.handleTheme}>
-             { this.createIcon("theme") }
-          </div>
-          <div id="save-button" className="app-button"
-            onClick={this.handleSave}>
-             { this.createIcon("save") }
-          </div>
-          <div id="load-button" className="app-button">
-            <input id="fileLoadInput" className="fileLoadInput" type="file"
-              onChange={this.handleLoad} multiple={false} accept=".json"/>
-            <label htmlFor="fileLoadInput" >
-             { this.createIcon("load") }
-            </label>
-          </div>
-          {!this.state.graphRoot &&
-            <div id="back-button" className="app-button back"
-              onClick={this.handleBack}>
-              { this.createIcon("back") }
-            </div>
-          }
-         </div>
-        <Graph ref={this.graph} notifyGraphRoot={this.notifyGraphRoot} />
-      </div>
-    );
+    return <div id={name+"-button"} className="app-button"
+      onClick={onClick}
+      onPointerEnter={this.handleButtonEnter}
+      onPointerLeave={this.handleButtonLeave}>
+      { this.createIcon(name) }
+    </div>
+  }
+
+  private createLabel()
+  {
+    if (this.state.buttonLabel)
+    {
+      const label = this.state.buttonLabel;
+      const fontSize = vgConfig.Graph.fontSize.appButtonLabel;
+      const size = vgUtils.textBoundingSize(label.name, fontSize);
+      return <div id="app-button-label" className="button-label label"
+        style={{left: label.x, top: label.y, width: size.width,
+          height: size.height, fontSize: fontSize}}>{label.name}</div>
+    }
+    else
+    {
+      return "";
+    }
   }
 
   private notifyGraphRoot = (graphRoot: boolean) =>
@@ -157,5 +168,20 @@ export default class App extends React.Component<IProps, IState>
       root.removeAttribute("class");
     else
       root.setAttribute("class", "theme-light");
+  }
+
+  private handleButtonEnter = (e: React.PointerEvent<HTMLElement>) =>
+  {
+    const targetButton = e.currentTarget;
+    const id = targetButton.id.split("-")[0];
+    const name = vgConfig.Strings.appButtons[id];
+
+    this.setState({buttonLabel: {name, x: targetButton.offsetLeft,
+      y: targetButton.offsetTop}});
+  }
+
+  private handleButtonLeave = (e: React.PointerEvent<HTMLElement>) =>
+  {
+    this.setState({buttonLabel: null});
   }
 }

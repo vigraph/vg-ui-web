@@ -352,7 +352,7 @@
   "audio/alsa-out":
   {
     "width": 100,
-    "height": 50,
+    "height": 40,
     "properties":
     {
       "channels":
@@ -364,7 +364,7 @@
       {
         "controlType": "none/label",
         "x": 60,
-        "y": 44
+        "y": 20
       },
       "max-delay":
       {
@@ -569,7 +569,7 @@
   "audio/filter":
   {
     "width": 145,
-    "height": 100,
+    "height": 85,
     "properties":
     {
       "input":
@@ -583,7 +583,7 @@
       {
         "controlType": "selector/default",
         "x": 40,
-        "y": 30,
+        "y": 15,
         "connector":
         {
           "y": 35
@@ -596,7 +596,7 @@
         "rangeMax": 1,
         "increment": 0.01,
         "x": 30,
-        "y": 60,
+        "y": 45,
         "connector":
         {
           "y": 50
@@ -609,7 +609,7 @@
         "rangeMax": 1,
         "increment": 0.01,
         "x": 70,
-        "y": 60,
+        "y": 45,
         "connector":
         {
           "y": 65
@@ -622,7 +622,7 @@
         "rangeMax": 5,
         "increment": 0.1,
         "x": 110,
-        "y": 60,
+        "y": 45,
         "connector":
         {
           "y": 80
@@ -1930,7 +1930,7 @@
   "vector/clip":
   {
     "width": 95,
-    "height": 180,
+    "height": 165,
     "properties":
     {
       "input":
@@ -1947,7 +1947,7 @@
         "rangeMax": 0.5,
         "increment": 0.01,
         "x": 25,
-        "y": 30,
+        "y": 15,
         "connector":
         {
           "y": 35
@@ -1960,7 +1960,7 @@
         "rangeMax": 0.5,
         "increment": 0.01,
         "x": 65,
-        "y": 30,
+        "y": 15,
         "connector":
         {
           "y": 50
@@ -1973,7 +1973,7 @@
         "rangeMax": 0.5,
         "increment": 0.01,
         "x": 25,
-        "y": 65,
+        "y": 50,
         "connector":
         {
           "y": 70
@@ -1986,7 +1986,7 @@
         "rangeMax": 0.5,
         "increment": 0.01,
         "x": 65,
-        "y": 65,
+        "y": 50,
         "connector":
         {
           "y": 85
@@ -1999,7 +1999,7 @@
         "rangeMax": 0.5,
         "increment": 0.01,
         "x": 25,
-        "y": 100,
+        "y": 85,
         "connector":
         {
           "y": 105
@@ -2012,7 +2012,7 @@
         "rangeMax": 0.5,
         "increment": 0.01,
         "x": 65,
-        "y": 100,
+        "y": 85,
         "connector":
         {
           "y": 120
@@ -2025,7 +2025,7 @@
         "rangeMax": 1,
         "increment": 0.01,
         "x": 25,
-        "y": 140,
+        "y": 125,
         "connector":
         {
           "y": 150

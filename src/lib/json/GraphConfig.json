@@ -46,7 +46,8 @@
     "nodeTitle": 12,
     "propertySettings": 10,
     "selectorLabel": 10,
-    "iconLabel": 12
+    "iconLabel": 12,
+    "appButtonLabel": 10
   },
   "node":
   {
