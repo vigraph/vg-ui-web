@@ -2055,7 +2055,7 @@
   "colour/hsl":
   {
     "width": 170,
-    "height": 100,
+    "height": 90,
     "category": "colourPicker",
     "properties":
     {
@@ -2064,21 +2064,33 @@
         "controlType": "colourPicker/main",
         "increment": 0.01,
         "x": 30,
-        "y": 30
+        "y": 20,
+        "connector":
+        {
+          "y": 27
+        }
       },
       "s":
       {
         "controlType": "colourPicker/default",
         "increment": 0.01,
         "x": 50,
-        "y": 50
+        "y": 40,
+        "connector":
+        {
+          "y": 47
+        }
       },
       "l":
       {
         "controlType": "colourPicker/default",
         "increment": 0.01,
         "x": 50,
-        "y": 70
+        "y": 60,
+        "connector":
+        {
+          "y": 67
+        }
       }
     }
   },
