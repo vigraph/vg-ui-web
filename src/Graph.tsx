@@ -29,7 +29,8 @@ interface IState
   targetConnector: { connector: Model.Connector, parent: Model.Node } | null,
   targetProperty: { property: Model.Property | null, updating: boolean },
   targetIcon: {name: string, position: {x: number, y: number}} | null,
-  showMenu: string,
+  menuState: string,
+  infoState: string,
   view: { x: number, y: number, w: number, h: number }
   pointerDown: boolean;
 }
@@ -73,7 +74,8 @@ export default class Graph extends React.Component<IProps, IState>
       targetConnector: null,
       targetProperty: {property: null, updating: false},
       targetIcon: null,
-      showMenu: "hidden",
+      menuState: "hidden",
+      infoState: "hidden",
       view: vgConfig.Graph.viewDefault,
       pointerDown: false
     };
@@ -94,16 +96,17 @@ export default class Graph extends React.Component<IProps, IState>
 
     return (
       <div className="wrapper">
-        {this.state.showMenu !== "hidden" && <Menu
-          position={(this.state.showMenu === "pinned" ?
+        {this.state.menuState !== "hidden" && <Menu
+          position={(this.state.menuState === "pinned" ?
             vgConfig.Graph.menu.pinnedPosition : pointerPos)}
           menuClosed={this.menuClosed} pinMenu={this.pinMenu}
           menuItemSelected={this.menuItemSelected}/>}
 
-        <InfoPanel graph={this.graph} node={this.state.targetNode}
+        {this.state.infoState !== "hidden" && <InfoPanel
+          graph={this.graph} node={this.state.targetNode}
           startUpdate={this.startUpdate} update={this.update}
-          endUpdate={this.endUpdate}
-          dynamicNodeUpdate={this.dynamicNodeUpdate}/>
+          endUpdate={this.endUpdate} pinInfo={this.pinInfo}
+          dynamicNodeUpdate={this.dynamicNodeUpdate}/>}
 
         <svg id="graph"
           viewBox={`${view.x} ${view.y} ${view.w} ${view.h}`}
@@ -536,19 +539,22 @@ export default class Graph extends React.Component<IProps, IState>
       this.pointerClick.t = 0;
     }
 
-    if (e.button === 2 && this.state.showMenu === "hidden")
+    if (e.button === 2 && this.state.menuState === "hidden")
     {
-      this.setState({showMenu: "show"});
+      this.setState({menuState: "show"});
     }
     else
     {
-      if (this.state.showMenu === "show")
-      {
-        this.setState({showMenu: "hidden"});
-      }
+      const menuState = this.state.menuState === "show" ? "hidden" :
+        this.state.menuState;
+      const infoState = this.state.infoState === "show" ? "hidden" :
+        this.state.infoState;
 
       this.pointerCache.push(e);
-      this.setState({pointerDown: true});
+
+      const pointerDown = true;
+
+      this.setState({menuState, infoState, pointerDown});
 
       window.addEventListener('pointermove', this.handleGraphDrag);
       window.addEventListener('pointerup', this.handleGraphDragRelease);
@@ -620,9 +626,9 @@ export default class Graph extends React.Component<IProps, IState>
 
     // Show menu on single long press
     if (this.pointerClick.t && pointerDuration >
-      (vgConfig.Graph.longPressTime * 1000) && this.state.showMenu === "hidden")
+      (vgConfig.Graph.longPressTime * 1000) && this.state.menuState === "hidden")
     {
-      this.setState({showMenu: "show"});
+      this.setState({menuState: "show"});
     }
 
     // Remove pointer event from cache
@@ -644,12 +650,12 @@ export default class Graph extends React.Component<IProps, IState>
   }
 
   //============================================================================
-  // Menu functions
+  // UI Panel (Menu and Info) functions
   //============================================================================
 
   private menuClosed = () =>
   {
-    this.setState({showMenu: "hidden"});
+    this.setState({menuState: "hidden"});
   }
 
   private menuItemSelected = (id: string, position?: {x: number, y: number}) =>
@@ -659,7 +665,12 @@ export default class Graph extends React.Component<IProps, IState>
 
   private pinMenu = (pin: boolean) =>
   {
-    this.setState({showMenu: (pin ? "pinned" : "hidden")});
+    this.setState({menuState: (pin ? "pinned" : "show")});
+  }
+
+  private pinInfo = (pin: boolean) =>
+  {
+    this.setState({infoState: (pin ? "pinned" : "show")});
   }
 
   //============================================================================
@@ -1210,7 +1221,9 @@ export default class Graph extends React.Component<IProps, IState>
     }
     else if (!this.state.targetNode || node.id !== this.state.targetNode.id)
     {
-      this.setState({targetNode: node});
+      const infoState = this.state.infoState === "hidden" ? "show" :
+        this.state.infoState;
+      this.setState({targetNode: node, infoState});
     }
   }
 

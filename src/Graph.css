@@ -504,38 +504,72 @@
   opacity: 1;
 }
 
-/* Info Panel */
-#info
+/* Generic Panel (Info and Menu) */
+#panel
 {
   position: absolute;
-  height: auto;
-  padding: 5px;
-  border: 1px solid var(--col-info-border);
-  background: var(--col-info-bg);
-  top: 50px;
-  right: 0px;
   opacity: 0.8;
+  border: 1px solid var(--col-panel-border);
+  background: var(--col-panel-bg);
 }
 
-#info.empty
+#panel.empty
 {
   display: none;
 }
 
-#info.hidden
+#panel-ui-wrapper
 {
-  width: 30px;
-}
-
-#info.shown
-{
-  width: 160px;
-}
-
-#info .info-visible-icon
-{
-  width: 20px;
   height: 20px;
+  margin-top: 5px;
+}
+
+#pin-button
+{
+  display: block;
+  width: 15px;
+  height: 15px;
+  pointer-events: auto;
+  float: left;
+  margin: 2px;
+  padding-left: 2px;
+}
+
+#pin-button circle
+{
+  fill: var(--col-pin-fill);
+  stroke: var(--col-menu-border);
+  stroke-width: 1;
+  cursor: pointer;
+}
+
+#pin-button.pinned circle
+{
+  fill: var(--col-pin-fill-pinned);
+}
+
+#panel #drag-bar-wrapper
+{
+  width: 146px;
+  height: 20px;
+  float: left;
+  padding-top: 2px;
+}
+
+#panel #drag-bar-wrapper .drag-bar
+{
+  background-color: var(--col-panel-border);
+  width: 95%;
+  height: 2px;
+  margin: 2px;
+}
+
+/* Info Panel */
+#info
+{
+  height: auto;
+  padding: 0px 5px 5px 5px;
+  width: 160px;
 }
 
 #info .info-text
@@ -553,7 +587,7 @@
 {
   padding-top: 5px;
   margin-top: 10px;
-  border-top: 2px solid var(--col-info-border);
+  border-top: 2px solid var(--col-panel-border);
   width: 100%;
   height: auto;
   display: inline-block;
@@ -576,7 +610,7 @@
   margin-bottom: 5px;
   font-family: latoRegular;
   background: var(--col-info-input-bg);
-  border: 1.4px solid var(--col-info-border);
+  border: 1.4px solid var(--col-panel-border);
   color: white;
 }
 
@@ -613,7 +647,7 @@
 {
   padding-top: 10px;
   margin-top: 10px;
-  border-top: 2px solid var(--col-info-border);
+  border-top: 2px solid var(--col-panel-border);
   width: 100%;
   height: auto;
 }
@@ -658,7 +692,7 @@
   font-size: 12px;
   font-family: latoRegular;
   background: var(--col-info-input-bg);
-  border: 1.4px solid var(--col-info-border);
+  border: 1.4px solid var(--col-panel-border);
   color: white;
 }
 

@@ -39,8 +39,8 @@
   --col-selector-background: #262626;
   --col-node-resize: #ccc;
   --col-node-pin-border: #d4aa00;
-  --col-info-bg: #4b4b4b;
-  --col-info-border: #888;
+  --col-panel-bg: #4b4b4b;
+  --col-panel-border: #888;
   --col-info-input-bg: #222;
   --col-info-input-focus: white;
 }

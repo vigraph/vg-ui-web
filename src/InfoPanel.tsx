@@ -6,6 +6,8 @@ import { vgUtils } from './lib/Utils';
 import { vgData } from './data/Data';
 import { vgIcons } from './icons/Icons';
 
+import Panel from './Panel';
+
 interface IProps
 {
   graph: Model.Graph;
@@ -14,11 +16,11 @@ interface IProps
   update: () => void;
   endUpdate: () => void;
   dynamicNodeUpdate: (node: Model.Node, finished: () => void) => void;
+  pinInfo: (pin: boolean) => void;
 }
 
 interface IState
 {
-  show: boolean,
   editTitle: boolean
 }
 
@@ -32,7 +34,6 @@ export default class InfoPanel extends React.Component<IProps, IState>
 
     this.state =
     {
-      show: true,
       editTitle: false
     }
 
@@ -42,50 +43,24 @@ export default class InfoPanel extends React.Component<IProps, IState>
   public render()
   {
     return (
-      <div id="info" className={`${this.state.show ?
-        "shown" : "hidden"} ${!this.props.node ? "empty" : ""}`}>
-        {this.createVisibilityIcon()}
-        {this.createInfoPanel()}
-      </div>
+      <Panel startPosition={{x: 5, y: 50}} horizontal={false}
+        empty={!this.props.node} notifyPin={this.props.pinInfo}>
+      {
+        <div id="info">
+          {this.createInfoPanel()}
+        </div>
+      }
+      </Panel>
     );
   }
 
-  // Create hide/show toggle icon depending on current info panel visibility
-  private createVisibilityIcon = () =>
-  {
-    if (this.state.show)
-    {
-      return <div id="info-hide-icon" className="info-visible-icon">
-        <svg id="info-hide-icon-svg" x={0} y={0} width={20} height={20}
-          onPointerDown={this.toggleShow}>
-          <path className="info-panel-icon show arrowhead"
-            d="M 10,0 20,10 10,20 z"/>
-          <rect className="info-panel-icon show arrowbody" x={0} y={7}
-            width={10} height={6}/>
-        </svg>
-      </div>
-    }
-    else
-    {
-      return <div id="info-show-icon" className="info-visible-icon">
-        <svg id="info-show-icon-svg" x={0} y={0} width={20} height={20}
-          onPointerDown={this.toggleShow}>
-          <path className="info-panel-icon hide arrowhead"
-            d="M 0,10 10,0 10,20 z"/>
-          <rect className="info-panel-icon hide arrowbody" x={10} y={7}
-            width={10} height={6}/>
-        </svg>
-      </div>
-    }
-  }
-
-  // Create info panel contents - if node provided and show state set
+  // Create info panel contents - if node provided
   // Contains three sections: Node info, Input properties info, Settings info
   private createInfoPanel = () =>
   {
     const node = this.props.node;
 
-    if (node && this.state.show)
+    if (node)
     {
       const section = vgUtils.capitaliseFirstLetter(node.type.split("/")[0]);
       const type = vgUtils.capitaliseFirstLetter(node.type.split("/")[1]);
@@ -330,13 +305,6 @@ export default class InfoPanel extends React.Component<IProps, IState>
         })}
         </select>
     }
-  }
-
-  // Toggle show state to hide/show info panel
-  private toggleShow = () =>
-  {
-    const show = !this.state.show;
-    this.setState({show});
   }
 
   // Momentary button trigger
