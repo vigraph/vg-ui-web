@@ -97,7 +97,11 @@
                 "idn-out", "infill-lines", "reorder-segments", "show-blanking"],
       "dmx": ["set-value", "get-value", "bitmap-render",
               "artnet-out", "ola-out", "ola-in" ],
-      "midi": ["alsa-in", "control-in", "keyboard-in", "key-in", "pin"],
+      "midi": ["alsa-in", "alsa-out", "winmm-in", "winmm-out",
+               "control-in", "keyboard-in", "key-in",
+               "control-out", "key-out",
+               "arpeggiate", "assign-voice",
+               "pin", "switch"],
       "time-series": ["average", "last", "offset", "plot",
                       "scale", "web-fetch", "capture"],
       "iot": ["load-dscusb", "mqtt-in"]
