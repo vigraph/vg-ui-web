@@ -508,7 +508,16 @@
       }
     }
   },
-  "audio/bit-crush":
+  "audio/pin":
+  {
+    "width": 70,
+    "height": 50,
+    "category": "pin",
+    "properties":
+    {
+    }
+  },
+ "audio/bit-crush":
   {
     "width": 110,
     "height": 60,
