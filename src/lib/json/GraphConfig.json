@@ -99,7 +99,7 @@
               "artnet-out", "ola-out", "ola-in" ],
       "bitmap": ["rectangle", "vector-fill", "image-in", "pin",
                  "fill", "blend", "fade", "tile", "twist",
-                 "translate", "switch", "websocket" ],
+                 "translate", "switch", "sdl-out", "websocket" ],
       "midi": ["alsa-in", "alsa-out", "winmm-in", "winmm-out",
                "control-in", "keyboard-in", "key-in",
                "control-out", "key-out",
