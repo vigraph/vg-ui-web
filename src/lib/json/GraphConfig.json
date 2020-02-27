@@ -75,7 +75,7 @@
     "children":
     {
       "core": ["clone",
-        "clone-info", "compare", "filter", "graph",
+        "clone-info", "compare", "filter", "graph", "memory",
         "interpolator", "log", "oscillator", "pin",
         "random", "switch", "timer"],
       "trigger": ["beat", "count", "memory", "pin", "selector", "start",
