@@ -74,7 +74,7 @@ export default class App extends React.Component<IProps, IState>
 
   private createButton(name: string, onClick: () => void)
   {
-    return <div id={name+"-button"} className="app-button"
+    return <div id={name+"-button"} className={"app-button " + name}
       onClick={onClick}
       onPointerEnter={this.handleButtonEnter}
       onPointerLeave={this.handleButtonLeave}>
@@ -176,8 +176,11 @@ export default class App extends React.Component<IProps, IState>
     const id = targetButton.id.split("-")[0];
     const name = vgConfig.Strings.appButtons[id];
 
-    this.setState({buttonLabel: {name, x: targetButton.offsetLeft,
-      y: targetButton.offsetTop}});
+    if (name)
+    {
+      this.setState({buttonLabel: {name, x: targetButton.offsetLeft,
+        y: targetButton.offsetTop}});
+    }
   }
 
   private handleButtonLeave = (e: React.PointerEvent<HTMLElement>) =>

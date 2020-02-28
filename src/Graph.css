@@ -505,7 +505,7 @@
 }
 
 /* Generic Panel (Info and Menu) */
-#panel
+.panel-wrapper
 {
   position: absolute;
   opacity: 0.8;
@@ -513,7 +513,7 @@
   background: var(--col-panel-bg);
 }
 
-#panel.empty
+.panel-wrapper.empty
 {
   display: none;
 }
@@ -522,6 +522,7 @@
 {
   height: 20px;
   margin-top: 5px;
+  pointer-events: none;
 }
 
 #pin-button
@@ -548,20 +549,56 @@
   fill: var(--col-pin-fill-pinned);
 }
 
-#panel #drag-bar-wrapper
+.panel-wrapper #drag-bar-wrapper
 {
   width: 146px;
   height: 20px;
   float: left;
   padding-top: 2px;
+  pointer-events: auto;
 }
 
-#panel #drag-bar-wrapper .drag-bar
+.panel-wrapper #drag-bar-wrapper .drag-bar
 {
   background-color: var(--col-panel-border);
   width: 95%;
   height: 2px;
   margin: 2px;
+}
+
+.panel-wrapper.horizontal
+{
+  display: inline-flex;
+}
+
+.panel-wrapper.horizontal #panel-ui-wrapper
+{
+  width: 20px;
+  height: auto;
+  float: left;
+}
+
+.panel-wrapper.horizontal #drag-bar-wrapper
+{
+  width: 20px;
+  min-height: 30px;
+  max-height: 50px;
+  float: none;
+  margin-left: 5px;
+}
+
+.panel-wrapper.horizontal #pin-button
+{
+  float: none;
+}
+
+.panel-wrapper.horizontal #drag-bar-wrapper .drag-bar
+{
+  width: 2px;
+  height: 95%;
+  float: left;
+  margin: 1px;
+  margin-bottom: 4px;
 }
 
 /* Info Panel */
@@ -730,6 +767,7 @@
 {
   display: block;
   pointer-events: none;
+  float: left;
 }
 
 #menu-label
@@ -744,41 +782,13 @@
   padding: 2px;
 }
 
-#menu #pin-button
-{
-  position: absolute;
-  left: 8px;
-  top: 3px;
-  width: 15px;
-  height: 15px;
-  pointer-events: auto;
-}
-
-#menu #pin-button circle
-{
-  position: absolute;
-  left: 5px;
-  top: 5px;
-  fill: var(--col-pin-fill);
-  stroke: var(--col-menu-border);
-  stroke-width: 1;
-  cursor: pointer;
-}
-
-#menu #pin-button.pinned circle
-{
-  fill: var(--col-pin-fill-pinned);
-}
-
 #menu .menu-parent-wrapper,
 #menu .menu-children-wrapper
 {
-  padding: 10px 0px 10px 30px;
-  border: 1px solid var(--col-menu-border);
-  background-color: var(--col-menu-fill);
+  padding: 10px 0px 10px 10px;
   pointer-events: auto;
-  position: absolute;
   white-space: nowrap;
+  float: left;
 }
 
 #menu .menu-item
@@ -789,7 +799,7 @@
   display: inline-block;
   margin-right: 10px;
   vertical-align: top;
-  border: 1px solid var(--col-menu-border);
+  border: 1px solid var(--col-panel-border);
   background-color: var(--col-menu-item-fill);
 }
 
@@ -801,6 +811,17 @@
 #menu .menu-children-wrapper
 {
   padding-bottom: 0px;
+  padding-top: 5px;
+}
+
+#menu .menu-children-title
+{
+  color: white;
+  width: 96%;
+  text-align: center;
+  margin-bottom: 10px;
+  font-size: 18px;
+  line-height: 18px;
 }
 
 #menu .menu-parent-wrapper,

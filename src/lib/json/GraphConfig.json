@@ -65,11 +65,7 @@
   {
     "size": 5,
     "hoverTime": 0.5,
-    "pinnedPosition":
-    {
-      "x": 300,
-      "y": 0
-    },
+    "padding": 10,
     "parents": ["core", "trigger", "maths", "audio", "vector", "colour",
                 "midi", "laser", "dmx", "time-series", "iot"],
     "children":

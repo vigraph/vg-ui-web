@@ -96,11 +96,10 @@ export default class Graph extends React.Component<IProps, IState>
 
     return (
       <div className="wrapper">
-        {this.state.menuState !== "hidden" && <Menu
-          position={(this.state.menuState === "pinned" ?
-            vgConfig.Graph.menu.pinnedPosition : pointerPos)}
+        <Menu displayState={this.state.menuState}
+          position={pointerPos}
           menuClosed={this.menuClosed} pinMenu={this.pinMenu}
-          menuItemSelected={this.menuItemSelected}/>}
+          menuItemSelected={this.menuItemSelected}/>
 
         {this.state.infoState !== "hidden" && <InfoPanel
           graph={this.graph} node={this.state.targetNode}

@@ -3,9 +3,13 @@ import * as React from 'react';
 import { vgData } from './data/Data';
 import { vgConfig } from './lib/Config';
 import { vgIcons } from './icons/Icons';
+import { vgUtils } from './lib/Utils';
+
+import Panel from './Panel';
 
 interface IProps
 {
+  displayState: string,
   position: {x: number, y: number},
   menuClosed: () => void,
   menuItemSelected: (id: string, position?: {x: number, y: number}) => void,
@@ -14,18 +18,17 @@ interface IProps
 
 interface IState
 {
-  menuItem?: {id: string, children: Array<string[]>},
+  subMenuPanels: Array<{id: string, children: Array<string[]>,
+    position: {x: number, y: number}, pinned: boolean}>,
   position: {x: number, y: number},
-  subMenuPosition: {x: number, y: number, reverse: boolean},
-  pinned: boolean,
-  showLabel: string | null
+  showLabel: string | null,
+  display: string
 }
 
 export default class Menu extends React.Component<IProps, IState>
 {
   private menuData: Array<{id: string, children: Array<string[]>}>;
   private menuRef: HTMLDivElement | null;
-  private subMenuRef: HTMLDivElement | null;
   private updateSubMenu: boolean;
   private pointerPosition: {x: number, y: number};
   private hoverTimer: number | null;
@@ -36,15 +39,13 @@ export default class Menu extends React.Component<IProps, IState>
 
     this.state =
     {
-      menuItem: undefined,
+      subMenuPanels: [],
       position: this.props.position,
-      subMenuPosition: {x: 0, y: 0, reverse: false},
-      pinned: false,
-      showLabel: null
+      showLabel: null,
+      display: this.props.displayState
     }
 
     this.menuRef = null;
-    this.subMenuRef = null;
     this.updateSubMenu = true;
     this.pointerPosition = {x: 0, y: 0};
     this.hoverTimer = null;
@@ -59,145 +60,106 @@ export default class Menu extends React.Component<IProps, IState>
       this.menuData = this.generateMenuData();
     }
 
-    const position = (this.state.pinned ? this.props.position :
-      this.state.position);
+    const position = this.state.position;
 
-    return <div id="menu" className="menu"
-      onContextMenu={this.handleMenuContextMenu}>
-      <div className={"menu-parent-wrapper"}
-      style={{left: position.x, top: position.y}}
-      ref={(ref) => { this.menuRef = ref; }}>
-        <svg id="pin-button" className={this.state.pinned?"pinned":""}
-        onPointerDown={this.togglePin}>
-          <circle cx="7" cy="7" r="5"/>
-        </svg>
+    return <div id="menu" className="menu">
+      { this.state.display !== "hidden" && <Panel id="menu"
+      startPosition={{x: position.x, y: position.y}}
+      horizontal={true} empty={false} notifyPin={this.props.pinMenu}
+      returnRef={this.updateMenuRef}>
       {
-        this.menuData.map((value: {id: string, children: Array<string[]>},
-          index: number) =>
-        {
-          const Icon = vgIcons.Menu[value.id] ? vgIcons.Menu[value.id] : "";
-          return <div key={index} id={"menu-"+value.id}
-            className={`menu-item parent` +
-              ` ${(this.state.menuItem && value.id ===
-              this.state.menuItem.id) ? "selected" : "" }`}
-            onPointerDown={this.handleParentPointerDown}
-            onPointerMove={this.handlePointerMove}
-            onPointerEnter={this.handlePointerEnter}
-            onPointerLeave={this.handlePointerLeave}>
+          <div className={"menu-parent-wrapper"}>
+          {
+            this.menuData.map((value: {id: string, children: Array<string[]>},
+              index: number) =>
             {
-              Icon ? <Icon /> : value.id
-            }
-            </div>
-        })
-      }
-      </div>
+              const Icon = vgIcons.Menu[value.id] ? vgIcons.Menu[value.id] : "";
+              return <div key={index} id={"menu-"+value.id}
+                className={`menu-item parent` +
+                  ` ${(this.state.subMenuPanels.length &&
+                  this.state.subMenuPanels.find(x => x.id === value.id)) ?
+                  "selected" : "" }`}
+                onPointerDown={this.handleParentPointerDown}
+                onPointerMove={this.handlePointerMove}
+                onPointerEnter={this.handlePointerEnter}
+                onPointerLeave={this.handlePointerLeave}>
+                {
+                  Icon ? <Icon /> : value.id
+                }
+                </div>
+            })
+          }
+          </div>
+    }
+      </Panel>
+    }
       {
-        this.state.menuItem && this.createSubMenu()
+        this.state.subMenuPanels.map(
+          (subMenu: {id: string, children: Array<string[]>,
+            position: {x: number, y: number}, pinned: boolean},
+            index: number) =>
+          {
+            return this.createSubMenu(subMenu, index);
+          })
       }
       {
         this.state.showLabel && this.createLabel()
       }
-    </div>
+        </div>
   }
 
-  public componentDidMount()
-  {
-    if (this.menuRef)
-    {
-      // Reposition menu if it would be created off screen
-      const windowWidth = window.innerWidth;
-      const windowHeight = window.innerHeight;
-
-      const newPosition = {...this.props.position};
-
-      const menuBoundX = newPosition.x + this.menuRef.offsetWidth;
-      const menuBoundY = newPosition.y + this.menuRef.offsetHeight;
-
-      let updateFlag = false;
-
-      if (menuBoundX > windowWidth)
-      {
-        updateFlag = true;
-        newPosition.x -= this.menuRef.offsetWidth;
-      }
-
-      if (menuBoundY > windowHeight)
-      {
-        updateFlag = true;
-        newPosition.y -= this.menuRef.offsetHeight;
-      }
-
-      if (updateFlag)
-      {
-        this.setState({position: newPosition});
-      }
-    }
-  }
-
+  // Update state values from properties to ensure they're up to date
   public componentDidUpdate()
   {
-    // Only update when updateSubMenu is set to stop an infinite number of
-    // componentDidUpdate calls
-    if (this.state.menuItem && this.menuRef && this.subMenuRef &&
-      this.updateSubMenu)
+    let stateUpdate = {};
+
+    if (this.state.display !== this.props.displayState)
     {
-      // Reposition menu if it would be created off screen
-      const windowWidth = window.innerWidth;
-      const windowHeight = window.innerHeight;
+      stateUpdate = {...stateUpdate, display: this.props.displayState};
+    }
 
-      const newPosition = (this.state.pinned ? {...this.props.position} :
-      {...this.state.position});
-
-      newPosition.y += this.menuRef.offsetHeight + 10;
-
-      const menuBoundX = newPosition.x + this.subMenuRef.offsetWidth;
-      const menuBoundY = newPosition.y + this.subMenuRef.offsetHeight;
-
-      let reverseOrder = false;
-
-      if (menuBoundX > windowWidth)
+    // If display state = hidden then hide all unpinned panels
+    if (this.props.displayState === "hidden")
+    {
+      const newSubMenuPanels = this.clearUnpinnedPanels();
+      if (newSubMenuPanels.length !== this.state.subMenuPanels.length)
       {
-        newPosition.x -= (this.subMenuRef.offsetWidth -
-          this.menuRef.offsetWidth);
+        stateUpdate = {...stateUpdate, subMenuPanels: newSubMenuPanels};
       }
+    }
 
-      if (menuBoundY > windowHeight)
-      {
-        newPosition.y -= (this.subMenuRef.offsetHeight +
-          this.menuRef.offsetHeight + 20);
+    if (this.state.position !== this.props.position &&
+      this.props.displayState !== "pinned")
+    {
+      stateUpdate = {...stateUpdate, position: this.props.position};
+    }
 
-        reverseOrder = true;
-      }
-
-      this.updateSubMenu = false;
-      this.setState({subMenuPosition: {...newPosition, reverse: reverseOrder}});
+    // State has changed so update
+    if (Object.keys(stateUpdate).length)
+    {
+      this.setState(stateUpdate);
     }
   }
 
-  private createSubMenu = () =>
+  // Create single sub menu panel
+  private createSubMenu = (menuData: {id: string, children: Array<string[]>,
+    position: {x: number, y: number}, pinned: boolean},
+    key: number) =>
   {
-    const menuID = (this.state.menuItem ? this.state.menuItem.id : "");
-    const menuData = this.menuData.find(x => x.id === menuID);
+    const position = menuData.position;
 
-    if (menuData)
+    return <Panel id={menuData.id} key={key}
+    startPosition={{x: position.x, y: position.y}}
+    horizontal={true} empty={false} notifyPin={this.notifySubMenuPin}
+    parentRef={this.menuRef?this.menuRef:undefined}
+    parentPadding={vgConfig.Graph.menu.padding*2}>
     {
-      if (this.state.pinned)
-      {
-        window.addEventListener("pointerdown", this.handleWindowPointerDown);
-      }
-
-      const position = this.state.subMenuPosition;
-
-      // Reverse order of sub menu block creation when sub menu created above
-      // menu. Ensures submenu and menu are visually connected
-      const subMenuData = (position.reverse ?
-        menuData.children.slice(0).reverse() : menuData.children);
-
-      return <div className={"menu-children-wrapper"}
-        style={{left: position.x, top: position.y}}
-        ref={(ref) => { this.subMenuRef = ref; }}>
+      <div className={"menu-children-wrapper"}>
+        <div className={"menu-children-title label"}>
+        {vgUtils.capitaliseFirstLetter(menuData.id)}
+        </div>
         {
-          subMenuData.map(
+          menuData.children.map(
             (subMenuBlock: string[], index: number) =>
             {
               return <div id={"sub-menu-block-"+index} key={"block-"+index}
@@ -205,7 +167,7 @@ export default class Menu extends React.Component<IProps, IState>
                 {
                   subMenuBlock.map((value: string, index: number) =>
                   {
-                    const id = menuID + "/" + value;
+                    const id = menuData.id + "/" + value;
                     const Icon = vgIcons.Menu[id]?vgIcons.Menu[id]:"";
 
                     return <div key={index} id={"menu-"+id}
@@ -225,6 +187,7 @@ export default class Menu extends React.Component<IProps, IState>
         }
       </div>
     }
+    </Panel>
   }
 
   private generateMenuData = () =>
@@ -276,15 +239,43 @@ export default class Menu extends React.Component<IProps, IState>
     const target = e.currentTarget.id;
     const targetItemID = target.substring(5, target.length);
 
-    if (this.state.menuItem && this.state.menuItem.id === targetItemID)
+    const targetIndex =
+      this.state.subMenuPanels.findIndex(x => x.id === targetItemID);
+
+    if (targetIndex > -1)
     {
-      this.setState({menuItem: undefined});
+      if (!this.state.subMenuPanels[targetIndex].pinned)
+      {
+        const subMenuPanels = this.state.subMenuPanels;
+        subMenuPanels.splice(targetIndex, 1);
+        this.setState({subMenuPanels});
+      }
     }
     else
     {
       this.updateSubMenu = true;
-      this.setState({menuItem: this.menuData.find(x => x.id === targetItemID),
-        subMenuPosition: {x: 0, y: 0, reverse: false}});
+
+      // Position sub menu under center of parent icon
+      const subMenuPosition = {...this.state.position};
+
+      if (this.menuRef)
+      {
+        subMenuPosition.y = this.menuRef.offsetTop +
+          this.menuRef.offsetHeight + vgConfig.Graph.menu.padding;
+        subMenuPosition.x = this.menuRef.offsetLeft +
+          e.currentTarget.offsetLeft + (e.currentTarget.offsetWidth / 2);
+      }
+
+      const newSubMenuPanel = this.menuData.find(x => x.id === targetItemID);
+      const subMenuPanels = this.clearUnpinnedPanels();
+
+      if (newSubMenuPanel)
+      {
+        subMenuPanels.push({...newSubMenuPanel, position: subMenuPosition,
+          pinned: false});
+      }
+
+      this.setState({subMenuPanels});
       this.clearHoverTimeout();
     }
   }
@@ -293,19 +284,12 @@ export default class Menu extends React.Component<IProps, IState>
   {
     e.stopPropagation();
     const target = e.currentTarget.id;
-    if (!this.state.pinned)
-    {
-      this.clearHoverTimeout();
-      this.props.menuClosed();
-    }
-    else
-    {
-      this.setState({menuItem: undefined});
-    }
 
-    const position = (this.state.pinned ? {x: e.pageX, y: e.pageY}: undefined);
+    this.clearHoverTimeout();
+    this.props.menuClosed();
 
-    this.props.menuItemSelected(target.substring(5, target.length), position);
+    this.props.menuItemSelected(target.substring(5, target.length),
+      {x: e.pageX, y: e.pageY});
   }
 
   // Do nothing - prevents browser context menu from showing
@@ -314,16 +298,10 @@ export default class Menu extends React.Component<IProps, IState>
     e.preventDefault();
   }
 
-  private handleWindowPointerDown = (e: PointerEvent) =>
-  {
-    e.stopPropagation();
-    window.removeEventListener("pointerdown", this.handleWindowPointerDown);
-    this.setState({menuItem: undefined});
-  }
-
   private handlePointerMove = (e: React.PointerEvent) =>
   {
-    this.pointerPosition = {x: e.pageX+10, y: e.pageY+10};
+    this.pointerPosition = {x: e.pageX+vgConfig.Graph.menu.padding,
+      y: e.pageY+vgConfig.Graph.menu.padding};
   }
 
   private handlePointerEnter = (e: React.PointerEvent) =>
@@ -357,15 +335,42 @@ export default class Menu extends React.Component<IProps, IState>
     }
   }
 
-  // Toggle pinning menu to set position (handled by Graph)
-
-  private togglePin = (e: React.MouseEvent<SVGSVGElement>) =>
+  private updateMenuRef = (ref: HTMLDivElement | null) =>
   {
-    e.stopPropagation();
-    window.removeEventListener("pointerdown", this.handleWindowPointerDown);
-    const newPinState = !this.state.pinned;
-    this.updateSubMenu = true;
-    this.setState({pinned: newPinState});
-    this.props.pinMenu(newPinState);
+    this.menuRef = ref;
+  }
+
+  // Sub menu panel has been pinned so update pinned state in sub menu panels
+  // store
+  private notifySubMenuPin = (pin: boolean, id?: string) =>
+  {
+    const newSubMenuPanels = this.state.subMenuPanels;
+    const index = newSubMenuPanels.findIndex(x => x.id === id);
+
+    if (index > -1)
+    {
+      newSubMenuPanels[index].pinned = pin;
+      this.setState({subMenuPanels: newSubMenuPanels});
+    }
+  }
+
+  // Clear all panels with pinned = false
+  private clearUnpinnedPanels = () =>
+  {
+    const newSubMenuPanels = this.state.subMenuPanels.filter(
+        (subMenuPanel: {id: string, children: Array<string[]>,
+          position: {x: number, y: number}, pinned: boolean}) =>
+        {
+          return subMenuPanel.pinned;
+        });
+
+    if (newSubMenuPanels.length !== this.state.subMenuPanels.length)
+    {
+      return newSubMenuPanels;
+    }
+    else
+    {
+      return this.state.subMenuPanels;
+    }
   }
 }

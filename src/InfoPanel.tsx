@@ -43,7 +43,7 @@ export default class InfoPanel extends React.Component<IProps, IState>
   public render()
   {
     return (
-      <Panel startPosition={{x: 5, y: 50}} horizontal={false}
+      <Panel id="info" startPosition={{x: 5, y: 50}} horizontal={false}
         empty={!this.props.node} notifyPin={this.props.pinInfo}>
       {
         <div id="info">
