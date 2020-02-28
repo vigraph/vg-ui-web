@@ -508,7 +508,16 @@
       }
     }
   },
-  "audio/bit-crush":
+  "audio/pin":
+  {
+    "width": 70,
+    "height": 50,
+    "category": "pin",
+    "properties":
+    {
+    }
+  },
+ "audio/bit-crush":
   {
     "width": 110,
     "height": 60,
@@ -1366,6 +1375,32 @@
         {
           "y": 50
         }
+      }
+    }
+  },
+  "midi/key-out":
+  {
+    "width": 100,
+    "height": 50,
+    "properties":
+    {
+      "channel":
+      {
+        "rangeMin": 0,
+        "rangeMax": 2
+      },
+      "key":
+      {
+        "rangeMin": -1
+      },
+      "velocity":
+      {
+        "controlType": "knob/default",
+        "rangeMin": 0,
+        "rangeMax": 1,
+        "increment": 0.01,
+        "x": 30,
+        "y": 10
       }
     }
   },
