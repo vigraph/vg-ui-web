@@ -770,7 +770,7 @@
   float: left;
 }
 
-#menu-label
+#menu-label-wrapper
 {
   position: absolute;
   color: #ccc;
@@ -780,6 +780,21 @@
   line-height: 14px;
   font-size: 14px;
   padding: 2px;
+  pointer-events: none;
+  animation: delayedShow 2s;
+  display: inline-table;
+}
+
+#menu-label-name
+{
+  font-size: 12px;
+}
+
+#menu-label-desc
+{
+  max-width: 100px;
+  white-space: pre-wrap;
+  font-size: 10px;
 }
 
 #menu .menu-parent-wrapper,

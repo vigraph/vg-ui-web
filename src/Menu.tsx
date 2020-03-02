@@ -21,7 +21,7 @@ interface IState
   subMenuPanels: Array<{id: string, children: Array<string[]>,
     position: {x: number, y: number}, pinned: boolean}>,
   position: {x: number, y: number},
-  showLabel: string | null,
+  itemLabel: {name: string, description?: string, x: number, y: number} | null,
   display: string
 }
 
@@ -41,7 +41,7 @@ export default class Menu extends React.Component<IProps, IState>
     {
       subMenuPanels: [],
       position: this.props.position,
-      showLabel: null,
+      itemLabel: null,
       display: this.props.displayState
     }
 
@@ -80,9 +80,7 @@ export default class Menu extends React.Component<IProps, IState>
                   this.state.subMenuPanels.find(x => x.id === value.id)) ?
                   "selected" : "" }`}
                 onPointerDown={this.handleParentPointerDown}
-                onPointerMove={this.handlePointerMove}
-                onPointerEnter={this.handlePointerEnter}
-                onPointerLeave={this.handlePointerLeave}>
+                onPointerMove={this.handlePointerMove}>
                 {
                   Icon ? <Icon /> : value.id
                 }
@@ -102,10 +100,7 @@ export default class Menu extends React.Component<IProps, IState>
             return this.createSubMenu(subMenu, index);
           })
       }
-      {
-        this.state.showLabel && this.createLabel()
-      }
-        </div>
+    </div>
   }
 
   // Update state values from properties to ensure they're up to date
@@ -185,6 +180,7 @@ export default class Menu extends React.Component<IProps, IState>
                 </div>
             })
         }
+        { this.createLabel() }
       </div>
     }
     </Panel>
@@ -227,10 +223,20 @@ export default class Menu extends React.Component<IProps, IState>
 
   private createLabel = () =>
   {
-    return <div id={"menu-label"} className={"menu label"}
-      style={{left: this.pointerPosition.x, top: this.pointerPosition.y}}>
-        {this.state.showLabel}
-      </div>
+    if (this.state.itemLabel)
+    {
+      const label = this.state.itemLabel;
+      return <div id="menu-label-wrapper" className="button-label label"
+        style={{left: label.x, top: label.y}}>
+        <div id="menu-label-name">{label.name}</div>
+        {label.description !== undefined && <div id="menu-label-desc">
+          {label.description}</div>}
+        </div>
+    }
+    else
+    {
+      return "";
+    }
   }
 
   private handleParentPointerDown = (e: React.PointerEvent<HTMLDivElement>) =>
@@ -276,7 +282,6 @@ export default class Menu extends React.Component<IProps, IState>
       }
 
       this.setState({subMenuPanels});
-      this.clearHoverTimeout();
     }
   }
 
@@ -285,7 +290,6 @@ export default class Menu extends React.Component<IProps, IState>
     e.stopPropagation();
     const target = e.currentTarget.id;
 
-    this.clearHoverTimeout();
     this.props.menuClosed();
 
     this.props.menuItemSelected(target.substring(5, target.length),
@@ -300,39 +304,31 @@ export default class Menu extends React.Component<IProps, IState>
 
   private handlePointerMove = (e: React.PointerEvent) =>
   {
-    this.pointerPosition = {x: e.pageX+vgConfig.Graph.menu.padding,
-      y: e.pageY+vgConfig.Graph.menu.padding};
+    this.pointerPosition = {x: e.pageX + vgConfig.Graph.menu.padding,
+      y: e.pageY + vgConfig.Graph.menu.padding};
   }
 
-  private handlePointerEnter = (e: React.PointerEvent) =>
+  private handlePointerEnter = (e: React.PointerEvent<HTMLDivElement>) =>
   {
     const id = e.currentTarget.id;
     let itemID = id.substring(5, id.length);
 
-    if (itemID.lastIndexOf("/") >= 1)
-    {
-      itemID = itemID.substring(itemID.lastIndexOf("/") + 1, itemID.length);
-    }
+    const x = e.currentTarget.offsetLeft + (e.currentTarget.offsetWidth / 2);
+    const y = e.currentTarget.offsetTop + e.currentTarget.offsetHeight;
 
-    this.hoverTimer = window.setTimeout(() =>
-      {
-        this.setState({showLabel: itemID});
-      }, vgConfig.Graph.menu.hoverTime * 1000)
+    const splitID = itemID.split("/");
+
+    const metadata = vgData.returnMetadata()[splitID[0]][splitID[1]];
+    const strings = vgConfig.Strings.descriptions[itemID];
+    const description = strings ? strings.description : undefined;
+
+    this.setState({itemLabel: {name: metadata.name, description,
+      x, y}});
   }
 
   private handlePointerLeave = (e: React.PointerEvent) =>
   {
-    this.clearHoverTimeout();
-  }
-
-  private clearHoverTimeout = () =>
-  {
-    if (this.hoverTimer)
-    {
-      this.setState({showLabel: null});
-      window.clearTimeout(this.hoverTimer);
-      this.hoverTimer = null;
-    }
+    this.setState({itemLabel: null});
   }
 
   private updateMenuRef = (ref: HTMLDivElement | null) =>
