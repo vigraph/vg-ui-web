@@ -22,7 +22,8 @@ interface IState
     position: {x: number, y: number}, pinned: boolean}>,
   position: {x: number, y: number},
   itemLabel: {name: string, description?: string, x: number, y: number} | null,
-  display: string
+  display: string,
+  draggingIcon: {id: string, x: number, y: number} | null
 }
 
 export default class Menu extends React.Component<IProps, IState>
@@ -30,8 +31,8 @@ export default class Menu extends React.Component<IProps, IState>
   private menuData: Array<{id: string, children: Array<string[]>}>;
   private menuRef: HTMLDivElement | null;
   private updateSubMenu: boolean;
-  private pointerPosition: {x: number, y: number};
   private hoverTimer: number | null;
+  private mouseDownChild: boolean;
 
   constructor(props: IProps)
   {
@@ -42,13 +43,14 @@ export default class Menu extends React.Component<IProps, IState>
       subMenuPanels: [],
       position: this.props.position,
       itemLabel: null,
-      display: this.props.displayState
+      display: this.props.displayState,
+      draggingIcon: null
     }
 
     this.menuRef = null;
     this.updateSubMenu = true;
-    this.pointerPosition = {x: 0, y: 0};
     this.hoverTimer = null;
+    this.mouseDownChild = false;
 
     this.menuData = this.generateMenuData();
   }
@@ -64,10 +66,10 @@ export default class Menu extends React.Component<IProps, IState>
 
     return <div id="menu" className="menu">
       { this.state.display !== "hidden" && <Panel id="menu"
-      startPosition={{x: position.x, y: position.y}}
-      horizontal={true} empty={false} notifyPin={this.props.pinMenu}
-      returnRef={this.updateMenuRef}>
-      {
+        startPosition={{x: position.x, y: position.y}}
+        horizontal={true} empty={false} notifyPin={this.props.pinMenu}
+        returnRef={this.updateMenuRef}>
+        {
           <div className={"menu-parent-wrapper"}>
           {
             this.menuData.map((value: {id: string, children: Array<string[]>},
@@ -79,8 +81,7 @@ export default class Menu extends React.Component<IProps, IState>
                   ` ${(this.state.subMenuPanels.length &&
                   this.state.subMenuPanels.find(x => x.id === value.id)) ?
                   "selected" : "" }`}
-                onPointerDown={this.handleParentPointerDown}
-                onPointerMove={this.handlePointerMove}>
+                onPointerDown={this.handleParentPointerDown}>
                 {
                   Icon ? <Icon /> : value.id
                 }
@@ -88,9 +89,9 @@ export default class Menu extends React.Component<IProps, IState>
             })
           }
           </div>
-    }
-      </Panel>
-    }
+        }
+        </Panel>
+      }
       {
         this.state.subMenuPanels.map(
           (subMenu: {id: string, children: Array<string[]>,
@@ -100,6 +101,7 @@ export default class Menu extends React.Component<IProps, IState>
             return this.createSubMenu(subMenu, index);
           })
       }
+      { this.createDraggingIcon() }
     </div>
   }
 
@@ -168,7 +170,8 @@ export default class Menu extends React.Component<IProps, IState>
                     return <div key={index} id={"menu-"+id}
                       className="menu-item child"
                       onPointerDown={this.handleChildPointerDown}
-                      onPointerMove={this.handlePointerMove}
+                      onPointerUp={this.handleChildPointerUp}
+                      onPointerMove={this.handleChildPointerMove}
                       onPointerEnter={this.handlePointerEnter}
                       onPointerLeave={this.handlePointerLeave}>
                       {
@@ -239,6 +242,28 @@ export default class Menu extends React.Component<IProps, IState>
     }
   }
 
+  private createDraggingIcon = () =>
+  {
+    if (this.state.draggingIcon)
+    {
+      const dIcon = this.state.draggingIcon;
+      const id = this.state.draggingIcon.id;
+      const Icon = vgIcons.Menu[id]?vgIcons.Menu[id]:"";
+      const splitID = id.split("/");
+
+      return <div id={"menu-dragging-icon"}
+        className="menu-item child" style={{left: dIcon.x, top: dIcon.y}}>
+        {
+          Icon ? <Icon /> : <span>{ splitID[1] }</span>
+        }
+        </div>
+    }
+    else
+    {
+      return;
+    }
+  }
+
   private handleParentPointerDown = (e: React.PointerEvent<HTMLDivElement>) =>
   {
     e.stopPropagation();
@@ -288,24 +313,33 @@ export default class Menu extends React.Component<IProps, IState>
   private handleChildPointerDown = (e: React.PointerEvent<HTMLDivElement>) =>
   {
     e.stopPropagation();
-    const target = e.currentTarget.id;
-
-    this.props.menuClosed();
-
-    this.props.menuItemSelected(target.substring(5, target.length),
-      {x: e.pageX, y: e.pageY});
+    this.mouseDownChild = true;
+    this.setState({itemLabel: null});
   }
 
-  // Do nothing - prevents browser context menu from showing
-  private handleMenuContextMenu = (e: React.PointerEvent<HTMLDivElement>) =>
+  private handleChildPointerUp = (e: React.PointerEvent<HTMLDivElement>) =>
   {
-    e.preventDefault();
+    if (!this.state.draggingIcon)
+    {
+      const target = e.currentTarget.id;
+
+      this.props.menuClosed();
+
+      this.props.menuItemSelected(target.substring(5, target.length),
+        {x: e.pageX, y: e.pageY});
+    }
   }
 
-  private handlePointerMove = (e: React.PointerEvent) =>
+  private handleChildPointerMove = (e: React.PointerEvent) =>
   {
-    this.pointerPosition = {x: e.pageX + vgConfig.Graph.menu.padding,
-      y: e.pageY + vgConfig.Graph.menu.padding};
+    if (this.mouseDownChild)
+    {
+      const id = e.currentTarget.id;
+      this.setState({draggingIcon: {id: id.substring(5, id.length),
+        x: 0, y: 0}});
+      window.addEventListener("pointermove", this.handleChildDragMove);
+      window.addEventListener("pointerup", this.handleChildDragUp);
+    }
   }
 
   private handlePointerEnter = (e: React.PointerEvent<HTMLDivElement>) =>
@@ -328,7 +362,34 @@ export default class Menu extends React.Component<IProps, IState>
 
   private handlePointerLeave = (e: React.PointerEvent) =>
   {
+    this.mouseDownChild = false;
     this.setState({itemLabel: null});
+  }
+
+  private handleChildDragMove = (e: PointerEvent) =>
+  {
+    if (this.state.draggingIcon)
+    {
+      const draggingIcon = {id: this.state.draggingIcon.id, x: e.pageX,
+        y: e.pageY};
+
+      this.setState({draggingIcon});
+    }
+  }
+
+  private handleChildDragUp = (e: PointerEvent) =>
+  {
+    window.removeEventListener("pointermove", this.handleChildDragMove);
+    window.removeEventListener("pointerup", this.handleChildDragUp);
+
+    if (this.state.draggingIcon)
+    {
+      this.props.menuItemSelected(this.state.draggingIcon.id,
+        {x: e.pageX, y: e.pageY});
+
+      this.setState({draggingIcon: null});
+      this.mouseDownChild = false;
+    }
   }
 
   private updateMenuRef = (ref: HTMLDivElement | null) =>

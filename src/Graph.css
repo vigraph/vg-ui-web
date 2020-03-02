@@ -856,6 +856,15 @@
   font-size: 70%;
   text-align: center;
   color: var(--col-menu-item-text);
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE10+/Edge */
+  user-select: none; /* Standard */
+}
+
+#menu-dragging-icon
+{
+  position: absolute;
 }
 
 /* UI 1.0 */
