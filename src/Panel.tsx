@@ -147,14 +147,11 @@ export default class Panel extends React.Component<IProps, IState>
     e.stopPropagation();
     e.preventDefault();
 
-    if (!this.state.pinned)
-    {
-      window.addEventListener('pointerup', this.handlePointerUp);
-      window.addEventListener('pointermove', this.handlePointerMove);
+    window.addEventListener('pointerup', this.handlePointerUp);
+    window.addEventListener('pointermove', this.handlePointerMove);
 
-      this.offsetX = e.pageX - this.state.x;
-      this.offsetY = e.pageY - this.state.y;
-    }
+    this.offsetX = e.pageX - this.state.x;
+    this.offsetY = e.pageY - this.state.y;
   }
 
   private handlePointerUp = (e: PointerEvent) =>
@@ -205,6 +202,7 @@ export default class Panel extends React.Component<IProps, IState>
   }
 
   // Check panel is positioned within the window, moving it if necessary
+  // Fall back to start position if moved position puts panel outside window
   private checkPositionInWindow = () =>
   {
     if (this.panelRef)
@@ -241,6 +239,16 @@ export default class Panel extends React.Component<IProps, IState>
 
       if (updateFlag)
       {
+        if (newPosition.x < 0)
+        {
+          newPosition.x = this.props.startPosition.x;
+        }
+
+        if (newPosition.y < 0)
+        {
+          newPosition.y = this.props.startPosition.y;
+        }
+
         this.positionOverride = true;
         this.setState({x: newPosition.x, y: newPosition.y});
         this.updateRef = true;

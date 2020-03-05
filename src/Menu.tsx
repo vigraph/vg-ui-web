@@ -172,8 +172,8 @@ export default class Menu extends React.Component<IProps, IState>
                       onPointerDown={this.handleChildPointerDown}
                       onPointerUp={this.handleChildPointerUp}
                       onPointerMove={this.handleChildPointerMove}
-                      onPointerEnter={this.handlePointerEnter}
-                      onPointerLeave={this.handlePointerLeave}>
+                      onPointerEnter={this.handleChildPointerEnter}
+                      onPointerLeave={this.handleChildPointerLeave}>
                       {
                         Icon ? <Icon /> : <span>{ value }</span>
                       }
@@ -323,6 +323,8 @@ export default class Menu extends React.Component<IProps, IState>
     {
       const target = e.currentTarget.id;
 
+      this.mouseDownChild = false;
+
       this.props.menuClosed();
 
       this.props.menuItemSelected(target.substring(5, target.length),
@@ -342,7 +344,7 @@ export default class Menu extends React.Component<IProps, IState>
     }
   }
 
-  private handlePointerEnter = (e: React.PointerEvent<HTMLDivElement>) =>
+  private handleChildPointerEnter = (e: React.PointerEvent<HTMLDivElement>) =>
   {
     const id = e.currentTarget.id;
     let itemID = id.substring(5, id.length);
@@ -360,7 +362,7 @@ export default class Menu extends React.Component<IProps, IState>
       x, y}});
   }
 
-  private handlePointerLeave = (e: React.PointerEvent) =>
+  private handleChildPointerLeave = (e: React.PointerEvent) =>
   {
     this.mouseDownChild = false;
     this.setState({itemLabel: null});
