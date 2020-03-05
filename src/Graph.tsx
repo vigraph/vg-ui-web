@@ -19,6 +19,7 @@ interface IProps
 {
   from?: any;
   notifyGraphRoot: (graphRoot: boolean) => void;
+  updateSavingEnabled: (savingEnabled: boolean) => void;
 }
 
 interface IState
@@ -31,8 +32,9 @@ interface IState
   targetIcon: {name: string, position: {x: number, y: number}} | null,
   menuState: string,
   infoState: string,
-  view: { x: number, y: number, w: number, h: number }
-  pointerDown: boolean;
+  view: { x: number, y: number, w: number, h: number },
+  pointerDown: boolean,
+  savingEnabled: boolean
 }
 
 export default class Graph extends React.Component<IProps, IState>
@@ -59,10 +61,13 @@ export default class Graph extends React.Component<IProps, IState>
     }
     else
     {
-      vgData.generateGraph("graph", (json:any) =>
+      vgData.startUp(() =>
         {
-          this.graph.loadFrom(json, true, "graph");
-          this.forceUpdate();
+          vgData.generateGraph("graph", (json:any) =>
+            {
+              this.graph.loadFrom(json, true, "graph");
+              this.forceUpdate();
+            });
         });
     }
 
@@ -77,7 +82,8 @@ export default class Graph extends React.Component<IProps, IState>
       menuState: "hidden",
       infoState: "hidden",
       view: vgConfig.Graph.viewDefault,
-      pointerDown: false
+      pointerDown: false,
+      savingEnabled: true
     };
 
     this.pointerClick = {x: 0, y: 0, t: 0};
@@ -106,6 +112,12 @@ export default class Graph extends React.Component<IProps, IState>
           startUpdate={this.startUpdate} update={this.update}
           endUpdate={this.endUpdate} pinInfo={this.pinInfo}
           dynamicNodeUpdate={this.dynamicNodeUpdate}/>}
+
+        {!this.state.savingEnabled && <div id="no-saving-notif">
+          {vgConfig.Strings.noSaving}
+          <a href={vgConfig.Graph.upgradeURL} target="_blank"
+            rel="noopener noreferrer">{" Upgrade "}</a>
+        </div>}
 
         <svg id="graph"
           viewBox={`${view.x} ${view.y} ${view.w} ${view.h}`}
@@ -365,6 +377,10 @@ export default class Graph extends React.Component<IProps, IState>
   {
     if (this.firstLoad)
     {
+      // Graph data has loaded - update saving enabled property
+      const savingEnabled = vgData.savingEnabled();
+      this.props.updateSavingEnabled(savingEnabled);
+
       this.firstLoad = false;
 
       const nodes = this.graph.getNodes();
@@ -398,7 +414,7 @@ export default class Graph extends React.Component<IProps, IState>
       const newView = Object.assign({}, this.state.view);
       newView.x = -(screenCentreSVG.x - centre.x);
       newView.y = -(screenCentreSVG.y - centre.y);
-      this.setState({view: newView});
+      this.setState({view: newView, savingEnabled});
     }
   }
 
@@ -463,11 +479,14 @@ export default class Graph extends React.Component<IProps, IState>
 
   public save = () =>
   {
-    vgData.getGraphToStore((graphJSON: vgTypes.ICombinedGraph) =>
-      {
-        const saveJSON = JSON.stringify(graphJSON);
-        vgUtils.saveToFile(saveJSON);
-      });
+    if (vgData.savingEnabled())
+    {
+      vgData.getGraphToStore((graphJSON: vgTypes.ICombinedGraph) =>
+        {
+          const saveJSON = JSON.stringify(graphJSON);
+          vgUtils.saveToFile(saveJSON);
+        });
+    }
   }
 
   public load = (fileInputID: string) =>
@@ -1218,7 +1237,7 @@ export default class Graph extends React.Component<IProps, IState>
     {
       this.setState({targetNode: null});
     }
-    else if (!this.state.targetNode || node.id !== this.state.targetNode.id)
+    else
     {
       const infoState = this.state.infoState === "hidden" ? "show" :
         this.state.infoState;

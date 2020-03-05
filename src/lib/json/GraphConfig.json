@@ -6,6 +6,7 @@
     "enabled": false,
     "connectorLabelText": 10
   },
+  "upgradeURL": "http://www.vigraph.com",
   "layoutPadding":
   {
     "x": 30,

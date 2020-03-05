@@ -16,7 +16,8 @@ interface IState
 {
   graphRoot: boolean,
   fullscreen: boolean,
-  buttonLabel: {name: string, x: number, y: number} | null
+  buttonLabel: {name: string, x: number, y: number} | null,
+  savingEnabled: boolean
 }
 
 export default class App extends React.Component<IProps, IState>
@@ -31,7 +32,8 @@ export default class App extends React.Component<IProps, IState>
     {
       graphRoot: true,
       fullscreen: false,
-      buttonLabel: null
+      buttonLabel: null,
+      savingEnabled: true
     };
   }
 
@@ -48,7 +50,7 @@ export default class App extends React.Component<IProps, IState>
           this.createButton("fullscreen", this.setFullScreen)
           }
           {this.createButton("theme", this.handleTheme)}
-          {this.createButton("save", this.handleSave)}
+          {this.createSaveButton()}
           <div id="load-button" className="app-button"
             onPointerEnter={this.handleButtonEnter}
             onPointerLeave={this.handleButtonLeave}>
@@ -61,7 +63,8 @@ export default class App extends React.Component<IProps, IState>
           {!this.state.graphRoot && this.createButton("back", this.handleBack)}
           {this.createLabel()}
          </div>
-        <Graph ref={this.graph} notifyGraphRoot={this.notifyGraphRoot} />
+        <Graph ref={this.graph} notifyGraphRoot={this.notifyGraphRoot}
+          updateSavingEnabled={this.updateSavingEnabled}/>
       </div>
     );
   }
@@ -72,9 +75,10 @@ export default class App extends React.Component<IProps, IState>
     return < Icon />
   }
 
-  private createButton(name: string, onClick: () => void)
+  private createButton(name: string, onClick: () => void, className?: string)
   {
-    return <div id={name+"-button"} className={"app-button " + name}
+    return <div id={name+"-button"} className={`app-button ${name} `+
+      `${className!==undefined?className:""}`}
       onClick={onClick}
       onPointerEnter={this.handleButtonEnter}
       onPointerLeave={this.handleButtonLeave}>
@@ -96,6 +100,21 @@ export default class App extends React.Component<IProps, IState>
     else
     {
       return "";
+    }
+  }
+
+  private createSaveButton()
+  {
+    if (this.state.savingEnabled)
+    {
+      return this.createButton("save", this.handleSave);
+    }
+    else
+    {
+      return this.createButton("save", () =>
+        {
+          window.open(vgConfig.Graph.upgradeURL, "_blank");
+        }, "disabled")
     }
   }
 
@@ -186,5 +205,10 @@ export default class App extends React.Component<IProps, IState>
   private handleButtonLeave = (e: React.PointerEvent<HTMLElement>) =>
   {
     this.setState({buttonLabel: null});
+  }
+
+  private updateSavingEnabled = (savingEnabled: boolean) =>
+  {
+    this.setState({savingEnabled});
   }
 }

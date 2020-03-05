@@ -21,6 +21,7 @@ class Data
   private generateSuccess?: (json: any) => void;
   private metadata: vgTypes.IMetadata;
   private layoutData: vgTypes.ILayoutData;
+  private versionData: vgTypes.IVersionData | null;
 
   public constructor()
   {
@@ -28,6 +29,7 @@ class Data
     this.rest = new rm.RestClient('vigraph-rest', this.restURL);
     this.metadata = {};
     this.layoutData = {};
+    this.versionData = null;
   }
 
   //============================================================================
@@ -37,6 +39,21 @@ class Data
   public returnMetadata()
   {
     return this.metadata;
+  }
+
+  public savingEnabled()
+  {
+    return (this.versionData ? this.versionData.saving : false);
+  }
+
+  // Startup - Get engine version data
+  public startUp(finished: () => void)
+  {
+    this.getVersionData((versionData: vgTypes.IVersionData | null) =>
+      {
+        this.versionData = versionData;
+        finished();
+      });
   }
 
   // Get graph data JSON and layout data
@@ -246,6 +263,12 @@ class Data
   public updateLayout(id?: string, position?: {x: number, y: number},
     size?: {w: number, h: number}, name?: {n: string}, success?: () => void)
   {
+    if (!this.savingEnabled())
+    {
+      vgUtils.log("Update Layout Disabled - trial version");
+      return;
+    }
+
     const url = this.restURL + "/layout";
 
     if (id)
@@ -661,7 +684,7 @@ class Data
 
     const getLayout = () =>
     {
-      if (Object.keys(this.layoutData).length > 0)
+      if (Object.keys(this.layoutData).length > 0 || !this.savingEnabled())
       {
         this.getGraphData(path);
       }
@@ -1240,6 +1263,38 @@ class Data
     };
 
     return node;
+  }
+
+  // Get engine version data
+  private async getVersionData(finished: (versionData: vgTypes.IVersionData |
+    null) => void)
+  {
+    try
+    {
+      const res: rm.IRestResponse<vgTypes.IVersionData> =
+        await this.rest.get<vgTypes.IVersionData>('/version');
+
+      if (res.statusCode === 200 && res.result)
+      {
+        vgUtils.log("Get Version Data Success");
+        finished(res.result);
+      }
+      else
+      {
+        // Error with status code
+        vgUtils.log("Get Version Data Failure with status code: " +
+          res.statusCode);
+
+        finished(null);
+      }
+    }
+    catch (error)
+    {
+      // Error
+      vgUtils.log("Get Version Data Failure with error: " + error);
+
+      finished(null);
+    }
   }
 }
 

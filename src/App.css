@@ -43,6 +43,7 @@
   --col-panel-border: #888;
   --col-info-input-bg: #222;
   --col-info-input-focus: white;
+  --col-notif-bg: #262626;
 }
 
 /* Light theme */
@@ -99,6 +100,11 @@
 #buttons .fileLoadInput
 {
   display: none;
+}
+
+#buttons .app-button.disabled
+{
+  opacity: 0.4;
 }
 
 @keyframes delayedShow
