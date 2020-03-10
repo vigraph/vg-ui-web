@@ -50,13 +50,13 @@
      inkscape:window-maximized="1"
      inkscape:current-layer="svg894" />
   <path
-     style="opacity:0.50400002;fill:none;fill-opacity:0.56066948;stroke:#4ecac2;stroke-width:0.21113085;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+     style="opacity:0.50400002;fill:none;fill-opacity:0.56066948;stroke:#4ecac2;stroke-width:0.52915;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
      d="M 2.6378569,7.7709066 C 2.0311651,7.1218539 1.6598084,6.2500445 1.6598084,5.2915001 c 0,-2.0057279 1.6259638,-3.6316917 3.6316917,-3.6316917 1.7939315,0 3.2840673,1.3007042 3.5787682,3.0104734"
      id="path913"
      inkscape:connector-curvature="0"
      sodipodi:nodetypes="cssc" />
   <path
-     style="fill:none;fill-rule:evenodd;stroke:#ffffff;stroke-width:0.264575px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+     style="fill:none;fill-rule:evenodd;stroke:#ffffff;stroke-width:0.52915;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none"
      d="M 1.9303176,8.1802271 3.1452029,7.1813213"
      id="path1510"
      inkscape:connector-curvature="0" />
@@ -64,6 +64,6 @@
      inkscape:connector-curvature="0"
      id="path1512"
      d="M 9.5166008,4.3330905 8.0452397,4.7650499"
-     style="fill:none;fill-rule:evenodd;stroke:#ffffff;stroke-width:0.264575px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+     style="fill:none;fill-rule:evenodd;stroke:#ffffff;stroke-width:0.52915;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none"
      sodipodi:nodetypes="cc" />
 </svg>
