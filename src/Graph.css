@@ -104,7 +104,23 @@
   overflow: hidden;
 }
 
-/* Property label */
+.node-header-wrapper foreignObject
+{
+  overflow: visible;
+}
+
+/* Property */
+.property-wrapper
+{
+  overflow: visible;
+}
+
+.property-wrapper.disabled
+{
+  pointer-events: none;
+  opacity: 0.1;
+}
+
 .property-label-wrapper
 {
   overflow: visible;
@@ -131,6 +147,18 @@
 .property-label-wrapper.curve
 {
   display: none;
+}
+
+/* Settings */
+.settings.label
+{
+  pointer-events: none;
+  white-space: pre;
+}
+
+.node .settings.label
+{
+  text-anchor: middle;
 }
 
 /* Connector */
@@ -889,18 +917,24 @@
   color: var(--col-text);
 }
 
-/* UI 1.0 */
-
-.property-wrapper
+/* Websocket Canvas */
+#canvas
 {
-  overflow: visible;
+  border: solid 1px #444;
+  pointer-events: none;
 }
 
-.property-wrapper.disabled
+:root.theme-light #canvas
+{
+  filter: invert(1);
+}
+
+#ws-canvas-wrapper
 {
   pointer-events: none;
-  opacity: 0.1;
 }
+
+/* UI 1.0 */
 
 #slider
 {
@@ -929,6 +963,21 @@
 }
 
 #text-display
+{
+  overflow: visible;
+}
+
+#text-property .settings.label
+{
+  text-anchor: start;
+}
+
+#prefix-property .settings.label
+{
+  text-anchor: start;
+}
+
+#text-display-wrapper
 {
   overflow: visible;
 }
@@ -1010,57 +1059,5 @@
   stroke-width: 2;
   stroke-opacity: 0.5;
   fill: none;
-  pointer-events: none;
-}
-
-foreignObject
-{
-  overflow: visible;
-}
-
-#canvas
-{
-  border: solid 1px #444;
-  pointer-events: none;
-}
-
-:root.theme-light #canvas
-{
-  filter: invert(1);
-}
-
-.settings.label
-{
-  pointer-events: none;
-  white-space: pre;
-}
-
-.settings.label.centre
-{
-  text-anchor: middle;
-}
-
-.node .settings.label
-{
-  text-anchor: middle;
-}
-
-#text-property .settings.label
-{
-  text-anchor: start;
-}
-
-#prefix-property .settings.label
-{
-  text-anchor: start;
-}
-
-#text-display-wrapper
-{
-  overflow: visible;
-}
-
-#ws-canvas-wrapper
-{
   pointer-events: none;
 }
