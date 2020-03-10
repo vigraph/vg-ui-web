@@ -102,9 +102,9 @@ export default class Graph extends React.Component<IProps, IState>
 
     return (
       <div className="wrapper">
-        <Menu displayState={this.state.menuState}
+        <Menu graphDisplay={this.state.menuState}
           position={pointerPos}
-          menuClosed={this.menuClosed} pinMenu={this.pinMenu}
+          menuStateUpdate={this.menuStateUpdate}
           menuItemSelected={this.menuItemSelected}/>
 
         {this.state.infoState !== "hidden" && <InfoPanel
@@ -671,19 +671,14 @@ export default class Graph extends React.Component<IProps, IState>
   // UI Panel (Menu and Info) functions
   //============================================================================
 
-  private menuClosed = () =>
+  private menuStateUpdate = (menuState: string) =>
   {
-    this.setState({menuState: "hidden"});
+    this.setState({menuState});
   }
 
   private menuItemSelected = (id: string, position?: {x: number, y: number}) =>
   {
     this.createNewNode(id, position);
-  }
-
-  private pinMenu = (pin: boolean) =>
-  {
-    this.setState({menuState: (pin ? "pinned" : "show")});
   }
 
   private pinInfo = (pin: boolean) =>

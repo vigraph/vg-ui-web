@@ -9,11 +9,10 @@ import Panel from './Panel';
 
 interface IProps
 {
-  displayState: string,
+  graphDisplay: string,
   position: {x: number, y: number},
-  menuClosed: () => void,
-  menuItemSelected: (id: string, position?: {x: number, y: number}) => void,
-  pinMenu: (pin: boolean) => void
+  menuStateUpdate: (menuState: string) => void,
+  menuItemSelected: (id: string, position?: {x: number, y: number}) => void
 }
 
 interface IState
@@ -33,6 +32,7 @@ export default class Menu extends React.Component<IProps, IState>
   private updateSubMenu: boolean;
   private hoverTimer: number | null;
   private mouseDownChild: boolean;
+  private menuPinned: boolean;
 
   constructor(props: IProps)
   {
@@ -43,7 +43,7 @@ export default class Menu extends React.Component<IProps, IState>
       subMenuPanels: [],
       position: this.props.position,
       itemLabel: null,
-      display: this.props.displayState,
+      display: this.props.graphDisplay,
       draggingIcon: null
     }
 
@@ -51,6 +51,7 @@ export default class Menu extends React.Component<IProps, IState>
     this.updateSubMenu = true;
     this.hoverTimer = null;
     this.mouseDownChild = false;
+    this.menuPinned = false;
 
     this.menuData = this.generateMenuData();
   }
@@ -65,9 +66,9 @@ export default class Menu extends React.Component<IProps, IState>
     const position = this.state.position;
 
     return <div id="menu" className="menu">
-      { this.state.display !== "hidden" && <Panel id="menu"
+      { (this.state.display !== "hidden" || this.menuPinned) && <Panel id="menu"
         startPosition={{x: position.x, y: position.y}}
-        horizontal={true} empty={false} notifyPin={this.props.pinMenu}
+        horizontal={true} empty={false} notifyPin={this.notifyMenuPin}
         returnRef={this.updateMenuRef}>
         {
           <div className={"menu-parent-wrapper"}>
@@ -110,23 +111,44 @@ export default class Menu extends React.Component<IProps, IState>
   {
     let stateUpdate = {};
 
-    if (this.state.display !== this.props.displayState)
-    {
-      stateUpdate = {...stateUpdate, display: this.props.displayState};
-    }
+    let newDisplay;
 
-    // If display state = hidden then hide all unpinned panels
-    if (this.props.displayState === "hidden")
+    // Told to show from Graph (right click on background) so show
+    if (this.props.graphDisplay === "show")
     {
+      newDisplay = "show";
+    }
+    // Told to hide from Graph (left click on background)
+    else if (this.props.graphDisplay === "hidden")
+    {
+      // Hide all unpinned subpanels
       const newSubMenuPanels = this.clearUnpinnedPanels();
       if (newSubMenuPanels.length !== this.state.subMenuPanels.length)
       {
         stateUpdate = {...stateUpdate, subMenuPanels: newSubMenuPanels};
       }
+
+      // If the menu is pinned tell Graph that menu is still being shown
+      // (and therefore used)
+      if (this.menuPinned)
+      {
+        this.props.menuStateUpdate("show");
+        newDisplay = "show";
+      }
+      // Menu is not pinned so update state to hidden
+      else
+      {
+        newDisplay = "hidden";
+      }
     }
 
-    if (this.state.position !== this.props.position &&
-      this.props.displayState !== "pinned")
+    // Update display state if it has changed
+    if (newDisplay !== this.state.display)
+    {
+      stateUpdate = {...stateUpdate, display: newDisplay};
+    }
+
+    if (this.state.position !== this.props.position && !this.menuPinned)
     {
       stateUpdate = {...stateUpdate, position: this.props.position};
     }
@@ -325,7 +347,10 @@ export default class Menu extends React.Component<IProps, IState>
 
       this.mouseDownChild = false;
 
-      this.props.menuClosed();
+      if (!this.menuPinned)
+      {
+        this.props.menuStateUpdate("hidden");
+      }
 
       this.props.menuItemSelected(target.substring(5, target.length),
         {x: e.pageX, y: e.pageY});
@@ -386,6 +411,7 @@ export default class Menu extends React.Component<IProps, IState>
 
     if (this.state.draggingIcon)
     {
+
       this.props.menuItemSelected(this.state.draggingIcon.id,
         {x: e.pageX, y: e.pageY});
 
@@ -397,6 +423,11 @@ export default class Menu extends React.Component<IProps, IState>
   private updateMenuRef = (ref: HTMLDivElement | null) =>
   {
     this.menuRef = ref;
+  }
+
+  private notifyMenuPin = (pin: boolean) =>
+  {
+    this.menuPinned = pin;
   }
 
   // Sub menu panel has been pinned so update pinned state in sub menu panels
