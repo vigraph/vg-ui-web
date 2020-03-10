@@ -2096,6 +2096,32 @@
       }
     }
   },
+  "vector/slice":
+  {
+    "width": 110,
+    "height": 70,
+    "properties":
+    {
+      "start":
+      {
+        "controlType": "knob/default",
+        "rangeMin": 0,
+        "rangeMax": 1,
+        "increment": 0.01,
+        "x": 30,
+        "y": 30
+      },
+      "length":
+      {
+        "controlType": "knob/default",
+        "rangeMin": 0,
+        "rangeMax": 1,
+        "increment": 0.01,
+        "x": 70,
+        "y": 30
+      }
+    }
+  },
   "colour/hsl":
   {
     "width": 170,
