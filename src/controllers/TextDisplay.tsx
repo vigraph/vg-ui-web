@@ -60,7 +60,7 @@ export default class TextDisplay extends React.Component<IProps, IState>
       this.updateInterval = window.setInterval(() =>
       {
         this.updateTextValue();
-      }, vgConfig.Graph.logUpdateTime*1000)
+      }, vgConfig.Graph.textUpdateTime*1000)
     }
   }
 

@@ -30,7 +30,6 @@ export default class Menu extends React.Component<IProps, IState>
   private menuData: Array<{id: string, children: Array<string[]>}>;
   private menuRef: HTMLDivElement | null;
   private updateSubMenu: boolean;
-  private hoverTimer: number | null;
   private mouseDownChild: boolean;
   private menuPinned: boolean;
 
@@ -49,7 +48,6 @@ export default class Menu extends React.Component<IProps, IState>
 
     this.menuRef = null;
     this.updateSubMenu = true;
-    this.hoverTimer = null;
     this.mouseDownChild = false;
     this.menuPinned = false;
 

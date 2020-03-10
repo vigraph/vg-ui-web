@@ -13,7 +13,7 @@
     "y": 30
   },
   "longPressTime": 1.5,
-  "logUpdateTime": 60,
+  "textUpdateTime": 60,
   "viewDefault": {"x": 0, "y": 0, "w": 5000, "h": 5000},
   "zoomFactor": 1.1,
   "connector":
@@ -65,7 +65,6 @@
   "menu":
   {
     "size": 5,
-    "hoverTime": 0.5,
     "padding": 10,
     "parents": ["core", "trigger", "maths", "audio", "vector", "colour",
                 "midi", "laser", "bitmap", "dmx", "time-series", "iot"],
