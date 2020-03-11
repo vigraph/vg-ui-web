@@ -1053,6 +1053,15 @@
       }
     }
   },
+  "trigger/pin":
+  {
+    "width": 70,
+    "height": 50,
+    "category": "pin",
+    "properties":
+    {
+    }
+  },
   "trigger/beat":
   {
     "width": 100,
