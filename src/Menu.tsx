@@ -349,6 +349,15 @@ export default class Menu extends React.Component<IProps, IState>
       {
         this.props.menuStateUpdate("hidden");
       }
+      else
+      {
+        // Hide all unpinned
+        const newSubMenuPanels = this.clearUnpinnedPanels();
+        if (newSubMenuPanels.length !== this.state.subMenuPanels.length)
+        {
+          this.setState({subMenuPanels: newSubMenuPanels});
+        }
+      }
 
       this.props.menuItemSelected(target.substring(5, target.length),
         {x: e.pageX, y: e.pageY});

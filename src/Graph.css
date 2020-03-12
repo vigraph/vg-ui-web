@@ -267,7 +267,7 @@
 {
   overflow: visible;
   pointer-events: none;
-  opacity: 0.8;
+  animation: delayedShow 2s;
 }
 
 .icon-label-border
@@ -280,6 +280,7 @@
 .icon-label-wrapper .icon-label
 {
   dominant-baseline: hanging;
+  opacity: 0.8;
 }
 
 /* Edge */
