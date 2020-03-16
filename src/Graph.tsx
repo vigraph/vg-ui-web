@@ -446,6 +446,22 @@ export default class Graph extends React.Component<IProps, IState>
     this.forceUpdate();
   }
 
+  // Clear Graph and Layout data and reload
+  public clear = () =>
+  {
+    if (window.confirm(vgConfig.Strings.clearGraph))
+    {
+      vgData.clear(() =>
+        {
+          vgData.generateGraph("graph", (json:any) =>
+            {
+              this.graph.loadFrom(json, true, "graph");
+              this.forceUpdate();
+            });
+        });
+    }
+  }
+
   public goBack = () =>
   {
     this.updateTargetNode();

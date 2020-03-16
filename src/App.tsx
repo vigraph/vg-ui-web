@@ -44,6 +44,7 @@ export default class App extends React.Component<IProps, IState>
         <div id="buttons">
           {this.createButton("undo", this.handleUndo)}
           {this.createButton("redo", this.handleRedo)}
+          {this.createButton("clear", this.handleClear)}
           {this.state.fullscreen ?
            this.createButton("window", this.setWindowed)
            :
@@ -139,6 +140,14 @@ export default class App extends React.Component<IProps, IState>
     if (this.graph.current)
     {
       this.graph.current.redo();
+    }
+  }
+
+  private handleClear = () =>
+  {
+    if (this.graph.current)
+    {
+      this.graph.current.clear();
     }
   }
 

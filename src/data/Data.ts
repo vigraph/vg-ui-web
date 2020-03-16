@@ -56,6 +56,14 @@ class Data
       });
   }
 
+  // Clear Graph and Layout data and update
+  public clear(success: () => void)
+  {
+    this.layoutData = {};
+    this.updateLayout();
+    this.postFullGraph({}, success);
+  }
+
   // Get graph data JSON and layout data
   public getGraphToStore(success: (graphJSON: vgTypes.ICombinedGraph) => void)
   {
@@ -114,7 +122,7 @@ class Data
   }
 
   // Post full Graph data to engine
-  public postFullGraph(graph: vgTypes.IRawGraphItem, success?: () => void,
+  public postFullGraph(graph: vgTypes.IRawGraphItem | {}, success?: () => void,
     failure?: () => void)
   {
     const url = this.restURL + "/graph";

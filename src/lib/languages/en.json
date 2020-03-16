@@ -1,5 +1,6 @@
 {
   "noSaving": "Trial Version - No Saving: ",
+  "clearGraph": "Clear all Graph data?",
   "appButtons":
   {
     "undo": "Undo",
@@ -8,7 +9,8 @@
     "windowed": "Windowed Mode",
     "theme": "Change Theme",
     "save": "Save Graph",
-    "load": "Load Graph"
+    "load": "Load Graph",
+    "clear": "Clear Graph"
   },
   "infoPanel":
   {

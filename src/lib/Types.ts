@@ -130,6 +130,7 @@ export interface IPropertiesConfig
 export interface ILanguageStrings
 {
   noSaving: string,
+  clearGraph: string,
   appButtons:
   {
     [key: string]: string
