@@ -16,13 +16,13 @@ interface IState
 
 export default class Node extends React.Component<IProps, IState>
 {
-  private pointerDownTime: number;
+  private hoverTimer: number | null;
 
   constructor(props: IProps)
   {
     super(props);
 
-    this.pointerDownTime = 0;
+    this.hoverTimer = null;
 
     this.state =
     {
@@ -37,9 +37,7 @@ export default class Node extends React.Component<IProps, IState>
 
     return <svg className="delete-wrapper" x={x} y={y}>
       <circle className="delete-icon" cx={0} cy={0} r={8}
-        onPointerDown={this.handlePointerDown}
-        onPointerUp={this.handlePointerUp}
-        onPointerLeave={this.handlePointerLeave}/>
+        onPointerDown={this.handlePointerDown}/>
       {this.state.pointerDown &&
         <circle className="delete-icon-animate" cx={0} cy={0} r={8}/>}
       <path className="delete-line" d={`M ${-5} ${-5} L${5} ${5}`}/>
@@ -50,28 +48,28 @@ export default class Node extends React.Component<IProps, IState>
   private handlePointerDown = (e: React.PointerEvent<SVGCircleElement>) =>
   {
     e.stopPropagation();
-    const date = new Date();
-    this.pointerDownTime = date.getTime();
     this.setState({pointerDown: true});
+
+    this.hoverTimer = window.setTimeout(() =>
+    {
+      window.removeEventListener("pointerdown", this.handlePointerUp);
+      this.props.deletePressed();
+    }, vgConfig.Graph.longPressTime * 1000);
+
+    window.addEventListener("pointerup", this.handlePointerUp);
   }
 
-  private handlePointerUp = (e: React.PointerEvent<SVGCircleElement>) =>
+  private handlePointerUp = (e: PointerEvent) =>
   {
     e.stopPropagation();
-    const date = new Date();
-    const current = date.getTime();
 
-    if (this.pointerDownTime &&
-      current - this.pointerDownTime > (vgConfig.Graph.longPressTime*1000))
+    if (this.hoverTimer)
     {
-      this.props.deletePressed();
+      window.clearTimeout(this.hoverTimer);
+      this.hoverTimer = null;
     }
-    this.setState({pointerDown: false});
-  }
 
-  private handlePointerLeave = (e: React.PointerEvent<SVGCircleElement>) =>
-  {
-    this.pointerDownTime = 0;
     this.setState({pointerDown: false});
+    window.removeEventListener("pointerdown", this.handlePointerUp);
   }
 }
