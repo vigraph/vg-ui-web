@@ -491,6 +491,9 @@ export default class Graph extends React.Component<IProps, IState>
 
   public load = (fileInputID: string) =>
   {
+    this.updateTargetNode();
+    this.setState({infoState: "hidden", menuState: "hidden"});
+
     vgUtils.loadFromFile(fileInputID, (fileContents: string) =>
       {
         const graphJSON: vgTypes.ICombinedGraph = JSON.parse(fileContents);
