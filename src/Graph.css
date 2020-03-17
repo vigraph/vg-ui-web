@@ -386,6 +386,7 @@
 .knob-arc
 {
   fill: var(--col-fallback);
+  pointer-events: none;
 }
 
 #knob.number .knob-arc
