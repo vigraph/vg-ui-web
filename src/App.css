@@ -4,7 +4,6 @@
 {
   --col-background: black;
   --col-fallback: white;
-  --col-default-background: #141414;
   --col-text: white;
   --col-border: #808080;
 
@@ -25,8 +24,9 @@
   --col-menu-border: #888;
   --col-menu-border-highlight: white;
   --col-menu-fill: #222;
-  --col-menu-item-fill: black;
+  --col-menu-item-fill: #141414;
   --col-menu-item-text: #4ecac2;
+  --col-menu-child-title: white;
 
   --col-delete: #c10000;
   --col-delete-animation: #ef3030;
@@ -45,6 +45,7 @@
   --col-knob-background: #808080;
   --col-knob-overlay: #262626;
   --col-button-fill: #808080;
+  --col-button-border: #808080;
   --col-selector-background: #262626;
 
   --col-notif-bg: #262626;
@@ -54,25 +55,52 @@
 :root.theme-light
 {
   --col-background: white;
+  --col-fallback: black;
   --col-text: black;
-  --col-default: black;
+  --col-border: #111;
+
   --col-label: #444;
-  --col-knob-bg: #ccc;
-  --col-knob-overlay: white;
-  --col-info-bg: #eee;
   --col-label-border: #111;
   --col-label-fill: #ccc;
-  --col-menu-border-highlight: #c44;
-  --col-menu-fill: #eee;
-  --col-menu-item-fill: white;
-  --col-menu-item-text: #206060;
-  --col-pin-fill: white;
-  --col-pin-fill-pinned: black;
 
   --col-node-background: #ddd;
-  --col-fallback: #222;
-  --col-number-type: #266;
-  --col-trigger-type: #262;
+  --col-node-resize: #ccc;
+  --col-node-pin-border: #aa6c39;
+
+  --col-panel-bg: #c6c6c6;
+  --col-panel-border: #111;
+  --col-pin-fill: white;
+  --col-pin-fill-pinned: black;
+  --col-info-input-bg: #222;
+  --col-info-input-focus: white;
+  --col-menu-border: #888;
+  --col-menu-border-highlight: #4ecac2;
+  --col-menu-fill: #222;
+  --col-menu-item-fill: #141414;
+  --col-menu-item-text: #4ecac2;
+  --col-menu-child-title: black;
+
+  --col-delete: #c10000;
+  --col-delete-animation: #ef3030;
+
+  --col-number-type: #4ecac2;
+  --col-trigger-type: #a0f0a0;
+  --col-audio-type: #fcc2ff;
+  --col-colour-type: #fdfd96;
+  --col-frame-type: #b19cd9;
+  --col-dataset-type: #ffb347;
+  --col-midi-type: #ff6961;
+  --col-waveform-type: #84b4c8;
+  --col-filter-mode-type: #aec6cf;
+  --col-oscilloscope-slope-type: #c23b22;
+
+  --col-knob-background: #808080;
+  --col-knob-overlay: #ddd;
+  --col-button-fill: #ddd;
+  --col-button-border: #808080;
+  --col-selector-background: #ddd;
+
+  --col-notif-bg: #ddd;
 }
 
 #container
