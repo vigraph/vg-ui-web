@@ -449,6 +449,9 @@ export default class Graph extends React.Component<IProps, IState>
   // Clear Graph and Layout data and reload
   public clear = () =>
   {
+    this.updateTargetNode();
+    this.setState({infoState: "hidden", menuState: "hidden"});
+
     if (window.confirm(vgConfig.Strings.clearGraph))
     {
       vgData.clear(() =>
@@ -970,7 +973,7 @@ export default class Graph extends React.Component<IProps, IState>
   }
 
   private addEdge = (srcID: string, srcOutput: string, destID: string,
-    destInput: string) =>
+    destInput: string, finished: () => void) =>
   {
     const src = this.graph.getNode(srcID);
     const dest = this.graph.getNode(destID);
@@ -1010,9 +1013,18 @@ export default class Graph extends React.Component<IProps, IState>
               this.updateGraphPin(dest, "input");
             }
 
-            this.forceUpdate();
-          });
+            finished();
+          },
+          finished);
       }
+      else
+      {
+        finished();
+      }
+    }
+    else
+    {
+      finished();
     }
   }
 
@@ -1059,12 +1071,13 @@ export default class Graph extends React.Component<IProps, IState>
 
     if (srcNode && srcConnector)
     {
+      this.graph.beginTransaction();
       const sNode: Model.Node = srcNode;
       const sConnector: Model.Connector = srcConnector;
       this.removeEdge(sNode.id, sConnector.id, inNode.id, inConnector.id,
         () =>
         {
-          this.newMovingConnectorEdge(sNode, sConnector, position);
+          this.newMovingConnectorEdge(sNode, sConnector, position, true);
         });
     }
   }
@@ -1088,18 +1101,20 @@ export default class Graph extends React.Component<IProps, IState>
 
     if (destNode && destConnector)
     {
+      this.graph.beginTransaction();
       const dNode: Model.Node = destNode;
       const dConnector: Model.Connector = destConnector
       this.removeEdge(outNode.id, outConnector.id, dNode.id, dConnector.id,
         () =>
         {
-          this.newMovingConnectorEdge(dNode, dConnector, position);
+          this.newMovingConnectorEdge(dNode, dConnector, position, true);
         });
     }
   }
 
   private newMovingConnectorEdge = (node: Model.Node,
-    connector: Model.Connector, position: {x: number, y: number}) =>
+    connector: Model.Connector, position: {x: number, y: number},
+    blockBeginTrans?: boolean) =>
   {
     if (this.graphRef)
     {
@@ -1107,7 +1122,10 @@ export default class Graph extends React.Component<IProps, IState>
       this.graphRef.addEventListener('pointerup', this.dropConnectorEdge);
     }
 
-    this.graph.beginTransaction();
+    if (!blockBeginTrans)
+    {
+      this.graph.beginTransaction();
+    }
 
     // Create dummy node and connect to selected connector to simulate
     // moving unconnected edge
@@ -1173,6 +1191,15 @@ export default class Graph extends React.Component<IProps, IState>
 
       this.graph.removeNode(dnode.id);
 
+      const finished = () =>
+      {
+        this.setState({tempConnectors: null, tempNodes: null});
+
+        this.graph.commitTransaction();
+
+        this.forceUpdate();
+      }
+
       // If the target connector has the same connector type as the previously
       // selected connector (or "any") and the same direction as the dummy
       // connector, then add a permanent edge between selected connector and
@@ -1186,21 +1213,21 @@ export default class Graph extends React.Component<IProps, IState>
         if (dconnector.direction === "input")
         {
           this.addEdge(rnode.id, rconnector.id, tconnector.parent.id,
-            tconnector.connector.id);
+            tconnector.connector.id, finished);
         }
         else
         {
           this.addEdge(tconnector.parent.id, tconnector.connector.id, rnode.id,
-            rconnector.id);
+            rconnector.id, finished);
         }
+      }
+      else
+      {
+        finished();
       }
     }
 
-    this.setState({tempConnectors: null, tempNodes: null});
 
-    this.graph.commitTransaction();
-
-    this.forceUpdate();
   }
 
   private moveConnectorEdge = (e: PointerEvent) =>
