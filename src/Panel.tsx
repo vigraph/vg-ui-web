@@ -9,7 +9,9 @@ interface IProps
   notifyPin: (pin: boolean, id?: string) => void,
   returnRef?: (ref: HTMLDivElement | null) => void,
   parentRef?: HTMLDivElement,
-  parentPadding?: number
+  parentPadding?: number,
+  resizable?: boolean,
+  resizeUpdate?: (widthDiff: number, heightDiff: number) => void
 }
 
 interface IState
@@ -27,6 +29,7 @@ export default class Panel extends React.Component<IProps, IState>
   private panelRef: HTMLDivElement | null;
   private positionOverride: boolean;
   private updateRef: boolean;
+  private resizePointerDown: {x: number, y: number};
 
   constructor(props: IProps)
   {
@@ -45,13 +48,15 @@ export default class Panel extends React.Component<IProps, IState>
     this.panelRef = null;
     this.positionOverride = false;
     this.updateRef = false;
+    this.resizePointerDown = {x: 0, y: 0};
   }
 
   public render()
   {
     return <div id={this.props.id+"-panel"}
       className={`panel-wrapper ${this.props.horizontal ?
-      "horizontal": ""} ${this.props.empty ? "empty" : ""}`}
+        "horizontal": ""} ${this.props.empty ? "empty" : ""}
+        ${this.props.resizable ? "resizable" : ""}`}
       style={{left: this.state.x, top: this.state.y}}
       ref={(ref) => { this.panelRef = ref; }}
       onContextMenu={this.preventDefault}>
@@ -67,6 +72,11 @@ export default class Panel extends React.Component<IProps, IState>
           </div>
         </div>
       {this.props.children}
+      {this.props.resizable && <div id={"panel-resize-wrapper"}>
+        <div id={"panel-resize-icon"}/>
+        <div id={"panel-resize-boundary"}
+          onPointerDown={this.handleResizePointerDown}/>
+      </div>}
     </div>;
   }
 
@@ -254,5 +264,38 @@ export default class Panel extends React.Component<IProps, IState>
         this.updateRef = true;
       }
     }
+  }
+
+  private handleResizePointerDown = (e: React.PointerEvent<HTMLDivElement>) =>
+  {
+    e.stopPropagation();
+
+    window.addEventListener('pointerup', this.handleResizePointerUp);
+    window.addEventListener('pointermove', this.handleResizePointerMove);
+
+    this.resizePointerDown = {x: e.pageX, y: e.pageY};
+  }
+
+  private handleResizePointerMove = (e: PointerEvent) =>
+  {
+    const currentPosition = {x: e.pageX, y: e.pageY};
+
+    if (this.props.resizeUpdate)
+    {
+      const diffX = currentPosition.x - this.resizePointerDown.x;
+      const diffY = currentPosition.y - this.resizePointerDown.y;
+
+      this.props.resizeUpdate(diffX, diffY);
+    }
+
+    this.resizePointerDown = {x: currentPosition.x, y: currentPosition.y};
+  }
+
+  private handleResizePointerUp = (e: PointerEvent) =>
+  {
+    window.removeEventListener('pointerup', this.handleResizePointerUp);
+    window.removeEventListener('pointermove', this.handleResizePointerMove);
+
+    this.resizePointerDown = {x: 0, y: 0};
   }
 }

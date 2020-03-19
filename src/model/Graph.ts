@@ -519,17 +519,6 @@ export class Graph
               {x: nNodePos.x, y: nNodePos.y});
           }
 
-          const cNodeSize = cNode.get("size");
-          const nNodeSize = nNode.get("size");
-
-          // Check node size
-          if (cNodeSize.w !== nNodeSize.w || cNodeSize.h !== nNodeSize.h)
-          {
-            // Node size has changed between states
-            vgData.updateLayout(nNode.get("path"), undefined,
-              {w: nNodeSize.w, h: nNodeSize.h});
-          }
-
           const cNodeDisplayName = cNode.get("displayName");
           const nNodeDisplayName = nNode.get("displayName");
 
@@ -537,7 +526,7 @@ export class Graph
           if (cNodeDisplayName !== nNodeDisplayName)
           {
             // Node display name has changed between states
-            vgData.updateLayout(nNode.get("path"), undefined, undefined,
+            vgData.updateLayout(nNode.get("path"), undefined,
               {n: nNodeDisplayName});
           }
 
@@ -637,8 +626,7 @@ export class Graph
           });
 
         vgData.updateLayout(value.get("path"), {x: value.get("position").x,
-          y: value.get("position").y}, {w: value.get("size").w,
-          h: value.get("size").h}, {n: value.get("displayName")});
+          y: value.get("position").y}, {n: value.get("displayName")});
       }
       else
       {

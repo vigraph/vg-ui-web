@@ -14,6 +14,7 @@ import Edge from './Edge';
 import Node from './Node';
 import Menu from './Menu';
 import InfoPanel from './InfoPanel';
+import WebsocketDisplay from './WebsocketDisplay'
 
 interface IProps
 {
@@ -32,6 +33,8 @@ interface IState
   targetIcon: {name: string, position: {x: number, y: number}} | null,
   menuState: string,
   infoState: string,
+  wsDisplays: Array<{id: string, port: number, pinned: boolean, position:
+    {x: number, y: number}}>
   view: { x: number, y: number, w: number, h: number },
   pointerDown: boolean,
   savingEnabled: boolean
@@ -83,7 +86,8 @@ export default class Graph extends React.Component<IProps, IState>
       infoState: "hidden",
       view: vgConfig.Graph.viewDefault,
       pointerDown: false,
-      savingEnabled: true
+      savingEnabled: true,
+      wsDisplays: []
     };
 
     this.pointerClick = {x: 0, y: 0, t: 0};
@@ -112,6 +116,16 @@ export default class Graph extends React.Component<IProps, IState>
           startUpdate={this.startUpdate} update={this.update}
           endUpdate={this.endUpdate} pinInfo={this.pinInfo}
           dynamicNodeUpdate={this.dynamicNodeUpdate}/>}
+
+        {this.state.wsDisplays.map((ws: {id: string, port: number,
+          pinned: boolean, position: {x: number, y: number}},
+          index: number) =>
+          {
+            return <WebsocketDisplay id={ws.id} key={"ws-display-"+index}
+              port={ws.port} pinDisplay={this.pinWSDisplay}
+              removeDisplay={this.removeWebsocketDisplay}
+              startPosition={ws.position}/>
+          })}
 
         {!this.state.savingEnabled && <div id="no-saving-notif">
           {vgConfig.Strings.noSaving}
@@ -171,7 +185,8 @@ export default class Graph extends React.Component<IProps, IState>
       dynamicNodeUpdate={this.dynamicNodeUpdate}
       updateTargetProperty={this.updateTargetProperty}
       updateTargetIcon={this.updateTargetIcon}
-      clearUI={clearUI}>
+      clearUI={clearUI}
+      showWebsocketDisplay={this.showWebsocketDisplay}>
       {
         this.graph.getNodeConnectors(node.id, "input").map(
         (connector: Model.Connector, j) =>
@@ -594,7 +609,14 @@ export default class Graph extends React.Component<IProps, IState>
 
       const pointerDown = true;
 
-      this.setState({menuState, infoState, pointerDown});
+      // Hide (remove) all unpinned websocket display
+      const wsDisplays = this.state.wsDisplays.filter(
+        (wsDisplay: {id: string, port: number, pinned: boolean}) =>
+        {
+          return wsDisplay.pinned;
+        });
+
+      this.setState({menuState, infoState, pointerDown, wsDisplays});
 
       window.addEventListener('pointermove', this.handleGraphDrag);
       window.addEventListener('pointerup', this.handleGraphDragRelease);
@@ -690,7 +712,7 @@ export default class Graph extends React.Component<IProps, IState>
   }
 
   //============================================================================
-  // UI Panel (Menu and Info) functions
+  // UI Panel (Menu, Info and Websocket Display) functions
   //============================================================================
 
   private menuStateUpdate = (menuState: string) =>
@@ -706,6 +728,45 @@ export default class Graph extends React.Component<IProps, IState>
   private pinInfo = (pin: boolean) =>
   {
     this.setState({infoState: (pin ? "pinned" : "show")});
+  }
+
+  private showWebsocketDisplay = (id: string, port: number,
+    position: {x: number, y: number}) =>
+  {
+    const currentWS = this.state.wsDisplays;
+
+    if (!currentWS.find(x => x.id === id))
+    {
+      currentWS.push({id, port, pinned: false, position});
+      this.setState({wsDisplays: currentWS});
+    }
+  }
+
+  private removeWebsocketDisplay = (id: string) =>
+  {
+    const newWS = this.state.wsDisplays;
+
+    const index = newWS.findIndex(x => x.id === id);
+
+    if (index >= 0)
+    {
+      newWS.splice(index, 1);
+      this.setState({wsDisplays: newWS});
+    }
+  }
+
+  private pinWSDisplay = (pinned: boolean, id?: string) =>
+  {
+    if (id)
+    {
+      const updatedWS = this.state.wsDisplays;
+
+      const index = updatedWS.findIndex(x => x.id === id);
+
+      updatedWS[index].pinned = pinned;
+
+      this.setState({wsDisplays: updatedWS});
+    }
   }
 
   //============================================================================

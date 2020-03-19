@@ -15,7 +15,7 @@ interface IProps
 
 export default class WebsocketCanvas extends React.Component<IProps>
 {
-  public static defaultProps = vgConfig.Graph.websocket.defaultProps;
+  public static defaultProps = vgConfig.Graph.websocketPanel.defaultProps;
 
   private canvasRef = React.createRef<HTMLCanvasElement>()
   private previousSize: {x: number, y: number};

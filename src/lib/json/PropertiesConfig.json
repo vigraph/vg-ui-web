@@ -2089,16 +2089,17 @@
   "vector/websocket-display":
   {
     "width": 200,
-    "height": 200,
+    "height": 40,
     "category": "websocket-display",
     "properties":
     {
       "port":
       {
+        "controlType": "none/label",
         "rangeMin": 0,
         "rangeMax": 65535,
-        "x": 0,
-        "y": 0
+        "x": 100,
+        "y": 23
       },
       "frame-rate":
       {

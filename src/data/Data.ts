@@ -98,7 +98,7 @@ class Data
 
         this.layoutData = finalLayout;
 
-        this.updateLayout(undefined, undefined, undefined, undefined, () =>
+        this.updateLayout(undefined, undefined, undefined, () =>
           {
             this.getCombinedGraphData(
               (combinedGraphJSON: vgTypes.ICombinedGraph) =>
@@ -264,12 +264,12 @@ class Data
     }
   }
 
-  // Update layout data. If no name, position or size given then layout data for
+  // Update layout data. If no name or position given then layout data for
   // given id is removed. If no id given then this.layoutData is sent with
   // no updates.
   // Note: ID is node path
   public updateLayout(id?: string, position?: {x: number, y: number},
-    size?: {w: number, h: number}, name?: {n: string}, success?: () => void)
+    name?: {n: string}, success?: () => void)
   {
     if (!this.savingEnabled())
     {
@@ -281,7 +281,7 @@ class Data
 
     if (id)
     {
-      if (!position && !size && !name)
+      if (!position && !name)
       {
         delete this.layoutData[id];
 
@@ -297,8 +297,7 @@ class Data
       }
       else
       {
-        this.layoutData[id] = {...this.layoutData[id], ...position, ...size,
-          ...name};
+        this.layoutData[id] = {...this.layoutData[id], ...position, ...name};
       }
     }
 
@@ -415,8 +414,7 @@ class Data
         const propConfig = vgConfig.Properties[item.type];
 
         // Node properties layout (height, width, x, y)
-        const w = this.layoutData[item.path] && this.layoutData[item.path].w ?
-          this.layoutData[item.path].w : (propConfig ? propConfig.width : 0);
+        const w = propConfig ? propConfig.width : 50;
 
         const h = this.calculateNodeHeight(item);
 
@@ -819,8 +817,7 @@ class Data
       }
 
       const height = this.calculateNodeHeight(node);
-      const width = layout[node.path] && layout[node.path].w ?
-        layout[node.path].w : (propConfig ? propConfig.width : 50);
+      const width = propConfig ? propConfig.width : 50;
 
       const name = layout[node.path] && layout[node.path].n ?
         layout[node.path].n : undefined;
@@ -854,11 +851,7 @@ class Data
   {
     const propConfig = vgConfig.Properties[node.type];
 
-    const layoutH = (this.layoutData[node.path] ? this.layoutData[node.path].h :
-      undefined);
-
-    let h: number = (layoutH !== undefined ? layoutH :
-      (propConfig ? propConfig.height : 50));
+    let h: number = (propConfig ? propConfig.height : 50);
 
     if (node.dynamic)
     {

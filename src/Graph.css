@@ -631,6 +631,78 @@
   margin-bottom: 4px;
 }
 
+.panel-wrapper.resizable #panel-ui-wrapper
+{
+  width: auto;
+  margin-right: 5px;
+  overflow: hidden;
+}
+
+.panel-wrapper.resizable #drag-bar-wrapper
+{
+  width: 100%;
+  float: none;
+  margin-left: 20px;
+}
+
+#panel-resize-wrapper
+{
+  position: absolute;
+  right: -8px;
+  bottom: -8px;
+  width: 16px;
+  height: 16px;
+}
+
+#panel-resize-boundary
+{
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+#panel-resize-icon
+{
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  margin: 5px;
+  background-color: var(--col-node-resize);
+  pointer-events: none;
+}
+
+/* Websocket (Panel) */
+#node-show-ws-background
+{
+  fill: #141414;
+}
+
+#node-show-ws-icon
+{
+  pointer-events: none;
+}
+
+#canvas
+{
+  border: solid 1px #444;
+  pointer-events: none;
+}
+
+:root.theme-light #canvas
+{
+  filter: invert(1);
+}
+
+#ws-canvas-wrapper
+{
+  pointer-events: none;
+}
+
+#websocket-display
+{
+  padding: 5px;
+}
+
 /* Info Panel */
 #info
 {
@@ -911,29 +983,16 @@
   background: var(--col-notif-bg);
   color: var(--col-text);
   opacity: 0.8;
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE10+/Edge */
+  user-select: none; /* Standard */
 }
 
 #no-saving-notif a
 {
   background: var(--col-notif-bg);
   color: var(--col-text);
-}
-
-/* Websocket Canvas */
-#canvas
-{
-  border: solid 1px #444;
-  pointer-events: none;
-}
-
-:root.theme-light #canvas
-{
-  filter: invert(1);
-}
-
-#ws-canvas-wrapper
-{
-  pointer-events: none;
 }
 
 /* UI 1.0 */

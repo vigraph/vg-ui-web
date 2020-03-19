@@ -52,7 +52,7 @@ export default class Node extends React.Component<IProps, IState>
 
     this.hoverTimer = window.setTimeout(() =>
     {
-      window.removeEventListener("pointerdown", this.handlePointerUp);
+      window.removeEventListener("pointerup", this.handlePointerUp);
       this.props.deletePressed();
     }, vgConfig.Graph.longPressTime * 1000);
 
@@ -70,6 +70,6 @@ export default class Node extends React.Component<IProps, IState>
     }
 
     this.setState({pointerDown: false});
-    window.removeEventListener("pointerdown", this.handlePointerUp);
+    window.removeEventListener("pointerup", this.handlePointerUp);
   }
 }

@@ -43,8 +43,9 @@ export default class InfoPanel extends React.Component<IProps, IState>
   public render()
   {
     return (
-      <Panel id="info" startPosition={{x: 5, y: 50}} horizontal={false}
-        empty={!this.props.node} notifyPin={this.props.pinInfo}>
+      <Panel id="info" startPosition={{x: window.innerWidth - 5, y: 50}}
+        horizontal={false} empty={!this.props.node}
+        notifyPin={this.props.pinInfo}>
       {
         <div id="info">
           {this.createInfoPanel()}
@@ -708,7 +709,7 @@ export default class InfoPanel extends React.Component<IProps, IState>
     {
       const node = this.props.node;
 
-      vgData.updateLayout(node.path, undefined, undefined,
+      vgData.updateLayout(node.path, undefined,
         {n: textBox.value.toString()}, () =>
         {
           this.props.startUpdate();

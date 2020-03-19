@@ -2,7 +2,6 @@ import * as React from 'react';
 import * as Model from './model';
 
 import Property from './Property';
-import WebsocketCanvas from './WebsocketCanvas';
 import Delete from './Delete'
 
 import { vgData } from './data/Data';
@@ -28,18 +27,17 @@ interface IProps
     position: {x: number, y: number}} | null) => void;
   removeNode: (node: Model.Node) => void;
   clearUI: boolean;
+  showWebsocketDisplay: (id: string, port: number, position: {x: number,
+    y: number}) => void;
 }
 
 interface IState
 {
   dragging: boolean;
-  resizing: boolean;
   showDelete: boolean;
   editTitle: boolean;
   x: number;
   y: number;
-  h: number;
-  w: number;
   relatedProperties?: {[key: string]: Model.Property};
 }
 
@@ -49,15 +47,13 @@ export default class Node extends React.Component<IProps, IState>
   // dragging (e.g. undo/redo) to work
   public static getDerivedStateFromProps(props: IProps, state: any)
   {
-    return state.dragging || state.resizing ? null :
-      { x: props.node.position.x, y: props.node.position.y,
-        h: props.node.size.h, w: props.node.size.w };
+    return state.dragging ? null :
+      { x: props.node.position.x, y: props.node.position.y };
   }
 
   private offsetX: number;
   private offsetY: number;
   private pointerDown: {x: number, y: number, target: string};
-  private resizePointerDown: {x: number, y: number};
   private titleFontSize: number;
   private updateStarted: boolean;
   private lastPointerUp: number;
@@ -69,20 +65,16 @@ export default class Node extends React.Component<IProps, IState>
     this.state =
       {
         dragging: false,
-        resizing: false,
         showDelete: false,
         editTitle: false,
         x: props.node.position.x,
         y: props.node.position.y,
-        h: props.node.size.h,
-        w: props.node.size.w,
         relatedProperties: undefined
       };
 
     this.offsetX = 0;
     this.offsetY = 0;
     this.pointerDown = {x: 0, y: 0, target: ""};
-    this.resizePointerDown = {x: 0, y: 0};
     this.titleFontSize = vgConfig.Graph.fontSize.nodeTitle;
     this.updateStarted = false;
     this.lastPointerUp = 0;
@@ -91,8 +83,8 @@ export default class Node extends React.Component<IProps, IState>
 
   public render()
   {
-    const height = this.state.h;
-    const width = this.state.w;
+    const height = this.props.node.size.h;
+    const width = this.props.node.size.w;
     const padding = this.props.padding;
 
     const properties = this.props.node.getProperties();
@@ -103,19 +95,16 @@ export default class Node extends React.Component<IProps, IState>
           (this.props.node.category ? this.props.node.category : "")}
         x={this.state.x} y={this.state.y}>
         <rect x={padding} y={0} width={width} height={height} id={"node-body"}
-          className={`node-background ${this.state.dragging ? "dragging" :
-            ""} ${this.state.resizing ? "resizing" : ""}`}
+          className={`node-background ${this.state.dragging ? "dragging" : ""}`}
           onPointerDown={this.handlePointerDown}
           onContextMenu={this.handleContextMenu}/>
         />
-        <path className={`node-border ${this.state.dragging ? "dragging" :
-          ""} ${this.state.resizing ? "resizing" : ""}`}
+        <path className={`node-border ${this.state.dragging ? "dragging" : ""}`}
           d={`M ${padding} ${0} L ${padding} ${height} L ${padding+width}
             ${height} L ${padding+width} ${0}`}
         />
         {this.createHeader()}
         {this.createSpecialCases()}
-        {this.createResizeIcon()}
         {properties.map((property: Model.Property, j) =>
           {
             return <Property key={j} property={property}
@@ -197,12 +186,11 @@ export default class Node extends React.Component<IProps, IState>
     const node = this.props.node;
     const title = node.displayName || node.name;
 
-    const width = this.state.w;
+    const width = node.size.w;
     const padding = this.props.padding;
     const iconSize = vgConfig.Graph.node.iconSize;
     // Full width minus left padding, icon width and icon padding
-    const titleWidth = (this.state.w ? this.state.w - padding - (iconSize +
-      padding / 2) : 0);
+    const titleWidth = width - padding - (iconSize + padding / 2);
 
     const linesArray = vgUtils.wrapText(title, titleWidth, this.titleFontSize);
     const textBox = vgUtils.textBoundingSize(linesArray[0], this.titleFontSize);
@@ -248,12 +236,10 @@ export default class Node extends React.Component<IProps, IState>
     return <svg id={node.id+"-header-wrapper"} className={"node-header-wrapper"}
       x={padding} y={-height}>
         <rect x={0} y={0} width={width} height={height} id={"node-header"}
-          className={`node-background ${this.state.dragging ? "dragging" :
-            ""} ${this.state.resizing ? "resizing" : ""}`}
+          className={`node-background ${this.state.dragging ? "dragging" : ""}`}
           onPointerDown={this.handlePointerDown}
           onContextMenu={this.handleContextMenu}/>
-        <path className={`node-border ${this.state.dragging ? "dragging" :
-          ""} ${this.state.resizing ? "resizing" : ""}`}
+        <path className={`node-border ${this.state.dragging ? "dragging" : ""}`}
           d={`M ${0} ${height} L ${0} ${0}
             L ${width} ${0} L ${width} ${height}`}/>
         { titleDisplay() }
@@ -273,35 +259,21 @@ export default class Node extends React.Component<IProps, IState>
 
   private createSpecialCases = () =>
   {
-    const padding = this.props.padding;
-
     const portProperty = this.props.node.getProperties().find(
       x => x.id === "port");
 
     if (this.props.node.category === "websocket-display" && portProperty)
     {
-      const width = this.state.w - (2 * padding);
-      const height = this.state.h - (2 * padding) - this.titleFontSize;
-
-      return <foreignObject id="ws-canvas-wrapper"
-        className={"ws-canvas " + this.props.node.id}
-        width={width} height={height} x={2 * padding}
-        y={this.titleFontSize + (1 * padding)}>
-        <WebsocketCanvas size={{ x: width, y: height }}
-          port={portProperty.value}/>
-      </foreignObject>
-    }
-  }
-
-  private createResizeIcon = () =>
-  {
-    if (this.resizeNodeProps() !== null)
-    {
-      return <svg id={"node-resize-wrapper"}
-        x={this.state.w+this.props.padding-3} y={this.state.h-3}>
-        <rect className={"node-resize-boundary"} x={-3} y={-3} width={15}
-          height={15} onPointerDown={this.handleResizePointerDown}/>
-        <rect className={"node-resize-icon"} x={0} y={0} width={6} height={6}/>
+      const padding = this.props.padding;
+      const Icon = vgIcons.App["show-ws"];
+      const iconSize = vgConfig.Graph.node.iconSize;
+      return <svg id="node-show-ws-wrapper"
+        x={this.props.node.size.w - (2*padding)} y={padding}
+        width={iconSize} height={iconSize}>
+        <rect id="node-show-ws-background"width={iconSize} height={iconSize}
+          x={0} y={0} onPointerDown={this.showWebsocketPointerDown} />
+        <Icon id="node-show-ws-icon" width={iconSize} height={iconSize} x={0}
+          y={0}/>
       </svg>
     }
   }
@@ -310,24 +282,6 @@ export default class Node extends React.Component<IProps, IState>
   private deleteNode = () =>
   {
     this.props.removeNode(this.props.node);
-  }
-
-  // Returns nodes resize props (aspect ratio, minimum width and height) from
-  // config or null if node doesn't support resizing
-  private resizeNodeProps = () =>
-  {
-    if (this.props.node.category === "websocket-display")
-    {
-      return vgConfig.Graph.websocket.resizeProps;
-    }
-    else if (this.props.node.type === "core/interpolate")
-    {
-      return vgConfig.Graph.interpolate.resizeProps;
-    }
-    else
-    {
-      return null;
-    }
   }
 
   // Do nothing - prevents browser context menu from showing
@@ -462,73 +416,15 @@ export default class Node extends React.Component<IProps, IState>
     e.stopPropagation();
   }
 
-  private handleResizePointerDown = (e: React.PointerEvent<SVGElement>) =>
+  private showWebsocketPointerDown = (e: React.PointerEvent<SVGElement>) =>
   {
     e.stopPropagation();
-
-    this.setState({resizing: true});
-
-    window.addEventListener('pointerup', this.handleResizePointerUp);
-    window.addEventListener('pointermove', this.handleResizePointerMove);
-
-    const currentPosition = vgUtils.windowToSVGPosition(
-      {x: e.pageX, y: e.pageY}, this.props.graphRef);
-
-    this.resizePointerDown = {x: currentPosition.x, y: currentPosition.y};
-
-    if (this.props.startUpdate)
+    const portProperty = this.props.node.getProperties().find(
+      x => x.id === "port");
+    if (portProperty !== undefined)
     {
-      this.props.startUpdate();
-    }
-  }
-
-  private handleResizePointerMove = (e: PointerEvent) =>
-  {
-    const currentPosition = vgUtils.windowToSVGPosition(
-      {x: e.pageX, y: e.pageY}, this.props.graphRef);
-
-    const diffX = currentPosition.x - this.resizePointerDown.x;
-    const diffY = currentPosition.y - this.resizePointerDown.y;
-
-    const newState = {...this.state};
-    newState.w += diffX;
-
-    const resizeProps = this.resizeNodeProps();
-    const aspectRatio = resizeProps.aspectRatio;
-
-    newState.h = (aspectRatio ? newState.w * aspectRatio : newState.h + diffY);
-
-    if (newState.h >= resizeProps.minHeight &&
-      newState.w >= resizeProps.minWidth)
-    {
-      this.setState(newState);
-
-      this.props.node.size = {h: newState.h, w: newState.w};
-
-      if (this.props.update)
-      {
-        this.props.update();
-      }
-    }
-
-    this.resizePointerDown = {x: currentPosition.x, y: currentPosition.y};
-  }
-
-  private handleResizePointerUp = (e: PointerEvent) =>
-  {
-    this.setState({resizing: false});
-
-    window.removeEventListener('pointerup', this.handleResizePointerUp);
-    window.removeEventListener('pointermove', this.handleResizePointerMove);
-
-    this.resizePointerDown = {x: 0, y: 0};
-
-    vgData.updateLayout(this.props.node.path, undefined, {w: this.state.w,
-      h: this.state.h});
-
-    if (this.props.endUpdate)
-    {
-      this.props.endUpdate();
+      this.props.showWebsocketDisplay(this.props.node.id, portProperty.value,
+        {x: e.pageX + (3 * this.props.padding), y: e.pageY});
     }
   }
 
@@ -548,8 +444,8 @@ export default class Node extends React.Component<IProps, IState>
     {
       const node = this.props.node;
 
-      vgData.updateLayout(node.path, undefined, undefined,
-        {n: textBox.value.toString()}, () =>
+      vgData.updateLayout(node.path, undefined, {n: textBox.value.toString()},
+        () =>
         {
           this.props.startUpdate();
           node.displayName = textBox.value.toString();
