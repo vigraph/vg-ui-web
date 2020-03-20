@@ -29,6 +29,7 @@ interface IProps
   clearUI: boolean;
   showWebsocketDisplay: (id: string, port: number, position: {x: number,
     y: number}) => void;
+  hideHeader?: boolean;
 }
 
 interface IState
@@ -86,7 +87,6 @@ export default class Node extends React.Component<IProps, IState>
     const height = this.props.node.size.h;
     const width = this.props.node.size.w;
     const padding = this.props.padding;
-
     const properties = this.props.node.getProperties();
 
     return (
@@ -103,7 +103,7 @@ export default class Node extends React.Component<IProps, IState>
           d={`M ${padding} ${0} L ${padding} ${height} L ${padding+width}
             ${height} L ${padding+width} ${0}`}
         />
-        {this.createHeader()}
+        {!this.props.hideHeader && this.createHeader()}
         {this.createSpecialCases()}
         {properties.map((property: Model.Property, j) =>
           {

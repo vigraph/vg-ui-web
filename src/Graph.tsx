@@ -172,7 +172,8 @@ export default class Graph extends React.Component<IProps, IState>
     );
   }
 
-  private createNodeComponent = (node: Model.Node, i: number) =>
+  private createNodeComponent = (node: Model.Node, i: number,
+    hideHeader?: boolean) =>
   {
     const clearUI = this.state.pointerDown || (this.state.targetNode !== null &&
       this.state.targetNode.id !== node.id);
@@ -186,7 +187,8 @@ export default class Graph extends React.Component<IProps, IState>
       updateTargetProperty={this.updateTargetProperty}
       updateTargetIcon={this.updateTargetIcon}
       clearUI={clearUI}
-      showWebsocketDisplay={this.showWebsocketDisplay}>
+      showWebsocketDisplay={this.showWebsocketDisplay}
+      hideHeader={hideHeader}>
       {
         this.graph.getNodeConnectors(node.id, "input").map(
         (connector: Model.Connector, j) =>
@@ -254,7 +256,7 @@ export default class Graph extends React.Component<IProps, IState>
     if (this.state.tempNodes)
     {
       return <svg id="dummynode">
-        {this.createNodeComponent(this.state.tempNodes.dummy, 0)}
+        {this.createNodeComponent(this.state.tempNodes.dummy, 0, true)}
         {this.createEdgeComponent(this.state.tempNodes.real,
           this.state.tempNodes.real.getForwardEdges().find(x => x.dest.id ===
           "dummynode"), "0")}
