@@ -3,12 +3,6 @@
 
 class Utils
 {
-
-  constructor()
-  {
-    // Nothing to construct
-  }
-
   public log(str: string)
   {
     if (window.console)

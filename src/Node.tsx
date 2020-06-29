@@ -97,7 +97,7 @@ export default class Node extends React.Component<IProps, IState>
         <rect x={padding} y={0} width={width} height={height} id={"node-body"}
           className={`node-background ${this.state.dragging ? "dragging" : ""}`}
           onPointerDown={this.handlePointerDown}
-          onContextMenu={this.handleContextMenu}/>
+          onContextMenu={this.handleContextMenu}
         />
         <path className={`node-border ${this.state.dragging ? "dragging" : ""}`}
           d={`M ${padding} ${0} L ${padding} ${height} L ${padding+width}
@@ -119,7 +119,6 @@ export default class Node extends React.Component<IProps, IState>
               relatedProperties={this.state.relatedProperties}/>
           })}
         {this.props.children}
-        />
       </svg>
     );
   }

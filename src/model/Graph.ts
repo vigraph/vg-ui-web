@@ -421,7 +421,9 @@ export class Graph
     this.rollbackTransaction();
 
     // Clone top state as transient one
-    this.state = this.state;  // Set get/set below!
+    // Note assign to self (it uses the get/set below!)
+    // eslint-disable-next-line
+    this.state = this.state;
 
     this.inTransaction = true;
   }

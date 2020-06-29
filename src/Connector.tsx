@@ -21,11 +21,6 @@ interface IProps
 
 export default class Connector extends React.Component<IProps>
 {
-  constructor(props: IProps)
-  {
-    super(props);
-  }
-
   public render()
   {
     const radius = this.props.radius;
@@ -40,8 +35,7 @@ export default class Connector extends React.Component<IProps>
           onPointerLeave={this.pointerLeave} onPointerDown={this.pointerDown} />
         <path className={`connector-icon ${this.props.connector.id}` +
           ` ${this.props.connector.direction} ${this.props.connector.type}`}
-          d={this.pathForType(this.props.connector.type)}
-          />
+          d={this.pathForType(this.props.connector.type)} />
         {vgConfig.Graph.debugMode.enabled && this.createDebugLabel()}
       </svg>
     );
@@ -122,7 +116,6 @@ export default class Connector extends React.Component<IProps>
       <text id={"connector-sample-rate-text"} x={1} y={1}
         fontSize={fontSize}
         className={"label debug"}>{this.props.connector.sampleRate}</text>
-      }
     </svg>
   }
 
