@@ -1,6 +1,6 @@
 # ViGraph Web UI
 
-This is the Web user interface of the ViGraph system, providing a drag-and-drop circuit diagram metaphor for creating ViGraph applications.  It connects to a [ViGraph engine](https://github.com/vigraph/vg-server) which actually runs the application.
+This is the Web user interface of the [ViGraph](https://vigraph.com) system, providing a drag-and-drop circuit diagram metaphor for creating ViGraph applications.  It connects to a [ViGraph engine](https://github.com/vigraph/vg-server) which actually runs the application.
 
 ViGraph was created in 2017 by [Paul Clark](https://sandtreader.com), initially to create interactive laser displays for his company [Greenwave Interactive](https://greenwaveinteractive.com).  Tom Nicholls at Paul's other company [Packet Ship](https://www.packetship.com) significantly improved the user interface in 2019/20.  Paul published the whole of ViGraph under AGPLv3 in July 2020.
 
@@ -23,7 +23,7 @@ You can find out more about ViGraph (with prettier pictures) at [vigraph.com](ht
 
 ## How to run it
 
-This is a React+TypeScript application built with [Create React App](https://create-react-app.dev/) (CRA).  To run it, clone this repository and run `npm install` and `npm start` in the directory:
+This is a React+TypeScript Web app built with [Create React App](https://create-react-app.dev/) (CRA).  To run it, clone this repository and run `npm install` and `npm start` in the directory:
 
         $ git clone git@github.com:vigraph/vg-ui-web.git
         $ cd vg-ui-web
@@ -32,5 +32,5 @@ This is a React+TypeScript application built with [Create React App](https://cre
 
 You'll need npm installed, of course (`sudo apt install npm`) but it will take care of the rest!
 
-By default the app will connect to http://localhost:33381 which is the default REST interface port provided by the local server on the same machine.  If you want to connect to another server, you can change it in `src/lib/json/GraphConfig.json`.
+By default the Web app will connect to http://localhost:33381 which is the default REST interface port provided by the local ViGraph engine server on the same machine.  If you want to connect to another server, you can change the URL in `src/lib/json/GraphConfig.json`.
 
