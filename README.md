@@ -34,3 +34,12 @@ You'll need npm installed, of course (`sudo apt install npm`) but it will take c
 
 By default the Web app will connect to http://localhost:33381 which is the default REST interface port provided by the local ViGraph engine server on the same machine.  If you want to connect to another server, you can change the URL in `src/lib/json/GraphConfig.json`.
 
+## Contributions
+
+Yes please!
+
+If it's a bug-fix, test or tidy, please just go ahead and send a PR.  If it's anything major, please discuss it with me first...
+
+I ask all contributors to sign a standard, FSF-approved [Contributor License Agreement](http://contributoragreements.org/) to make the project easier to manage.  You can sign it when you generate a PR, or in advance [here](https://cla-assistant.io/vigraph/vg-server).  You only have to do this once for all of ViGraph and ObTools.
+
+Thanks!
