@@ -23,9 +23,14 @@ You can find out more about ViGraph (with prettier pictures) at [vigraph.com](ht
 
 ## How to run it
 
-This is a REACT+TypeScript application built with [Create React App](https://create-react-app.dev/) (CRA).  To run it, clone this repository and run "npm start" in the directory:
+This is a React+TypeScript application built with [Create React App](https://create-react-app.dev/) (CRA).  To run it, clone this repository and run `npm install` and `npm start` in the directory:
 
         $ git clone git@github.com:vigraph/vg-ui-web.git
         $ cd vg-ui-web
+        $ npm install
         $ npm start
+
+You'll need npm installed, of course (`sudo apt install npm`) but it will take care of the rest!
+
+By default the app will connect to http://localhost:33381 which is the default REST interface port provided by the local server on the same machine.  If you want to connect to another server, you can change it in `src/lib/json/GraphConfig.json`.
 
