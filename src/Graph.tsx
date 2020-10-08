@@ -20,7 +20,6 @@ interface IProps
 {
   from?: any;
   notifyGraphRoot: (graphRoot: boolean) => void;
-  updateSavingEnabled: (savingEnabled: boolean) => void;
 }
 
 interface IState
@@ -36,8 +35,7 @@ interface IState
   wsDisplays: Array<{id: string, port: number, pinned: boolean, position:
     {x: number, y: number}}>
   view: { x: number, y: number, w: number, h: number },
-  pointerDown: boolean,
-  savingEnabled: boolean
+  pointerDown: boolean
 }
 
 export default class Graph extends React.Component<IProps, IState>
@@ -86,7 +84,6 @@ export default class Graph extends React.Component<IProps, IState>
       infoState: "hidden",
       view: vgConfig.Graph.viewDefault,
       pointerDown: false,
-      savingEnabled: true,
       wsDisplays: []
     };
 
@@ -126,12 +123,6 @@ export default class Graph extends React.Component<IProps, IState>
               removeDisplay={this.removeWebsocketDisplay}
               startPosition={ws.position}/>
           })}
-
-        {!this.state.savingEnabled && <div id="no-saving-notif">
-          {vgConfig.Strings.noSaving}
-          <a href={vgConfig.Graph.upgradeURL} target="_blank"
-            rel="noopener noreferrer">{" Upgrade "}</a>
-        </div>}
 
         <svg id="graph"
           viewBox={`${view.x} ${view.y} ${view.w} ${view.h}`}
@@ -394,10 +385,6 @@ export default class Graph extends React.Component<IProps, IState>
   {
     if (this.firstLoad)
     {
-      // Graph data has loaded - update saving enabled property
-      const savingEnabled = vgData.savingEnabled();
-      this.props.updateSavingEnabled(savingEnabled);
-
       this.firstLoad = false;
 
       const nodes = this.graph.getNodes();
@@ -431,7 +418,7 @@ export default class Graph extends React.Component<IProps, IState>
       const newView = Object.assign({}, this.state.view);
       newView.x = -(screenCentreSVG.x - centre.x);
       newView.y = -(screenCentreSVG.y - centre.y);
-      this.setState({view: newView, savingEnabled});
+      this.setState({view: newView});
     }
   }
 
@@ -515,14 +502,11 @@ export default class Graph extends React.Component<IProps, IState>
 
   public save = () =>
   {
-    if (vgData.savingEnabled())
+    vgData.getGraphToStore((graphJSON: vgTypes.ICombinedGraph) =>
     {
-      vgData.getGraphToStore((graphJSON: vgTypes.ICombinedGraph) =>
-        {
-          const saveJSON = JSON.stringify(graphJSON);
-          vgUtils.saveToFile(saveJSON);
-        });
-    }
+      const saveJSON = JSON.stringify(graphJSON);
+      vgUtils.saveToFile(saveJSON);
+    });
   }
 
   public load = (fileInputID: string) =>

@@ -973,28 +973,6 @@
   position: absolute;
 }
 
-/* No Saving */
-#no-saving-notif
-{
-  position: absolute;
-  padding: 5px;
-  right: 0px;
-  bottom: 0px;
-  background: var(--col-notif-bg);
-  color: var(--col-text);
-  opacity: 0.8;
-  -webkit-user-select: none; /* Safari */
-  -moz-user-select: none; /* Firefox */
-  -ms-user-select: none; /* IE10+/Edge */
-  user-select: none; /* Standard */
-}
-
-#no-saving-notif a
-{
-  background: var(--col-notif-bg);
-  color: var(--col-text);
-}
-
 /* UI 1.0 */
 
 #slider

@@ -16,8 +16,7 @@ interface IState
 {
   graphRoot: boolean,
   fullscreen: boolean,
-  buttonLabel: {name: string, x: number, y: number} | null,
-  savingEnabled: boolean
+  buttonLabel: {name: string, x: number, y: number} | null
 }
 
 export default class App extends React.Component<IProps, IState>
@@ -32,8 +31,7 @@ export default class App extends React.Component<IProps, IState>
     {
       graphRoot: true,
       fullscreen: false,
-      buttonLabel: null,
-      savingEnabled: true
+      buttonLabel: null
     };
   }
 
@@ -64,8 +62,7 @@ export default class App extends React.Component<IProps, IState>
           {!this.state.graphRoot && this.createButton("back", this.handleBack)}
           {this.createLabel()}
          </div>
-        <Graph ref={this.graph} notifyGraphRoot={this.notifyGraphRoot}
-          updateSavingEnabled={this.updateSavingEnabled}/>
+        <Graph ref={this.graph} notifyGraphRoot={this.notifyGraphRoot}/>
       </div>
     );
   }
@@ -106,17 +103,7 @@ export default class App extends React.Component<IProps, IState>
 
   private createSaveButton()
   {
-    if (this.state.savingEnabled)
-    {
-      return this.createButton("save", this.handleSave);
-    }
-    else
-    {
-      return this.createButton("save", () =>
-        {
-          window.open(vgConfig.Graph.upgradeURL, "_blank");
-        }, "disabled")
-    }
+    return this.createButton("save", this.handleSave);
   }
 
   private notifyGraphRoot = (graphRoot: boolean) =>
@@ -214,10 +201,5 @@ export default class App extends React.Component<IProps, IState>
   private handleButtonLeave = (e: React.PointerEvent<HTMLElement>) =>
   {
     this.setState({buttonLabel: null});
-  }
-
-  private updateSavingEnabled = (savingEnabled: boolean) =>
-  {
-    this.setState({savingEnabled});
   }
 }

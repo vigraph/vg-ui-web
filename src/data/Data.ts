@@ -41,11 +41,6 @@ class Data
     return this.metadata;
   }
 
-  public savingEnabled()
-  {
-    return (this.versionData ? this.versionData.saving : false);
-  }
-
   // Startup - Get engine version data
   public startUp(finished: () => void)
   {
@@ -271,12 +266,6 @@ class Data
   public updateLayout(id?: string, position?: {x: number, y: number},
     name?: {n: string}, success?: () => void)
   {
-    if (!this.savingEnabled())
-    {
-      vgUtils.log("Update Layout Disabled - trial version");
-      return;
-    }
-
     const url = this.restURL + "/layout";
 
     if (id)
@@ -690,7 +679,7 @@ class Data
 
     const getLayout = () =>
     {
-      if (Object.keys(this.layoutData).length > 0 || !this.savingEnabled())
+      if (Object.keys(this.layoutData).length > 0)
       {
         this.getGraphData(path);
       }

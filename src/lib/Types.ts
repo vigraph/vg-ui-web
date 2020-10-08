@@ -129,7 +129,6 @@ export interface IPropertiesConfig
 
 export interface ILanguageStrings
 {
-  noSaving: string,
   clearGraph: string,
   appButtons:
   {
@@ -168,8 +167,7 @@ export interface IVersionData
 {
   major: number,
   minor: number,
-  name: string,
-  saving: boolean
+  name: string
 }
 
 // radius    - Knob radius
