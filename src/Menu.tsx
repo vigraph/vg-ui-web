@@ -235,6 +235,7 @@ export default class Menu extends React.Component<IProps, IState>
               children[section].push(child);
               count++;
             }
+            else console.log("Missing metadata for "+category+":"+child);
           });
 
           menuData.push({id: category, children});

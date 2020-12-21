@@ -349,6 +349,26 @@
       }
     }
   },
+  "control/knob":
+  {
+    "width": 90,
+    "height": 90,
+    "properties":
+    {
+     "value":
+      {
+        "controlType": "knob/default",
+        "rangeMin": 0,
+        "rangeMax": 1000,
+        "increment": 0.1,
+        "x": 40,
+        "y": 30
+      },
+      "on-change":
+      {
+      }
+    }
+  },
   "audio/alsa-out":
   {
     "width": 100,

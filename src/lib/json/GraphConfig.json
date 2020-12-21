@@ -25,9 +25,9 @@
   {
     "resizeProps":
     {
-      "aspectRatio": 1,
+      "aspectRatio": 0,
       "minWidth": 150,
-      "minHeight": 150
+      "minHeight": 15
     },
     "defaultProps":
     {
@@ -66,14 +66,16 @@
   {
     "size": 5,
     "padding": 10,
-    "parents": ["core", "trigger", "maths", "audio", "vector", "colour",
+    "parents": ["core", "control", "trigger", "maths",
+                "audio", "vector", "colour",
                 "midi", "laser", "bitmap", "dmx", "time-series", "iot"],
     "children":
     {
       "core": ["clone",
         "clone-info", "compare", "filter", "graph", "memory",
         "interpolator", "log", "oscillator", "pin",
-        "random", "switch", "timer"],
+               "random", "switch", "timer"],
+      "control": [ "knob"],
       "trigger": ["beat", "count", "memory", "pin", "selector", "start",
                "latch"],
       "maths": ["add", "subtract", "multiply", "divide", "mod", "power",
@@ -97,7 +99,7 @@
               "artnet-out", "ola-out", "ola-in" ],
       "bitmap": ["rectangle", "vector-fill", "image-in", "pin",
                  "fill", "blend", "fade", "tile", "twist",
-                 "translate", "switch", "sdl-out", "websocket" ],
+                 "translate", "switch", "sdl-out", "websocket-display" ],
       "midi": ["alsa-in", "alsa-out", "winmm-in", "winmm-out",
                "control-in", "keyboard-in", "key-in",
                "control-out", "key-out",
