@@ -363,9 +363,23 @@
         "increment": 0.1,
         "x": 40,
         "y": 30
-      },
-      "on-change":
+      }
+    }
+  },
+  "control/slider":
+  {
+    "width": 80,
+    "height": 120,
+    "properties":
+    {
+     "value":
       {
+        "controlType": "slider/vert",
+        "rangeMin": 0,
+        "rangeMax": 1000,
+        "increment": 0.1,
+        "x": 40,
+        "y": 20
       }
     }
   },

@@ -12,7 +12,7 @@
    version="1.1"
    viewBox="0 0 10.583 10.583"
    id="svg913"
-   sodipodi:docname="control_knob.svg"
+   sodipodi:docname="control_slider.svg"
    inkscape:version="0.92.4 (5da689c313, 2019-01-14)">
   <metadata
      id="metadata919">
@@ -22,7 +22,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -42,18 +42,34 @@
      id="namedview915"
      showgrid="false"
      inkscape:zoom="8.34386"
-     inkscape:cx="-4.8547769"
+     inkscape:cx="19.594339"
      inkscape:cy="20"
      inkscape:window-x="0"
      inkscape:window-y="247"
      inkscape:window-maximized="1"
      inkscape:current-layer="svg913" />
-  <path
-     style="fill:none;stroke:#4ecac2;stroke-width:0.9999685;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:22.9260006;stroke-dasharray:none"
-     d="M 3.1381253,7.4753178 C 2.5276652,6.8890713 2.1476998,6.0646086 2.1476998,5.1514001 2.1476997,3.3721595 3.5900593,1.9297999 5.3692999,1.9298 c 0.8265017,0 1.58031,0.3112374 2.1506154,0.8229024"
-     id="path4661" />
-  <path
-     style="fill:none;stroke:#999999;stroke-width:0.9999685;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:22.9260006;stroke-dasharray:none"
-     d="m 7.5199153,2.7527024 c 0.6574119,0.5898151 1.0709846,1.4459588 1.0709846,2.3986977 0,0.8393951 -0.3210237,1.6038111 -0.8469941,2.1771711"
-     id="circle909" />
+  <rect
+     style="opacity:1;fill:#999999;fill-opacity:1;stroke:none;stroke-width:1.40521729;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:22.9260006;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+     id="rect1410"
+     width="1.8708278"
+     height="7.7369823"
+     x="4.534379"
+     y="1.2922789"
+     ry="0" />
+  <rect
+     ry="0"
+     y="5.0656433"
+     x="4.534379"
+     height="3.9636178"
+     width="1.8708278"
+     id="rect1412"
+     style="opacity:1;fill:#4ecac2;fill-opacity:1;stroke:none;stroke-width:1.00578129;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:22.9260006;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+  <rect
+     style="opacity:1;fill:#e6e6e6;fill-opacity:1;stroke:none;stroke-width:0.99996853;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:22.9260006;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+     id="rect1414"
+     width="2.5367157"
+     height="0.66588783"
+     x="4.153872"
+     y="4.7485542"
+     ry="0.33294392" />
 </svg>

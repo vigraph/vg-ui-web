@@ -74,7 +74,7 @@
         "clone-info", "compare", "filter", "graph", "memory",
         "interpolator", "log", "oscillator", "pin",
                "random", "switch", "timer"],
-      "control": [ "knob"],
+      "control": [ "knob", "slider" ],
       "trigger": ["beat", "count", "memory", "pin", "selector", "start",
                "latch"],
       "maths": ["add", "subtract", "multiply", "divide", "mod", "power",

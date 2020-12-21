@@ -992,7 +992,7 @@
 
 .slider-value
 {
-  fill: #00ff00;
+  fill: var(--col-number-type);
 }
 
 .slider-dial
