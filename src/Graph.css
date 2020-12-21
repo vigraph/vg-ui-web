@@ -913,8 +913,12 @@
 
 #menu .menu-children-wrapper
 {
-  padding-bottom: 0px;
+  padding-bottom: 10px;
   padding-top: 5px;
+  display: grid;
+  grid-template-columns: repeat(5, 40px);
+  grid-gap: 10px;
+  width: 250px;
 }
 
 #menu .menu-item
@@ -936,23 +940,24 @@
 
 #menu .menu-children-title
 {
+  grid-column: 1 / span 5;
+  display: block;
   color: var(--col-menu-child-title);
   width: 96%;
   text-align: center;
-  margin-bottom: 10px;
+  margin-top: 5px;
   font-size: 18px;
   line-height: 18px;
 }
 
-#menu .menu-parent-wrapper,
-#menu .sub-menu-block
+#menu .menu-parent-wrapper
 {
   width: fit-content;
 }
 
-#menu .sub-menu-block
+#menu .menu-item.child
 {
-  margin-bottom: 10px;
+    display: block;
 }
 
 #menu .menu-item.child span

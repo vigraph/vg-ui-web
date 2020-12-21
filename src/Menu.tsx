@@ -17,7 +17,7 @@ interface IProps
 
 interface IState
 {
-  subMenuPanels: Array<{id: string, children: Array<string[]>,
+  subMenuPanels: Array<{id: string, children: Array<string>,
     position: {x: number, y: number}, pinned: boolean}>,
   position: {x: number, y: number},
   itemLabel: {name: string, description?: string, x: number, y: number} | null,
@@ -27,7 +27,7 @@ interface IState
 
 export default class Menu extends React.Component<IProps, IState>
 {
-  private menuData: Array<{id: string, children: Array<string[]>}>;
+  private menuData: Array<{id: string, children: Array<string>}>;
   private menuRef: HTMLDivElement | null;
   private updateSubMenu: boolean;
   private mouseDownChild: boolean;
@@ -71,7 +71,7 @@ export default class Menu extends React.Component<IProps, IState>
         {
           <div className={"menu-parent-wrapper"}>
           {
-            this.menuData.map((value: {id: string, children: Array<string[]>},
+            this.menuData.map((value: {id: string, children: Array<string>},
               index: number) =>
             {
               const Icon = vgIcons.Menu[value.id] ? vgIcons.Menu[value.id] : "";
@@ -93,7 +93,7 @@ export default class Menu extends React.Component<IProps, IState>
       }
       {
         this.state.subMenuPanels.map(
-          (subMenu: {id: string, children: Array<string[]>,
+          (subMenu: {id: string, children: Array<string>,
             position: {x: number, y: number}, pinned: boolean},
             index: number) =>
           {
@@ -159,7 +159,7 @@ export default class Menu extends React.Component<IProps, IState>
   }
 
   // Create single sub menu panel
-  private createSubMenu = (menuData: {id: string, children: Array<string[]>,
+  private createSubMenu = (menuData: {id: string, children: Array<string>,
     position: {x: number, y: number}, pinned: boolean},
     key: number) =>
   {
@@ -177,30 +177,22 @@ export default class Menu extends React.Component<IProps, IState>
         </div>
         {
           menuData.children.map(
-            (subMenuBlock: string[], index: number) =>
+            (value: string, index: number) =>
             {
-              return <div id={"sub-menu-block-"+index} key={"block-"+index}
-                className={"sub-menu-block"}>
-                {
-                  subMenuBlock.map((value: string, index: number) =>
-                  {
-                    const id = menuData.id + "/" + value;
-                    const Icon = vgIcons.Menu[id]?vgIcons.Menu[id]:"";
+              const id = menuData.id + "/" + value;
+              const Icon = vgIcons.Menu[id]?vgIcons.Menu[id]:"";
 
-                    return <div key={index} id={"menu-"+id}
-                      className="menu-item child"
-                      onPointerDown={this.handleChildPointerDown}
-                      onPointerUp={this.handleChildPointerUp}
-                      onPointerMove={this.handleChildPointerMove}
-                      onPointerEnter={this.handleChildPointerEnter}
-                      onPointerLeave={this.handleChildPointerLeave}>
-                      {
-                        Icon ? <Icon /> : <span>{ value }</span>
-                      }
-                      </div>
-                  })
+              return <div key={index} id={"menu-"+id}
+                          className="menu-item child"
+                          onPointerDown={this.handleChildPointerDown}
+                          onPointerUp={this.handleChildPointerUp}
+                          onPointerMove={this.handleChildPointerMove}
+                          onPointerEnter={this.handleChildPointerEnter}
+                          onPointerLeave={this.handleChildPointerLeave}>
+                {
+                  Icon ? <Icon /> : <span>{ value }</span>
                 }
-                </div>
+              </div>
             })
         }
         { this.createLabel() }
@@ -212,30 +204,20 @@ export default class Menu extends React.Component<IProps, IState>
   private generateMenuData = () =>
   {
     const metadata = vgData.returnMetadata();
-    const menuData: Array<{id: string, children: Array<string[]>}> = [];
+    const menuData: Array<{id: string, children: Array<string>}> = [];
 
     vgConfig.Graph.menu.parents.forEach((category: string) =>
       {
-        const children: Array<string[]> = [[]];
-        let count: number = 0;
-        let section: number = 0;
+        const children: Array<string> = [];
 
         if (metadata[category] && vgConfig.Graph.menu.children[category])
         {
           vgConfig.Graph.menu.children[category].forEach((child: string) =>
           {
             if (metadata[category][child])
-            {
-              if (count + 1 > vgConfig.Graph.menu.size)
-              {
-                section++;
-                count = 0;
-                children[section] = [];
-              }
-              children[section].push(child);
-              count++;
-            }
-            else console.log("Missing metadata for "+category+":"+child);
+              children.push(child);
+            else
+              console.log("Missing metadata for "+category+":"+child);
           });
 
           menuData.push({id: category, children});
@@ -456,7 +438,7 @@ export default class Menu extends React.Component<IProps, IState>
   private clearUnpinnedPanels = () =>
   {
     const newSubMenuPanels = this.state.subMenuPanels.filter(
-        (subMenuPanel: {id: string, children: Array<string[]>,
+        (subMenuPanel: {id: string, children: Array<string>,
           position: {x: number, y: number}, pinned: boolean}) =>
         {
           return subMenuPanel.pinned;

@@ -64,7 +64,6 @@
   },
   "menu":
   {
-    "size": 5,
     "padding": 10,
     "parents": ["core", "control", "trigger", "maths",
                 "audio", "vector", "colour",
