@@ -20,8 +20,6 @@ interface IProps
   showNodeGraph: (path: string, pathSpecific?: string,
     sourceSpecific?: string) => void;
   updateTargetNode: (node: Model.Node) => void;
-  updateTargetProperty: (updateID: Model.Property,
-    property: Model.Property | null, updating: boolean) => void;
   updateTargetIcon: (icon: {name: string,
     position: {x: number, y: number}} | null) => void;
   removeNode: (node: Model.Node) => void;

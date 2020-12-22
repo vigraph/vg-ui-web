@@ -28,7 +28,6 @@ interface IState
   tempConnectors:{ dummy: Model.Connector,  real: Model.Connector } | null,
   targetNode: Model.Node | null,
   targetConnector: { connector: Model.Connector, parent: Model.Node } | null,
-  targetProperty: { property: Model.Property | null, updating: boolean },
   targetIcon: {name: string, position: {x: number, y: number}} | null,
   menuState: string,
   infoState: string,
@@ -78,7 +77,6 @@ export default class Graph extends React.Component<IProps, IState>
       tempConnectors: null,
       targetNode: null,
       targetConnector: null,
-      targetProperty: {property: null, updating: false},
       targetIcon: null,
       menuState: "hidden",
       infoState: "hidden",
@@ -156,7 +154,6 @@ export default class Graph extends React.Component<IProps, IState>
           </svg>
           {this.createDummyNode()}
           {this.createConnectorLabel(this.state.targetConnector)}
-          {this.createPropertyLabel()}
           {this.createIconLabel()}
         </svg>
       </div>
@@ -175,7 +172,6 @@ export default class Graph extends React.Component<IProps, IState>
       showNodeGraph={this.showNodeGraph} removeNode={this.removeNode}
       updateTargetNode={this.updateTargetNode}
       dynamicNodeUpdate={this.dynamicNodeUpdate}
-      updateTargetProperty={this.updateTargetProperty}
       updateTargetIcon={this.updateTargetIcon}
       clearUI={clearUI}
       showWebsocketDisplay={this.showWebsocketDisplay}
@@ -305,57 +301,6 @@ export default class Graph extends React.Component<IProps, IState>
           </text>
           </svg>
       }
-    }
-  }
-
-  private createPropertyLabel = () =>
-  {
-    if (this.state.targetProperty.property)
-    {
-      const property = this.state.targetProperty.property;
-      const fSize = vgConfig.Graph.fontSize.propertyLabel;
-      const padding = 3;
-      const value = (typeof property.value !== "undefined" ?
-        property.value.toString() : null);
-
-      const nameSize = vgUtils.textBoundingSize(property.id, fSize);
-      let textWidth: number;
-
-      if (value)
-      {
-        const valueSize = vgUtils.textBoundingSize(value, fSize);
-        textWidth = Math.max(nameSize.width, valueSize.width);
-      }
-      else
-      {
-        textWidth = nameSize.width;
-      }
-
-      const width = textWidth + (2 * padding);
-
-      const node = this.graph.getNode(property.parent);
-      const x = property.position.x + (node ? node.position.x : 0) +
-        (width / 2);
-      const y = property.position.y + (node ? node.position.y : 0) -
-        ((fSize * 2) + (padding * 2));
-
-      const controlType = property.controlType.split("/");
-
-      return <svg className={"property-label-wrapper " + property.id + " " +
-        controlType[0]} x={x} y={y}>
-        <rect className="property-label-border"
-          x={-width / 2} y={0} width={width}
-          height={(fSize * 2) + (padding * 2)}/>
-        <text className="label property-label" x={padding} y={8 + (padding)}
-          fontSize={fSize}>
-          <tspan x={0} dy={0}>{property.id}</tspan>
-          <tspan x={0} dy={fSize+1}>{value ? value : ""}</tspan>
-        </text>
-      </svg>
-    }
-    else
-    {
-      return "";
     }
   }
 
@@ -761,7 +706,6 @@ export default class Graph extends React.Component<IProps, IState>
 
   private showNodeGraph = (path: string) =>
   {
-    this.setState({targetProperty: {property: null, updating: false}});
     this.updateTargetNode();
 
     vgData.generateGraph(path, (json:any) =>
@@ -1301,21 +1245,6 @@ export default class Graph extends React.Component<IProps, IState>
     parent: Model.Node} | null) =>
   {
     this.setState({targetConnector: target});
-  }
-
-  // Target (mouse over) property
-  private updateTargetProperty = (updateProp: Model.Property,
-    property: Model.Property | null, updating: boolean) =>
-  {
-    // Only update if there was no previous target property, or the current
-    // target property is updated. To account for changing a property whilst
-    // hovering over another.
-    if (!this.state.targetProperty.property ||
-      (updateProp.id === this.state.targetProperty.property.id &&
-      updateProp.parent === this.state.targetProperty.property.parent))
-    {
-      this.setState({targetProperty: {property, updating}});
-    }
   }
 
   // Target (click) node - will be shown in info panel
