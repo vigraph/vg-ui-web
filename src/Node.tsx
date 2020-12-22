@@ -38,7 +38,6 @@ interface IState
   editTitle: boolean;
   x: number;
   y: number;
-  relatedProperties?: {[key: string]: Model.Property};
 }
 
 export default class Node extends React.Component<IProps, IState>
@@ -69,7 +68,6 @@ export default class Node extends React.Component<IProps, IState>
         editTitle: false,
         x: props.node.position.x,
         y: props.node.position.y,
-        relatedProperties: undefined
       };
 
     this.offsetX = 0;
@@ -86,7 +84,6 @@ export default class Node extends React.Component<IProps, IState>
     const height = this.props.node.size.h;
     const width = this.props.node.size.w;
     const padding = this.props.padding;
-    const properties = this.props.node.getProperties();
 
     return (
       <svg id={`node-${this.props.node.id}`}
@@ -107,54 +104,6 @@ export default class Node extends React.Component<IProps, IState>
         {this.props.children}
       </svg>
     );
-  }
-
-  // Component has been created - collect together related properties in this
-  // node and fill in any missing values (properties that have connections)
-  public componentDidMount()
-  {
-    if (this.state.relatedProperties === undefined)
-    {
-      let relatedProps: {[key: string]: Model.Property} =
-        this.getRelatedProperties();
-
-      const updateProps: Array<Model.Property> = [];
-
-      if (Object.keys(relatedProps).length > 0)
-      {
-        for (const key of Object.keys(relatedProps))
-        {
-          if (relatedProps[key] && relatedProps[key].value === undefined)
-          {
-            updateProps.push(relatedProps[key]);
-          }
-        }
-      }
-
-      const updatePropsLength = updateProps.length;
-      let updatePropsCount = 0;
-
-      if (updatePropsLength > 0)
-      {
-        updateProps.forEach((prop: Model.Property) =>
-        {
-          vgData.getPropertyValue(this.props.node.path, prop.id, (value: any) =>
-          {
-            relatedProps[prop.id].value = value;
-            updatePropsCount++;
-
-            if (updatePropsCount === updatePropsLength)
-            {
-              this.setState({relatedProperties: relatedProps});
-            }
-          });
-        });
-      }
-      else
-      {
-        this.setState({relatedProperties: relatedProps});
-      }
-    }
   }
 
   // Clear UI (title edit and delete icon) if set in properties
@@ -472,31 +421,6 @@ export default class Node extends React.Component<IProps, IState>
     {
       this.props.endUpdate();
     }
-  }
-
-  // Return current property and any related properties e.g. all individual
-  // colour properties for colourPicker
-  private getRelatedProperties = () =>
-  {
-    let relatedProperties = {};
-
-    if (this.props.node.category === "colour-picker")
-    {
-      const properties = this.props.node.getProperties();
-
-      relatedProperties =
-      {
-        hex: properties.find(x => x.id === "hex"),
-        h: properties.find(x => x.id === "h"),
-        s: properties.find(x => x.id === "s"),
-        l: properties.find(x => x.id === "l"),
-        r: properties.find(x => x.id === "r"),
-        g: properties.find(x => x.id === "g"),
-        b: properties.find(x => x.id === "b")
-      };
-    }
-
-    return relatedProperties;
   }
 }
 
