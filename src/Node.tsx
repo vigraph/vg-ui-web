@@ -480,7 +480,7 @@ export default class Node extends React.Component<IProps, IState>
   {
     let relatedProperties = {};
 
-    if (this.props.node.category === "colourPicker")
+    if (this.props.node.category === "colour-picker")
     {
       const properties = this.props.node.getProperties();
 

@@ -1274,7 +1274,7 @@ class Data
 
       case "colour/hsl":
       case "colour/rgb":
-        return "colourPicker"; // !!! Inconsistent casing
+        return "colour-picker";
 
       default:
         return undefined;
