@@ -53,7 +53,7 @@ export interface IProcessedGraphItem
   // propType = "input" | "setting"
   properties?: Array<{ id: string, value: any, valueType: string,
     propType: string, description?: string, controlType?: string,
-    valueFormat?: string, rangeMin?: number, rangeMax?: number,
+    rangeMin?: number, rangeMax?: number,
     increment?: number, x?: number, y?: number}>,
   subGraph?: boolean
 }
@@ -97,30 +97,6 @@ export interface IMetadata
         [key: string]:
         {
           type: string
-        }
-      }
-    }
-  }
-}
-
-export interface IPropertiesConfig
-{
-  [key: string]: {
-    width: number,
-    height: number,
-    category?: string,
-    properties: {
-      [key: string]: {
-        controlType?: string,
-        x?: number,
-        y?: number,
-        valueFormat?: string,
-        rangeMin?: number,
-        rangeMax?: number,
-        increment?: number,
-        connector?: {
-          x?: number,
-          y: number
         }
       }
     }

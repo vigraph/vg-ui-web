@@ -26,7 +26,6 @@
 //                                  description: string,
 //                                  propType: string,
 //                                  valueType: string,
-//                                  valueFormat: string,
 //                                  controlType: string,
 //                                  position: {x, y},
 //                                  value: any,
@@ -67,7 +66,7 @@ export class Graph
   //       inputs: [ { id, type, sampleRate, x, y } ],
   //       outputs: [ { id, type, sampleRate, x, y } ],
   //       edges: [ { output, destId, input } ],
-  //       properties: [ { id, description, propType, valueType, valueFormat,
+  //       properties: [ { id, description, propType, valueType, 
   //                       controlType, x, y, value, rangeMin, rangeMax,
   //                       increment
   //                   } ],
@@ -172,7 +171,6 @@ export class Graph
         property.value = p.value;
         property.valueType = p.valueType || "";
         property.description = p.description || ""
-        property.valueFormat = p.valueFormat || "";
         property.controlType = p.controlType || "none/none";
         property.position = { x: p.x || 0, y: p.y || 0 };
         property.range = { min: p.rangeMin || undefined,

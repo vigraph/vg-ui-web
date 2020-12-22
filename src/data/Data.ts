@@ -1149,7 +1149,7 @@ class Data
     // Properties: inputs and settings
     const gProps: Array<{ id: string, value: any, valueType: string,
       propType: string, description?: string, controlType?: string,
-      valueFormat?: string, rangeMin?: number, rangeMax?: number,
+      rangeMin?: number, rangeMax?: number,
       increment?: number, x?: number, y?: number}> = [];
 
     const itemStrings = vgConfig.Strings.descriptions[item.type];

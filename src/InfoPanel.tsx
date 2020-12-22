@@ -208,7 +208,7 @@ export default class InfoPanel extends React.Component<IProps, IState>
       return <div id={property.id}
         className={"undefined-value-label info-text"}>{"--"}</div>
     }
-    else if (property.valueFormat === "triggerButton")
+    else if (property.valueType === "trigger")
     {
       return <input id={property.id} type="button" disabled={disabled}
         className={"value-button " + property.propType}
@@ -543,64 +543,10 @@ export default class InfoPanel extends React.Component<IProps, IState>
   {
     let newValue = value;
 
-    // Hex colour property must have valid hex (#rrggbb or #rgb)
-    if (property.valueFormat === "hex-colour")
-    {
-      // Insert # if it is missing
-      if (newValue[0] !== "#")
-      {
-        newValue = "#" + newValue;
-      }
-
-      if (!(/^#[0-9a-f]*$/i.test(newValue)) || (newValue.length !== 7 &&
-        newValue.length !== 4))
-      {
-        newValue = property.value;
-      }
-    }
-    // IP address value format
-    else if (property.valueFormat === "ip-address")
-    {
-      if (!(/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/i.test(newValue)))
-      {
-        newValue = property.value;
-      }
-    }
-    // Curve value must be (t: number, v: number) with t!==0 and t!==1 and v>0
-    // and v < property max range
-    else if (property.valueType === "curve")
-    {
-      const curvePoint = newValue.split(",");
-
-      if (curvePoint.length !== 2)
-      {
-        newValue = null;
-      }
-      else
-      {
-        let t = parseFloat(curvePoint[0]);
-        let v = parseFloat(curvePoint[1]);
-
-        if (isNaN(t) || isNaN(v))
-        {
-          newValue = null;
-        }
-        else
-        {
-
-          t = (t > 1 ? 1 : (t < 0 ? 0 : t));
-          v = ((property.range.max !== undefined && v > property.range.max) ?
-            property.range.max : (v < 0 ? 0 : v));
-
-          newValue = t + "," + v;
-        }
-      }
-    }
     // Number value must be a number (float), within the properties range and
     // follow the set increment (and level of accuracy - see Utils.js)
     // Similarly for integer
-    else if (property.valueType === "number" ||
-      property.valueType === "integer")
+    if (property.valueType === "number" || property.valueType === "integer")
     {
       newValue = (property.valueType === "number" ? parseFloat(newValue) :
         parseInt(newValue));
@@ -611,19 +557,21 @@ export default class InfoPanel extends React.Component<IProps, IState>
       }
       else
       {
-        newValue = vgUtils.snapValueToIncrement(value, property.increment);
+        // !!! None of this is still available - should engine provide
+        // metadata for it?
+//        newValue = vgUtils.snapValueToIncrement(value, property.increment);
 
-        newValue = (property.range.max !== undefined ?
-          Math.min(newValue, property.range.max) : newValue);
+//        newValue = (property.range.max !== undefined ?
+//          Math.min(newValue, property.range.max) : newValue);
 
-        newValue = (property.range.min !== undefined ?
-          Math.max(newValue, property.range.min) : newValue);
+//        newValue = (property.range.min !== undefined ?
+//          Math.max(newValue, property.range.min) : newValue);
 
         // Number must be a power of 2
-        if (property.valueFormat === "power2" && Math.log2(newValue) % 1 !== 0)
-        {
-          newValue = property.value;
-        }
+//        if (property.valueFormat === "power2" && Math.log2(newValue) % 1 !== 0)
+//       {
+//          newValue = property.value;
+//        }
       }
     }
 
