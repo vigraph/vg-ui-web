@@ -105,19 +105,6 @@ export default class Node extends React.Component<IProps, IState>
         />
         {!this.props.hideHeader && this.createHeader()}
         {this.createSpecialCases()}
-        {properties.map((property: Model.Property, j) =>
-          {
-            return <Property key={j} property={property}
-              name={property.id}
-              parent={this.props.node}
-              startUpdate={this.props.startUpdate}
-              update={this.props.update}
-              endUpdate={this.endPropertyUpdate}
-              showNodeGraph={this.props.showNodeGraph}
-              padding={this.props.padding}
-              updateTargetProperty={this.props.updateTargetProperty}
-              relatedProperties={this.state.relatedProperties}/>
-          })}
         {this.props.children}
       </svg>
     );

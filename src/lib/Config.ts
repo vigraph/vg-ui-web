@@ -7,14 +7,12 @@ import { vgUtils } from '../lib/Utils';
 class Config
 {
   public Graph: {[key: string]: any};
-  public Properties: vgTypes.IPropertiesConfig;
   public Controls: any;
   public Strings: vgTypes.ILanguageStrings;
 
   constructor()
   {
     this.Graph = require('./json/GraphConfig.json');
-    this.Properties = require('./json/PropertiesConfig.json');
     this.Controls = require('./json/ControlsConfig.json');
 
     this.Strings = require('./languages/en.json');

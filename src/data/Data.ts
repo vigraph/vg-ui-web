@@ -400,11 +400,8 @@ class Data
       {
         const item = this.processSingleGraphItem(nodeID, result, parentPath);
 
-        const propConfig = vgConfig.Properties[item.type];
-
         // Node properties layout (height, width, x, y)
-        const w = propConfig ? propConfig.width : 50;
-
+        const w = vgConfig.Graph.node.minWidth;
         const h = this.calculateNodeHeight(item);
 
         const x = this.layoutData[item.path] && this.layoutData[item.path].x ?
@@ -792,8 +789,6 @@ class Data
 
     nodes.forEach((node: vgTypes.IProcessedGraphItem) =>
     {
-      const propConfig = vgConfig.Properties[node.type];
-
       // Node found in layout so add to current valid layouts store
       if (layout[node.path])
       {
@@ -806,7 +801,7 @@ class Data
       }
 
       const height = this.calculateNodeHeight(node);
-      const width = propConfig ? propConfig.width : 50;
+      const width = vgConfig.Graph.node.minWidth;
 
       const name = layout[node.path] && layout[node.path].n ?
         layout[node.path].n : undefined;
@@ -838,20 +833,12 @@ class Data
   // of inputs/outputs (if dynamic)
   private calculateNodeHeight(node: vgTypes.IProcessedGraphItem)
   {
-    const propConfig = vgConfig.Properties[node.type];
+    const connectorSpacing = vgConfig.Graph.connector.padding
+                           + vgConfig.Graph.connector.size;
+    const minHeight = Math.max((node.inputs.length + 1) * connectorSpacing,
+                               (node.outputs.length + 1) * connectorSpacing);
 
-    let h: number = (propConfig ? propConfig.height : 50);
-
-    if (node.dynamic)
-    {
-      const connectorPadding = vgConfig.Graph.connector.padding;
-      const minHeight = Math.max((node.inputs.length + 1) * connectorPadding,
-        (node.outputs.length + 1) * connectorPadding);
-
-      h = (h ? Math.max(minHeight, h) : minHeight);
-    }
-
-    return h;
+    return Math.max(minHeight, vgConfig.Graph.node.minHeight);
   }
 
   // Generate Graph layout without node position data. Nodes ranked by number of
@@ -946,14 +933,9 @@ class Data
 
     nodesByRank.forEach((value: vgTypes.IProcessedGraphItem) =>
     {
-      const layout = {x: 0, y: 0, h: 50, w: 50};
-
-      if (vgConfig.Properties[value.type])
-      {
-        layout.w = vgConfig.Properties[value.type].width;
-      }
-
-      layout.h = this.calculateNodeHeight(value);
+      const layout = { x: 0, y: 0,
+                       h: this.calculateNodeHeight(value),
+                       w: vgConfig.Graph.node.minWidth };
 
       const nRank = ranks[value.id] ? ranks[value.id] : 0;
 
@@ -1089,7 +1071,6 @@ class Data
     const itemSection = splitType[0];
     const itemType = splitType[1];
     const metadata = this.metadata[itemSection][itemType];
-    const propsConfig = vgConfig.Properties[item.type];
 
     // Edges
     const gEdges:
@@ -1115,10 +1096,7 @@ class Data
     // Get connector position from properties config for a given input/output id
     const getConnectorPosition = (id: string) =>
     {
-      if (propsConfig && propsConfig.properties[id])
-      {
-        return propsConfig.properties[id].connector;
-      }
+      return {};
     }
 
     // Inputs - position added later
@@ -1189,9 +1167,6 @@ class Data
     {
       for (const inputID of Object.keys(metadata.inputs))
       {
-        const iPropsConfig = (propsConfig && propsConfig.properties[inputID] ?
-          propsConfig.properties[inputID] : null);
-
         const iPropsStrings = (itemStrings && itemStrings.properties &&
           itemStrings.properties[inputID] ? itemStrings.properties[inputID] :
           null);
@@ -1204,7 +1179,7 @@ class Data
           value: (itemInput ? itemInput.value : undefined),
           valueType: (itemInput ? itemInput.type : "number"),
           propType: "input",
-          ...iPropsConfig, ...iPropsStrings
+          ...iPropsStrings
         });
       }
     }
@@ -1213,9 +1188,6 @@ class Data
     {
       for (const settingID of Object.keys(metadata.settings))
       {
-        const sPropsConfig = (propsConfig && propsConfig.properties[settingID] ?
-          propsConfig.properties[settingID] : {});
-
         const sPropsStrings = (itemStrings && itemStrings.properties &&
           itemStrings.properties[settingID] ?
           itemStrings.properties[settingID] : null);
@@ -1228,7 +1200,7 @@ class Data
           value: (itemSetting ? itemSetting.value : undefined),
           valueType: (itemSetting ? itemSetting.type : "number"),
           propType: "setting",
-          ...sPropsConfig, ...sPropsStrings
+          ...sPropsStrings
         });
       }
     }
@@ -1243,7 +1215,7 @@ class Data
       type: item.type,
       path: parentPath + "/" + itemID,
       dynamic: metadata.dynamic,
-      category: propsConfig ? propsConfig.category : undefined,
+      category: this.getNodeCategory(item.type),
       description: itemStrings ? itemStrings.description : "",
       inputs: gInputs,
       outputs: gOutputs,
@@ -1284,6 +1256,37 @@ class Data
       vgUtils.log("Get Version Data Failure with error: " + error);
 
       finished(null);
+    }
+  }
+
+  // !!! Temporary way to get node category from type
+  // - should come from engine metadata
+  private getNodeCategory(type: string): string | undefined
+  {
+    switch (type)
+    {
+      case "core/clone":
+      case "core/graph":
+        return "subgraph";
+
+      case "core/pin":
+      case "audio/pin":
+      case "bitmap/pin":
+      case "trigger/pin":
+      case "vector/pin":
+      case "colour/pin":
+        return "pin";
+
+      case "bitmap/websocket-display":
+      case "vector/websocket-display":
+        return "websocket-display";
+
+      case "colour/hsl":
+      case "colour/rgb":
+        return "colourPicker"; // !!! Inconsistent casing
+
+      default:
+        return undefined;
     }
   }
 }
