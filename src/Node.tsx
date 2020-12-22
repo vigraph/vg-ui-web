@@ -1,7 +1,6 @@
 import * as React from 'react';
 import * as Model from './model';
 
-import Property from './Property';
 import Delete from './Delete'
 
 import { vgData } from './data/Data';
