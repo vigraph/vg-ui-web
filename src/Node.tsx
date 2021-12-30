@@ -80,33 +80,16 @@ export default class Node extends React.Component<IProps, IState>
   public render()
   {
     const node = this.props.node;
-    const height = node.size.h;
-    const width = node.size.w;
-    const padding = this.props.padding;
-    const Icon = vgIcons.Menu[node.type] ? vgIcons.Menu[node.type] : "";
-    const iconSize = vgConfig.Graph.node.iconSize;
 
     return (
-      <svg id={`node-${this.props.node.id}`}
-           className={"node " + this.props.node.type.replace("/","-") + " " +
-                (this.props.node.category ? this.props.node.category : "")}
+      <svg id={`node-${node.id}`}
+           className={"node " + node.type.replace("/","-") + " " +
+                    (node.category ? node.category : "")}
            x={this.state.x} y={this.state.y}>
-        <rect x={padding} y={0} width={width} height={height} id={"node-body"}
-              className={`node-background ${this.state.dragging ? "dragging" : ""}`}
-              onPointerDown={this.handlePointerDown}
-              onContextMenu={this.handleContextMenu}
-        />
-        <path className={`node-border ${this.state.dragging ? "dragging" : ""}`}
-              d={`M ${padding} ${0} L ${padding} ${height} L ${padding+width}
-            ${height} L ${padding+width} ${0}`}
-        />
+        {this.createBackground()}
+        {this.createBorder()}
         {!this.props.hideHeader && this.createHeader()}
-        {
-          Icon ? <Icon className={"node-icon"}
-                  x={padding+(width-iconSize)/2}
-                  y={(height-iconSize)/2}
-                  width={iconSize} height={iconSize}/> : ""
-        }
+        {this.createIcon()}
         {this.createSpecialCases()}
         {this.props.children}
       </svg>
@@ -120,6 +103,47 @@ export default class Node extends React.Component<IProps, IState>
       {
         this.setState({showDelete: false, editTitle: false});
       }
+  }
+
+  protected createBackground = () =>
+  {
+    const node = this.props.node;
+    const height = node.size.h;
+    const width = node.size.w;
+    const padding = this.props.padding;
+
+    return <rect x={padding} y={0} width={width} height={height}
+            id={"node-body"}
+            className={`node-background ${this.state.dragging?"dragging":""}`}
+            onPointerDown={this.handlePointerDown}
+            onContextMenu={this.handleContextMenu}
+    />
+  }
+
+  protected createBorder = () =>
+  {
+    const node = this.props.node;
+    const height = node.size.h;
+    const width = node.size.w;
+    const padding = this.props.padding;
+    return <path className={`node-border ${this.state.dragging ? "dragging" : ""}`}
+          d={`M ${padding} ${0} L ${padding} ${height} L ${padding+width}
+            ${height} L ${padding+width} ${0}`}
+    />
+  }
+
+  protected createIcon = () =>
+  {
+    const node = this.props.node;
+    const height = node.size.h;
+    const width = node.size.w;
+    const padding = this.props.padding;
+    const Icon = vgIcons.Menu[node.type] ? vgIcons.Menu[node.type] : "";
+    const iconSize = vgConfig.Graph.node.iconSize;
+    return Icon ? <Icon className={"node-icon"}
+                        x={padding+(width-iconSize)/2}
+                        y={(height-iconSize)/2}
+                        width={iconSize} height={iconSize}/> : ""
   }
 
   private createHeader = () =>

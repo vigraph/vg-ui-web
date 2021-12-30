@@ -12,6 +12,8 @@ import './Graph.css';
 import Connector from './Connector';
 import Edge from './Edge';
 import Node from './Node';
+import KnobNode from './KnobNode';
+import SliderNode from './SliderNode';
 import Menu from './Menu';
 import InfoPanel from './InfoPanel';
 import WebsocketDisplay from './WebsocketDisplay'
@@ -166,7 +168,19 @@ export default class Graph extends React.Component<IProps, IState>
     const clearUI = this.state.pointerDown || (this.state.targetNode !== null &&
       this.state.targetNode.id !== node.id);
 
-    return <Node key={node.path+":"+i} node={node}
+    let CNode = Node;
+    switch (node.type)
+    {
+      case "control/knob":
+        CNode = KnobNode;
+      break;
+
+      case "control/slider":
+        CNode = SliderNode;
+      break;
+    }
+
+    return <CNode key={node.path+":"+i} node={node}
       startUpdate={this.startUpdate} update={this.update}
       endUpdate={this.endUpdate} padding={this.csize*2} graphRef={this.graphRef}
       showNodeGraph={this.showNodeGraph} removeNode={this.removeNode}
@@ -214,7 +228,7 @@ export default class Graph extends React.Component<IProps, IState>
             return "";
           }
         })}
-    </Node>
+    </CNode>
   }
 
   private createEdgeComponent = (node: Model.Node, edge?: {outputId: string,
