@@ -42,6 +42,11 @@
   overflow: visible;
 }
 
+.node.knob .node-background
+{
+  fill-opacity: 0;
+}
+
 .node-border,
 .node-header-separator
 {

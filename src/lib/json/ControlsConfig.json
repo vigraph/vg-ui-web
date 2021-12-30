@@ -68,8 +68,8 @@
   {
     "default":
     {
-      "radius": 15,
-      "overlayRadius": 10,
+      "radius": 30,
+      "overlayRadius": 20,
       "rangeMin": 0,
       "rangeMax": 270,
       "offset": 45,

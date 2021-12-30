@@ -93,10 +93,12 @@ export default class Knob extends React.Component<IProps, IState>
 
     return(
         <svg id="knob" className={this.props.settingsType + " " +
-          this.props.property.valueType}
-          ref={(ref) => {this.knobRef = ref}}
-          height={r*2} width={r*2}
-          onPointerDown={this.handlePointerDown}>
+                                  this.props.property.valueType}
+             ref={(ref) => {this.knobRef = ref}}
+             x={this.props.position.x - r}
+             y={this.props.position.y - r}
+             height={r*2} width={r*2}
+             onPointerDown={this.handlePointerDown}>
           <path
             className={`knob-background range`}
             d={`M${r} ${r} `+

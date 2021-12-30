@@ -100,9 +100,9 @@ export default class Node extends React.Component<IProps, IState>
   public componentDidUpdate()
   {
     if (this.props.clearUI && (this.state.showDelete || this.state.editTitle))
-      {
-        this.setState({showDelete: false, editTitle: false});
-      }
+    {
+      this.setState({showDelete: false, editTitle: false});
+    }
   }
 
   protected createBackground = () =>

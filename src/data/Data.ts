@@ -1276,6 +1276,12 @@ class Data
       case "colour/rgb":
         return "colour-picker";
 
+      case "control/knob":
+        return "knob";
+
+      case "control/slider":
+        return "slider";
+
       default:
         return undefined;
     }

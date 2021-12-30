@@ -169,13 +169,13 @@ export default class Graph extends React.Component<IProps, IState>
       this.state.targetNode.id !== node.id);
 
     let CNode = Node;
-    switch (node.type)
+    switch (node.category)
     {
-      case "control/knob":
+      case "knob":
         CNode = KnobNode;
       break;
 
-      case "control/slider":
+      case "slider":
         CNode = SliderNode;
       break;
     }
