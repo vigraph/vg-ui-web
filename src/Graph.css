@@ -89,6 +89,11 @@
   pointer-events: none;
 }
 
+.node-icon
+{
+  pointer-events: none;
+}
+
 #node-title-edit-input
 {
   width: 100%;

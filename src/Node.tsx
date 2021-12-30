@@ -79,25 +79,34 @@ export default class Node extends React.Component<IProps, IState>
 
   public render()
   {
-    const height = this.props.node.size.h;
-    const width = this.props.node.size.w;
+    const node = this.props.node;
+    const height = node.size.h;
+    const width = node.size.w;
     const padding = this.props.padding;
+    const Icon = vgIcons.Menu[node.type] ? vgIcons.Menu[node.type] : "";
+    const iconSize = vgConfig.Graph.node.iconSize;
 
     return (
       <svg id={`node-${this.props.node.id}`}
-        className={"node " + this.props.node.type.replace("/","-") + " " +
-          (this.props.node.category ? this.props.node.category : "")}
-        x={this.state.x} y={this.state.y}>
+           className={"node " + this.props.node.type.replace("/","-") + " " +
+                (this.props.node.category ? this.props.node.category : "")}
+           x={this.state.x} y={this.state.y}>
         <rect x={padding} y={0} width={width} height={height} id={"node-body"}
-          className={`node-background ${this.state.dragging ? "dragging" : ""}`}
-          onPointerDown={this.handlePointerDown}
-          onContextMenu={this.handleContextMenu}
+              className={`node-background ${this.state.dragging ? "dragging" : ""}`}
+              onPointerDown={this.handlePointerDown}
+              onContextMenu={this.handleContextMenu}
         />
         <path className={`node-border ${this.state.dragging ? "dragging" : ""}`}
-          d={`M ${padding} ${0} L ${padding} ${height} L ${padding+width}
+              d={`M ${padding} ${0} L ${padding} ${height} L ${padding+width}
             ${height} L ${padding+width} ${0}`}
         />
         {!this.props.hideHeader && this.createHeader()}
+        {
+          Icon ? <Icon className={"node-icon"}
+                  x={padding+(width-iconSize)/2}
+                  y={(height-iconSize)/2}
+                  width={iconSize} height={iconSize}/> : ""
+        }
         {this.createSpecialCases()}
         {this.props.children}
       </svg>
@@ -108,86 +117,77 @@ export default class Node extends React.Component<IProps, IState>
   public componentDidUpdate()
   {
     if (this.props.clearUI && (this.state.showDelete || this.state.editTitle))
-    {
-      this.setState({showDelete: false, editTitle: false});
-    }
+      {
+        this.setState({showDelete: false, editTitle: false});
+      }
   }
 
   private createHeader = () =>
-  {
-    const node = this.props.node;
-    const title = node.displayName || node.name;
-
-    const width = node.size.w;
-    const padding = this.props.padding;
-    const iconSize = vgConfig.Graph.node.iconSize;
-    // Full width minus left padding, icon width and icon padding
-    const titleWidth = width - padding - (iconSize + padding / 2);
-
-    const linesArray = vgUtils.wrapText(title, titleWidth, this.titleFontSize);
-    const textBox = vgUtils.textBoundingSize(linesArray[0], this.titleFontSize);
-
-    const height = (textBox.height * linesArray.length) + padding;
-    this.headerHeight = height;
-
-    const Icon = vgIcons.Menu[node.type] ? vgIcons.Menu[node.type] : "";
-
-    // Display title text or edit box
-    const titleDisplay = () =>
     {
-      if (this.state.editTitle)
-      {
-        return  <foreignObject id="node-title-edit-wrapper"
-          className={"foreign-object " + this.props.node.id}
-          width={titleWidth} height={height}
-          fontSize={this.titleFontSize} x={2} y={2}>
-          <input id="node-title-edit-input" type="text"
-            className={"value-input display-name"} autoComplete={"off"}
-            width={titleWidth} height={height} defaultValue={title}
-            onPointerDown={this.titleEditPointerdown}
-            onBlur={this.titleEditOnBlur}
-            onKeyDown={this.titleEditKeyDown}/>
-        </foreignObject>;
-      }
-      else
-      {
-        return <svg className={"node-title-wrapper " + this.props.node.id}
-          width={titleWidth} height={height} x={padding} y={(padding/2)+1}>
-          <text className={"node-title " + this.props.node.id}
-            fontSize={this.titleFontSize} x={0} y={0}>
-              {linesArray.map((word: string, index: number) =>
-                {
-                  return <tspan key={index} x={0} width={titleWidth}
-                    dy={(index?1:0)*this.titleFontSize}>{word}</tspan>
-                })}
-          </text>
-        </svg>
-      }
-    }
+      const node = this.props.node;
+      const title = node.displayName || node.name;
 
-    return <svg id={node.id+"-header-wrapper"} className={"node-header-wrapper"}
-      x={padding} y={-height}>
+      const width = node.size.w;
+      const padding = this.props.padding;
+
+      // Full width minus left padding
+      const titleWidth = width - padding;
+
+      const linesArray = vgUtils.wrapText(title, titleWidth, this.titleFontSize);
+      const textBox = vgUtils.textBoundingSize(linesArray[0], this.titleFontSize);
+
+      const height = (textBox.height * linesArray.length) + padding;
+      this.headerHeight = height;
+
+      // Display title text or edit box
+      const titleDisplay = () =>
+        {
+          if (this.state.editTitle)
+            {
+              return  <foreignObject id="node-title-edit-wrapper"
+                                     className={"foreign-object " + this.props.node.id}
+                                     width={titleWidth} height={height}
+                                     fontSize={this.titleFontSize} x={2} y={2}>
+                <input id="node-title-edit-input" type="text"
+                       className={"value-input display-name"} autoComplete={"off"}
+                       width={titleWidth} height={height} defaultValue={title}
+                       onPointerDown={this.titleEditPointerdown}
+                       onBlur={this.titleEditOnBlur}
+                       onKeyDown={this.titleEditKeyDown}/>
+              </foreignObject>;
+            }
+          else
+            {
+              return <svg className={"node-title-wrapper " + this.props.node.id}
+                          width={titleWidth} height={height} x={padding} y={(padding/2)+1}>
+                <text className={"node-title " + this.props.node.id}
+                      fontSize={this.titleFontSize} x={0} y={0}>
+                  {linesArray.map((word: string, index: number) =>
+                    {
+                      return <tspan key={index} x={0} width={titleWidth}
+                                    dy={(index?1:0)*this.titleFontSize}>{word}</tspan>
+                    })}
+                </text>
+              </svg>
+            }
+        }
+
+      return <svg id={node.id+"-header-wrapper"} className={"node-header-wrapper"}
+                  x={padding} y={-height}>
         <rect x={0} y={0} width={width} height={height} id={"node-header"}
-          className={`node-background ${this.state.dragging ? "dragging" : ""}`}
-          onPointerDown={this.handlePointerDown}
-          onContextMenu={this.handleContextMenu}/>
+              className={`node-background ${this.state.dragging ? "dragging" : ""}`}
+              onPointerDown={this.handlePointerDown}
+              onContextMenu={this.handleContextMenu}/>
         <path className={`node-border ${this.state.dragging ? "dragging" : ""}`}
-          d={`M ${0} ${height} L ${0} ${0}
+              d={`M ${0} ${height} L ${0} ${0}
             L ${width} ${0} L ${width} ${height}`}/>
         { titleDisplay() }
-        {
-          Icon ? <Icon x={width-(iconSize+padding/4)} y={padding/4}
-            width={iconSize} height={iconSize}
-            onPointerEnter={this.iconPointerEnter}
-            onPointerLeave={this.iconPointerLeave}
-            onPointerDown={this.iconPointerDown}/> : ""
-        }
         <path className={"node-header-separator"}
-          d={`M ${padding/2} ${height} L ${width-(padding/2)} ${height}`}/>
+              d={`M ${padding/2} ${height} L ${width-(padding/2)} ${height}`}/>
         {this.state.showDelete && <Delete x={0} y={0}
-          deletePressed={this.deleteNode}/>}
+                                          deletePressed={this.deleteNode}/>}
       </svg>
-  }
+    }
 
   private createSpecialCases = () =>
   {
@@ -322,30 +322,6 @@ export default class Node extends React.Component<IProps, IState>
     {
       this.props.update();
     }
-  }
-
-  private iconPointerEnter = (e: React.PointerEvent<SVGElement>) =>
-  {
-    const node = this.props.node;
-    const padding = this.props.padding;
-    const iconSize = vgConfig.Graph.node.iconSize;
-
-    const name = node.type.split("/")[1];
-    const x = node.position.x + node.size.w + padding - (iconSize + padding/4);
-    const y = node.position.y + padding/4 - this.headerHeight;
-    const position = {x, y};
-
-    this.props.updateTargetIcon({name, position})
-  }
-
-  private iconPointerLeave = (e: React.PointerEvent<SVGElement>) =>
-  {
-    this.props.updateTargetIcon(null);
-  }
-
-  private iconPointerDown = (e: React.PointerEvent<SVGElement>) =>
-  {
-    e.stopPropagation();
   }
 
   private showWebsocketPointerDown = (e: React.PointerEvent<SVGElement>) =>
