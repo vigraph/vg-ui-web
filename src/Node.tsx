@@ -247,7 +247,7 @@ export default class Node extends React.Component<IProps, IState>
     e.stopPropagation();
   }
 
-  private handlePointerDown = (e: React.PointerEvent<SVGRectElement>) =>
+  protected handlePointerDown = (e: React.PointerEvent<SVGElement>) =>
   {
     e.stopPropagation();
     e.preventDefault();

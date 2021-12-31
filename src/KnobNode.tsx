@@ -26,6 +26,7 @@ export default class KnobNode extends Node
               startUpdate={this.props.startUpdate}
               update={this.updateProperty}
               endUpdate={this.props.endUpdate}
+              parentPointerDown={this.handlePointerDown}
               disabled={false}
               settingsType="default"
         />

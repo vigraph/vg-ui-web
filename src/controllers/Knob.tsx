@@ -11,6 +11,7 @@ interface IProps
   startUpdate: () => void;
   update: (value: number) => void;
   endUpdate: () => void;
+  parentPointerDown?: (e: React.PointerEvent<SVGElement>) => void;
   position: {x: number, y: number};
   disabled: boolean;
   settingsType: string;
@@ -125,8 +126,9 @@ export default class Knob extends React.Component<IProps, IState>
               1}) rotate(${settings.offset}, ${r}, ${r})`}
           />
           <circle className="knob-overlay"
-            cx={r} cy={r} r={oR}
-            transform={`scale(${this.state.turning ? settings.turnScale : 1})`}
+                  cx={r} cy={r} r={oR}
+                  transform={`scale(${this.state.turning ? settings.turnScale : 1})`}
+                  onPointerDown={this.props.parentPointerDown}
           />
         </svg>
     );

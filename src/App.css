@@ -43,7 +43,7 @@
   --col-oscilloscope-slope-type: #c23b22;
 
   --col-knob-background: #808080;
-  --col-knob-overlay: #262626;
+  --col-knob-overlay: #000;
   --col-button-fill: #808080;
   --col-button-border: #808080;
   --col-selector-background: #262626;
@@ -95,7 +95,7 @@
   --col-oscilloscope-slope-type: #c23b22;
 
   --col-knob-background: #808080;
-  --col-knob-overlay: #ddd;
+  --col-knob-overlay: #fff;
   --col-button-fill: #ddd;
   --col-button-border: #808080;
   --col-selector-background: #ddd;
