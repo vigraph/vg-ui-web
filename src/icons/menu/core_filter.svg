@@ -1,8 +1,34 @@
-<svg width="40" height="40" version="1.1" viewBox="0 0 10.583 10.583" xmlns="http://www.w3.org/2000/svg">
- <g transform="translate(0 -286.42)">
-  <g transform="matrix(.26458 0 0 .26458 -47.467 94.614)">
-   <rect x="179.4" y="724.92" width="40" height="40" fill="#141414"/>
-   <path d="m184.46 729.03 7.4727 12.058 4.6445 6.8075v7.7938l5.6562 5.1265v-12.92l4.6445-6.9843 7.4727-11.881h-14.945z" fill="none" stroke="#4ecac2" stroke-linejoin="round" stroke-width="2"/>
-  </g>
- </g>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   width="40"
+   height="40"
+   version="1.1"
+   viewBox="0 0 10.583 10.583"
+   id="svg1340">
+  <metadata
+     id="metadata1346">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs1344" />
+  <path
+     d="M 1.3374268,1.0807574 3.3145538,4.271063 4.5433956,6.0721914 V 8.134275 L 6.039913,9.4906444 V 6.0722708 L 7.2687548,4.2243647 9.2458817,1.0808897 H 5.2917336 Z"
+     fill="none"
+     stroke="#4ecac2"
+     stroke-linejoin="round"
+     stroke-width="0.52916"
+     id="path1334" />
 </svg>

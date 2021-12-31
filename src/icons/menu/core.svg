@@ -1,14 +1,72 @@
-<svg id="svg7986" width="40" height="40" version="1.1" viewBox="0 0 10.583 10.583" xmlns="http://www.w3.org/2000/svg">
- <g id="layer1" transform="translate(0 -286.42)">
-  <g id="g6747" transform="matrix(.26458 0 0 .26458 -47.561 266.74)">
-   <rect id="rect827-7-5-0" x="179.76" y="74.386" width="40" height="40" fill="#141414"/>
-   <g stroke="#4ecac2" stroke-linejoin="round">
-    <circle id="path1170-3" cx="190.07" cy="97.155" r="4.7771" fill="#4ecac2" stroke-width="2.446"/>
-    <circle id="path1170-6-7" cx="206.32" cy="84.621" r="5.3305" fill="none" stroke-width="1.339"/>
-    <circle id="path1170-6-1-5" cx="209.44" cy="104.15" r="5.3305" fill="none" stroke-width="1.339"/>
-   </g>
-   <rect id="rect1202-9" transform="rotate(-38.849)" x="81.187" y="193.88" width="21.289" height="2" fill="#4ecac2"/>
-   <rect id="rect1202-8-2" transform="rotate(19.357)" x="207.85" y="27.447" width="18.884" height="1.7741" fill="#4ecac2"/>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   id="svg7986"
+   width="40"
+   height="40"
+   version="1.1"
+   viewBox="0 0 10.583 10.583">
+  <metadata
+     id="metadata536">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs534" />
+  <g
+     stroke="#4ecac2"
+     stroke-linejoin="round"
+     id="g525"
+     transform="matrix(0.26458,0,0,0.26458,-47.561,-19.68)">
+    <circle
+       id="path1170-3"
+       cx="190.07001"
+       cy="97.154999"
+       r="4.7771001"
+       fill="#4ecac2"
+       stroke-width="2.446" />
+    <circle
+       id="path1170-6-7"
+       cx="206.32001"
+       cy="84.621002"
+       r="5.3305001"
+       fill="none"
+       stroke-width="1.339" />
+    <circle
+       id="path1170-6-1-5"
+       cx="209.44"
+       cy="104.15"
+       r="5.3305001"
+       fill="none"
+       stroke-width="1.339" />
   </g>
- </g>
+  <rect
+     id="rect1202-9"
+     transform="rotate(-38.849)"
+     x="-3.2154613"
+     y="6.1363597"
+     width="5.6326437"
+     height="0.52916002"
+     fill="#4ecac2"
+     style="stroke-width:0.26458" />
+  <rect
+     id="rect1202-8-2"
+     transform="rotate(19.357)"
+     x="3.597501"
+     y="4.4586492"
+     width="4.9963288"
+     height="0.46939138"
+     fill="#4ecac2"
+     style="stroke-width:0.26458" />
 </svg>

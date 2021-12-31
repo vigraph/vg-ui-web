@@ -1,29 +1,143 @@
-<svg width="40" height="40" version="1.1" viewBox="0 0 10.583 10.583" xmlns="http://www.w3.org/2000/svg">
- <g transform="translate(0 -286.42)">
-  <g transform="matrix(.26458 0 0 .26458 -47.608 156.73)">
-   <rect x="179.93" y="490.17" width="40" height="40" fill="#141414"/>
-   <g transform="translate(-11.128 -10.485)">
-    <rect x="194.3" y="504.17" width="22.413" height="22.413" fill="#141414" stroke="#fff" stroke-linejoin="round" stroke-width=".76625"/>
-    <g transform="matrix(1.2672 0 0 1.2672 -54.27 -137.09)">
-     <g stroke="#4ecac2" stroke-linejoin="round">
-      <circle cx="201.26" cy="515.96" r="1.8429" fill="#4ecac2" stroke-width=".94355"/>
-      <circle cx="207.53" cy="511.13" r="2.0564" fill="none" stroke-width=".51656"/>
-      <circle cx="208.74" cy="518.66" r="2.0564" fill="none" stroke-width=".51656"/>
-     </g>
-     <rect transform="rotate(-38.849)" x="-169.18" y="527.69" width="8.2128" height=".77155" fill="#4ecac2"/>
-     <rect transform="rotate(19.357)" x="359.48" y="419.62" width="7.285" height=".6844" fill="#4ecac2"/>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   width="40"
+   height="40"
+   version="1.1"
+   viewBox="0 0 10.583 10.583"
+   id="svg989">
+  <metadata
+     id="metadata995">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs993" />
+  <g
+     transform="matrix(0.26458,0,0,0.26458,-50.552246,-132.46412)"
+     id="g967">
+    <rect
+       x="194.3"
+       y="504.17001"
+       width="22.413"
+       height="22.413"
+       fill="#141414"
+       stroke="#ffffff"
+       stroke-linejoin="round"
+       stroke-width="0.76625"
+       id="rect951" />
+    <g
+       transform="matrix(1.2672,0,0,1.2672,-54.27,-137.09)"
+       id="g965">
+      <g
+         stroke="#4ecac2"
+         stroke-linejoin="round"
+         id="g959">
+        <circle
+           cx="201.25999"
+           cy="515.96002"
+           r="1.8429"
+           fill="#4ecac2"
+           stroke-width="0.94355"
+           id="circle953" />
+        <circle
+           cx="207.53"
+           cy="511.13"
+           r="2.0564001"
+           fill="none"
+           stroke-width="0.51656"
+           id="circle955" />
+        <circle
+           cx="208.74001"
+           cy="518.65997"
+           r="2.0564001"
+           fill="none"
+           stroke-width="0.51656"
+           id="circle957" />
+      </g>
+      <rect
+         transform="rotate(-38.849)"
+         x="-169.17999"
+         y="527.69"
+         width="8.2128"
+         height="0.77155"
+         fill="#4ecac2"
+         id="rect961" />
+      <rect
+         transform="rotate(19.357)"
+         x="359.48001"
+         y="419.62"
+         width="7.2849998"
+         height="0.68440002"
+         fill="#4ecac2"
+         id="rect963" />
     </g>
-   </g>
-   <rect x="194.3" y="504.17" width="22.413" height="22.413" fill="#141414" stroke="#fff" stroke-linejoin="round" stroke-width=".76625"/>
-   <g transform="matrix(1.2672 0 0 1.2672 -54.27 -137.09)">
-    <g stroke="#4ecac2" stroke-linejoin="round">
-     <circle cx="201.26" cy="515.96" r="1.8429" fill="#4ecac2" stroke-width=".94355"/>
-     <circle cx="207.53" cy="511.13" r="2.0564" fill="none" stroke-width=".51656"/>
-     <circle cx="208.74" cy="518.66" r="2.0564" fill="none" stroke-width=".51656"/>
-    </g>
-    <rect transform="rotate(-38.849)" x="-169.18" y="527.69" width="8.2128" height=".77155" fill="#4ecac2"/>
-    <rect transform="rotate(19.357)" x="359.48" y="419.62" width="7.285" height=".6844" fill="#4ecac2"/>
-   </g>
   </g>
- </g>
+  <rect
+     x="3.7998948"
+     y="3.7033021"
+     width="5.9300318"
+     height="5.9300318"
+     fill="#141414"
+     stroke="#ffffff"
+     stroke-linejoin="round"
+     stroke-width="0.202734"
+     id="rect969" />
+  <g
+     transform="matrix(0.33527578,0,0,0.33527578,-61.966757,-165.96127)"
+     id="g983">
+    <g
+       stroke="#4ecac2"
+       stroke-linejoin="round"
+       id="g977">
+      <circle
+         cx="201.25999"
+         cy="515.96002"
+         r="1.8429"
+         fill="#4ecac2"
+         stroke-width="0.94355"
+         id="circle971" />
+      <circle
+         cx="207.53"
+         cy="511.13"
+         r="2.0564001"
+         fill="none"
+         stroke-width="0.51656"
+         id="circle973" />
+      <circle
+         cx="208.74001"
+         cy="518.65997"
+         r="2.0564001"
+         fill="none"
+         stroke-width="0.51656"
+         id="circle975" />
+    </g>
+    <rect
+       transform="rotate(-38.849)"
+       x="-169.17999"
+       y="527.69"
+       width="8.2128"
+       height="0.77155"
+       fill="#4ecac2"
+       id="rect979" />
+    <rect
+       transform="rotate(19.357)"
+       x="359.48001"
+       y="419.62"
+       width="7.2849998"
+       height="0.68440002"
+       fill="#4ecac2"
+       id="rect981" />
+  </g>
 </svg>

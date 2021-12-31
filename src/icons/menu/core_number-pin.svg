@@ -1,12 +1,65 @@
-<svg width="40" height="40" version="1.1" viewBox="0 0 10.583 10.583" xmlns="http://www.w3.org/2000/svg">
- <g transform="translate(0 -286.42)">
-  <g>
-   <rect x="4.075e-7" y="286.42" width="10.583" height="10.583" fill="#141414"/>
-   <g>
-    <path d="m4.5727 293.81v2.1588h0.00212l0.35739 0.33421 0.3595 0.33636 0.3595-0.33636 0.35739-0.33421h0.00212v-2.1588z" fill="#d4aa00" stroke="#000" stroke-linejoin="round" stroke-width=".11944"/>
-    <ellipse cx="5.2917" cy="290.53" rx="3.1326" ry="3.0932" fill="#323232" stroke="#0f82af" stroke-linejoin="round" stroke-width=".32252"/>
-    <text x="5.2503257" y="291.55942" fill="#4ecac2" font-family="'Droid Sans Japanese'" font-size="2.8222px" letter-spacing="0px" stroke-width=".26458px" text-align="center" text-anchor="middle" word-spacing="0px" style="line-height:125%" xml:space="preserve"><tspan x="5.2503257" y="291.55942" stroke-width=".26458px" text-align="center" text-anchor="middle">123</tspan></text>
-   </g>
-  </g>
- </g>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   width="40"
+   height="40"
+   version="1.1"
+   viewBox="0 0 10.583 10.583"
+   id="svg787">
+  <metadata
+     id="metadata793">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs791" />
+  <path
+     d="M 4.5727,7.39 V 9.5488 H 4.57482 L 4.93221,9.88301 5.29171,10.21937 5.65121,9.88301 6.0086,9.5488 H 6.01072 V 7.39 Z"
+     fill="#d4aa00"
+     stroke="#000000"
+     stroke-linejoin="round"
+     stroke-width="0.11944"
+     id="path773" />
+  <ellipse
+     cx="5.2916999"
+     cy="4.1099987"
+     rx="3.1326001"
+     ry="3.0932"
+     fill="#323232"
+     stroke="#0f82af"
+     stroke-linejoin="round"
+     stroke-width="0.32252"
+     id="ellipse775"
+     style="fill:none" />
+  <text
+     x="5.2503257"
+     y="5.1394176"
+     fill="#4ecac2"
+     font-family="'Droid Sans Japanese'"
+     font-size="2.8222px"
+     letter-spacing="0px"
+     stroke-width="0.26458px"
+     text-align="center"
+     text-anchor="middle"
+     word-spacing="0px"
+     style="line-height:125%"
+     xml:space="preserve"
+     id="text779"><tspan
+       x="5.2503257"
+       y="5.1394176"
+       stroke-width="0.26458px"
+       text-align="center"
+       text-anchor="middle"
+       id="tspan777">123</tspan></text>
 </svg>

@@ -1,18 +1,90 @@
-<svg width="40" height="40" version="1.1" viewBox="0 0 10.583 10.583" xmlns="http://www.w3.org/2000/svg">
- <g transform="translate(0 -286.42)">
-  <g transform="matrix(-.26458 0 0 .26458 58.425 248.03)">
-   <g>
-    <rect x="180.82" y="145.1" width="40" height="40" fill="#141414"/>
-    <path d="m198.1 173.03v8.1597h8e-3l1.3508 1.2631 1.3587 1.2713 1.3587-1.2713 1.3508-1.2631h8e-3v-8.1597z" fill="#d4aa00" stroke="#000" stroke-linejoin="round" stroke-width=".45142"/>
-    <ellipse cx="200.82" cy="160.65" rx="11.84" ry="11.691" fill="#ccc" stroke="#0f82af" stroke-linejoin="round" stroke-width="1.219"/>
-   </g>
-   <g stroke="#0f82af" stroke-linejoin="round">
-    <circle cx="194.79" cy="161.67" r="2.6235" fill="#0f82af" stroke-width="1.3432"/>
-    <circle cx="203.71" cy="154.78" r="2.9275" fill="none" stroke-width=".73538"/>
-    <circle cx="205.43" cy="165.51" r="2.9275" fill="none" stroke-width=".73538"/>
-   </g>
-   <rect transform="rotate(-38.849)" x="47.055" y="247.54" width="11.692" height="1.0984" fill="#0f82af"/>
-   <rect transform="rotate(19.357)" x="235.35" y="87.297" width="10.371" height=".97431" fill="#0f82af"/>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   width="40"
+   height="40"
+   version="1.1"
+   viewBox="0 0 10.583 10.583"
+   id="svg512">
+  <metadata
+     id="metadata518">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs516" />
+  <path
+     d="M 6.011702,7.3902774 V 9.5491708 H 6.009582 L 5.6521907,9.8833618 5.2927059,10.219722 4.933221,9.8833618 4.5758263,9.5491708 h -0.00212 V 7.3902774 Z"
+     fill="#d4aa00"
+     stroke="#000000"
+     stroke-linejoin="round"
+     stroke-width="0.119437"
+     id="path490" />
+  <ellipse
+     cx="-5.2920423"
+     cy="4.1147752"
+     rx="3.1326272"
+     ry="3.0932047"
+     fill="#cccccc"
+     stroke="#0f82af"
+     stroke-linejoin="round"
+     stroke-width="0.322523"
+     id="ellipse492"
+     transform="scale(-1,1)" />
+  <g
+     stroke="#0f82af"
+     stroke-linejoin="round"
+     id="g502"
+     transform="matrix(-0.26458,0,0,0.26458,58.425,-38.39)">
+    <circle
+       cx="194.78999"
+       cy="161.67"
+       r="2.6235001"
+       fill="#0f82af"
+       stroke-width="1.3432"
+       id="circle496" />
+    <circle
+       cx="203.71001"
+       cy="154.78"
+       r="2.9275"
+       fill="none"
+       stroke-width="0.73538"
+       id="circle498" />
+    <circle
+       cx="205.42999"
+       cy="165.50999"
+       r="2.9275"
+       fill="none"
+       stroke-width="0.73538"
+       id="circle500" />
   </g>
- </g>
+  <rect
+     transform="matrix(-0.7788018,-0.62727009,-0.62727009,0.7788018,0,0)"
+     x="-8.9707842"
+     y="-1.0523242"
+     width="3.0934694"
+     height="0.29061466"
+     fill="#0f82af"
+     id="rect504"
+     style="stroke-width:0.26458" />
+  <rect
+     transform="matrix(-0.94347167,0.33145317,0.33145317,0.94347167,0,0)"
+     x="-5.5779138"
+     y="6.2423134"
+     width="2.7439592"
+     height="0.25778294"
+     fill="#0f82af"
+     id="rect506"
+     style="stroke-width:0.26458" />
 </svg>

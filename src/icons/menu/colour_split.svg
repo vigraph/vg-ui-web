@@ -5,15 +5,11 @@
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns="http://www.w3.org/2000/svg"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    height="40"
    viewBox="0 0 10.583 10.583"
    width="40"
    version="1.1"
-   id="svg817"
-   sodipodi:docname="colour_split.svg"
-   inkscape:version="0.92.4 (5da689c313, 2019-01-14)">
+   id="svg817">
   <metadata
      id="metadata823">
     <rdf:RDF>
@@ -28,27 +24,6 @@
   </metadata>
   <defs
      id="defs821" />
-  <sodipodi:namedview
-     pagecolor="#ffffff"
-     bordercolor="#666666"
-     borderopacity="1"
-     objecttolerance="10"
-     gridtolerance="10"
-     guidetolerance="10"
-     inkscape:pageopacity="0"
-     inkscape:pageshadow="2"
-     inkscape:window-width="1920"
-     inkscape:window-height="995"
-     id="namedview819"
-     showgrid="false"
-     inkscape:zoom="9.8"
-     inkscape:cx="36.720466"
-     inkscape:cy="1.5232753"
-     inkscape:window-x="0"
-     inkscape:window-y="24"
-     inkscape:window-maximized="1"
-     inkscape:current-layer="svg817"
-     inkscape:snap-global="false" />
   <g
      style="fill:#4ecac2"
      id="g970"
@@ -61,7 +36,6 @@
        x="334.95999" />
     <path
        style="stroke:#4ecac2;stroke-width:1.66180003;stroke-linejoin:round"
-       inkscape:connector-curvature="0"
        id="path968"
        d="m 357.65,536.86 v -6.9857 -6.9857 l 12.1,6.9857 -6.0498,3.4928 z"
        transform="matrix(0.68054,0,0,1.0138,107.11,131.48)" />
@@ -84,10 +58,10 @@
        font-size="10.667px"
        letter-spacing="0px"
        word-spacing="0px"
-       style="font-size:2.82227492px;line-height:125%;font-family:'Droid Sans Japanese';letter-spacing:0px;word-spacing:0px;fill:#000000;stroke-width:0.26458001px"
+       style="font-size:2.82227px;line-height:125%;font-family:'Droid Sans Japanese';letter-spacing:0px;word-spacing:0px;fill:#000000;stroke-width:0.26458px"
        xml:space="preserve"
        id="text4393"><tspan
-         style="fill:#ffffff;stroke-width:0.26458001px"
+         style="fill:#ffffff;stroke-width:0.26458px"
          x="-7.5885444"
          y="8.473443"
          id="tspan4391">R</tspan></text>
@@ -110,7 +84,7 @@
       <text
          id="text4401"
          xml:space="preserve"
-         style="font-size:10.66699982px;line-height:125%;font-family:'Droid Sans Japanese';letter-spacing:0px;word-spacing:0px;fill:#000000;stroke-width:1px"
+         style="font-size:10.667px;line-height:125%;font-family:'Droid Sans Japanese';letter-spacing:0px;word-spacing:0px;fill:#000000;stroke-width:1px"
          word-spacing="0px"
          letter-spacing="0px"
          font-size="10.667px"
@@ -137,7 +111,7 @@
     <text
        id="text4409"
        xml:space="preserve"
-       style="font-size:2.82227492px;line-height:125%;font-family:'Droid Sans Japanese';letter-spacing:0px;word-spacing:0px;fill:#000000;stroke-width:0.26458001px"
+       style="font-size:2.82227px;line-height:125%;font-family:'Droid Sans Japanese';letter-spacing:0px;word-spacing:0px;fill:#000000;stroke-width:0.26458px"
        word-spacing="0px"
        letter-spacing="0px"
        font-size="10.667px"
@@ -146,7 +120,7 @@
          id="tspan4407"
          y="13.691422"
          x="-6.3364148"
-         style="fill:#ffffff;stroke-width:0.26458001px">B</tspan></text>
+         style="fill:#ffffff;stroke-width:0.26458px">B</tspan></text>
   </g>
   <rect
      style="opacity:1;fill:none;fill-opacity:1;stroke:#4ecac2;stroke-width:0.3999874;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"

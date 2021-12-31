@@ -1,13 +1,48 @@
-<svg width="40" height="40" version="1.1" viewBox="0 0 10.583 10.583" xmlns="http://www.w3.org/2000/svg">
- <g transform="translate(0 -286.42)">
-  <g transform="matrix(.26458 0 0 .26458 -61.218 45.877)">
-   <rect x="231.38" y="909.13" width="40" height="40" fill="#141414"/>
-   <circle cx="251.38" cy="929.13" r="1.0607" fill="#4ecac2" stroke="#4ecac2" stroke-linejoin="round" stroke-width="2"/>
-   <g transform="matrix(.94278 0 0 .94278 14.385 54.249)" stroke="#4ecac2" stroke-linejoin="round">
-    <circle cx="251.38" cy="929.13" r="16.022" fill="#141414" stroke-width="2.735"/>
-    <rect transform="rotate(90)" x="910.45" y="-251.79" width="18.562" height="1" fill="#4ecac2" stroke-width="2"/>
-    <rect transform="rotate(213.06)" x="-735.69" y="-642.22" width="18.562" height="1" fill="#4ecac2" stroke-width="2"/>
-   </g>
-  </g>
- </g>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   width="40"
+   height="40"
+   version="1.1"
+   viewBox="0 0 10.583 10.583"
+   id="svg1270">
+  <metadata
+     id="metadata1276">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs1274" />
+  <circle
+     cx="5.2923951"
+     cy="5.5730667"
+     r="0.28064004"
+     fill="#4ecac2"
+     stroke="#4ecac2"
+     stroke-linejoin="round"
+     stroke-width="0.52916"
+     id="circle1256" />
+  <circle
+     cx="5.2923951"
+     cy="5.5730667"
+     r="3.9965391"
+     fill="#141414"
+     stroke-width="0.68222"
+     id="circle1258"
+     style="fill:none;stroke:#4ecac2;stroke-linejoin:round" />
+  <path
+     style="fill:#000000;fill-opacity:0;fill-rule:evenodd;stroke:#4ecac2;stroke-width:0.52915;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+     d="M 5.254279,3.040159 5.256019,5.3884205 7.7838588,7.645628"
+     id="path1294" />
 </svg>

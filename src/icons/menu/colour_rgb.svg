@@ -1,17 +1,112 @@
-<svg width="40" height="40" version="1.1" viewBox="0 0 10.583 10.583" xmlns="http://www.w3.org/2000/svg">
- <g transform="translate(0 -286.42)">
-  <g transform="matrix(.26458 0 0 .26458 -25.929 187.99)">
-   <rect x="98" y="371.99" width="40" height="40" fill="#141414"/>
-   <g transform="translate(-2.2097 5.6069)">
-    <rect x="102.2" y="368.56" width="16" height="16" rx="2" ry="2" fill="#c80000"/>
-    <text x="106.11979" y="380.45065" fill="#000000" font-family="'Droid Sans Japanese'" font-size="10.667px" letter-spacing="0px" stroke-width="1px" word-spacing="0px" style="line-height:125%" xml:space="preserve"><tspan x="106.11979" y="380.45065" fill="#ffffff">R</tspan></text>
-   </g>
-   <g transform="translate(-.27621 2.0161)">
-    <rect x="120.35" y="374.27" width="16" height="16" rx="2" ry="2" fill="#00c800"/>
-    <text x="124.35287" y="386.15247" fill="#000000" font-family="'Droid Sans Japanese'" font-size="10.667px" letter-spacing="0px" stroke-width="1px" word-spacing="0px" style="line-height:125%" xml:space="preserve"><tspan x="124.35287" y="386.15247" fill="#ffffff">G</tspan></text>
-   </g>
-   <rect x="104.45" y="393.89" width="16" height="16" rx="2" ry="2" fill="#0000c8"/>
-   <text x="108.64261" y="405.7793" fill="#000000" font-family="'Droid Sans Japanese'" font-size="10.667px" letter-spacing="0px" stroke-width="1px" word-spacing="0px" style="line-height:125%" xml:space="preserve"><tspan x="108.64261" y="405.7793" fill="#ffffff">B</tspan></text>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   width="40"
+   height="40"
+   version="1.1"
+   viewBox="0 0 10.583 10.583"
+   id="svg1314">
+  <metadata
+     id="metadata1320">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs1318" />
+  <g
+     transform="matrix(0.26458,0,0,0.26458,-26.513642,-96.946526)"
+     id="g1294">
+    <rect
+       x="102.2"
+       y="368.56"
+       width="16"
+       height="16"
+       rx="2"
+       ry="2"
+       fill="#c80000"
+       id="rect1288" />
+    <text
+       x="106.11979"
+       y="380.45065"
+       fill="#000000"
+       font-family="'Droid Sans Japanese'"
+       font-size="10.667px"
+       letter-spacing="0px"
+       stroke-width="1px"
+       word-spacing="0px"
+       style="line-height:125%"
+       xml:space="preserve"
+       id="text1292"><tspan
+         x="106.11979"
+         y="380.45065"
+         fill="#ffffff"
+         id="tspan1290">R</tspan></text>
   </g>
- </g>
+  <g
+     transform="matrix(0.26458,0,0,0.26458,-26.00208,-97.89658)"
+     id="g1302">
+    <rect
+       x="120.35"
+       y="374.26999"
+       width="16"
+       height="16"
+       rx="2"
+       ry="2"
+       fill="#00c800"
+       id="rect1296" />
+    <text
+       x="124.35287"
+       y="386.15247"
+       fill="#000000"
+       font-family="'Droid Sans Japanese'"
+       font-size="10.667px"
+       letter-spacing="0px"
+       stroke-width="1px"
+       word-spacing="0px"
+       style="line-height:125%"
+       xml:space="preserve"
+       id="text1300"><tspan
+         x="124.35287"
+         y="386.15247"
+         fill="#ffffff"
+         id="tspan1298">G</tspan></text>
+  </g>
+  <rect
+     x="1.7063802"
+     y="5.7854199"
+     width="4.2332802"
+     height="4.2332802"
+     rx="0.52916002"
+     ry="0.52916002"
+     fill="#0000c8"
+     id="rect1304"
+     style="stroke-width:0.26458" />
+  <text
+     x="2.8156614"
+     y="8.9310865"
+     fill="#000000"
+     font-family="'Droid Sans Japanese'"
+     font-size="2.82227px"
+     letter-spacing="0px"
+     stroke-width="0.26458px"
+     word-spacing="0px"
+     style="line-height:125%"
+     xml:space="preserve"
+     id="text1308"><tspan
+       x="2.8156614"
+       y="8.9310865"
+       fill="#ffffff"
+       id="tspan1306"
+       style="stroke-width:0.0700026px">B</tspan></text>
 </svg>
