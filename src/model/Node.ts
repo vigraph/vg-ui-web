@@ -211,6 +211,36 @@ export class Node
     return result;
   }
 
+  // Get whether a given connector should be shown, based on node type and
+  // other factors
+  // !!! This has specific knowledge of categories which seems wrong but
+  // at least we can centralise this here until replaced
+  public getConnectorVisibility(connector: Connector): boolean
+  {
+    switch (this.category)
+    {
+      case "pin":
+        // Pin special case - connecting to one side hides the other
+        if (connector.direction === "input")
+        {
+          if (this.getForwardEdges().length) return false;
+        }
+        else
+        {
+          if (this.getReverseEdges().length) return false;
+        }
+        break;
+
+      case "knob":
+      case "slider":
+        // Controls - hide the 'input'
+        if (connector.direction === "input") return false;
+        break;
+    }
+
+    return true;
+  }
+
   // Get connector position based on size of node and index of connector, if
   // connector doesn't have a given position already
   public getConnectorPosition(connector: Connector): {x: number, y: number}

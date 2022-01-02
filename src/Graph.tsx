@@ -181,59 +181,61 @@ export default class Graph extends React.Component<IProps, IState>
     }
 
     return <CNode key={node.path+":"+i} node={node}
-      startUpdate={this.startUpdate} update={this.update}
-      endUpdate={this.endUpdate} padding={this.csize*2} graphRef={this.graphRef}
-      showNodeGraph={this.showNodeGraph} removeNode={this.removeNode}
-      updateTargetNode={this.updateTargetNode}
-      dynamicNodeUpdate={this.dynamicNodeUpdate}
-      updateTargetIcon={this.updateTargetIcon}
-      clearUI={clearUI}
-      showWebsocketDisplay={this.showWebsocketDisplay}
-      hideHeader={hideHeader}>
+                  startUpdate={this.startUpdate} update={this.update}
+                  endUpdate={this.endUpdate} padding={this.csize*2}
+                  graphRef={this.graphRef}
+                  showNodeGraph={this.showNodeGraph}
+                  removeNode={this.removeNode}
+                  updateTargetNode={this.updateTargetNode}
+                  dynamicNodeUpdate={this.dynamicNodeUpdate}
+                  updateTargetIcon={this.updateTargetIcon}
+                  clearUI={clearUI}
+                  showWebsocketDisplay={this.showWebsocketDisplay}
+                  hideHeader={hideHeader}>
       {
         this.graph.getNodeConnectors(node.id, "input").map(
-        (connector: Model.Connector, j) =>
-        {
-          // Don't create input connector for pin with output connected
-          if (node.category !== "pin" || !node.getForwardEdges().length)
-          {
-            return <Connector key={j} parent={node} connector={connector}
-              inputConnectorSelected={this.moveEdgeFromInput}
-              outputConnectorSelected={this.newMovingConnectorEdge}
-              updateTargetConnector={this.updateTargetConnector}
-              radius={this.csize} nodePadding={this.csize*2}
-              position={node.getConnectorPosition(connector)}/>
-          }
-          else
-          {
-            return "";
-          }
+          (connector: Model.Connector, j) =>
+            {
+              if (node.getConnectorVisibility(connector))
+              {
+                return <Connector key={j} parent={node} connector={connector}
+                                  inputConnectorSelected={this.moveEdgeFromInput}
+                                  outputConnectorSelected={this.newMovingConnectorEdge}
+                                  updateTargetConnector={this.updateTargetConnector}
+                                  radius={this.csize}
+                                  nodePadding={this.csize*2}
+                                  position={node.getConnectorPosition(connector)}/>
+              }
+              else
+              {
+                return "";
+              }
         })}
       {
         this.graph.getNodeConnectors(node.id, "output").map(
-        (connector: Model.Connector, j) =>
-        {
-          // Don't create output conntor for pin with input connected
-          if (node.category !== "pin" || !node.getReverseEdges().length)
-          {
-            return <Connector key={j} parent={node} connector={connector}
-              inputConnectorSelected={this.moveEdgeFromInput}
-              outputConnectorSelected={this.newMovingConnectorEdge}
-              updateTargetConnector={this.updateTargetConnector}
-              radius={this.csize} nodePadding={this.csize*2}
-              position={node.getConnectorPosition(connector)}/>
-          }
-          else
-          {
-            return "";
-          }
+          (connector: Model.Connector, j) =>
+            {
+              if (node.getConnectorVisibility(connector))
+              {
+                return <Connector key={j} parent={node} connector={connector}
+                                  inputConnectorSelected={this.moveEdgeFromInput}
+                                  outputConnectorSelected={this.newMovingConnectorEdge}
+                                  updateTargetConnector={this.updateTargetConnector}
+                                  radius={this.csize}
+                                  nodePadding={this.csize*2}
+                                  position={node.getConnectorPosition(connector)}/>
+              }
+              else
+              {
+                return "";
+              }
         })}
     </CNode>
   }
 
   private createEdgeComponent = (node: Model.Node, edge?: {outputId: string,
-    dest: Model.Node, destInput: string}, key?: string) =>
-  {
+                                                           dest: Model.Node, destInput: string}, key?: string) =>
+                                                             {
     if (edge)
     {
       const oConnector = node.getOutputConnector(edge.outputId);
