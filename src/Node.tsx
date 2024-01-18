@@ -30,6 +30,7 @@ interface IProps
   showWebsocketDisplay: (id: string, port: number, position: {x: number,
     y: number}) => void;
   hideHeader?: boolean;
+  children?: React.ReactNode;
 }
 
 interface IState

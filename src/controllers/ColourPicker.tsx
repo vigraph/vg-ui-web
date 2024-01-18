@@ -186,7 +186,7 @@ export default class ColourPicker extends React.Component<IProps, IState>
   }
 
   private createPickerByName = (name: string,
-    gradientFunction: (value: string, i: number) => {}) =>
+    gradientFunction: (value: string, i: number) => React.ReactNode) =>
   {
     // Dummy array to create gradients more easily
     const gradientArray = ["","","","","","","","","",""];

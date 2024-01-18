@@ -16,7 +16,7 @@ class Icons
     {
       const key = path.substring(path.lastIndexOf('/') + 1,
         path.lastIndexOf('.')).replace("_","/");
-      this.Menu[key] = reqMenuSvgs(path).default;
+      this.Menu[key] = reqMenuSvgs(path);
     });
 
     this.App = {};
@@ -24,7 +24,12 @@ class Icons
     {
       const key = path.substring(path.lastIndexOf('/') + 1,
         path.lastIndexOf('.'));
-      this.App[key] = reqAppSvgs(path).default;
+      console.log("***"+path+" -> "+key);
+
+      const mod = reqAppSvgs(path);
+      console.log(mod);
+      console.log(typeof mod);
+      this.App[key] = mod;
     });
   }
 }

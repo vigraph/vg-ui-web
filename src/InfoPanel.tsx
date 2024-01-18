@@ -17,6 +17,7 @@ interface IProps
   endUpdate: () => void;
   dynamicNodeUpdate: (node: Model.Node, finished: () => void) => void;
   pinInfo: (pin: boolean) => void;
+  children?: React.ReactNode;
 }
 
 interface IState

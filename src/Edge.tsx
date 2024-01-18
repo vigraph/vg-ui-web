@@ -89,6 +89,7 @@ export default class Edge extends React.Component<IProps, IState>
 
     return (
       <svg id="edge-wrapper">
+        <>
         <path className={`edge ${this.state.edgeSelected ? "selected" : ""} ` +
           `${this.state.hover ? "hover" : "" } ${this.props.srcOutput.type} ` +
           `${(this.props.src.type === "dummy" ||
@@ -117,6 +118,7 @@ export default class Edge extends React.Component<IProps, IState>
             this.props.showConnectorLabel({connector: this.props.destInput,
             parent: this.props.dest}))
         }
+        </>
       </svg>
     );
   }

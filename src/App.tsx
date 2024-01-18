@@ -70,7 +70,7 @@ export default class App extends React.Component<IProps, IState>
   private createIcon(name: string)
   {
     const Icon = vgIcons.App[name];
-    return < Icon />
+    return <Icon />
   }
 
   private createButton(name: string, onClick: () => void, className?: string)

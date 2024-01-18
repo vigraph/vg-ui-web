@@ -12,6 +12,7 @@ interface IProps
   parentPadding?: number,
   resizable?: boolean,
   resizeUpdate?: (widthDiff: number, heightDiff: number) => void
+  children?: React.ReactNode;
 }
 
 interface IState
