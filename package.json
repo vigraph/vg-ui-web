@@ -3,27 +3,37 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "assert": "^2.1.0",
+    "browserify-zlib": "^0.2.0",
+    "buffer": "^6.0.3",
+    "https-browserify": "^1.0.0",
     "immutable": "^3.8.2",
+    "path-browserify": "^1.0.1",
     "pepjs": "^0.5.3",
-    "react": "^16.14.0",
+    "react": "^18.2.0",
     "react-app-polyfill": "^1.0.6",
-    "react-dom": "^16.14.0",
-    "react-scripts": "^3.4.4",
-    "typed-rest-client": "^1.8.0"
+    "react-dom": "^18.2.0",
+    "react-scripts": "^5.0.1",
+    "stream-browserify": "^3.0.0",
+    "stream-http": "^3.2.0",
+    "typed-rest-client": "^1.8.11",
+    "url": "^0.11.3",
+    "util": "^0.12.5"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "start": "react-app-rewired start",
+    "build": "react-app-rewired build"
   },
   "devDependencies": {
-    "@types/jest": "^23.3.14",
-    "@types/node": "^10.17.49",
-    "@types/react": "^16.14.2",
-    "@types/react-dom": "^16.9.10",
+    "@types/jest": "^27.5.2",
+    "@types/node": "^18.16.1",
+    "@types/react": "^18.0.25",
+    "@types/react-dom": "^18.0.9",
     "@types/webpack-env": "^1.16.0",
-    "typescript": "^3.9.7"
+    "process": "^0.11.10",
+    "react-app-rewired": "^2.2.1",
+    "typescript": "^4.9.3",
+    "webpack": "^5.89.0"
   },
   "browserslist": {
     "production": [
